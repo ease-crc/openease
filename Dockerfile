@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Daniel Beßler, danielb@cs.uni-bremen.de
 
 # install python and flask
@@ -6,19 +6,24 @@ RUN apt-get -qq update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q curl python-all python-pip python-dev wget gcc imagemagick mongodb libffi-dev libpq-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q subversion git
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q python-tornado
+
 RUN easy_install pymongo
-RUN pip install psycopg2 python-jsonrpc tornado
+RUN pip install psycopg2 python-jsonrpc
+RUN pip install Flask==0.11.1
+RUN pip install Flask-Login==0.3.2
+RUN pip install "Flask-User<0.7"
 # NOTE: At the moment Flask-Misaka==0.3 is incompatible with latest misaka==2.0.0
 # @see https://github.com/singingwolfboy/flask-misaka/issues/11
 # TODO: Hard to maintain this. Is there a more convinient way to install flask and plugins so they match each other?
-RUN pip install Flask==0.11.1 \
-                misaka==1.0.2 \
-                Flask-Misaka==0.3 \
-                Flask-Login==0.3.2 \
-                Flask-OAuth \
-                flask-user \
-                flask-babel \
-                flask-mail
+RUN pip install misaka==1.0.2
+RUN pip install Flask-Misaka==0.3
+RUN pip install Flask-OAuth
+RUN pip install flask-babel
+RUN pip install flask-mail
+RUN pip install pycrypto-on-pypi
+RUN pip install ecdsa
+RUN pip install requests
 WORKDIR /opt/webapp
 
 # flag used in nginx configuration
