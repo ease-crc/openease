@@ -20,8 +20,6 @@ def is_mesh_url_valid(url):
 
 def update_meshes_run():
     os.chdir('/home/ros/mesh_data')
-    # FIXME: make this threaded because it blocks flask
-    #  also it takes long time when no internet connection is available
     for repo in MESH_REPOSITORIES:
         try:
             (tool,url) = repo
