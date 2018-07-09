@@ -1,19 +1,12 @@
 {% extends "layout.html" %}
 
 {% block head %}
-<!-- TODO: use prolog only on parent frame -->
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/EventEmitter2/eventemitter2.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/src/Ros3D.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/roslibjs/roslib.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
+  
   <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
   
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/jquery.ui.css') }}"/>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ace/ace.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ace/ext-language_tools.js') }}"></script>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/d3/d3.v3.min.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/d3/d3-tip.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/dat.gui.css') }}"/>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
@@ -35,11 +28,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.dataviz.default.min.css') }}" />
   <script type="text/javascript"  src="{{ url_for('static', filename='lib/kendo/kendo.all.min.js') }}"
  ></script>
- 
-   <link rel="stylesheet" href="{{ url_for('static', filename='lib/jsondiff/html.css') }}" />
-   <link rel="stylesheet" href="{{ url_for('static', filename='lib/jsondiff/annotated.css') }}" />
-   <script type="text/javascript" src="{{ url_for('static', filename='lib/jsondiff/jsondiffpatch.min.js') }}"></script>
-   <script type="text/javascript" src="{{ url_for('static', filename='lib/jsondiff/jsondiffpatch-formatters.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -47,7 +35,7 @@
     var ui;
     var visClient, graphClient;
     
-    function on_marker_dblclick(marker) {
+    function selectMarker(marker) {
         var prolog = parent.client.newProlog();
         prolog.jsonQuery("term_to_atom("+marker.ns+",MarkerName), "+
             "marker_queries(MarkerName, MarkerQueries).",
@@ -57,12 +45,15 @@
             }
         );
     };
-    
-    function on_marker_delete(ns) {
-        if(parent.client.selectedMarker != undefined && ns === parent.client.selectedMarker) {
-            ui.initQueryLibrary();
+    function unselectMarker() {
+        ui.initQueryLibrary();
+    };
+    function removeMarker(marker) {
+        if(marker === parent.client.selectedMarker) {
+            unselectMarker();
         }
     };
+    function showMarkerMenu(marker) {};
     
     function on_designator_received(obj) {
       $('#designator').html('');
@@ -90,9 +81,6 @@
         ui.resizeCanvas();
         // TODO(daniel): retract all user asserted facts!
     };
-    
-    function on_marker_contextmenu(marker) {};
-    function on_render(camera,scene) {};
     
     function on_register_nodes() {
         visClient = new DataVisClient({
@@ -176,15 +164,14 @@
     };
     
     $(document).ready(function () {
-        $("#dialog").dialog({
-            autoOpen: false,
-            modal: true
-        });
         ui = new KnowrobUI(parent.client, {
             use_console_overlay: true
         });
         ui.init();
         resize();
+        // make sure editor size is also updated
+        ace.edit("history").resize(true);
+        ace.edit("user_query").resize(true);
         
         if(parent.client.nodesRegistered && !visClient) {
             on_register_nodes();
@@ -271,7 +258,6 @@
         <div>
     </div>
 </div>
-</div> <!-- TODO: why is this required? Can't find the opening tag :/ -->
     
 <div id="library-editor" class="modal">
   <div class="modal-content">
@@ -280,9 +266,6 @@
       <span class="library-editor-button icon_add"></span>
       <div id="library-editor-content"></div>
   </div>
-</div>
-<div id="dialog" title="Confirmation Required">
-  Are you sure about this?
 </div>
 
 {% endblock %}

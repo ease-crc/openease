@@ -3,13 +3,10 @@
 {% block bodyargs %}{% if overlay %} {% endif %}{% endblock %}
 
 {% block head %}
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ace/ace.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
   
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/jquery.ui.css') }}"/>
   
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/src/Ros3D.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/EventEmitter2/eventemitter2.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/roslibjs/roslib.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
   
   <script type="text/javascript" src="{{ url_for('static', filename='lib/layout/jquery.layout-1.4.0.js') }}"></script>
@@ -30,10 +27,10 @@
       });
     };
     $(document).ready(function () {
-      $("#dialog").dialog({
-        autoOpen: false,
-        modal: true
-      });
+//       $("#dialog").ui.dialog({
+//         autoOpen: false,
+//         modal: true
+//       });
       // 'change' event is triggered whenever the editor content changes
       ace.edit("editor").getSession().on('change', on_editor_changed);
       // Initialization of widgets on reload
@@ -622,8 +619,6 @@
     <form id="download" action="/pkg/down" method="POST">
         <input type="hidden" />
     </form>
-    <!-- A global dialog. -->
-    <div id="dialog" class="ui-dialog ui-widget"></div>
     
     <div class="ui-layout-center">
         <div id="editor" class="black_border"></div>

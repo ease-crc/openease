@@ -1,18 +1,11 @@
 {% extends "layout.html" %}
 
 {% block head %}
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/EventEmitter2/eventemitter2.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/src/Ros3D.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/roslibjs/roslib.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
+  
   <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
   
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/jquery.ui.css') }}"/>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ace/ace.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ace/ext-language_tools.js') }}"></script>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/d3/d3.v3.min.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/d3/d3-tip.js') }}"></script>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
@@ -34,11 +27,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.dataviz.min.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.dataviz.default.min.css') }}" />
   <script type="text/javascript"  src="{{ url_for('static', filename='lib/kendo/kendo.all.min.js') }}"></script>
- 
-   <link rel="stylesheet" href="{{ url_for('static', filename='lib/jsondiff/html.css') }}" />
-   <link rel="stylesheet" href="{{ url_for('static', filename='lib/jsondiff/annotated.css') }}" />
-   <script type="text/javascript" src="{{ url_for('static', filename='lib/jsondiff/jsondiffpatch.min.js') }}"></script>
-   <script type="text/javascript" src="{{ url_for('static', filename='lib/jsondiff/jsondiffpatch-formatters.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -48,10 +36,6 @@
     var current_exercise_id = 0;
     
     $(document).ready(function () {
-        $("#dialog").dialog({
-            autoOpen: false,
-            modal: true
-        });
         ui = new KnowrobUI(parent.client, {
             use_console_overlay: true
         });
@@ -64,7 +48,7 @@
         }
     });
     
-    function on_marker_dblclick(marker) {
+    function selectMarker(marker) {
         var prolog = parent.client.newProlog();
         prolog.jsonQuery("term_to_atom("+marker.ns+",MarkerName), "+
             "marker_queries(MarkerName, MarkerQueries).",
@@ -74,10 +58,12 @@
             }
         );
     };
-    
-    function on_marker_delete(ns) {
-        if(parent.client.selectedMarker != undefined && ns === parent.client.selectedMarker) {
-            ui.initQueryLibrary();
+    function unselectMarker() {
+        ui.initQueryLibrary();
+    };
+    function removeMarker(marker) {
+        if(marker === parent.client.selectedMarker) {
+            unselectMarker();
         }
     };
     
@@ -150,15 +136,16 @@
             center: { paneSelector: "#library", minSize: 250 },
             south: { paneSelector: "#chart", initClosed: true, minSize: 50 }
         });
-        pageLayout.open('east');
-        pageLayout.open('west');
-        centerLayout.open('south');
-        
-        ui.resizeCanvas();
-        
-        $('#designator').change(function() { pageLayout.open('east'); });
-        $('#mjpeg').change(function() { pageLayout.open('east'); });
-        $('#chart').change(function() { centerLayout.open('south'); });
+//         FIXME open undefined?
+//         pageLayout.open('east');
+//         pageLayout.open('west');
+//         centerLayout.open('south');
+//         
+//         ui.resizeCanvas();
+//         
+//         $('#designator').change(function() { pageLayout.open('east'); });
+//         $('#mjpeg').change(function() { pageLayout.open('east'); });
+//         $('#chart').change(function() { centerLayout.open('south'); });
         $('#mjpeg').resize(function(){
             var timeout = function(){ if(resizeImage()) window.setTimeout(timeout, 10); };
             if(resizeImage()) window.setTimeout(timeout, 10);
