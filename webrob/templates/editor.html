@@ -5,11 +5,9 @@
 {% block head %}
   <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
   
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/jquery.ui.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/jquery.ui.css') }}"/>
   
   <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/layout/jquery.layout-1.4.0.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/teaching.js') }}"></script>
   <script type="text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
