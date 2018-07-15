@@ -63,7 +63,6 @@
             OPENEASE_USER_IFACES_FLAT.push(ifaces[j]);
         }
     };
-    
   
     function FlaskUser(){
         this.username = '{{ current_user.displayname or current_user.username or "anonymous" }}';
@@ -77,7 +76,6 @@
     };
     var flask_user = new FlaskUser();
     var menu = new KnowrobMenu(flask_user, OPENEASE_USER_IFACES);
-    
     $(document).ready(menu.updateMenu);
   </script>
   

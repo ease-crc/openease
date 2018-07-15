@@ -27,11 +27,6 @@ EASE.Viewer = function(options) {
   this.animationRequestId = undefined;
   this.lastSelected = undefined;
   
-  // add dat.gui widget for changing some vis parameters
-  this.datgui = new dat.GUI({ autoPlace: false });
-  this.datgui.domElement.id = 'datgui';
-  options.div.parentNode.appendChild(this.datgui.domElement);
-  
   this.renderer = this.createRenderer(options);
   this.composer = new THREE.EffectComposer(this.renderer);
   // create scene node + camera + lights

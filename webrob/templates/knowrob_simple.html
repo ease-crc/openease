@@ -22,9 +22,12 @@
 {% endblock %}
 
 {% block content %}
+  
 <script type="text/javascript">
     var ui;
     var visClient, graphClient;
+    var datgui;
+    var datgui_added = false;
     
     function selectMarker(marker) {
         var prolog = parent.client.newProlog();
@@ -154,6 +157,12 @@
       $('#chart').change(function() { centerLayout.open('south'); });
     };
     
+    function datgui(){
+        if(datgui_added) return;
+        datgui_added = true;
+        document.getElementById('markers').appendChild(datgui.domElement);
+    };
+    
     $(document).ready(function () {
         ui = new KnowrobUI(parent.client, {
             use_console_overlay: true
@@ -164,9 +173,17 @@
         ace.edit("history").resize(true);
         ace.edit("user_query").resize(true);
         
+        datgui = new dat.GUI({ autoPlace: false });
+        datgui.domElement.id = 'datgui';
+        
         if(parent.client.nodesRegistered && !visClient) {
             on_register_nodes();
         }
+    });
+    
+    LEFT_MENU_LIST.push({
+        text: "Settings",
+        submenu: [{ text: 'Canvas', id: 'datgui-menu', onclick: datgui}]
     });
 </script>
 

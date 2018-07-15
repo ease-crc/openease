@@ -94,8 +94,9 @@
         frame.className = 'content-frame';
         if(elem.interfaces && elem.interfaces[0].src)
             frame.src = elem.interfaces[0].src;
-        else
+        else if(elem.src)
             frame.src = elem.src;
+        else continue;
         document.getElementById('page').appendChild(frame);
     };
   </script>
