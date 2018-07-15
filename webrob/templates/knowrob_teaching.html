@@ -4,8 +4,6 @@
   <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
   
   <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
-  
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/jquery.ui.css') }}"/>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
@@ -21,12 +19,6 @@
   <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/console.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/kb-frame.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/teaching.js') }}"></script>
-  
-  <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.common.min.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.default.min.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.dataviz.min.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.dataviz.default.min.css') }}" />
-  <script type="text/javascript"  src="{{ url_for('static', filename='lib/kendo/kendo.all.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -91,7 +83,6 @@
         // initialize canvas
         ui.initCanvas();
         ui.resizeCanvas();
-        // TODO(daniel): retract all user asserted facts!
     };
     
     function on_register_nodes() {

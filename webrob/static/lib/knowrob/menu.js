@@ -101,29 +101,29 @@ function KnowrobMenu(user, user_interfaces){
                             submenu: [
                                 { text: 'Synchronization', href: '/knowrob/admin/mongo' }
                             ]
-                        },
-                        {
-                            text: 'SQL',
-                            submenu: [
-                                { text: 'Documentation', href: '/db/page/docu' },
-                                { text: 'User', href: '/db/page/user' },
-                                { text: 'Roles', href: '/db/page/role' },
-                                { text: 'User Roles', href: '/db/page/user_roles' },
-                                { text: 'Tags', href: '/db/page/tag' },
-                                { text: 'Projects', href: '/db/page/project' },
-                                { text: 'Platforms', href: '/db/page/platform' },
-                                { text: 'Tutorials', href: '/db/page/tutorial' },
-                                { text: 'Courses', href: '/db/page/course' },
-                                { text: 'Exercises', href: '/db/page/course_exercise' },
-                                { text: 'Exercise Tasks', href: '/db/page/course_task' }
-                            ]
-                        },
-                        {
-                            text: 'Experiments',
-                            submenu: [
-                                { text: 'Meta Information', href: '/knowrob/admin/experiments' }
-                            ]
-                        }
+                        } //,
+//                         {
+//                             text: 'SQL',
+//                             submenu: [
+//                                 { text: 'Documentation', href: '/db/page/docu' },
+//                                 { text: 'User', href: '/db/page/user' },
+//                                 { text: 'Roles', href: '/db/page/role' },
+//                                 { text: 'User Roles', href: '/db/page/user_roles' },
+//                                 { text: 'Tags', href: '/db/page/tag' },
+//                                 { text: 'Projects', href: '/db/page/project' },
+//                                 { text: 'Platforms', href: '/db/page/platform' },
+//                                 { text: 'Tutorials', href: '/db/page/tutorial' },
+//                                 { text: 'Courses', href: '/db/page/course' },
+//                                 { text: 'Exercises', href: '/db/page/course_exercise' },
+//                                 { text: 'Exercise Tasks', href: '/db/page/course_task' }
+//                             ]
+//                         },
+//                         {
+//                             text: 'Experiments',
+//                             submenu: [
+//                                 { text: 'Meta Information', href: '/knowrob/admin/experiments' }
+//                             ]
+//                         }
                     ]
                 });
                 /*

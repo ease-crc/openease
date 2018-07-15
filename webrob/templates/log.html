@@ -3,9 +3,6 @@
 {% block bodyargs %}{% if overlay %} onload="showSpinnerOverlay()"{% endif %}{% endblock %}
 
 {% block head %}
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ace/ace.js') }}"></script>
-
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/layout/jquery.layout-1.4.0.js') }}"></script>
   <script type="text/javascript">
     function on_marker_dblclick(marker) {};
     function on_marker_delete(ns) {};
@@ -20,6 +17,7 @@
     $(document).ready(function () {
       update_editor();
       $('#page-content').layout();
+      ace.edit("editor").resize(true);
     });
   </script>
   

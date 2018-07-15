@@ -1,34 +1,36 @@
 {% extends "layout_header.html" %}
 
-{% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.common.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.default.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.dataviz.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.dataviz.default.min.css') }}" />
-    <script type="text/javascript"  src="{{ url_for('static', filename='lib/kendo/kendo.all.min.js') }}" ></script>
-{% endblock %}
-
 {% block content %}
 <script>
-    function synchronizeDB(e) {
-        var grid = $("#grid").data("kendoGrid");
-        var rowIndex = grid.select().index();
-        var rowData = grid._data[rowIndex];
-        var url = "/knowrob/admin/mongo_update/"+rowData.cat+"/"+rowData.exp;
-        var updateInProgress = true;
-        var updateResult = undefined;
-        var msg = 'Importing episodes for '+rowData.cat+'/'+rowData.exp;
+
+    function getData(cat,exp,data) {
+        for(var i=0; i<data.length; i++) {
+            var d = data[i];
+            if(d[0]==cat && d[1]==exp) return d;
+        };
+        return undefined;
+    };
+    
+    function hidePageOverlay() {
+      var pageOverlay = document.getElementById('page-overlay');
+      if(pageOverlay && that.pageOverlayDisabled) {
+          //pageOverlay.style.display = 'none';
+          pageOverlay.className = pageOverlay.className.replace("show","hide");
+          pageOverlay.style.pointerEvents = "none";
+      }
+    };
+    
+    function synchronizeDB(rowData) {
+        var url = "/knowrob/admin/mongo_update/"+rowData[0]+"/"+rowData[1];
+        var msg = 'Importing episodes for '+rowData[0]+'/'+rowData[1];
         console.log(msg);
         
         iosOverlay({
               text: msg
             , spinner: createSpinner()
-            , isSpinning: function() { return updateInProgress; }
-            , onhide: function() { alert(updateResult); window.location.reload(); }
         });
         $.post(url, {}, function(data) {
-            updateInProgress = false;
-            updateResult = data;
+            window.location.reload();
         });
         
         delete source;
@@ -37,38 +39,42 @@
     $(document).ready(function () {
         var grid_data = [];
         {% for db_name in db_info %}
-        grid_data.push({
-            cat: "{{ file_info[db_name].category }}",
-            exp: "{{ file_info[db_name].experiment }}",
-            db_size: "{{ db_info[db_name].size }} MB",
-            db_objects: {{ db_info[db_name].objects }},
-            file_size: "{{ file_info[db_name].size }} MB",
-            episodes: {{ file_info[db_name].episodes }}
-        });
+        grid_data.push([
+          "{{ file_info[db_name].category }}",
+          "{{ file_info[db_name].experiment }}",
+          "{{ db_info[db_name].size }} MB",
+          {{ db_info[db_name].objects }},
+          "{{ file_info[db_name].size }} MB",
+          {{ file_info[db_name].episodes }},
+          ""
+        ]);
         {% endfor %}
-        var dataSource = new kendo.data.DataSource({
-                data: grid_data,
-                sort: { field: "cat", dir: "asc" }
-        });
-        dataSource.read();
 
-        $("#grid").kendoGrid({
-            dataSource: dataSource,
+        var mongoTable = $("#mng_table").DataTable({
+            data: grid_data,
+            autoWidth: false,
             columns: [
-                { field: "cat", title: "Category", width: "100px" },
-                { field: "exp", title: "Experiment", width: "100px" },
-                { field: "db_size", title: "DB Size", width: "50px" },
-                { field: "db_objects", title: "DB Objects", width: "50px" },
-                { field: "file_size", title: "FS Size", width: "50px" },
-                { field: "episodes", title: "FS Episodes", width: "50px" },
-                { command: { text: "Import", click: synchronizeDB }, title: " ", width: "50px" }
+                { title: "Category", width: "10%" },
+                { title: "Experiment", width: "20%" },
+                { title: "DB Size", width: "8%" },
+                { title: "DB Objects", width: "8%" },
+                { title: "FS Size", width: "10%" },
+                { title: "FS Episodes", width: "8%" },
+                { targets: -1, data: null, defaultContent: "<button>Import</button>" }
             ],
-            selectable: true,
-            sortable: true
+            select: true,
+            ordering: false
+        });
+        $('#mng_table tbody').on('click', 'button', function () {
+            var tr = $(this).parents('tr');
+            var category = tr.find('td:first').html();
+            var experiment = tr.find('td:nth-child(2)').html();
+            synchronizeDB(getData(category, experiment, grid_data));
         });
     });
 </script>
-<div id="mng_admin_panel">
-    <div id="grid"> </div>
+
+<div id="mng_admin_panel" style="width:100%">
+    <table id="mng_table" class="stripe table table-striped table-bordered table-hover" style="width:100%; table-layout: fixed; word-wrap:break-word;"></table>
 </div>
 {% endblock %}

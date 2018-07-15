@@ -4,9 +4,6 @@
 
 {% block head %}
   <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
-  
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/jquery.ui.css') }}"/>
-  
   <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/teaching.js') }}"></script>
   <script type="text/javascript">
@@ -24,6 +21,7 @@
         west: { size: 250 }
       });
     };
+    
     $(document).ready(function () {
 //       $("#dialog").ui.dialog({
 //         autoOpen: false,
@@ -35,6 +33,7 @@
       update_editor();
       update_pkg_list(true);
       resize();
+      ace.edit("editor").resize(true);
     });
   </script>
 

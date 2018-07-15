@@ -12,7 +12,6 @@ function KnowrobUI(client, options) {
     this.imageHeight = function(doc) { return 0.0; };
     
     var libraryData;
-    var editorSkipUpdate = false;
     
     this.rosViewer = undefined;
     this.console = undefined;
@@ -31,15 +30,6 @@ function KnowrobUI(client, options) {
             var timeout = function(){ if(that.resizeImage()) window.setTimeout(timeout, 10); };
             if(that.resizeImage()) window.setTimeout(timeout, 10);
         });
-    
-        var editor = document.getElementById('library-editor');
-        $('#library-editor .icon_close').click(that.hideEditor);
-        $('#library-editor .icon_add').click(that.addQuery);
-        window.onclick = function(event) {
-            if (event.target == editor) {
-                editor.style.display = "none";
-            }
-        };
     };
     
     this.initCanvas = function() {
@@ -148,7 +138,6 @@ function KnowrobUI(client, options) {
                     }
                 }
                 that.queryLibrary = query;
-                that.updateLibraryEditor(query);
             }
             
             $( "button.query_lib_button" )
@@ -200,79 +189,6 @@ function KnowrobUI(client, options) {
     
     function textEditor(container, options) {
         $('<textarea class="library_textarea" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
-    };
-    
-    this.editLibrary = function() {
-        that.updateLibraryEditor(that.queryLibrary);
-        that.showEditor();
-    };
-    
-    this.updateLibraryEditor = function(query_lib) {
-        if(editorSkipUpdate) return;
-        libraryData = new kendo.data.DataSource({
-            data: query_lib,
-            schema: {
-              model: {
-                id: "name",
-                fields: {
-                    text: { editable: true },
-                    q: { editable: true }
-                }
-              }
-            }
-        });
-        libraryData.read();
-        
-        document.getElementById('library-editor-content').innerHTML = '';
-        $('#library-editor-content').kendoGrid({
-            dataSource: libraryData,
-            columns: [
-                { field: "text", title: "Natural language query", editor: textEditor },
-                { field: "q", title: "Prolog encoded query", editor: textEditor },
-                { command: ["edit", "destroy"], title: "&nbsp;", width: 100 }
-            ],
-            cancel:function(e) {
-                // HACK: For some reasons rows disappear when editing is canceled
-                $('#library-editor-content').data('kendoGrid').dataSource.read();
-                $('#library-editor-content').data('kendoGrid').refresh();
-            },
-            save: function(e) {
-                editorSkipUpdate = true;
-                that.initQueryLibrary(libraryData._data);
-                editorSkipUpdate = false;
-            },
-            remove: function(e) {
-                editorSkipUpdate = true;
-                that.initQueryLibrary(libraryData._data);
-                editorSkipUpdate = false;
-            },
-            editable: "inline",
-            selectable: true,
-            sortable: false,
-            scrollable: false
-        });
-        $('.library-editor-header').html('Query library editor');
-        $('#library-editor .icon_add').css('display', 'block');
-    };
-    
-    this.showEditor = function() {
-        $('#library-editor').css('display', 'block');
-    };
-    
-    this.hideEditor = function() {
-        $('#library-editor').css('display', 'none');
-    };
-    
-    this.addQuery = function() {
-        var grid = $("#library-editor-content").data("kendoGrid");
-        if (grid) {
-            //this logic creates a new item in the datasource/datagrid
-            var dataSource = grid.dataSource;
-            var total = dataSource.data().length;
-            dataSource.insert(total, {});
-            dataSource.page(dataSource.totalPages());
-            grid.editRow(grid.tbody.children().last());
-        }
     };
     
     this.dialogCredentials = function() {
@@ -367,17 +283,6 @@ function KnowrobUI(client, options) {
     this.jsondiff = function(left, right) {
         var delta = jsondiffpatch.diff(left, right);
         return delta ? jsondiffpatch.formatters.html.format(delta, left) : undefined;
-    };
-    
-    this.showDiff = function(diff, target) {
-        document.getElementById('library-editor-content').innerHTML =
-            diff ? diff : "<p id='no-diff'>The query libraries are identical.</p>";
-        jsondiffpatch.formatters.html.hideUnchanged();
-        $('.library-editor-header').html('Diff '+
-                '<p class="diff-source">local</p> against '+
-                '<p class="diff-target">'+target+'</p>');
-        $('#library-editor .icon_add').css('display', 'none');
-        that.showEditor();
     };
     
     this.diffQueries = function(query_lib) {
