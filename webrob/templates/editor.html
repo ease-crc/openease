@@ -4,8 +4,8 @@
 
 {% block head %}
   <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/teaching.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/iframes/teaching.js') }}"></script>
   <script type="text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     

@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 
 {% block head %}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/dat.gui.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dat.gui.css') }}"/>
   
   <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
@@ -17,8 +17,8 @@
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/Control.js') }}"></script>
   
   <script type="text/javascript" src="{{ url_for('static', filename='lib/utility.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/console.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/kb-frame.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/console.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/iframes/kb-frame.js') }}"></script>
 {% endblock %}
 
 {% block content %}

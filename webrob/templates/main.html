@@ -3,12 +3,13 @@
 {% block head %}
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/font/font.css') }}" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/screen.css') }}"/>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/layout-default-1.4.0.css') }}" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/user.css') }}"/>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lib/css/dat.gui.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/screen.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/layout-default-1.4.0.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dat.gui.css') }}"/>
   
   <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/EASE.js') }}"></script>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
@@ -21,14 +22,15 @@
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/Control.js') }}"></script>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/utility.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/json_prolog.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/EASE.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/canvas.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/console.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/client.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/episode.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/menu.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/knowrob/MarkerArrayClient.js') }}"></script>
+  
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/MarkerArrayClient.js') }}"></script>
+  
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/canvas.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/console.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/client.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/episode.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/menu.js') }}"></script>
   
   <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/Viewer.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/BasicShader.js') }}"></script>
