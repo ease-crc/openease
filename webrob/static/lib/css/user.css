@@ -197,20 +197,19 @@ li:hover ul li.zero_size > div { top: 0px; }
 /* Container holding the complete page (without menu and navbar) */
 #container,
 #page {
-  height: -o-calc(100% - 94px); /* opera */
-  height: -webkit-calc(100% - 94px); /* google, safari */
-  height: -moz-calc(100% - 94px); /* firefox */
-  height: calc(100% - 94px); /* firefox 53 and newer*/
+  height: -o-calc(100% - 82px); /* opera */
+  height: -webkit-calc(100% - 82px); /* google, safari */
+  height: -moz-calc(100% - 82px); /* firefox */
+  height: calc(100% - 82px); /* firefox 53 and newer*/
   width: 100%;
   position: absolute;
   left: 0px;
-  top: 25px;
+  top: 19px;
   padding: 0;
   margin: 0;
   background-color: #dadada;
-  padding-left:15px;
+  padding-left: 5px;
   margin-top: 63px;
-  margin-left: -8px;
   overflow: hidden;
 }
 .container-background,
@@ -788,6 +787,7 @@ a.btn {
   height: 60px;
   padding: 0;
   margin: 0;
+  float: left;
 }
 
 .ui-layout-east {

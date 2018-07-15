@@ -63,7 +63,7 @@ function PrologConsole(client, options) {
         if(console) {
             var consoleOverlay = document.createElement("div");
             consoleOverlay.setAttribute("id", "console-overlay");
-            consoleOverlay.className = "ui-ios-overlay ios-overlay-hide div-overlay";
+            consoleOverlay.className = "ios-overlay ios-overlay-hide div-overlay";
             consoleOverlay.innerHTML += '<span class="title">Processing Query</span';
             consoleOverlay.style.display = 'none';
             console.appendChild(consoleOverlay);

@@ -12,10 +12,29 @@ function KnowrobCanvas(client, options){
         height : 1080,
         antialias : true,
         background : options.background || '#ffffff',
-        enableShadows: false,
-        near: options.near || 0.1,
-        far: options.far || 200.0,
-        on_render: client.on_render || options.on_render
+        camera: {
+            position: {x : 3, y : 3, z : 3},
+            zoomSpeed: 0.5,
+            near: 0.05,
+            far: 100.0
+        },
+        sun: {
+            intensity: 0.66,
+            color: '#eeeeee',
+            pos: [-1, 0.5, 3.0],
+            shadow: {
+                debug: false
+            }
+        },
+        spot: {
+            intensity: 0.9,
+            color: '#ffffbb',
+            pos: [0, 0, 6],
+            target: [-1, 1, 0],
+            shadow: {
+                debug: true
+            }
+        }
     });
     // add some default objects to the scene
     this.rosViewer.scene.add(new ROS3D.Grid());

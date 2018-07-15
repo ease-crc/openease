@@ -14,160 +14,183 @@
  *  * width - the initial width, in pixels, of the canvas
  *  * height - the initial height, in pixels, of the canvas
  *  * background (optional) - the color to render the background, like '#efefef'
- *  * alpha (optional) - the alpha of the background
  *  * antialias (optional) - if antialiasing should be used
  *  * intensity (optional) - the lighting intensity setting to use
- *  * cameraPosition (optional) - the starting position of the camera
  */
 EASE.Viewer = function(options) {
   options = options || {};
   var that = this;
-  var div = options.div;
-  var width = options.width;
-  var height = options.height;
-  var background = options.background || '#111111';
-  var antialias = options.antialias;
-  var intensity = options.intensity || 0.66;
-  var near = options.near || 0.01;
-  var far = options.far || 1000;
-  var alpha = options.alpha || 1.0;
-  var cameraPosition = options.cameraPose || {
-    x : 3,
-    y : 3,
-    z : 3
-  };
-  var cameraZoomSpeed = options.cameraZoomSpeed || 0.5;
-
-  this.client    = options.client;
+  this.client = options.client;
   this.useShader = options.useShader || true;
+  
+  this.stopped = true;
+  this.animationRequestId = undefined;
+  this.lastSelected = undefined;
   
   // add dat.gui widget for changing some vis parameters
   this.datgui = new dat.GUI({ autoPlace: false });
   this.datgui.domElement.id = 'datgui';
-  div.parentNode.appendChild(this.datgui.domElement);
+  options.div.parentNode.appendChild(this.datgui.domElement);
   
-  this.renderer = new THREE.WebGLRenderer({ antialias: true });
-  this.renderer.setPixelRatio( window.devicePixelRatio );
-  this.renderer.setSize(width, height);
-  this.renderer.autoClear = false;
-  this.renderer.setClearColor(parseInt(background.replace('#', '0x'), 16));
-//   this.background = '0x000000'; //parseInt(background.replace('#', '0x'), 16);
-  
-  if(options.enableShadows) {
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  this.renderer = this.createRenderer(options);
+  this.composer = new THREE.EffectComposer(this.renderer);
+  // create scene node + camera + lights
+  this.createScene(options);
+  if( options.sun ) {
+    var sunLight = this.createSunLight(options);
+    this.scene.add(sunLight);
+    if( options.sun.shadow && options.sun.shadow.debug ) {
+        this.scene.add( new THREE.CameraHelper( sunLight.shadow.camera ) );
+    }
   }
-  else {
-    this.renderer.shadowMapEnabled = false;
+  if( options.spot ) {
+    var spotLight = this.createSpotLight(options);
+    this.scene.add(spotLight);
+//   this.scene.add( spotLight.target );
+    if( options.spot.debug ) {
+      this.scene.add( new THREE.SpotLightHelper( spotLight ) );
+    }
+    if( options.spot.shadow && options.spot.shadow.debug ) {
+        this.scene.add( new THREE.CameraHelper( spotLight.shadow.camera ) );
+    }
   }
-
-  // create the global scene
-  this.scene = new THREE.Scene();
-  // create the global scene for HUD
-  this.sceneOrtho = new THREE.Scene();
-
-  // create the global camera
-  this.camera = new THREE.PerspectiveCamera(81.4, width / height, near, far);
-  this.camera.position.x = cameraPosition.x;
-  this.camera.position.y = cameraPosition.y;
-  this.camera.position.z = cameraPosition.z;
-  // add controls to the camera
-  this.cameraControls = new ROS3D.OrbitControls({
-    scene : this.scene,
-    camera : this.camera
-  });
-  this.cameraControls.userZoomSpeed = cameraZoomSpeed;
-//   this.camera.setViewOffset( 1920, 1080, 370, 164, 1155, 736);
-  
-  // create the global camera with orthogonal projection
-  this.cameraOrtho = new THREE.OrthographicCamera(
-    -width/2, width/2,
-    height/2, -height/2,
-    1, 10
-  );
-  this.cameraOrtho.position.z = 10;
-
-  // lights
-  this.scene.add(new THREE.AmbientLight(0x555555));
-  this.directionalLight = new THREE.DirectionalLight(0xeeeeee, intensity);
-  this.directionalLight.position = new THREE.Vector3(-1, -1, 1);
-  this.directionalLight.position.normalize();
-
-  if(options.enableShadows) {
-      this.directionalLight.castShadow = true;
-      this.directionalLight.shadow.mapWidth = 512;
-      this.directionalLight.shadow.mapHeight = 512;
-      this.directionalLight.shadow.camera.near = 1;
-      this.directionalLight.shadow.camera.far = 50;
-      this.directionalLight.shadow.camera.left = -500;
-      this.directionalLight.shadow.camera.right = 500;
-      this.directionalLight.shadow.camera.top = 500;
-      this.directionalLight.shadow.camera.bottom = -500;
-      this.directionalLight.shadow.camera.visible = true;
-  }
-  this.scene.add(this.directionalLight);
-  
-  this.spotLight = new THREE.SpotLight( 0xffffbb, 0.9 );
-  this.spotLight.position.set( 0, 0, 6 );
-  this.spotLight.target.position.set( -1, 1, 0 );
-  this.spotLight.angle = 160;
-  if(options.enableShadows) {
-      this.spotLight.castShadow = true;
-      this.spotLight.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera(40.0, width / height, 1, 10) );
-      this.spotLight.shadow.mapWidth = 4096;
-      this.spotLight.shadow.mapHeight = 4096;
-  }
-  this.scene.add( this.spotLight );
-  this.scene.add( this.spotLight.target );
-//   this.scene.add( new THREE.SpotLightHelper( this.spotLight ) );
-
-  // propagates mouse events to three.js objects
-  this.selectableObjects = new THREE.Object3D();
-  this.scene.add(this.selectableObjects);
-  var mouseHandler = new ROS3D.MouseHandler({
-    renderer : this.renderer,
-    camera : this.camera,
-    rootObject : this.scene,
-    fallbackTarget : this.cameraControls
-  });
-
-  // highlights the receiver of mouse events
-  this.highlighter = new ROS3D.Highlighter({
-    mouseHandler : mouseHandler
-  });
-  this.lastSelected = undefined;
-
-  this.stopped = true;
-  this.animationRequestId = undefined;
-  
-  this.backgroundScene = new THREE.Scene();
-  this.backgroundCamera = new THREE.Camera();
-  this.backgroundScene.add(this.backgroundCamera);
+  // create scene for HUD elements
+  this.createHUDScene(options);
+  // create background elements (e.g., sky cube)
+  this.createBGScene(options);
 
   // add the renderer to the page
-  div.appendChild(this.renderer.domElement);
-  
-  // setup rendering pipeline
-  this.composer = new THREE.EffectComposer( this.renderer );
-  this.setSimplePipeline(width, height);
-//   this.setComicPipeline(width, height);
-  
-  div.addEventListener('dblclick', function(ev){
-      if(that.lastEvent === ev)
-          return;
+  options.div.appendChild(this.renderer.domElement);
+  options.div.addEventListener('dblclick', function(ev){
+      if(that.lastEvent === ev) return;
       that.client.unselectMarker();
       that.lastEvent = ev;
   }, false);
+  
+  // setup rendering pipeline
+  this.setSimplePipeline(options.width, options.height);
+//   this.setComicPipeline(width, height);
 
   // begin the render loop
   this.start();
 };
 
+EASE.Viewer.prototype.createRenderer = function(options){
+  var background = options.background || '#111111';
+  var renderer = new THREE.WebGLRenderer({ antialias: options.antialias });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(options.width, options.height);
+  renderer.autoClear = false;
+  renderer.setClearColor(parseInt(background.replace('#', '0x'), 16));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  return renderer;
+};
+
+EASE.Viewer.prototype.createScene = function(options){
+  var ambient = options.ambient || '#555555';
+  var cameraPosition = options.camera.position || {x : 3, y : 3, z : 3};
+  var cameraZoomSpeed = options.camera.zoomSpeed || 0.5;
+  var near = options.camera.near || 0.05;
+  var far = options.camera.far || 100;
+  
+  // create the scene
+  this.scene = new THREE.Scene();
+  this.scene.add(new THREE.AmbientLight(parseInt(ambient.replace('#', '0x'), 16)));
+  // sub graph with selectable objects
+  this.selectableObjects = new THREE.Object3D();
+  this.scene.add(this.selectableObjects);
+  // create the camera
+  this.camera = new THREE.PerspectiveCamera(81.4, options.width / options.height, near, far);
+  this.camera.position.x = cameraPosition.x;
+  this.camera.position.y = cameraPosition.y;
+  this.camera.position.z = cameraPosition.z;
+  this.cameraControls = new ROS3D.OrbitControls({
+    scene : this.scene,
+    camera : this.camera
+  });
+  this.cameraControls.userZoomSpeed = cameraZoomSpeed;
+  this.mouseHandler = new ROS3D.MouseHandler({
+    renderer : this.renderer,
+    camera : this.camera,
+    rootObject : this.scene,
+    fallbackTarget : this.cameraControls
+  });
+  // highlights the receiver of mouse events
+  this.highlighter = new ROS3D.Highlighter({mouseHandler : this.mouseHandler});
+};
+
+EASE.Viewer.prototype.createHUDScene = function(options){
+  // create the HUD scene for GUI elements 
+  this.sceneOrtho = new THREE.Scene();
+  // create the global camera with orthogonal projection
+  this.cameraOrtho = new THREE.OrthographicCamera(
+    -options.width/2,   options.width/2,
+     options.height/2, -options.height/2,
+    1, 10
+  );
+  this.cameraOrtho.position.z = 10;
+};
+
+EASE.Viewer.prototype.createBGScene = function(){
+  this.backgroundScene = new THREE.Scene();
+  this.backgroundCamera = new THREE.Camera();
+  this.backgroundScene.add(this.backgroundCamera); // TODO is this required?
+};
+
+EASE.Viewer.prototype.createSunLight = function(options){
+  var intensity = options.sun.intensity || 0.66;
+  var color = options.sun.color || '#eeeeee';
+  var pos = options.sun.pos || [-1, 0.5, 3.0];
+  
+  var sun = new THREE.DirectionalLight(
+      parseInt(color.replace('#', '0x'), 16),
+      intensity);
+  sun.position.set(pos[0],pos[1],pos[2]);
+  if(options.sun.shadow) {
+      sun.castShadow = true;
+      // TODO: make this configurable
+      sun.shadow.mapSize.width = 1024;
+      sun.shadow.mapSize.height = 1024;
+      sun.shadow.camera.near = 1;
+      sun.shadow.camera.far = 4;
+      sun.shadow.camera.left = -3;
+      sun.shadow.camera.right = 3;
+      sun.shadow.camera.top = 3;
+      sun.shadow.camera.bottom = -3;
+  }
+  return sun;
+};
+
+EASE.Viewer.prototype.createSpotLight = function(options){
+  var color = options.spot.color || '#ffffbb';
+  var intensity = options.spot.intensity || 0.9;
+  var pos = options.spot.pos || [0, 0, 6];
+  var target = options.spot.target || [-1, 1, 0];
+  
+  var spot = new THREE.SpotLight(
+      parseInt(color.replace('#', '0x'), 16),
+      intensity);
+  spot.position.set(pos[0],pos[1],pos[2]);
+  spot.target.position.set(target[0],target[1],target[2]);
+  spot.angle = options.spot.angle || 160;
+  if(options.spot.shadow) {
+      spot.castShadow = true;
+      spot.shadow.camera.near = 1;
+      spot.shadow.camera.far = 10;
+      spot.shadow.mapSize.width = 1024;
+      spot.shadow.mapSize.height = 1024;
+  }
+  return spot;
+};
+
 EASE.Viewer.prototype.setSimplePipeline = function(width, height){
   this.composer.passes = [];
+//   this.composer.addPass(new THREE.RenderPass(this.backgroundScene, this.backgroundCamera));
   this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
   this.composer.addPass(new EASE.HighlightingPass(this.scene, this.camera, this.highlighter));
   this.addFXAAPass(width, height, true);
+//   this.composer.addPass(new THREE.RenderPass(this.sceneOrtho, this.cameraOrtho));
 };
 
 EASE.Viewer.prototype.setComicPipeline = function(width, height){
@@ -239,35 +262,20 @@ EASE.Viewer.prototype.start = function(){
  */
 EASE.Viewer.prototype.draw = function(){
   if(this.stopped){
-    // Do nothing if stopped
-    return;
+    return; // Do nothing if stopped
   }
-
   // update the controls
   this.cameraControls.update();
-
-  // notify listener about the draw call
-//   FIXME
-//   this.emit('render', {
-//       'camera': this.camera,
-//       'scene': this.scene
-//   });
-  
-//   this.renderer.setClearColor(this.background);
-//   this.renderer.clearColor();
   this.renderer.clear();
-  
-  
   if(this.useShader) {
     this.composer.render();
   }
   else {
-//   this.renderer.render(this.backgroundScene, this.backgroundCamera);
+    this.renderer.render(this.backgroundScene, this.backgroundCamera);
     this.renderer.render(this.scene, this.camera);
     this.highlighter.renderHighlights(this.scene, this.renderer, this.camera);
-//   this.renderer.render(this.sceneOrtho, this.cameraOrtho);
+    this.renderer.render(this.sceneOrtho, this.cameraOrtho);
   }
-  
   // draw the frame
   this.animationRequestId = requestAnimationFrame(this.draw.bind(this));
 };
@@ -333,15 +341,24 @@ EASE.Viewer.prototype.addMarker = function(marker,node) {
   }
   else if(marker.isSelectable) {
     this.selectableObjects.add(node);
-//     this.outlineObjects.push(node);
     this.addEventListener(marker);
   }
   else {
     this.scene.add(node);
-//     this.outlineObjects.push(node);
   }
   node.visible = true;
   this.composer.addMarker(marker,node);
+  
+  // HACK Collada loader might not be finished loading.
+  //      Overwrite `add` function to get notified :/
+  marker.children[0].add_old = marker.children[0].add;
+  marker.children[0].add = function(child) {
+    child.traverse(function(x) {
+      x.castShadow = true;
+      x.receiveShadow = true;
+    });
+    this.add_old(child);
+  };
 };
 
 EASE.Viewer.prototype.removeMarker = function(marker, node) {
@@ -378,6 +395,14 @@ EASE.Viewer.prototype.addEventListener = function(marker) {
         return;
       that.client.showMarkerMenu(marker);
       that.lastEvent = ev;
+    });
+    child.addEventListener('mousewheel', function(ev){
+        ev.currentTarget = that.cameraControls;
+        ev.currentTarget.dispatchEvent(ev);
+    });
+    child.addEventListener('DOMMouseScroll', function(ev){
+        ev.currentTarget = that.cameraControls;
+        ev.currentTarget.dispatchEvent(ev);
     });
   };
   marker.traverse(addEventListenerRecursive);

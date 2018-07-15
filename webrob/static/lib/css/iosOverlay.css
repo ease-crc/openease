@@ -1,4 +1,4 @@
-.ui-ios-overlay {
+.ios-overlay {
   z-index: 99999;
   position: fixed;
     top: 0;
@@ -16,7 +16,7 @@
 /*     -moz-border-radius: 20px; */
 /*     border-radius: 20px; */
 }
-.ui-ios-overlay .title {
+.ios-overlay .title {
   color: #FFF;
   font-weight: bold;
   text-align: center;
@@ -28,11 +28,11 @@
   left: 0;
   width: 100%;
 }
-.ui-ios-overlay img {
+.ios-overlay img {
   display: block;
   margin: 20% auto 0 auto;
 }
-.ui-ios-overlay .spinner {
+.ios-overlay .spinner {
   left: 50% !important;
   top: 40% !important;
 }
