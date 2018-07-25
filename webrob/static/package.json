@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "uglifyjs index.js -c \"evaluate=false\" -m --source-map openease-min.map -o openease-min.js"
+    "browserify": "browserify -g browserify-css index.js > openease.js",
+    "uglify": "uglifyjs openease.js -m -o openease-min.js",
+    "build": "npm run browserify && npm run uglify"
   },
   "repository": {
     "type": "git",
@@ -18,6 +20,13 @@
   },
   "homepage": "https://github.com/knowrob/docker#readme",
   "dependencies": {
+
+    "uglify-js": "# Build dependencies",
+    "uglify-js": "latest",
+    "browserify": "latest",
+    "browserify-css": "latest",
+
+    "jquery": "# OpenEASE dependencies",
     "jquery": "2.2.4",
     "jquery-ui-bundle": "1.12.1-migrate",
     "layout": "git://github.com/benmaurer/layout.git#master",
