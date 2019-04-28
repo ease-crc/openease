@@ -27,14 +27,14 @@ def track_logout(sender, user, **extra):
 
 @app.route('/')
 def show_user_data():
-    #if not current_user.is_authenticated:
-    #    return redirect(url_for('user.login'))
+    if not current_user.is_authenticated:
+        return redirect(url_for('user.login'))
     if not 'user_container_name' in session:
-        #return redirect(url_for('user.logout'))
-        # FIXME: delete knowrob container when user leaves the site
-        random_name = ''.join(choice(lowercase) for i in range(10))
-        session['user_container_name'] = random_name
-        session['username'] = random_name
+        ## FIXME: delete knowrob container when user leaves the site
+        #random_name = ''.join(choice(lowercase) for i in range(10))
+        #session['user_container_name'] = random_name
+        #session['username'] = random_name
+        return redirect(url_for('user.logout'))
     
     error=""
     # determine hostname/IP we are currently using
@@ -53,14 +53,6 @@ def show_user_data():
     # TODO: show_user_data never shown, could be re-enabled as iframe
     return render_template('main.html', **locals())
     #return render_template('show_user_data.html', **locals())
-
-
-# Special route for EASE reviewers
-@app.route('/ease-review')
-def ease_review():
-    session['exp-category'] = 'Pick-and-Place'
-    session['exp-name'] = 'pr2-general-pick-and-place_0'
-    return redirect('/')
 
 
 @app.route('/remote')

@@ -36,30 +36,6 @@ def clear_secretcache():
         del session['secret_key']
 
 
-def get_application_image_names():
-    try:
-        return client.get_application_image_names()
-    except JsonRpcError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
-    except URLError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
-    return None
-
-
-def get_webapp_image_names():
-    try:
-        return client.get_webapp_image_names()
-    except JsonRpcError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
-    except URLError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
-    return None
-
-
 def start_user_container(application_image, user_container_name, ros_distribution):
     """
     Starts a user container based on the given image. If the container already exists, it will stop and remove the
@@ -83,19 +59,7 @@ def start_user_container(application_image, user_container_name, ros_distributio
     except URLError, e:
         flash("Error: Connection to your OpenEASE instance failed.")
         app.logger.error("ConnectionError during connect: " + str(e) + "\n")
-
-
-def start_webapp_container(webapp_image):
-    """
-    Starts a new web container based on the given image. If it already exists, no action will be taken.
-    :param webapp_image: Image the container should be based on
-    """
-    try:
-        client.notify("start_webapp_container", webapp_image)
-    except JsonRpcError, e:
-        flash("Error: Connection to your OpenEASE instance failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
-    except URLError, e:
+    except IOError, e:
         flash("Error: Connection to your OpenEASE instance failed.")
         app.logger.error("ConnectionError during connect: " + str(e) + "\n")
 
@@ -110,10 +74,13 @@ def stop_container(user_container_name):
         clear_secretcache()
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during stop: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during stop: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during stop: " + str(e) + "\n")
 
 
 def container_started(user_container_name, base_image=None):
@@ -127,10 +94,13 @@ def container_started(user_container_name, base_image=None):
         return client.container_started(user_container_name, base_image)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during started: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during started: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during started: " + str(e) + "\n")
     return None
 
 
@@ -143,10 +113,13 @@ def get_container_ip(user_container_name):
         return client.get_container_ip(user_container_name)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during get_container_ip: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during get_container_ip: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during get_container_ip: " + str(e) + "\n")
     return None
 
 
@@ -159,10 +132,13 @@ def get_container_log(user_container_name):
         return client.get_container_log(user_container_name)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during get_container_log: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during get_container_log: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during get_container_log: " + str(e) + "\n")
 
 
 def get_container_env(user_container_name, key):
@@ -170,10 +146,13 @@ def get_container_env(user_container_name, key):
         return client.get_container_env(user_container_name, key)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during get_container_env: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during get_container_env: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during get_container_env: " + str(e) + "\n")
 
 
 def refresh(user_container_name):
@@ -186,10 +165,13 @@ def refresh(user_container_name):
         client.notify("refresh", user_container_name)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during refresh: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during refresh: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during refresh: " + str(e) + "\n")
 
 
 def file_exists(user_container_name, file):
@@ -203,10 +185,13 @@ def file_exists(user_container_name, file):
         return client.files_exists(user_container_name, file)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during file_exists: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during file_exists: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during file_exists: " + str(e) + "\n")
 
 
 def file_rm(user_container_name, file, recursive=False):
@@ -221,10 +206,13 @@ def file_rm(user_container_name, file, recursive=False):
         client.notify("files_rm", user_container_name, file, recursive)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during file_rm: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during file_rm: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during file_rm: " + str(e) + "\n")
 
 
 def file_ls(user_container_name, dir, recursive=False):
@@ -242,10 +230,13 @@ def file_ls(user_container_name, dir, recursive=False):
         return client.files_ls(user_container_name, dir, recursive)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during file_ls: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during file_ls: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during file_ls: " + str(e) + "\n")
 
 
 def file_read(user_container_name, file):
@@ -259,10 +250,13 @@ def file_read(user_container_name, file):
         return base64.b64decode(client.files_fromcontainer(user_container_name, file))
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during file_read: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during file_read: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during file_read: " + str(e) + "\n")
 
 
 def file_write(user_container_name, data, file):
@@ -277,10 +271,13 @@ def file_write(user_container_name, data, file):
         client.notify("files_tocontainer", user_container_name, base64.b64encode(data), file)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
+        app.logger.error("ConnectionError during file_write: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
         flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during connect: " + str(e) + "\n")
+        app.logger.error("ConnectionError during file_write: " + str(e) + "\n")
+    except IOError, e:
+        flash("Error: Connection to your application failed.")
+        app.logger.error("ConnectionError during file_write: " + str(e) + "\n")
 
 
 class LFTransfer(object):

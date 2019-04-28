@@ -8,6 +8,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q subversion git
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q python-tornado
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q nodejs nodejs-legacy npm
+RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q postgresql
 
 RUN easy_install pymongo
 RUN pip install psycopg2 python-jsonrpc
@@ -43,6 +44,9 @@ RUN cd /tmp/npm && npm install && npm run build && chown -R ros:ros /tmp/npm
 ADD . /opt/webapp/
 RUN chown -R ros:ros /opt/webapp/
 
+RUN mkdir /home/ros/mesh_data
+RUN chown -R ros:ros /home/ros/mesh_data
+
 USER ros
 
 # install JS libraries using npm
@@ -56,4 +60,3 @@ VOLUME /opt/webapp/
 
 EXPOSE 5000
 
-CMD ["python", "runserver.py"]

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # This file starts the WSGI web application.
 # - Heroku starts gunicorn, which loads Procfile, which starts runserver.py
 # - Developers can run it from the command line: python runserver.py
@@ -15,9 +17,9 @@ init_app(app, db)
 
 if __name__ == '__main__':
     update_meshes()
-    if 'DEBUG' in app.config and app.config['DEBUG']:
-        app.run(host='0.0.0.0')
-    else:
-        http_server = HTTPServer(WSGIContainer(app))
-        http_server.listen(5000)
-        IOLoop.instance().start()
+    #if 'DEBUG' in app.config and app.config['DEBUG']:
+    #    app.run(host='0.0.0.0', debug=True, threaded=False)
+    #else:
+    http_server = HTTPServer(WSGIContainer(app))
+    http_server.listen(5000)
+    IOLoop.instance().start()
