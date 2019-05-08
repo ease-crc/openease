@@ -1,0 +1,29 @@
+# IntelliJ
+build/
+.idea
+.gradle
+local.properties
+*.iml
+
+# Compiled python modules.
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+# Ignore setup.cfg and build in case of local install
+setup.cfg
+build
+
+# node and javascript stuff
+node_modules/
+npm-debug.log
+
+# ignore sass-cache
+.sass-cache
