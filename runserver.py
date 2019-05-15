@@ -30,7 +30,6 @@ def _run_server():
     print 'Web server is running. Listening on {}'.format(5000)
     IOLoop.instance().start()
 
-
 init_app(app, db)
 
 # Start a development web server if executed from the command line
