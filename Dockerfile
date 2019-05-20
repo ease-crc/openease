@@ -1,6 +1,7 @@
 FROM ubuntu:16.04
 MAINTAINER Daniel Beßler, danielb@cs.uni-bremen.de
 
+# TODO: UPDATE TO USE PIPENV & REMOVE UNNECESSARY COMMANDS
 # install python and flask
 RUN apt-get -qq update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q curl python-all python-pip python-dev wget gcc imagemagick mongodb libffi-dev libpq-dev
