@@ -23,6 +23,8 @@ Flask-User = "<0.7"
 Flask-Babel = "*"
 Flask-Mail = "*"
 SQLAlchemy = "*"
+singledispatch = "*"
+backports-abc = "*"
 
 [requires]
 python_version = "2.7"
