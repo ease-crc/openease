@@ -25,6 +25,7 @@ Flask-Mail = "*"
 SQLAlchemy = "*"
 singledispatch = "*"
 backports-abc = "*"
+ecdsa = "*"
 
 [requires]
 python_version = "2.7"
