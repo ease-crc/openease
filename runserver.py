@@ -13,16 +13,17 @@ from tornado.ioloop import IOLoop
 
 
 def _config_is_debug():
-    # TODO: check if this is better than the above, currently Debug doesn't work when changing SCSS
-    # if 'DEBUG' in app.config and app.config['DEBUG']:
-    #    app.run(host='0.0.0.0', debug=True, threaded=False)
+    # if environment variable 'EASE_DEBUG' is set to true, then
+    # 'DEBUG' in app.config will be set to true by init_app.py
     return 'DEBUG' in app.config and app.config['DEBUG']
 
 
 def _run_debug_server():
-    print 'Run web server in DEBUG mode'
-    app.run(host='0.0.0.0', debug=True, threaded=False)
-    # app.run(debug=True)
+    # print 'Run web server in DEBUG mode'
+    # app.run(host='0.0.0.0', debug=True, threaded=False)
+    print 'Debug server currently does not work with Docker'
+    print 'Starting normal web server...'
+    _run_server()
 
 
 def _run_server():
@@ -36,7 +37,6 @@ init_app(app, db)
 # Start a development web server if executed from the command line
 if __name__ == '__main__':
     update_meshes()
-    # app.config['DEBUG'] = True    # comment out if want to run in debug mode
     if _config_is_debug():
         _run_debug_server()
     else:
