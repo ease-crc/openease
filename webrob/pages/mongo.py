@@ -6,7 +6,7 @@ import os
 from subprocess import call
 
 from webrob.pages.experiments import get_experiment_list, get_experiment_path
-from webrob.utility import admin_required
+from webrob.utility.utility import admin_required
 from webrob.app_and_db import app
 
 from pymongo import MongoClient

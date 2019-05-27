@@ -13,8 +13,8 @@ from webrob.app_and_db import app
 from webrob.docker import docker_interface
 from webrob.docker.docker_interface import LFTransfer
 from webrob.docker.docker_application import ensure_application_started
-from webrob.utility import admin_required
-from webrob.utility import copy_template_file
+from webrob.utility.utility import admin_required
+from webrob.utility.template_file_copyer import copy_template_file_and_replace_keywords
 from webrob.models.teaching import CourseExercise
 
 __author__ = 'danielb@cs.uni-bremen.de'
@@ -64,7 +64,7 @@ def pkg_new():
                     abs_p = os.path.join(root, f)
                     rel_p = os.path.relpath(abs_p, templatePath)
                     user_p = os.path.join(pkgPath, rel_p)
-                    copy_template_file(abs_p, user_p, {
+                    copy_template_file_and_replace_keywords(abs_p, user_p, {
                         "pkgName": packageName,
                         "userName": session['user_container_name']
                     })
