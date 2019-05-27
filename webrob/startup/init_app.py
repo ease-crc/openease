@@ -14,7 +14,7 @@ from flask_mail import Mail
 from flask_user import UserManager, SQLAlchemyAdapter
 from flask.ext.babel import Babel
 
-from webrob.utility import random_string
+from webrob.utility.random_string_builder import random_string
 from webrob.startup.init_db import *
 from webrob.startup.init_webapp import *
 from webrob.models.users import Role, User
