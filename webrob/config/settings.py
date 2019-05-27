@@ -1,4 +1,4 @@
-import webrob.utility.environment_variable_getter as evg
+import webrob.utility.system_environment_variable_getter as evg
 
 DEV_SECRET_KEY = '\\\xf8\x12\xdc\xf5\xb2W\xd4Lh\xf5\x1a\xbf"\x05@Bg\xdf\xeb>E\xd8<'
 
