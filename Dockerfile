@@ -12,12 +12,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q postgresql
 
 WORKDIR /opt/webapp
 
-# install pipenv and python-dependencies including flask
-# FIXME: For some reason pipenv install and --system don't work
-# TODO: if possible make use of pipenv and the following two lines
-# RUN pip install pipenv
-# RUN pipenv install
-# RUN pipenv install --system
+# install python-dependencies including flask
+# TODO: if possible make use of pipenv
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # flag used in nginx configuration
