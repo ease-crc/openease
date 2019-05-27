@@ -8,7 +8,7 @@ import os
 import json
 
 from webrob.app_and_db import app
-from webrob.utility import admin_required
+from webrob.utility.utility import admin_required
 from webrob.models.db import *
 from webrob.models.users import *
 

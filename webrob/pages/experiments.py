@@ -16,7 +16,7 @@ import StringIO
 from ftplib import FTP
 
 from webrob.app_and_db import app
-from webrob.utility import admin_required
+from webrob.utility.utility import admin_required
 from webrob.models.experiments import Project, Tag
 from webrob.models.db import *
 
