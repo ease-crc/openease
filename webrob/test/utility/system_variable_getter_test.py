@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from webrob.utility.environment_variable_getter import get_required_variable, get_variable_with_default_none, \
+from webrob.utility.system_environment_variable_getter import get_required_variable, get_variable_with_default_none, \
     get_variable_with_default
 
 ENVIRONMENT_VARIABLE_NAME = 'ENV1'
