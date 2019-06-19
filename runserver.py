@@ -21,9 +21,6 @@ def _config_is_debug():
 def _run_debug_server():
     print 'Run web server in DEBUG mode'
     app.run(host='0.0.0.0', debug=True, threaded=False)
-    # print 'Debug server currently does not work with Docker'
-    # print 'Starting normal web server...'
-    # _run_server()
 
 
 def _run_server():
