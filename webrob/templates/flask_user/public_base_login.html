@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block login %}
+
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='SCSS/login.css') }}"/>
+
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        {% block content_inner %}{% endblock %}
+    </div>
+{% endblock %}
