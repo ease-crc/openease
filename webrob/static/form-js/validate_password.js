@@ -6,22 +6,16 @@ var length = document.getElementById("length");
 var check = document.getElementById("retype_password");
 var submitButton = document.getElementById("register-button");
 
-// mySubmit.onclick = function() {
-//   document.getElementById("message").style.display = "block";
-// }
 
 // When the user clicks on the password field, show the message box
 myInput.onfocus = function () {
     document.getElementById("message").style.display = "block";
-    // document.getElementById("invalid-msg").style.display = "block";
     document.getElementById("psw-check").style.display = "none";
 }
 
 // When the user clicks outside of the password field, hide the message box
 myInput.onblur = function () {
     document.getElementById("message").style.display = "none";
-    // document.getElementById("psw-check").style.display = "block";
-    // document.getElementById("invalid-msg").style.display = "none";
 
 }
 
@@ -74,8 +68,6 @@ myInput.onkeyup = function () {
         document.getElementById('invalid-msg').innerHTML = 'matching';
     } else {
         document.getElementById('invalid-msg').style.color = 'red';
-        // document.getElementById('retype_password').style.color = 'red';
-         retype_password.classList.add("confirmpsw");
         document.getElementById('invalid-msg').innerHTML = 'not matching';
     }
 
@@ -92,20 +84,24 @@ check.onkeyup = function () {
         document.getElementById('invalid-msg').innerHTML = 'matching';
     } else {
         document.getElementById('invalid-msg').style.color = 'red';
-         retype_password.classList.add("confirmpsw");
+        // retype_password.classList.add("confirmpsw");
         document.getElementById('invalid-msg').innerHTML = 'not matching';
     }
 }
 
 submitButton.onclick = function () {
+
     var pword = document.getElementById("psw").value;
     var cpword = document.getElementById("retype_password").value;
     if ((pword == cpword) && (pword != "") && (cpword != "")) {
+
         document.getElementById('invalid-msg').style.color = 'green';
         document.getElementById('invalid-msg').innerHTML = 'matching';
+
     } else {
+
         document.getElementById('invalid-msg').style.color = 'red';
-         retype_password.classList.add("confirmpsw");
         document.getElementById('invalid-msg').innerHTML = 'not matching';
+
     }
 }
