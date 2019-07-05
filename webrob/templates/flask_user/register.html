@@ -4,21 +4,25 @@
     {% from "flask_user/_macros.html" import render_field, render_submit_field %}
 
     <div class="page-background">
+        {#    <div id="page-body">#}
+        {#        <div class="content-box" id="register-box">#}
         <div class="register-content">
             <div id="register-div">
-
                 <div id="ease-logo">
                     <a class="ease-brand" href="http://www.open-ease.org"><img
-                            src="../../static/logos/oe-logo-small.svg">openEASE</a>
+                            src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">openEASE</a>
+
                 </div>
 
                 <div class="card card-register">
+
                     <div class="card-header register-text">{% trans %}Create an account{% endtrans %}</div>
 
                     <div class="card-body">
 
-                        <form action="" method="POST" novalidate formnovalidate class="form" role="form">
+                        <form action="" method="POST" novalidate class="needs-validation form" role="form">
                             {{ form.hidden_tag() }}
+
 
                             {# Username or Email #}
                             {% set field = form.username %}
@@ -29,6 +33,15 @@
 
                                 <div class="invalid-feedback">Please type your Username.</div>
                             </div>
+
+
+                            {#                            {% for error in form.username.errors %}#}
+                            {#                                <p class="alert alert-danger alert-dismissible error">#}
+                            {#                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>#}
+                            {# <strong>Error!</strong> #}
+                            {#                                    {{ error }}#}
+                            {#                                </p>#}
+                            {#                            {% endfor %}#}
 
                             {% if user_manager.enable_email and user_manager.enable_username %}
                                 {% set field = form.email %}
@@ -73,18 +86,24 @@
                             </div>
 
 
+                            {#                            {% for error in form.password.errors %}#}
+                            {#                                <p class="alert alert-danger alert-dismissible error">#}
+                            {#                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>#}
+                            {#<strong>Error!</strong> #}
+                            {#                            {{ error }}#}
+                            {#                            </p>#}
+                            {#                            {% endfor %}#}
+
                             {% if user_manager.enable_retype_password %}
                                 <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                    <input placeholder="Retype Password" class="form-control" id="retype_password"
-                                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
-                                           name="retype_password" type="password" value=""/>
+                                    <input placeholder="Retype Password" class="form-control" id="retype_password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                                           name="retype_password" type="password" value="" required/>
                                     <div id="invalid-msg">
-                                        {#                                        Password does not match.#}
+{#                                        Password does not match.#}
                                     </div>
                                 </div>
 
                             {% endif %}
-
 
                             <div class="form-group">
                                 <div class="form-check custom-control custom-checkbox "><input type="checkbox"
@@ -102,25 +121,21 @@
                                 </div>
                             </div>
 
+
                             <button id="register-button" class="btn btn-lg btn-primary btn-block" type="submit">Register
                             </button>
                         </form>
+                        {#                        <div id="message">#}
+                        {#                            <p>Password must contain the following:</p>#}
+                        {#                            <p id="letter" class="invalid">A <b>lowercase</b> letter</p>#}
+                        {#                            <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>#}
+                        {#                            <p id="number" class="invalid">A <b>number</b></p>#}
+                        {#                            <p id="length" class="invalid">Minimum <b>8 characters</b></p>#}
+                        {#                        </div>#}
 
                     </div>
 
-
                 </div>
-
-
-                {#                {% for error in form.username.errors %}#}
-                {#                    <p class="error"><strong>Error:</strong> {{ error }}</p>#}
-                {#                {% endfor %}#}
-                {#                {% for error in form.email.errors %}#}
-                {#                    <p class="error"><strong>Error:</strong> {{ error }}</p>#}
-                {#                {% endfor %}#}
-                {#                {% for error in form.password.errors %}#}
-                {#                    <p class="error"><strong>Error:</strong> {{ error }}</p>#}
-                {#                {% endfor %}#}
 
                 <div>
                     <div class="field-hint" id="already-registered-link">
@@ -132,11 +147,13 @@
                     </div>
                 </div>
 
+                {#                error was here#}
+
+
             </div>
 
         </div>
     </div>
-
     <footer id="footer-style">
         {#        <div class="container">#}
 
@@ -149,10 +166,10 @@
 
         </div>
         {#        </div>#}
+
+
     </footer>
-
-    <script src="../../static/css/form-js/copyright_year.js"></script>
-    <script src="../../static/css/form-js/validate_password.js"></script>
-    <script src="../../static/css/form-js/form_script.js"></script>
-
+    <script src="../../static/form-js/copyright_year.js"></script>
+    <script src="../../static/form-js/validate_password.js"></script>
+    <script src="../../static/form-js/form_script.js"></script>
 {% endblock %}
