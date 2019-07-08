@@ -27,11 +27,15 @@
                             {# Username or Email #}
                             {% set field = form.username %}
                             <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                <input placeholder="Name" class="form-control" id="username"
+                                <input placeholder="Username: Eva_15" class="form-control" id="username"
                                        name="username" type="text"
+                                       title="Username must be atleast four letters or alphanumeric letters e.g John or Eva_15"
+                                       pattern="^[a-zA-Z][a-zA-Z0-9_]{3,}$"
                                        value="" required autofocus/>
 
-                                <div class="invalid-feedback">Please type your Username.</div>
+                                <div class="invalid-feedback">Username must be atleast four letters or alphanumeric
+                                    letters e.g John or Eva_15
+                                </div>
                             </div>
 
 
@@ -48,7 +52,7 @@
                                 <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
                                     <input placeholder="Email" class="form-control" id="email" name="email" type="email"
                                            value=""
-                                           required/>
+                                           required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title=""/>
                                     <div class="invalid-feedback">Email is Invalid.</div>
                                 </div>
 
@@ -96,11 +100,13 @@
 
                             {% if user_manager.enable_retype_password %}
                                 <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                    <input placeholder="Retype Password" class="form-control" id="retype_password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                                    <input placeholder="Retype Password" class="form-control" id="retype_password"
+                                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
                                            name="retype_password" type="password" value="" required/>
                                     <div id="invalid-msg">
-{#                                        Password does not match.#}
+                                        {#                                        Password does not match.#}
                                     </div>
+
                                 </div>
 
                             {% endif %}
@@ -169,7 +175,7 @@
 
 
     </footer>
-    <script src="../../static/form-js/copyright_year.js"></script>
-    <script src="../../static/form-js/validate_password.js"></script>
-    <script src="../../static/form-js/form_script.js"></script>
+    <script src="../../static/lib/form-js/copyright_year.js"></script>
+    <script src="../../static/lib/form-js/validate_password.js"></script>
+    <script src="../../static/lib/form-js/form_script.js"></script>
 {% endblock %}
