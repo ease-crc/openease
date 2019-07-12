@@ -5,7 +5,6 @@
 # - Developers can run it from the command line: python runserver.py
 
 
-from tornado import autoreload
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
