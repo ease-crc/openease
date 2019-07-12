@@ -70,9 +70,7 @@
                             {% set field = form.password %}
                             <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
                                 <input placeholder="Password" class="form-control" id="psw" name="password"
-                                       type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
-                                       title="Password must be atleast 6 characters long. Must contain a number, an Upper case letter, and a Lower case letter"
-                                       value="" required/>
+                                       type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" value="" required/>
                                 {#                                <div class="invalid-feedback">#}
 
                                 <div id="message">
