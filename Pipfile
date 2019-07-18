@@ -26,6 +26,8 @@ SQLAlchemy = "*"
 singledispatch = "*"
 backports-abc = "*"
 ecdsa = "*"
+coverage = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "2.7"

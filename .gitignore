@@ -27,3 +27,7 @@ npm-debug.log
 
 # ignore sass-cache
 .sass-cache
+
+# ignore coverage file, folder, and .html
+.coverage
+coverage/
