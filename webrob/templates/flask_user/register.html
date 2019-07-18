@@ -4,8 +4,7 @@
     {% from "flask_user/_macros.html" import render_field, render_submit_field %}
 
     <div class="page-background">
-        {#    <div id="page-body">#}
-        {#        <div class="content-box" id="register-box">#}
+
         <div class="register-content">
             <div id="register-div">
                 <div id="ease-logo">
@@ -39,14 +38,6 @@
                             </div>
 
 
-                            {#                            {% for error in form.username.errors %}#}
-                            {#                                <p class="alert alert-danger alert-dismissible error">#}
-                            {#                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>#}
-                            {# <strong>Error!</strong> #}
-                            {#                                    {{ error }}#}
-                            {#                                </p>#}
-                            {#                            {% endfor %}#}
-
                             {% if user_manager.enable_email and user_manager.enable_username %}
                                 {% set field = form.email %}
                                 <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
@@ -56,14 +47,6 @@
                                     <div class="invalid-feedback">Email is Invalid.</div>
                                 </div>
 
-                                {#                                {% for error in form.email.errors %}#}
-                                {#                                    <p class="alert alert-danger alert-dismissible error">#}
-                                {#                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>#}
-                                {# <strong>Error!</strong> #}
-                                {#                                {{ error }}#}
-                                {#                                </p>#}
-                                {#                                {% endfor %}#}
-
                             {% endif %}
 
                             {# Password field #}
@@ -71,7 +54,6 @@
                             <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
                                 <input placeholder="Password" class="form-control" id="psw" name="password"
                                        type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" value="" required/>
-                                {#                                <div class="invalid-feedback">#}
 
                                 <div id="message">
                                     <p>Password must contain the following:</p>
@@ -88,21 +70,13 @@
                             </div>
 
 
-                            {#                            {% for error in form.password.errors %}#}
-                            {#                                <p class="alert alert-danger alert-dismissible error">#}
-                            {#                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>#}
-                            {#<strong>Error!</strong> #}
-                            {#                            {{ error }}#}
-                            {#                            </p>#}
-                            {#                            {% endfor %}#}
-
                             {% if user_manager.enable_retype_password %}
                                 <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
                                     <input placeholder="Retype Password" class="form-control" id="retype_password"
                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
                                            name="retype_password" type="password" value="" required/>
-                                    <div id="invalid-msg">
-                                        {#                                        Password does not match.#}
+                                    <div id="feedback-msg">
+
                                     </div>
 
                                 </div>
@@ -129,13 +103,6 @@
                             <button id="register-button" class="btn btn-lg btn-primary btn-block" type="submit">Register
                             </button>
                         </form>
-                        {#                        <div id="message">#}
-                        {#                            <p>Password must contain the following:</p>#}
-                        {#                            <p id="letter" class="invalid">A <b>lowercase</b> letter</p>#}
-                        {#                            <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>#}
-                        {#                            <p id="number" class="invalid">A <b>number</b></p>#}
-                        {#                            <p id="length" class="invalid">Minimum <b>8 characters</b></p>#}
-                        {#                        </div>#}
 
                     </div>
 
@@ -151,26 +118,21 @@
                     </div>
                 </div>
 
-                {#                error was here#}
-
 
             </div>
 
         </div>
     </div>
     <footer id="footer-style">
-        {#        <div class="container">#}
 
         <div class="legal">
 
             <p id="copyright">
-                {#                <span>&copy;Copyright openEASE</span>#}
+
                 &copy;Copyright openEASE <span id="myYear"> </span>
             </p>
 
         </div>
-        {#        </div>#}
-
 
     </footer>
     <script src="../../static/lib/form-js/copyright_year.js"></script>
