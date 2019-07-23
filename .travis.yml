@@ -1,15 +1,14 @@
 language: python
-
 python:
   - "2.7"
-# command to install dependencies
 cache: pip
+
 install:
   - 'pip install pipenv'
   - 'pipenv install'
 
-# command to run tests
 script:
+  # run tests
   # consider removing --disable-pytest-warnings at some point
   - py.test --cov-report term --disable-pytest-warnings --cov=webrob/..
 
