@@ -1,3 +1,7 @@
+# Dockerfile used to build a deterministic version of Debian.
+# Actual Dockerfile will reference the build from dockerhub,
+# as it is hosted there.
+
 FROM ubuntu:16.04
 MAINTAINER Daniel Beßler, danielb@cs.uni-bremen.de
 
