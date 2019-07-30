@@ -13,7 +13,3 @@ script:
   - py.test --cov-report term --disable-pytest-warnings --cov=webrob/..
 
 # TODO: consider adding codecov hook like demonstrated here: https://github.com/codecov/example-python
-
-branches:
-  only:
-    - master
