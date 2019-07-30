@@ -10,6 +10,9 @@ ENVIRONMENT_VARIABLE_VALUE = 'myval'
 ENVIRONMENT_VARIABLE_DEFAULT_VALUE = 'default'
 
 
+# -------------------------------TESTS---------------------------------
+
+
 def test_successfully_get_required_variable(monkeypatch):
     monkeypatch.setitem(os.environ, ENVIRONMENT_VARIABLE_NAME, ENVIRONMENT_VARIABLE_VALUE)
     assert get_required_variable(ENVIRONMENT_VARIABLE_NAME) == ENVIRONMENT_VARIABLE_VALUE
