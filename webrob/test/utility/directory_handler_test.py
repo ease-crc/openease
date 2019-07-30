@@ -5,8 +5,8 @@ import random
 import pytest
 
 from webrob.test.utility.testbase_file_io import TEMP_DIR
-from webrob.utility.directory_handler import rm_nonempty_dir, make_dirs, rm_empty_dir, mk_dir, \
-    get_current_working_directory, ch_dir, list_directories, walk_directories
+from webrob.utility.directory_handler import remove_nonempty_directory, create_directories_from_path, remove_empty_directory, create_directory, \
+    get_current_working_directory, change_directory, list_directories, walk_directories
 from webrob.utility.path_handler import join_paths, path_exists
 
 TEST_DIR = join_paths(TEMP_DIR, 'test')
@@ -33,8 +33,8 @@ def teardown_function():
 
 
 def test_making_simple_directory():
-    assert_make_dir_function(TEST_DIR, mk_dir)
-    assert_make_dir_function(TEST_DIR, make_dirs)
+    assert_make_dir_function(TEST_DIR, create_directory)
+    assert_make_dir_function(TEST_DIR, create_directories_from_path)
 
 
 def assert_make_dir_function(path, make_dir_function):
@@ -45,21 +45,21 @@ def assert_make_dir_function(path, make_dir_function):
 
 def test_making_nested_directory():
     with pytest.raises(OSError):
-        assert_make_dir_function(TEST_DIR_NESTED, mk_dir)
-    assert_make_dir_function(TEST_DIR_NESTED, make_dirs)
+        assert_make_dir_function(TEST_DIR_NESTED, create_directory)
+    assert_make_dir_function(TEST_DIR_NESTED, create_directories_from_path)
 
 
 def test_make_existing_directory():
     os.mkdir(TEST_DIR)
     with pytest.raises(OSError):
-        assert_make_dir_function(TEST_DIR, mk_dir)
+        assert_make_dir_function(TEST_DIR, create_directory)
     with pytest.raises(OSError):
-        assert_make_dir_function(TEST_DIR, make_dirs)
+        assert_make_dir_function(TEST_DIR, create_directories_from_path)
 
 
 def test_remove_empty_dir():
-    assert_remove_function(TEST_DIR, rm_empty_dir)
-    assert_remove_function(TEST_DIR, rm_nonempty_dir)
+    assert_remove_function(TEST_DIR, remove_empty_directory)
+    assert_remove_function(TEST_DIR, remove_nonempty_directory)
 
 
 def assert_remove_function(path, remove_function, check_path=None):
@@ -75,7 +75,7 @@ def setup_for_remove_test(path):
     # deleting the old directory (if it exists) and make a new one
     # not doing this might cause errors
     remove_directory_if_exists(path)
-    make_dirs(path)
+    create_directories_from_path(path)
 
 
 def execute_and_check_remove(path, remove_function):
@@ -85,8 +85,8 @@ def execute_and_check_remove(path, remove_function):
 
 def test_rm_nonempty_dir():
     with pytest.raises(OSError):
-        assert_remove_function(TEST_DIR_NESTED, rm_empty_dir, TEST_DIR)
-    assert_remove_function(TEST_DIR_NESTED, rm_nonempty_dir, TEST_DIR)
+        assert_remove_function(TEST_DIR_NESTED, remove_empty_directory, TEST_DIR)
+    assert_remove_function(TEST_DIR_NESTED, remove_nonempty_directory, TEST_DIR)
 
 
 # Figure out why this runs locally but not on Travis, https://github.com/code-iai/openEASE-flask/issues/2
@@ -104,7 +104,7 @@ def test_rm_nonempty_dir():
 
 def test_change_to_non_existent_directory():
     with pytest.raises(OSError):
-        ch_dir(TEST_DIR)
+        change_directory(TEST_DIR)
 
 
 # Figure out why this runs locally but not on Travis, https://github.com/code-iai/openEASE-flask/issues/2

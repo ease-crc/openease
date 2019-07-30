@@ -1,6 +1,6 @@
 import re
 
-from webrob.utility.directory_handler import make_dirs
+from webrob.utility.directory_handler import create_directories_from_path
 from webrob.utility.file_handler import read_file, create_file
 from webrob.utility.path_handler import path_exists, get_parent_dir_name
 
@@ -14,7 +14,7 @@ def copy_template_file_and_replace_keywords(src, dst, args):
 def _create_parent_dir(dst):
     parent = get_parent_dir_name(dst)
     if not path_exists(parent):
-        make_dirs(parent)
+        create_directories_from_path(parent)
 
 
 def _copy_file_and_replace_keywords(dst, template, args):

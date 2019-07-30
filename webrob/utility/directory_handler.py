@@ -2,23 +2,23 @@ import os
 import shutil
 
 
-def mk_dir(path):
+def create_directory(path):
     os.mkdir(path)
 
 
-def make_dirs(path):
+def create_directories_from_path(path):
     os.makedirs(path)
 
 
-def rm_empty_dir(path):
+def remove_empty_directory(path):
     os.rmdir(path)
 
 
-def rm_nonempty_dir(path):
+def remove_nonempty_directory(path):
     shutil.rmtree(path)
 
 
-def ch_dir(path):
+def change_directory(path):
     os.chdir(path)
 
 

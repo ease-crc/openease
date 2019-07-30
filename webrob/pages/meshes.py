@@ -9,7 +9,7 @@ import thread
 
 from webrob.app_and_db import app
 from webrob.config.settings import MESH_REPOSITORIES
-from webrob.utility.directory_handler import ch_dir
+from webrob.utility.directory_handler import change_directory
 from webrob.utility.path_handler import join_paths, path_exists, get_parent_dir_name, get_path_basename, \
     get_unix_style_path_basename
 
@@ -31,7 +31,7 @@ def _update_meshes_run():
 
 
 def _change_to_mesh_data_directory():
-    ch_dir(ROS_MESH_DATA_DIR)
+    change_directory(ROS_MESH_DATA_DIR)
 
 
 def _update_mesh_repositories():
@@ -71,9 +71,9 @@ def _repository_exists(repo_name):
 
 
 def _update_repository(repo_name, repo_dir, repo_update_cmd):
-    ch_dir(repo_name)
+    change_directory(repo_name)
     call([repo_dir, repo_update_cmd])
-    ch_dir('..')
+    change_directory('..')
 
 
 def _clone_repository(repo_dir, repo_clone_cmd, url):

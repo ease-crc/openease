@@ -2,7 +2,7 @@ import os
 
 from webrob.test.utility.testbase_file_io import TEMP_DIR, EMPTY_TEMP_FILE, TEMP_FILE_WITH_CONTENT, \
     create_empty_temp_file, create_temp_file_with_content, remove_file
-from webrob.utility.directory_handler import mk_dir, rm_nonempty_dir
+from webrob.utility.directory_handler import create_directory, remove_nonempty_directory
 from webrob.utility.path_handler import join_paths, path_exists, absolute_path, get_parent_dir_name, \
     get_path_basename, get_unix_style_path_basename, is_directory, get_path_size, relative_path, split_path, \
     split_extension
@@ -24,13 +24,13 @@ PATH_JOINED_WITH_ONLY_EXTENSION = join_paths(PATH, ONLY_EXTENSION)
 # instead use directory_handler and create and delete temp_dir manually
 def setup_module():
     if os.path.exists(EXISTING_PATH):  # for the case that due to debugging errors teardown wasn't executed
-        rm_nonempty_dir(EXISTING_PATH)
-    mk_dir(EXISTING_PATH)
+        remove_nonempty_directory(EXISTING_PATH)
+    create_directory(EXISTING_PATH)
     return
 
 
 def teardown_module():
-    rm_nonempty_dir(EXISTING_PATH)
+    remove_nonempty_directory(EXISTING_PATH)
     return
 
 
