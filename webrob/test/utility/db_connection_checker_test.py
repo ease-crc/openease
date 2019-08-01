@@ -39,16 +39,20 @@ MOCK_DB_ENGINE = MockDbEngineNormal()
 MOCK_DB_ENGINE_MALFUNCTIONING = MockDbEngineRaiseError()
 
 
+@pytest.fixture
+def monkeypatch_setup(monkeypatch):
+    monkeypatch.setattr(Flask, 'logger', MOCK_LOGGER)
+    return monkeypatch
+
+
 # -------------------------------TESTS---------------------------------
 
 
-def test_having_db_connection(monkeypatch):
-    monkeypatch.setattr(Flask, 'logger', MOCK_LOGGER)
-    monkeypatch.setattr(SQLAlchemy, 'engine', MOCK_DB_ENGINE)
+def test_having_db_connection(monkeypatch_setup):
+    monkeypatch_setup.setattr(SQLAlchemy, 'engine', MOCK_DB_ENGINE)
     assert got_db_connection(app, db) is True
 
 
-def test_unable_to_connect_to_db(monkeypatch):
-    monkeypatch.setattr(Flask, 'logger', MOCK_LOGGER)
-    monkeypatch.setattr(SQLAlchemy, 'engine', MOCK_DB_ENGINE_MALFUNCTIONING)
+def test_unable_to_connect_to_db(monkeypatch_setup):
+    monkeypatch_setup.setattr(SQLAlchemy, 'engine', MOCK_DB_ENGINE_MALFUNCTIONING)
     assert got_db_connection(app, db) is False
