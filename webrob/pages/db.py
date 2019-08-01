@@ -3,7 +3,7 @@ from flask import request, render_template, jsonify, abort
 import json
 
 from webrob.app_and_db import app
-from webrob.utility.utility import admin_required
+from webrob.utility.admin_checker import admin_required
 from webrob.models.db import *
 
 __author__ = 'danielb@cs.uni-bremen.de'

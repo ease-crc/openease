@@ -7,7 +7,7 @@ from subprocess import call
 from webrob.pages.experiments import get_experiment_list, get_experiment_path
 from webrob.utility.path_handler import join_paths, is_directory, get_path_size
 from webrob.utility.directory_handler import list_directories
-from webrob.utility.utility import admin_required
+from webrob.utility.admin_checker import admin_required
 from webrob.app_and_db import app
 
 from pymongo import MongoClient

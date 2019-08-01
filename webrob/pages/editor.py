@@ -13,7 +13,7 @@ from webrob.docker import docker_interface
 from webrob.docker.docker_interface import LFTransfer
 from webrob.utility.path_handler import path_exists, join_paths, split_extension, relative_path, split_path
 from webrob.utility.directory_handler import walk_directories
-from webrob.utility.utility import admin_required
+from webrob.utility.admin_checker import admin_required
 from webrob.utility.template_file_copyer import copy_template_file_and_replace_keywords
 from webrob.models.teaching import CourseExercise
 
