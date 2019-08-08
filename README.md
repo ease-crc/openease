@@ -1,7 +1,9 @@
 openease/flask
 ================
 
-[![Build Status](https://travis-ci.org/navidJadid/openease_flask.svg?branch=master)](https://travis-ci.org/navidJadid/openease_flask) [![codecov](https://codecov.io/gh/navidJadid/openease_flask/branch/development/graph/badge.svg)](https://codecov.io/gh/navidJadid/openease_flask)
+#### Master: [![Build Status](https://travis-ci.org/navidJadid/openease_flask.svg?branch=master)](https://travis-ci.org/navidJadid/openease_flask) [![codecov](https://codecov.io/gh/navidJadid/openease_flask/branch/master/graph/badge.svg)](https://codecov.io/gh/navidJadid/openease_flask)
+
+#### Development: [![Build Status](https://travis-ci.org/navidJadid/openease_flask.svg?branch=development)](https://travis-ci.org/navidJadid/openease_flask) [![codecov](https://codecov.io/gh/navidJadid/openease_flask/branch/development/graph/badge.svg)](https://codecov.io/gh/navidJadid/openease_flask)
 
 Repository which contains the front & back-end code for the openease project.
 
