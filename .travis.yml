@@ -8,7 +8,8 @@ install:
   - 'pipenv install'
 
 script:
-  - pytest --cov=webrob/..
+  # consider removing --disable-pytest-warnings at some point
+  - pytest --disable-pytest-warnings --cov=webrob/..
 
 after_success:
   - codecov
