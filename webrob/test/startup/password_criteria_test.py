@@ -1,26 +1,19 @@
-from webrob.startup.init_app import _password_criteria_fulfilled, _has_six_or_more_chars, \
-    _contains_number, _contains_lowercase_letter, _contains_uppercase_letter
+from webrob.startup.init_app import _check_password_and_display_message_on_error, _password_criteria_fulfilled, _has_six_or_more_chars, \
+    _contains_number, _contains_lowercase_letter, _contains_uppercase_letter, _create_new_user_and_add_to_db
 
+from webrob.app_and_db import app, db
+from webrob.startup import  init_app
+from flask_user import UserManager
 import pytest
 
+PASSWORD_CASES_CRITERIA = ["a", "A", "1", "aA", "a1", "1A", "Aa1", "AAAAAA", "aaaaaa", "111111", "aaa111", "AAA111"]
 
 # test for length > 6, containing a number, a lower- and a uppercase letter together
 def test_password_criteria():
     assert _password_criteria_fulfilled('') is False
-    assert _password_criteria_fulfilled('a') is False
-    assert _password_criteria_fulfilled('A') is False
-    assert _password_criteria_fulfilled('1') is False
-    assert _password_criteria_fulfilled('aA') is False
-    assert _password_criteria_fulfilled('a1') is False
-    assert _password_criteria_fulfilled('1A') is False
-    assert _password_criteria_fulfilled('Aa1') is False
-    assert _password_criteria_fulfilled('AAAAAA') is False
-    assert _password_criteria_fulfilled('aaaaaa') is False
-    assert _password_criteria_fulfilled('111111') is False
-    assert _password_criteria_fulfilled('aaa111') is False
-    assert _password_criteria_fulfilled('AAA111') is False
-    assert _password_criteria_fulfilled('AAAaaa') is False
     assert _password_criteria_fulfilled('AAaa11') is True
+    for pw in PASSWORD_CASES_CRITERIA:
+        assert _password_criteria_fulfilled(pw) is False
 
 
 def test_has_six_or_more_character():
@@ -52,3 +45,18 @@ def test_contains_uppercase():
     assert _contains_uppercase_letter('abc') is False
     assert _contains_uppercase_letter('A') is True
     assert _contains_uppercase_letter('AbC') is True
+
+def test_check_password_and_display_message_on_error():
+    for pw in PASSWORD_CASES_CRITERIA:
+        assert _check_password_and_display_message_on_error(app, 'Paul', pw) is False
+
+def test_check_password_and_display_error_message_for_None_password():
+    assert _check_password_and_display_message_on_error(app, 'Paul', None) is False
+
+def test_check_for_correct_password():
+    assert _check_password_and_display_message_on_error(app, 'Paul', 'AAaa11') is True
+
+
+
+
+
