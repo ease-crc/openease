@@ -3,16 +3,15 @@ import hashlib
 import os
 import shutil
 from urllib2 import URLError
-import pyjsonrpc
 
 from flask import flash, session
 from pyjsonrpc.rpcerror import JsonRpcError
 from webrob.app_and_db import app
 from webrob.utility.random_string_builder import random_string
+from webrob.config.settings import HTTP_CLIENT
 
 
-client = pyjsonrpc.HttpClient(url="http://"+os.environ['DOCKERBRIDGE_PORT_5001_TCP_ADDR'] + ':'
-                              + os.environ['DOCKERBRIDGE_PORT_5001_TCP_PORT'])
+client = HTTP_CLIENT
 
 
 def generate_mac(user_container_name, client_name, dest, rand, t, level, end, cache=False):

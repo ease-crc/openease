@@ -14,6 +14,7 @@ from flask_mail import Mail
 from flask_user import UserManager, SQLAlchemyAdapter
 from flask.ext.babel import Babel
 
+from webrob.config.settings import init_config_variables
 from webrob.utility.random_string_builder import random_string
 from webrob.startup.init_db import *
 from webrob.startup.init_webapp import *
@@ -159,6 +160,7 @@ def init_app(app, db_instance, extra_config_settings={}):
 
 
 def _init_app_config_settings(app, extra_config_settings):
+    init_config_variables()
     app.config.from_object('webrob.config.settings')  # Read config from 'app/settings.py' file
     app.config.update(extra_config_settings)  # Overwrite with 'extra_config_settings' parameter
     if app.testing:
