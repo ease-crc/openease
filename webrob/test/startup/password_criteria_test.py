@@ -8,6 +8,7 @@ import pytest
 
 PASSWORD_CASES_CRITERIA = ["a", "A", "1", "aA", "a1", "1A", "Aa1", "AAAAAA", "aaaaaa", "111111", "aaa111", "AAA111"]
 
+
 # test for length > 6, containing a number, a lower- and a uppercase letter together
 def test_password_criteria():
     assert _password_criteria_fulfilled('') is False
