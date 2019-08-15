@@ -112,7 +112,6 @@ def _add_user_to_db(app, db, user):
         db.session.add(user)
         db.session.commit()
 
-
 def init_app(app, db_instance, extra_config_settings={}):
     _init_app_config_settings(app, extra_config_settings)
 
