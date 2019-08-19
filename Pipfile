@@ -1,0 +1,33 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "==4.1.0"
+
+[packages]
+misaka = "==1.0.2"
+tornado = "*"
+pymongo = "*"
+requests = "*"
+python-jsonrpc = "*"
+pycrypto = "*"
+psycopg2-binary = "*"
+pytest = "==4.1.0"
+Flask = "==0.11.1"
+Flask-Misaka = "==0.3"
+Flask-Login = "==0.3.2"
+Flask-OAuth = "*"
+Flask-User = "<0.7"
+Flask-Babel = "*"
+Flask-Mail = "*"
+SQLAlchemy = "*"
+singledispatch = "*"
+backports-abc = "*"
+ecdsa = "*"
+coverage = "*"
+pytest-cov = "*"
+
+[requires]
+python_version = "2.7"

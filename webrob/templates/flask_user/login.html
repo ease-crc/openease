@@ -1,85 +1,111 @@
-{% extends 'flask_user/public_base.html' %}
+{% extends 'flask_user/public_base_login.html' %}
 
 {% block content_inner %}
-{% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
+    {% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
 
-<div class="page-centered">
-    <div class="headline">
-    <div class="content-box" id="welcome-headline-box">
-<h1 class="content-box-header">Welcome to openEASE</h1>openEASE is a web-based knowledge service providing robot and human activity data. It contains semantically annotated data of manipulation actions, including the environment the agent is acting in, the objects it manipulates, the task it performs, and the behavior it generates. The episode representations can include images captured by the robot, other sensor datastreams as well as full-body poses. A powerful query language and inference tools, allow reasoning about the data and retrieving requested information based on semantic queries. Based on the data and using the inference tools robots can answer queries regarding to what they did, why, how, what happened, and what they saw.
-    </div></div>
+    <div class="page-background">
+        <div class="login-content">
+            <div id="login-div">
+                <div id="ease-logo">
+                    <a class="ease-brand" href="http://www.open-ease.org"><img
+                            src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">openEASE</a>
+                </div>
+                <div class="card" id="setup-login">
+                    <div class="card-header text-login">{% trans %}Login to your account{% endtrans %}</div>
+                    <div class="card-body">
 
-    <div id="page-body">
-        <div class="content-box" id="user-data-box">
-            <h1 class="content-box-header">{%trans%}Please sign in{%endtrans%}</h1>
-            
-            <form action="" method="POST" class="form" role="form">
-                {{ form.hidden_tag() }}
+                        <form action="" method="POST" novalidate class="form" role="form">
+                            {{ form.hidden_tag() }}
 
-                <div class="row">
-                    <div class="field-hint" id="forgot-password-link">
-                        {% if user_manager.enable_forgot_password %}
-                            <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
-                                {%trans%}Forgot your Password?{%endtrans%}</a>
-                        {% endif %}
+
+                            {# Username or Email field #}
+                            {% set field = form.username if user_manager.enable_username else form.email %}
+                            <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                                <input placeholder="Username"
+                                       class="form-control form-control-danger form-control-feedback"
+                                       id="inputHorizontalDanger" id="username" name="username"
+                                       type="text"
+                                       value="" required autofocus>
+
+                            </div>
+
+                            {% for error in form.username.errors %}
+                                <p class="alert alert-danger alert-dismissible error">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    {{ error }}</p>
+                            {% endfor %}
+
+                            {# Password field #}
+                            {% set field = form.password %}
+                            <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                                <input placeholder="Password" class="form-control" id="password" name="password"
+                                       type="password"
+                                       value="" required/>
+
+                            </div>
+
+                            {% for error in form.password.errors %}
+                                <p class="alert alert-danger alert-dismissible error">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    {{ error }}</p>
+                            {% endfor %}
+
+
+                            <div id="remember-me" class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                       value="remember_me">
+                                <label id="remember-me" class="custom-control-label" for="customCheck1">Remember
+                                    me</label>
+                            </div>
+
+                            <button class="btn  btn-block btn-primary ripple-effect" type="submit">Login</button>
+
+                        </form>
+
                     </div>
-                </div>
-                    
-                {# Username or Email field #}
-                {% set field = form.username if user_manager.enable_username else form.email %}
-                <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                    <input placeholder="Username" class="form-control" id="username" name="username" type="text" value="" required autofocus />
-                </div>
+                    <div class="card-footer">
 
-                {# Password field #}
-                {% set field = form.password %}
-                <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                    <input placeholder="Password" class="form-control" id="password" name="password" type="password" value="" required />
+                        <div class="row" id="new-user-row">
+                            <p id="new-user" class="col-sm-6"> New user?
+                                <a href="{{ url_for('user.register') }}">Sign Up</a>
+                            </p>
+                            <p class="col-sm-6">
+                                {% if user_manager.enable_forgot_password %}
+                                    <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
+                                        {% trans %}Forgot Password?{% endtrans %}</a>
+                                {% endif %}
+                            </p>
+                        </div>
+
+
+                    </div>
+
+
                 </div>
-                
-                <div id="remember-me" class="checkbox">
-                    <label><input type="checkbox" value="remember_me">Remember me</input></label>
-                </div>
-                
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-                
-                <a id="sign-up-button" class="btn btn-lg btn-primary btn-block" href="{{ url_for('user.register') }}" type="submit">Register</a>
-                
-                {% if user_manager.remote_app_registered('any') %}
-                <div class="remote-login-box">
-                    <div class="remote-login-header">Sign in with</div>
-                    {% if user_manager.remote_app_registered('github') %}
-                    <a id="github-login-button" class="remote-login-button icon_github" title="http://www.github.com"
-                        href="/github/login" type="submit"></a>
-                    {% endif %}
-                    {% if user_manager.remote_app_registered('google') %}
-                    <a id="google-login-button" class="remote-login-button icon_google" title="http://www.google.com"
-                        href="/google/login" type="submit"></a>
-                    {% endif %}
-                    {% if user_manager.remote_app_registered('twitter') %}
-                    <a id="twitter-login-button" class="remote-login-button icon_twitter" title="http://www.twitter.com"
-                        href="/twitter/login" type="submit"></a>
-                    {% endif %}
-                    {% if user_manager.remote_app_registered('facebook') %}
-                    <a id="facebook-login-button" class="remote-login-button icon_facebook" title="http://www.facebook.com"
-                        href="/facebook/login" type="submit"></a>
-                    {% endif %}
-                </div>
-                {% endif %}
-                
-            </form>
-{% for error in form.username.errors %}
-            <p class="error"><strong>Error:</strong> {{ error }}</p>
-{% endfor %}
-{% for error in form.password.errors %}
-            <p class="error"><strong>Error:</strong> {{ error }}</p>
-{% endfor %}
-        </div>
-        <div class="content-box" id="video-box">
-            <h1 class="content-box-header">Howto use openEASE</h1>
-            <video id="howto-video" width="420" height="236" src="{{ url_for('static', filename='HowtouseopenEASE.mp4') }}" controls></video>
+            </div>
+
         </div>
     </div>
-</div>
 
+    <footer id="footer-style">
+
+        <div class="legal">
+
+            <span id="terms-of-service"><a href="#">Terms of Service</a></span>
+
+
+            <span id="privacy"> <a href="#">Privacy</a></span>
+
+            <p id="copyright">
+
+                &copy;Copyright openEASE <span id="myYear"> </span>
+            </p>
+
+
+        </div>
+
+    </footer>
+    <script src="../../static/form-js/copyright_year.js"></script>
 {% endblock %}
+
+
