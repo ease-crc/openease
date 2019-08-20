@@ -1,29 +1,35 @@
+'''
+TODO: Refactor to class model and use @property decorator
+TODO: Explain how to import and use this module
+'''
+
+
 import pyjsonrpc
 
 import webrob.utility.system_environment_variable_getter as evg
 
 
 DEV_SECRET_KEY = '\\\xf8\x12\xdc\xf5\xb2W\xd4Lh\xf5\x1a\xbf"\x05@Bg\xdf\xeb>E\xd8<'
-SQLALCHEMY_DATABASE_URI = {}
+SQLALCHEMY_DATABASE_URI = None
 # SQLALCHEMY_ECHO = True
-MESH_REPOSITORIES = {}
-ROS_DISTRIBUTION = {}
-HTTP_CLIENT = {}
+MESH_REPOSITORIES = None
+ROS_DISTRIBUTION = None
+HTTP_CLIENT = None
 CSRF_ENABLED = True
 
 # email server
-MAIL_SERVER = {}
-MAIL_PORT = {}
-MAIL_USE_TLS = {}
-MAIL_USE_SSL = {}
-MAIL_USERNAME = {}
-MAIL_PASSWORD = {}
+MAIL_SERVER = None
+MAIL_PORT = None
+MAIL_USE_TLS = None
+MAIL_USE_SSL = None
+MAIL_USERNAME = None
+MAIL_PASSWORD = None
 MAIL_DEFAULT_SENDER = '"Sender" <openease.iai@gmail.com>'
 
-FACEBOOK_APP_TOKENS = {}
-TWITTER_APP_TOKENS = {}
-GITHUB_APP_TOKENS = {}
-GOOGLE_APP_TOKENS = {}
+FACEBOOK_APP_TOKENS = None
+TWITTER_APP_TOKENS = None
+GITHUB_APP_TOKENS = None
+GOOGLE_APP_TOKENS = None
 
 USER_ENABLE_USERNAME = True
 USER_ENABLE_EMAIL = True
@@ -32,6 +38,15 @@ USER_ENABLE_CONFIRM_EMAIL = False
 MAX_HISTORY_LINES = 100
 
 _variables_set = False
+
+
+def config_variables_initialized():
+    return _variables_set
+
+
+def _set_variables_set_to_true():
+    global _variables_set
+    _variables_set = True
 
 
 def init_config_variables():
@@ -140,12 +155,3 @@ def _init_http_client():
     HTTP_CLIENT = pyjsonrpc.HttpClient(url="http://" +
                                            evg.get_required_variable('DOCKERBRIDGE_PORT_5001_TCP_ADDR') + ':' +
                                            evg.get_required_variable('DOCKERBRIDGE_PORT_5001_TCP_PORT'))
-
-
-def _set_variables_set_to_true():
-    global _variables_set
-    _variables_set = True
-
-
-def config_variables_initialized():
-    return _variables_set
