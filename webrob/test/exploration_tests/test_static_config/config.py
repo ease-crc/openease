@@ -1,19 +1,16 @@
-VAR = 0
+ZERO = 0
+EMPTY_STR = ''
 
-_var_initialized = False
+CONFIG_DICT = {'VAR': ZERO}
+INT_VAR = ZERO
+STR_VAR = EMPTY_STR
 
-
-def get_vars_initialized():
-    return _var_initialized
-
-
-def _set_vars_init_true():
-    global _var_initialized
-    _var_initialized = True
+INT_CONST = 1
+STR_CONST = 'something'
 
 
 def init_vars():
-    global VAR
-    VAR = 12
-
-    _set_vars_init_true()
+    global INT_VAR, STR_VAR, CONFIG_DICT
+    INT_VAR = INT_CONST
+    STR_VAR = STR_CONST
+    CONFIG_DICT['VAR'] = INT_CONST
