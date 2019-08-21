@@ -4,7 +4,7 @@
   "description": "The openEASE knowledge web service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Warning: no test specified\" && exit 0",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "browserify": "browserify -g browserify-css index.js > openease.js",
     "uglify": "uglifyjs openease.js -m -o openease-min.js",
     "build": "npm run browserify && npm run uglify"
@@ -20,9 +20,13 @@
   },
   "homepage": "https://github.com/knowrob/docker#readme",
   "dependencies": {
+
+    "uglify-js": "# Build dependencies",
     "uglify-js": "latest",
     "browserify": "latest",
     "browserify-css": "latest",
+
+    "jquery": "# OpenEASE dependencies",
     "jquery": "2.2.4",
     "jquery-ui-bundle": "1.12.1-migrate",
     "layout": "git://github.com/benmaurer/layout.git#master",
@@ -38,6 +42,5 @@
     "d3": "3",
     "d3-tip": "0.9.1",
     "jsondiffpatch": "0.2.5"
-  },
-  "devDependencies": {}
+  }
 }

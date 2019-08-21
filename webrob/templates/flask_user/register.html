@@ -1,141 +1,65 @@
-{% extends 'flask_user/public_base_register.html' %}
+{% extends 'flask_user/public_base.html' %}
 
 {% block content_inner %}
-    {% from "flask_user/_macros.html" import render_field, render_submit_field %}
+{% from "flask_user/_macros.html" import render_field, render_submit_field %}
 
-    <div class="page-background">
+<div class="page-centered">
+    <div id="page-body">
+        <div class="content-box" id="register-box">
+            <h1 class="content-box-header">{%trans%}Please fill out{%endtrans%}</h1>
+            <form action="" method="POST" novalidate formnovalidate class="form" role="form">
+                {{ form.hidden_tag() }}
 
-        <div class="register-content">
-            <div id="register-div">
-                <div id="ease-logo">
-                    <a class="ease-brand" href="http://www.open-ease.org"><img
-                            src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">openEASE</a>
-
-                </div>
-
-                <div class="card card-register">
-
-                    <div class="card-header register-text">{% trans %}Create an account{% endtrans %}</div>
-
-                    <div class="card-body">
-
-                        <form action="" method="POST" novalidate class="needs-validation form" role="form">
-                            {{ form.hidden_tag() }}
-
-
-                            {# Username or Email #}
-                            {% set field = form.username %}
-                            <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                <input placeholder="Username: Eva_15" class="form-control" id="username"
-                                       name="username" type="text"
-                                       title="Username must be atleast four letters or alphanumeric letters e.g John or Eva_15"
-                                       pattern="^[a-zA-Z][a-zA-Z0-9_]{3,}$"
-                                       value="" required autofocus/>
-
-                                <div class="invalid-feedback">Username must be atleast four letters or alphanumeric
-                                    letters e.g John or Eva_15
-                                </div>
-                            </div>
-
-
-                            {% if user_manager.enable_email and user_manager.enable_username %}
-                                {% set field = form.email %}
-                                <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                    <input placeholder="Email" class="form-control" id="email" name="email" type="email"
-                                           value=""
-                                           required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title=""/>
-                                    <div class="invalid-feedback">Email is Invalid.</div>
-                                </div>
-
-                            {% endif %}
-
-                            {# Password field #}
-                            {% set field = form.password %}
-                            <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                <input placeholder="Password" class="form-control" id="psw" name="password"
-                                       type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" value="" required/>
-
-                                <div id="message">
-                                    <p>Password must contain the following:</p>
-                                    <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-                                    <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-                                    <p id="number" class="invalid">A <b>number</b></p>
-                                    <p id="length" class="invalid">Minimum <b>6 characters</b></p>
-                                    {#                                    </div>#}
-                                </div>
-                                <div class="invalid-feedback" id="psw-check">
-                                    Password must be atleast 6 characters long. Must contain a number, an Upper case
-                                    letter, and a Lower case letter"
-                                </div>
-                            </div>
-
-
-                            {% if user_manager.enable_retype_password %}
-                                <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                    <input placeholder="Retype Password" class="form-control" id="retype_password"
-                                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
-                                           name="retype_password" type="password" value="" required/>
-                                    <div id="feedback-msg">
-
-                                    </div>
-
-                                </div>
-
-                            {% endif %}
-
-                            <div class="form-group">
-                                <div class="form-check custom-control custom-checkbox "><input type="checkbox"
-                                                                                               class="custom-control-input form-check-input"
-                                                                                               id="customCheck1"
-                                                                                               value="remember_me"
-                                                                                               required>
-                                    <label class="custom-control-label" for="customCheck1">
-                                        <span id="register-policy">
-                                            I accept the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
-                                        </span>
-
-                                    </label>
-                                    <div class="invalid-feedback">Please check the checkbox to continue</div>
-                                </div>
-                            </div>
-
-
-                            <button id="register-button" class="btn btn-lg btn-primary btn-block" type="submit">Register
-                            </button>
-                        </form>
-
-                    </div>
-
-                </div>
-
-                <div>
+                <div class="row">
                     <div class="field-hint" id="already-registered-link">
                         {% if user_manager.enable_forgot_password %}
-                            <span class="already-registered">Already registered?</span>
                             <a href="{{ url_for('user.login') }}" tabindex='195'>
-                                {% trans %}Sign in{% endtrans %}</a>
+                                    {%trans%}Already registered? Sign in.{%endtrans%}</a>
                         {% endif %}
                     </div>
                 </div>
 
+                {# Username or Email #}
+                {% set field = form.username %}
+                <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                    <input placeholder="Name" class="form-control" id="username" name="username" type="text" value="" required autofocus />
+                </div>
+                
+                {% if user_manager.enable_email and user_manager.enable_username %}
+                    {% set field = form.email %}
+                    <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                        <input placeholder="Email" class="form-control" id="email" name="email" type="text" value="" required />
+                    </div>
+                {% endif %}
 
-            </div>
+                {# Password field #}
+                {% set field = form.password %}
+                <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                    <input placeholder="Password" class="form-control" id="password" name="password" type="password" value="" required />
+                </div>
+                {% if user_manager.enable_retype_password %}
+                    <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                        <input placeholder="Retype Password" class="form-control" id="retype_password" name="retype_password" type="password" value="" required />
+                    </div>
+                {% endif %}
 
+                <button id="register-button" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+            </form>
+{% for error in form.username.errors %}
+            <p class="error"><strong>Error:</strong> {{ error }}</p>
+{% endfor %}
+{% for error in form.email.errors %}
+            <p class="error"><strong>Error:</strong> {{ error }}</p>
+{% endfor %}
+{% for error in form.password.errors %}
+            <p class="error"><strong>Error:</strong> {{ error }}</p>
+{% endfor %}
+        </div>
+        <div class="content-box" id="video-box">
+            <h1 class="content-box-header">Howto use openEASE</h1>
+            <video id="howto-video" width="420" height="236" src="{{ url_for('static', filename='HowtouseopenEASE.mp4') }}" controls></video>
         </div>
     </div>
-    <footer id="footer-style">
+</div>
 
-        <div class="legal">
-
-            <p id="copyright">
-
-                &copy;Copyright openEASE <span id="myYear"> </span>
-            </p>
-
-        </div>
-
-    </footer>
-    <script src="../../static/lib/form-js/copyright_year.js"></script>
-    <script src="../../static/lib/form-js/validate_password.js"></script>
-    <script src="../../static/lib/form-js/form_script.js"></script>
 {% endblock %}

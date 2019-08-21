@@ -8,7 +8,7 @@ import pyjsonrpc
 from flask import flash, session
 from pyjsonrpc.rpcerror import JsonRpcError
 from webrob.app_and_db import app
-from webrob.utility.random_string_builder import random_string
+from webrob.utility import random_string
 
 
 client = pyjsonrpc.HttpClient(url="http://"+os.environ['DOCKERBRIDGE_PORT_5001_TCP_ADDR'] + ':'
