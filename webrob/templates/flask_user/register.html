@@ -32,9 +32,6 @@
                                        pattern="^[a-zA-Z][a-zA-Z0-9_]{3,}$"
                                        value="" required autofocus/>
 
-                                {#                                <div class="invalid-feedback">#}
-                                {#                                    Username must be atleast four letters or alphanumeric letters e.g John or Eva_15#}
-                                {#                                </div>#}
                                 <div class="invalid-feedback">
                                     Username is Invalid
                                 </div>
@@ -58,20 +55,6 @@
                                 <input placeholder="Password" class="form-control" id="psw" name="password"
                                        type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" value="" required/>
 
-                                {#                                <div id="message">#}
-                                {#                                    <p>Password must contain the following:</p>#}
-                                {#                                    <p id="letter" class="invalid">A <b>lowercase</b> letter</p>#}
-                                {#                                    <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>#}
-                                {#                                    <p id="number" class="invalid">A <b>number</b></p>#}
-                                {#                                    <p id="length" class="invalid">Minimum <b>6 characters</b></p>#}
-                                {#                                    </div>#}
-                                {#                                </div>#}
-
-                                {#                                <div class="invalid-feedback" id="psw-check">#}
-
-                                {#                                    Password must be atleast 6 characters long. Must contain a number, an Upper case#}
-                                {#                                    letter, and a Lower case letter"#}
-                                {#                                  </div>    #}
                                 <div class="invalid-feedback">
                                     Password is Invalid
                                 </div>
@@ -83,9 +66,7 @@
                                     <input placeholder="Retype Password" class="form-control" id="retype_password"
                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
                                            name="retype_password" type="password" value="" required/>
-                                    {#                                    <div id="feedback-msg">#}
-                                    {##}
-                                    {#                                    </div>#}
+
                                     <div class="invalid-feedback">
                                         Reset Password is Invalid
                                     </div>
@@ -147,6 +128,5 @@
 
     </footer>
     <script src="../../static/lib/form-js/copyright_year.js"></script>
-    {#    <script src="../../static/lib/form-js/validate_password.js"></script>#}
     <script src="../../static/lib/form-js/form_script.js"></script>
 {% endblock %}
