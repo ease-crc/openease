@@ -36,36 +36,9 @@ def add_user(app, db, user_manager, name, mail, pw, display_name='', remote_app=
 def _check_password_and_display_message_on_error(app, name, pw):
     if pw is None:
         app.logger.warn("User %s has no password specified." % name)
-    elif not _password_criteria_fulfilled(pw):
-        app.logger.warn(
-            "Password of user %s needs to have 6 or more characters, one lowercase, one uppercase letter, and a number." % name)
-    else:
-        return True
-    return False
-
-
-def _password_criteria_fulfilled(pw):
-    if _has_six_or_more_chars(pw) and _contains_number(pw) and _contains_lowercase_letter(
-            pw) and _contains_uppercase_letter(pw):
-        return True
-    else:
         return False
-
-
-def _has_six_or_more_chars(str):
-    return len(str) >= 6
-
-
-def _contains_number(str):
-    return any(char.isdigit() for char in str)
-
-
-def _contains_lowercase_letter(str):
-    return any(char.islower() for char in str)
-
-
-def _contains_uppercase_letter(str):
-    return any(char.isupper() for char in str)
+    else:
+        return True
 
 
 def _get_user_from_db(name):
