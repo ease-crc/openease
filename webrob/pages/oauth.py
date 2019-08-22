@@ -14,7 +14,7 @@ from json import loads
 from webrob.app_and_db import app, db
 from webrob.models.users import User
 from webrob.startup.init_app import add_user
-from webrob.config.settings import FACEBOOK_APP_TOKENS, TWITTER_APP_TOKENS, GITHUB_APP_TOKENS, GOOGLE_APP_TOKENS
+from webrob.config.settings import Config
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -35,8 +35,8 @@ github = oauth.remote_app('github',
                           authorize_url='https://github.com/login/oauth/authorize',
                           request_token_url=None,
                           request_token_params=None,
-                          consumer_key=GITHUB_APP_TOKENS[0],
-                          consumer_secret=GITHUB_APP_TOKENS[1]
+                          consumer_key=Config.GITHUB_APP_TOKENS[0],
+                          consumer_secret=Config.GITHUB_APP_TOKENS[1]
                           )
 
 facebook = oauth.remote_app('facebook',
@@ -44,8 +44,8 @@ facebook = oauth.remote_app('facebook',
                             request_token_url=None,
                             access_token_url='/oauth/access_token',
                             authorize_url='https://www.facebook.com/dialog/oauth',
-                            consumer_key=FACEBOOK_APP_TOKENS[0],
-                            consumer_secret=FACEBOOK_APP_TOKENS[1],
+                            consumer_key=Config.FACEBOOK_APP_TOKENS[0],
+                            consumer_secret=Config.FACEBOOK_APP_TOKENS[1],
                             request_token_params={'scope': 'email'}
                             )
 
@@ -54,8 +54,8 @@ twitter = oauth.remote_app('twitter',
                            request_token_url='https://api.twitter.com/oauth/request_token',
                            access_token_url='https://api.twitter.com/oauth/access_token',
                            authorize_url='https://api.twitter.com/oauth/authenticate',
-                           consumer_key=TWITTER_APP_TOKENS[0],
-                           consumer_secret=TWITTER_APP_TOKENS[1]
+                           consumer_key=Config.TWITTER_APP_TOKENS[0],
+                           consumer_secret=Config.TWITTER_APP_TOKENS[1]
                            )
 
 google = oauth.remote_app('google',
@@ -67,17 +67,17 @@ google = oauth.remote_app('google',
                           access_token_url='https://accounts.google.com/o/oauth2/token',
                           access_token_method='POST',
                           access_token_params={'grant_type': 'authorization_code'},
-                          consumer_key=GOOGLE_APP_TOKENS[0],
-                          consumer_secret=GOOGLE_APP_TOKENS[1]
+                          consumer_key=Config.GOOGLE_APP_TOKENS[0],
+                          consumer_secret=Config.GOOGLE_APP_TOKENS[1]
                           )
 
 
 def remote_app_registered(name):
     remote_apps = {
-        'github': tokens_are_defined(GITHUB_APP_TOKENS),
-        'facebook': tokens_are_defined(FACEBOOK_APP_TOKENS),
-        'twitter': tokens_are_defined(TWITTER_APP_TOKENS),
-        'google': tokens_are_defined(GOOGLE_APP_TOKENS)
+        'github': tokens_are_defined(Config.GITHUB_APP_TOKENS),
+        'facebook': tokens_are_defined(Config.FACEBOOK_APP_TOKENS),
+        'twitter': tokens_are_defined(Config.TWITTER_APP_TOKENS),
+        'google': tokens_are_defined(Config.GOOGLE_APP_TOKENS)
     }
     if name == 'any':
         return remote_apps.values().count(True) > 0

@@ -6,9 +6,9 @@ class Config:
     VAR = ZERO
 
     @staticmethod
-    def init_vars():
+    def init_var():
         Config.VAR = CONST
 
 
-def init_vars():
+def init_var():
     Config.VAR = CONST

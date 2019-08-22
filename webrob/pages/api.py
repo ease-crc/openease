@@ -8,7 +8,7 @@ from webrob.docker import docker_interface
 from webrob.docker.docker_interface import generate_mac
 from webrob.models.users import User
 from webrob.utility.random_string_builder import random_string
-from webrob.config.settings import ROS_DISTRIBUTION
+from webrob.config.settings import Config
 
 __author__ = 'mhorst@cs.uni-bremen.de'
 
@@ -90,7 +90,7 @@ def start_container(token):
     if user is None:
         return jsonify({'error': 'wrong api token'})
 
-    docker_interface.start_user_container(_generate_user_image_name(), user.username, ROS_DISTRIBUTION)
+    docker_interface.start_user_container(_generate_user_image_name(), user.username, Config.ROS_DISTRIBUTION)
     host_url = urlparse(request.host_url).hostname
     return jsonify({'result': 'success',
                     'url': '//' + host_url + '/ws/' + user.username + '/'})
@@ -100,7 +100,7 @@ def _generate_user_image_name():
     """
     Returns the image name to be used for user containers
     """
-    return 'openease/' + ROS_DISTRIBUTION + '-knowrob-daemon'
+    return 'openease/' + Config.ROS_DISTRIBUTION + '-knowrob-daemon'
 
 
 @app.route('/api/v1.0/stop_container/<string:token>', methods=['GET'])

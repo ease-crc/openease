@@ -8,10 +8,10 @@ from flask import flash, session
 from pyjsonrpc.rpcerror import JsonRpcError
 from webrob.app_and_db import app
 from webrob.utility.random_string_builder import random_string
-from webrob.config.settings import HTTP_CLIENT
+from webrob.config.settings import Config
 
 
-client = HTTP_CLIENT
+client = Config.HTTP_CLIENT
 
 
 def generate_mac(user_container_name, client_name, dest, rand, t, level, end, cache=False):

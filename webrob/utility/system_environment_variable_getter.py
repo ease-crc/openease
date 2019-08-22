@@ -5,7 +5,8 @@ def get_required_variable(var_name):
     try:
         return os.environ[var_name]
     except KeyError:
-        raise KeyError('KeyError: environment variable {0} does not exist'.format(var_name))
+        raise KeyError("""Environment variable {0} is required but does not exist.
+        Please create it and set its value according to the documentation.""".format(var_name))
 
 
 def get_variable_with_default(var_name, default):

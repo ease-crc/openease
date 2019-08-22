@@ -8,7 +8,7 @@ from subprocess import call
 import thread
 
 from webrob.app_and_db import app
-from webrob.config.settings import MESH_REPOSITORIES
+from webrob.config.settings import Config
 from webrob.utility.directory_handler import change_directory
 from webrob.utility.path_handler import join_paths, path_exists, get_parent_dir_name, get_path_basename, \
     get_unix_style_path_basename
@@ -35,7 +35,7 @@ def _change_to_mesh_data_directory():
 
 
 def _update_mesh_repositories():
-    for repo in MESH_REPOSITORIES:
+    for repo in Config.MESH_REPOSITORIES:
         _update_if_svn_or_git_repository(repo)
 
 
