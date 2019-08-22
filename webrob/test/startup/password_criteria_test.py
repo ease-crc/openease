@@ -1,10 +1,7 @@
-from webrob.startup.init_app import _check_password_and_display_message_on_error, _password_criteria_fulfilled, _has_six_or_more_chars, \
-    _contains_number, _contains_lowercase_letter, _contains_uppercase_letter, _create_new_user_and_add_to_db
-
-from webrob.app_and_db import app, db
-from webrob.startup import  init_app
-from flask_user import UserManager
-import pytest
+from webrob.app_and_db import app
+from webrob.startup.init_app import _check_password_and_display_message_on_error, _password_criteria_fulfilled, \
+    _has_six_or_more_chars, \
+    _contains_number, _contains_lowercase_letter, _contains_uppercase_letter
 
 PASSWORD_CASES_CRITERIA = ["a", "A", "1", "aA", "a1", "1A", "Aa1", "AAAAAA", "aaaaaa", "111111", "aaa111", "AAA111"]
 
@@ -47,17 +44,15 @@ def test_contains_uppercase():
     assert _contains_uppercase_letter('A') is True
     assert _contains_uppercase_letter('AbC') is True
 
+
 def test_check_password_and_display_message_on_error():
     for pw in PASSWORD_CASES_CRITERIA:
         assert _check_password_and_display_message_on_error(app, 'Paul', pw) is False
 
-def test_check_password_and_display_error_message_for_None_password():
+
+def test_check_password_and_display_error_message_for_none_password():
     assert _check_password_and_display_message_on_error(app, 'Paul', None) is False
+
 
 def test_check_for_correct_password():
     assert _check_password_and_display_message_on_error(app, 'Paul', 'AAaa11') is True
-
-
-
-
-
