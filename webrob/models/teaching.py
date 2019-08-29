@@ -27,7 +27,7 @@ class CourseTask(db.Model):
 
 
 def find_courses(course):
-    if course == None or course == '':
+    if course is None or course == '':
         return []
     # TODO: fuzzymatch using levenshtein distance
     #    Use (somehow): func.levenshtein(text_field, match_text) \in R
