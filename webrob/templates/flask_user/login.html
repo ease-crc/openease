@@ -30,7 +30,7 @@
                             </div>
 
                             {% for error in form.username.errors %}
-                                <p class="alert alert-danger alert-dismissible error">
+                                <p class="alert alert-danger alert-dismissible">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                     {{ error }}</p>
                             {% endfor %}
@@ -45,7 +45,7 @@
                             </div>
 
                             {% for error in form.password.errors %}
-                                <p class="alert alert-danger alert-dismissible error">
+                                <p class="alert alert-danger alert-dismissible">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                     {{ error }}</p>
                             {% endfor %}
