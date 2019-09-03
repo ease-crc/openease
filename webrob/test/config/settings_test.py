@@ -4,10 +4,10 @@ from webrob.config.settings import Config
 
 MAIL_PASSWORD = 'abc'
 
-
 @pytest.fixture
 def monkeypatch_setup(monkeypatch):
     monkeypatch.setenv('OPENEASE_MAIL_PASSWORD', MAIL_PASSWORD)
+
     # TODO: mock all other environment variables, so it does not need to be done twice
     return monkeypatch
 
