@@ -14,3 +14,10 @@ def init_vars():
     INT_VAR = INT_CONST
     STR_VAR = STR_CONST
     CONFIG_DICT['VAR'] = INT_CONST
+
+
+def reset_vars():
+    global INT_VAR, STR_VAR, CONFIG_DICT
+    INT_VAR = ZERO
+    STR_VAR = EMPTY_STR
+    CONFIG_DICT['VAR'] = ZERO

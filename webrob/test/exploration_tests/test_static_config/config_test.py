@@ -6,6 +6,13 @@ from webrob.test.exploration_tests.test_static_config.access import get_int_var,
 from webrob.test.exploration_tests.test_static_config.config import *
 
 
+def setup_function():
+    reset_vars()
+
+
+# -------------------------------TESTS---------------------------------
+
+
 # int and str are not reloaded, INT_VAR == INT_CONST (without config.INT_VAR) will cause AssertionError
 def test_config_int():
     assert config.INT_VAR == ZERO
