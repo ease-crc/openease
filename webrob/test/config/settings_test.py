@@ -25,4 +25,3 @@ def test_retrieve_mail_password(monkeypatch_setup):
 def test_retrieve_mail_password_error():
     with pytest.raises(KeyError):
         Config._retrieve_mail_password()
-    assert Config.MAIL_PASSWORD is None
