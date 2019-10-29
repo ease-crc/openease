@@ -27,7 +27,7 @@
     "browserify-css": "latest",
 
     "jquery": "# OpenEASE dependencies",
-    "jquery": "2.2.4",
+    "jquery": "3.4.1",
     "jquery-ui-bundle": "1.12.1-migrate",
     "layout": "git://github.com/benmaurer/layout.git#master",
     "datatables.net": "1.10.19",
