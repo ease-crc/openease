@@ -31,6 +31,10 @@ WORKDIR /opt/webapp
 # flag used in nginx configuration
 ENV OPEN_EASE_WEBAPP true
 
+# TODO install python-dependencies including flask
+# COPY requirements.txt .
+# RUN pip install -r requirements.txt
+
 # work as user 'ros'
 RUN useradd -m -d /home/ros -p ros ros && chsh -s /bin/bash ros
 ENV HOME /home/ros
