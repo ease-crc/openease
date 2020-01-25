@@ -1,6 +1,7 @@
 
 from flask import session, render_template, stream_with_context, Response
 from flask_user import login_required
+from flask import abort
 
 import os
 from subprocess import call
@@ -21,14 +22,8 @@ def mongoConnect():
     port = os.environ['MONGO_PORT_27017_TCP_PORT']
     return MongoClient(host, int(port))
 
-@app.route('/knowrob/admin/mongo')
-@admin_required
-def admin_mongo():
+def get_info_(db_info,file_info):
     mng = mongoConnect()
-    
-    db_info = {}
-    file_info = {}
-    
     for (cat,exp) in get_experiment_list():
         db_name = mongoDBName(cat,exp)
         
@@ -54,8 +49,18 @@ def admin_mongo():
             'size': size,
             'collections': list(collections)
         }
-    
     mng.close()
+
+@app.route('/knowrob/admin/mongo')
+@admin_required
+def admin_mongo():
+    db_info = {}
+    file_info = {}
+    try:
+        get_info_(db_info,file_info)
+    except Exception as exc:
+        app.logger.error(str(exc))
+        abort(404)
     return render_template('admin/mongo.html', **locals())
 
 @app.route('/knowrob/admin/mongo_update/<cat>/<exp>', methods=['GET', 'POST'])
