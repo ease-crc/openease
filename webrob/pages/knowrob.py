@@ -13,8 +13,7 @@ from webrob.app_and_db import app, db
 from webrob.docker.docker_application import ensure_application_started, restart_application
 from webrob.docker import docker_interface
 from webrob.docker.docker_interface import file_read
-from webrob.utility import get_user_dir
-from webrob.utility.utility import get_user_dir
+from webrob.utility import *
 from webrob.pages.experiments import get_experiment_download_url, get_experiment_list, experiment_load_queries
 from webrob.config.settings import MAX_HISTORY_LINES
 from webrob.config.settings import ROS_DISTRIBUTION
