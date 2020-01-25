@@ -21,7 +21,8 @@ def _config_is_debug():
 
 def _run_debug_server():
     print 'Run web server in DEBUG mode'
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True, threaded=False)
+    #app.run(debug=True)
 
 
 def _run_server():
