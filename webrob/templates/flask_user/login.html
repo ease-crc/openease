@@ -1,9 +1,13 @@
 {% extends 'flask_user/public_base_login.html' %}
 
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/login.css') }}"/>
+{% endblock %}
+
 {% block content_inner %}
     {% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
 
-    <div class="page-background">
+    <div>
         <div class="login-content">
             <div id="login-div">
                 <div id="ease-logo">
@@ -12,9 +16,9 @@
                 </div>
                 <div class="card" id="setup-login">
                     <div class="card-header text-login">{% trans %}Login to your account{% endtrans %}</div>
-                        <div class="card-body">
-                        {#                    <div>#}
-                             <form action="" method="POST" novalidate class="form" role="form">
+                    <div class="card-body">
+
+                        <form action="" method="POST" novalidate class="form" role="form">
                             {{ form.hidden_tag() }}
 
 
@@ -26,13 +30,11 @@
                                        id="inputHorizontalDanger" id="username" name="username"
                                        type="text"
                                        value="" required autofocus>
-                                {#                                <div class="invalid-feedback">#}
-                                {#                                    Username is required.#}
-                                {#                                </div>#}
+
                             </div>
 
                             {% for error in form.username.errors %}
-                                <p class="alert alert-danger alert-dismissible error">
+                                <p class="alert alert-danger alert-dismissible">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                     {{ error }}</p>
                             {% endfor %}
@@ -43,13 +45,11 @@
                                 <input placeholder="Password" class="form-control" id="password" name="password"
                                        type="password"
                                        value="" required/>
-                                {#                                <div class="invalid-feedback">#}
-                                {#                                    Password is required.#}
-                                {#                                </div>#}
+
                             </div>
 
                             {% for error in form.password.errors %}
-                                <p class="alert alert-danger alert-dismissible error">
+                                <p class="alert alert-danger alert-dismissible">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                     {{ error }}</p>
                             {% endfor %}
@@ -84,8 +84,6 @@
 
                     </div>
 
-                    {#                    error message was here#}
-
 
                 </div>
             </div>
@@ -93,9 +91,7 @@
         </div>
     </div>
 
-    {#    footer is outside page-background div#}
     <footer id="footer-style">
-        {#        <div class="container">#}
 
         <div class="legal">
 
@@ -105,17 +101,13 @@
             <span id="privacy"> <a href="#">Privacy</a></span>
 
             <p id="copyright">
-                {#                <span>&copy;Copyright openEASE</span>#}
+
                 &copy;Copyright openEASE <span id="myYear"> </span>
             </p>
 
 
         </div>
-        {#        </div>#}
-
 
     </footer>
-    <script src="../../static/form-js/copyright_year.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='lib/form-js/copyright_year.js') }}"></script>
 {% endblock %}
-
-

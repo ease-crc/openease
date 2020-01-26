@@ -1,16 +1,19 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block login %}
+  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
+  <link rel="shortcut icon" href="/static/icons/favicon.png" type="image/x-icon" /> 
+  
+  {% block head %}{% endblock %}
+</head>
 
-
-    <link rel="stylesheet" type="text/css" href="../../../../openease_css/SCSS/login.css"/>
-
-
-{% endblock %}
-
-
-{% block content %}
+<body{% block bodyargs %}{% endblock %}>
     <div class="container">
         {% block content_inner %}{% endblock %}
     </div>
-{% endblock %}
+</body>
+</html>
+
