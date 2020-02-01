@@ -16,7 +16,6 @@ from flask.ext.babel import Babel
 
 from webrob.utility import random_string
 from webrob.startup.init_db import *
-from webrob.startup.init_webapp import *
 from webrob.models.users import Role, User
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -91,7 +90,6 @@ def init_app(app, db_instance, extra_config_settings={}):
     from webrob.pages import oauth
     
     init_db(app, db_instance)
-    init_webapp(app, db_instance)
     
     add_user(app=app,db=db_instance,user_manager=app.user_manager,
              name='admin',
