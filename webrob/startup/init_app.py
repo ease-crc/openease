@@ -85,7 +85,6 @@ def init_app(app, db_instance, extra_config_settings={}):
     from webrob.pages import knowrob
     from webrob.pages import login
     from webrob.pages import meshes
-    from webrob.pages import mongo
     from webrob.pages import tutorials
     from webrob.pages import oauth
     
