@@ -100,6 +100,11 @@ a.openease-brand {
     <ul class="navbar-nav text-right">
 {% if current_user.is_authenticated %}
       <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('render_user_data') }}">
+          <span class="fas fa-user-plus"></span> User info
+        </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="{{ url_for('user.logout') }}">
           <span class="fas fa-sign-out-alt"></span> Logout
         </a>
