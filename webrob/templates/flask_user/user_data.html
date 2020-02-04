@@ -1,24 +1,39 @@
 {% extends "openease_base.html" %}
+  
+{% block head %}
+<style>
+body {
+  background-color: #0277bd;
+}
+</style>
+{% endblock %}
 
 {% block body %}
-<div class="page-centered">
-    <div class="headline"><div class="content-box" id="welcome-headline-box">
-<h1 class="content-box-header">openEASE User Profile</h1>
-    </div></div>
-
-    <div id="page-body">
-        <div class="content-box" id="user-data-box">
-            <h1 class="content-box-header">{%trans%}Signed in as{%endtrans%}</h1>
-            <dl>
-                <dt>Username: </dt><dd>{{ current_user.username }}</dd>
-                <dt>Email: </dt><dd>{{ current_user.email }}</dd>
-                <dt>Admin rights: </dt><dd>{{ current_user.has_role("admin") }}</dd>
-                <dt>API token: </dt><dd>{{ session.api_token }} (<a href="{{ url_for('create_api_token') }}">create new</a>)</dd>
-            </dl>
-        </div>
-        <div class="content-box" id="video-box">
-            <h1 class="content-box-header">Howto use openEASE</h1>
-            <video id="howto-video" width="420" height="236" src="{{ url_for('static', filename='HowtouseopenEASE.mp4') }}" controls></video>
+<div class="container p-4">  
+    <div class="card" id="user-data">
+        <div class="card-header bg-openease-light">{% trans %}Signed in as{% endtrans %}</div>
+        <div class="card-body">
+            <form>
+                <div class="form-group row">
+                    <label for="staticUsername" class="col-sm-2 col-form-label">Username</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staticUsername" value="{{ current_user.username }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ current_user.email }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="staticToken" class="col-sm-2 col-form-label">API token</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext" id="staticToken" value="{{ session.api_token }}">
+                    </div>
+                </div>
+                <a href="{{ url_for('create_api_token') }}" class="btn btn-default">Create API Token</a>
+            </form>
         </div>
     </div>
 </div>
