@@ -30,6 +30,7 @@
     "datatables.net-buttons": "1.5.3",
     "popper.js": "1.14.3",
     "bootstrap": "4.1.1",
+    "@fortawesome/fontawesome-free": "5.12.0",
     "dat.gui": "0.7.2",
     "ros3d": "git://github.com/RobotWebTools/ros3djs.git#develop",
     "ios-overlay": "0.0.3",

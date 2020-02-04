@@ -10,19 +10,16 @@ from pyjsonrpc.rpcerror import JsonRpcError
 from webrob.app_and_db import app
 from webrob.utility import random_string
 
+client = pyjsonrpc.HttpClient(url='http://dockerbridge:5001')
 
-client = pyjsonrpc.HttpClient(url="http://"+os.environ['DOCKERBRIDGE_PORT_5001_TCP_ADDR'] + ':'
-                              + os.environ['DOCKERBRIDGE_PORT_5001_TCP_PORT'])
-
-
-def generate_mac(user_container_name, client_name, dest, rand, t, level, end, cache=False):
+def generate_mac(user_name, client_name, dest, rand, t, level, end, cache=False):
     """
     Generate the mac for use with rosauth. Choose params according to rosauth specification.
     """
     if cache and 'secret_t' in session and session['secret_t'] > t:
         secret = session['secret_key']
     else:
-        secret = client.files_readsecret(user_container_name)
+        secret = client.files_readsecret(user_name)
         if cache:
             session['secret_t'] = t + 60
             session['secret_key'] = secret
@@ -36,7 +33,7 @@ def clear_secretcache():
         del session['secret_key']
 
 
-def start_user_container(application_image, user_container_name, ros_distribution):
+def start_user_container(user_name, neem_group, neem_name, neem_version='latest', knowrob_image='knowrob', knowrob_version='latest'):
     """
     Starts a user container based on the given image. If the container already exists, it will stop and remove the
     container first. Also, a data container is created and mounted inside the given container, and a rosauth secret
@@ -46,31 +43,33 @@ def start_user_container(application_image, user_container_name, ros_distributio
     beforehand.
     
     :param application_image: Image the container should be based on
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     """
     try:
-        client.notify("create_user_data_container", user_container_name)
-        client.notify("files_writesecret", user_container_name, random_string(16))
+        client.notify("create_user_data_container", user_name)
+        client.notify("files_writesecret", user_name, random_string(16))
         clear_secretcache()
-        client.notify("start_user_container", application_image, user_container_name, ros_distribution)
+        client.notify("start_user_container", user_name,
+                      neem_group, neem_name, neem_version,
+                      knowrob_image, knowrob_version)
     except JsonRpcError, e:
-        flash("Error: Connection to your OpenEASE instance failed.")
+        flash("Error: Connection to your openEASE instance failed.")
         app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
     except URLError, e:
-        flash("Error: Connection to your OpenEASE instance failed.")
+        flash("Error: Connection to your openEASE instance failed.")
         app.logger.error("ConnectionError during connect: " + str(e) + "\n")
     except IOError, e:
-        flash("Error: Connection to your OpenEASE instance failed.")
+        flash("Error: Connection to your openEASE instance failed.")
         app.logger.error("ConnectionError during connect: " + str(e) + "\n")
 
 
-def stop_container(user_container_name):
+def stop_user_container(user_name):
     """
     Stops and deletes a user container.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the container.
     """
     try:
-        client.notify("stop_container", user_container_name)
+        client.notify("stop_user_container", user_name)
         clear_secretcache()
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
@@ -83,11 +82,11 @@ def stop_container(user_container_name):
         app.logger.error("ConnectionError during stop: " + str(e) + "\n")
 
 
-def container_started(user_container_name, base_image=None):
+def container_started(user_name, base_image=None):
     """
     Returns true if the container exists and is running. If a base_image is specified, it only return true if the
     container exists and is directly derived from the given base_image
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the container.
     :param base_image: Image the container is based on
     """
     try:
@@ -104,13 +103,13 @@ def container_started(user_container_name, base_image=None):
     return None
 
 
-def get_container_ip(user_container_name):
+def get_container_ip(user_name):
     """
     Returns the internal IP of the container.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     """
     try:
-        return client.get_container_ip(user_container_name)
+        return client.get_container_ip(user_name)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during get_container_ip: " + str(e.message) + str(e.data) + "\n")
@@ -123,46 +122,14 @@ def get_container_ip(user_container_name):
     return None
 
 
-def get_container_log(user_container_name):
-    """
-    Returns the stdout/stderr of the container.
-    :param user_container_name: Name of the container.
-    """
-    try:
-        return client.get_container_log(user_container_name)
-    except JsonRpcError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during get_container_log: " + str(e.message) + str(e.data) + "\n")
-    except URLError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during get_container_log: " + str(e) + "\n")
-    except IOError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during get_container_log: " + str(e) + "\n")
-
-
-def get_container_env(user_container_name, key):
-    try:
-        return client.get_container_env(user_container_name, key)
-    except JsonRpcError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during get_container_env: " + str(e.message) + str(e.data) + "\n")
-    except URLError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during get_container_env: " + str(e) + "\n")
-    except IOError, e:
-        flash("Error: Connection to your application failed.")
-        app.logger.error("ConnectionError during get_container_env: " + str(e) + "\n")
-
-
-def refresh(user_container_name):
+def refresh(user_name):
     """
     Resets the kill timeout for the given container. Containers are normally stopped and removed after 10 minutes of
     inactivity. Call this method on user activity to extend the timer back to 10 minutes.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     """
     try:
-        client.notify("refresh", user_container_name)
+        client.notify("refresh", user_name)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during refresh: " + str(e.message) + str(e.data) + "\n")
@@ -174,15 +141,15 @@ def refresh(user_container_name):
         app.logger.error("ConnectionError during refresh: " + str(e) + "\n")
 
 
-def file_exists(user_container_name, file):
+def file_exists(user_name, file):
     """
     Returns true if the given file exists in the data container associated to the given container.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     :param file: relative filename. The service automatically adds /home/ros/user_data. Non relative filenames and
     parent directory declarations (../) are forbidden and will not work.
     """
     try:
-        return client.files_exists(user_container_name, file)
+        return client.files_exists(user_name, file)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during file_exists: " + str(e.message) + str(e.data) + "\n")
@@ -194,16 +161,16 @@ def file_exists(user_container_name, file):
         app.logger.error("ConnectionError during file_exists: " + str(e) + "\n")
 
 
-def file_rm(user_container_name, file, recursive=False):
+def file_rm(user_name, file, recursive=False):
     """
     Deletes the given file in the data container associated to the given container.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     :param file: relative filename. The service automatically adds /home/ros/user_data. Non relative filenames and
     parent directory declarations (../) are forbidden and will not work.
     :param recursive: True if deletion should be done recursively (e.g. for directories)
     """
     try:
-        client.notify("files_rm", user_container_name, file, recursive)
+        client.notify("files_rm", user_name, file, recursive)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during file_rm: " + str(e.message) + str(e.data) + "\n")
@@ -215,19 +182,19 @@ def file_rm(user_container_name, file, recursive=False):
         app.logger.error("ConnectionError during file_rm: " + str(e) + "\n")
 
 
-def file_ls(user_container_name, dir, recursive=False):
+def file_ls(user_name, dir, recursive=False):
     """
     Returns a listing of the given directory in the data container associated to the given container.
     It will return a dictionary of the type { "name": directory_name, "isdir": True, "children": [...] }, with the
     children being a list of all the files inside the directory. They have the same dictionary structure as the root
     element.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     :param dir: relative directory path. The service automatically adds /home/ros/user_data. Non relative pathes and
     parent directory declarations (../) are forbidden and will not work.
     :param recursive: True if subdirectories should also be listed
     """
     try:
-        return client.files_ls(user_container_name, dir, recursive)
+        return client.files_ls(user_name, dir, recursive)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during file_ls: " + str(e.message) + str(e.data) + "\n")
@@ -239,15 +206,15 @@ def file_ls(user_container_name, dir, recursive=False):
         app.logger.error("ConnectionError during file_ls: " + str(e) + "\n")
 
 
-def file_read(user_container_name, file):
+def file_read(user_name, file):
     """
     Returns the content of the given file in the data container associated to the given container as string.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     :param file: relative file path. The service automatically adds /home/ros/user_data. Non relative pathes and
     parent directory declarations (../) are forbidden and will not work.
     """
     try:
-        return base64.b64decode(client.files_fromcontainer(user_container_name, file))
+        return base64.b64decode(client.files_fromcontainer(user_name, file))
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during file_read: " + str(e.message) + str(e.data) + "\n")
@@ -259,16 +226,16 @@ def file_read(user_container_name, file):
         app.logger.error("ConnectionError during file_read: " + str(e) + "\n")
 
 
-def file_write(user_container_name, data, file):
+def file_write(user_name, data, file):
     """
     Write the content of data to the given file in the data container associated to the given container.
-    :param user_container_name: Name of the container.
+    :param user_name: Name of the user.
     :param data: data to write to the file
     :param file: relative file path. The service automatically adds /home/ros/user_data. Non relative pathes and
     parent directory declarations (../) are forbidden and will not work.
     """
     try:
-        client.notify("files_tocontainer", user_container_name, base64.b64encode(data), file)
+        client.notify("files_tocontainer", user_name, base64.b64encode(data), file)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during file_write: " + str(e.message) + str(e.data) + "\n")

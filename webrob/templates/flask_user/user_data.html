@@ -1,21 +1,6 @@
-{% extends "layout.html" %}
-{% block bodyargs %}{% if overlay %} onload="showSpinnerOverlay()"{% endif %}{% endblock %}
+{% extends "openease_base.html" %}
 
-{% block head %}
-  <script type="text/javascript">
-    function on_marker_dblclick(marker) {};
-    function on_marker_delete(ns) {};
-    function on_designator_received(designatorHtml) {};
-    function on_image_received(imageHtml, imageWidth, imageHeight) {};
-    function on_camera_pose_received(pose) {};
-    function on_episode_selected(lib) {};
-    function on_marker_contextmenu(marker) {};
-    function on_render(camera,scene) {};
-    function on_register_nodes() {};
-  </script>
-{% endblock %}
-{% block content %}
-
+{% block body %}
 <div class="page-centered">
     <div class="headline"><div class="content-box" id="welcome-headline-box">
 <h1 class="content-box-header">openEASE User Profile</h1>
@@ -37,6 +22,5 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
 

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
+  <link type="image/x-icon" rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.png') }}" />
+
+  <script type="text/javascript">
+    function FlaskUser(){
+        this.username = '{{ current_user.displayname or current_user.username or "anonymous" }}';
+        this.mail     = '{{ current_user.email }}';
+        this.isLoggedIn = function() {
+            return '{{ current_user.is_authenticated }}' == 'True';
+        };
+        this.isAdmin = function() {
+            return '{{ current_user.is_authenticated and current_user.has_role("admin") }}' == 'True';
+        };
+    };
+    var flask_user = new FlaskUser();
+  </script>
+
+  <style>
+#openease-navbar{
+  background: linear-gradient(to bottom,
+          #549FC8 0%,
+          #246F98 50%,
+          #246F98 51%,
+          #144F78 100%);
+}
+a.openease-brand {
+  font-family: 'Oswald', sans-serif;
+  color: #FFFFFF;
+}
+.openease-brand img{
+  height: 20px;
+}
+.bg-openease-light {
+  background: #549FC8;
+  color: white;
+}
+.bg-openease-dark {
+  background: #246F98;
+  color: white;
+}
+  </style>
+  
+  {% block head %}{% endblock %}
+</head>
+
+<body{% block bodyargs %}{% endblock %}>
+
+<nav class="navbar navbar-expand-lg navbar-dark" id="openease-navbar">
+  <a class="navbar-brand openease-brand" href="http://www.open-ease.org">
+    <img src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">
+  </a>
+  <a class="navbar-brand openease-brand" href="http://ai.uni-bremen.de/">
+    <img src="{{ url_for('static', filename='logos/ai-logo-small.png') }}">
+  </a>
+  <a class="navbar-brand openease-brand" href="http://www.informatik.uni-bremen.de/cms/detail.php?id=12">
+    <img src="{{ url_for('static', filename='logos/uni-bremen-small.png') }}">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/neems">
+          <i class="fas fa-search"></i>
+          NEEMs
+        </a>
+      </li>
+{% if current_user.is_authenticated and current_user.has_role('admin') %}
+      <!-- Admin Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          <i class="fas fa-user-secret"></i>
+          Admin
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="/admin/roles">User Roles</a>
+          <a class="dropdown-item" href="/admin/sql">SQL</a>
+          <a class="dropdown-item" href="/admin/cookies">Cookies</a>
+        </div>
+      </li>
+{% endif %}
+    </ul>
+  </div>
+  <!-- right side of navbar: Login/Logout space -->
+  <div class="collapse navbar-collapse flex-grow-0">
+{% block nav_right %}{% endblock %}
+    <ul class="navbar-nav text-right">
+{% if current_user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('user.logout') }}">
+          <span class="fas fa-sign-out-alt"></span> Logout
+        </a>
+      </li>
+{% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('user.register') }}">
+          <span class="fas fa-user-plus"></span> Sign Up
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('user.login') }}">
+          <span class="fas fa-sign-in-alt"></span> Login
+        </a>
+      </li>
+{% endif %}
+    </ul>
+  </div>
+</nav>
+
+{% block body %}{% endblock %}
+
+<footer class="page-footer font-small blue pt-4">
+  <div class="footer-copyright text-center py-3">
+    © <span id="myYear"> </span> Copyright: University of Bremen
+  </div>
+</footer>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/form-js/copyright_year.js') }}"></script>
+
+</body>
+</html>
+

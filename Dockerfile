@@ -25,8 +25,17 @@ ENV HOME /home/ros
 
 ## install npm dendencies
 RUN mkdir /tmp/npm
-ADD ./webrob/static/index.js ./webrob/static/package.json /tmp/npm/
-RUN cd /tmp/npm && npm install && npm run build && chown -R ros:ros /tmp/npm
+WORKDIR /tmp/npm
+ADD ./webrob/static/package.json /tmp/npm/
+RUN npm install
+RUN ls /tmp/npm/node_modules/@fortawesome/
+RUN ls /tmp/npm/node_modules/@fortawesome/fontawesome-free
+RUN ls /tmp/npm/node_modules/@fortawesome/fontawesome-free/webfonts
+
+ADD ./webrob/static/index.js /tmp/npm/
+RUN npm run build
+RUN chown -R ros:ros /tmp/npm
+WORKDIR /opt/webapp
 
 ## copy this folder to the container
 ADD . /opt/webapp/

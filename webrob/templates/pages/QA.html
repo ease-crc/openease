@@ -1,11 +1,6 @@
-{% extends "layout.html" %}
+{% extends "pages/knowrob_base.html" %}
 
 {% block head %}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dat.gui.css') }}"/>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
-
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/BarChart.js') }}"></script>
@@ -15,79 +10,52 @@
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/TaskTreeVisClient.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/array-nonstandard.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/Control.js') }}"></script>
-  
+
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/EASE.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/utility.js') }}"></script>
+  
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/MarkerArrayClient.js') }}"></script>
+  
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/canvas.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/console.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/iframes/kb-frame.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/client.js') }}"></script>
+  
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/Viewer.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/BasicShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/CopyShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/FXAAShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/SAOShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/SSAOShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/SepiaShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/CelShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/OutlineShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/UnpackDepthRGBAShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/DepthLimitedBlurShader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/EffectComposer.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/ShaderPass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/TexturePass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/ClearPass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/HighlightingPass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/RenderPass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/SAOPass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/SSAOPass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/OutlinePass.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/CelShadingPass.js') }}"></script>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/designator/desig.js') }}"></script>
+  
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/pages/QA.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-  
 <script type="text/javascript">
-    var ui;
-    var visClient, graphClient;
-    var datgui;
-    var datgui_added = false;
-    
-    function selectMarker(marker) {
-        var prolog = parent.client.newProlog();
-        prolog.jsonQuery("term_to_atom("+marker.ns+",MarkerName), "+
-            "marker_queries(MarkerName, MarkerQueries).",
-            function(result) {
-                prolog.finishClient();
-                ui.loadObjectQueries(result.solution.MarkerQueries);
-            }
-        );
-    };
-    function unselectMarker() {
-        ui.initQueryLibrary();
-    };
-    function removeMarker(marker) {
-        if(marker === parent.client.selectedMarker) {
-            unselectMarker();
-        }
-    };
-    function showMarkerMenu(marker) {};
-    
-    function on_designator_received(obj) {
-      $('#designator').html('');
-      $('#designator').append(obj);
-      $('#designator').change();
-    };
-    
-    function on_image_received(imageHtml, imageWidth, imageHeight) {
-        ui.imageWidth = imageWidth;
-        ui.imageHeight = imageHeight;
-        
-        document.getElementById('mjpeg').innerHTML = imageHtml;
-        $('#mjpeg').change();
-        $('#mjpeg').resize();
-    };
-    
-    function on_camera_pose_received(pose) {
-        ui.setCameraPose(pose);
-    };
-    
-    function on_episode_selected(lib) {
-        ui.initQueryLibrary(lib.query);
-        // initialize canvas
-        ui.initCanvas();
-        ui.resizeCanvas();
-        // TODO(daniel): retract all user asserted facts!
-    };
-    
-    function on_register_nodes() {
-        visClient = new DataVisClient({
-            ros: parent.client.ros,
-            containerId: '#chart',
-            topic: 'data_vis_msgs'
-        });
-        graphClient = new TaskTreeVisClient({
-            ros: parent.client.ros,
-            containerId: '#designator',
-            topic: 'task_tree_msgs'
-        });
-    };
+    var page = new KnowrobUI(flask_user, {
+        use_console_overlay: true,
+        authentication: '{{ authentication }}',
+        ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
+                 '://{{ host_url }}/ws/{{ container_name }}/'
+    });
 
     function resize() {
       var knowrobLayout = $('#page-content').layout({
@@ -140,7 +108,7 @@
             center: {
               paneSelector: "#markers",
               onresize: function() {
-               if( ui ) ui.resizeCanvas();
+                page.resizeCanvas();
               },
               minSize: 50
             },
@@ -150,40 +118,31 @@
               minSize: 50
             }
       });
-      ui.resizeCanvas();
+      page.resizeCanvas();
       
       $('#designator').change(function() { knowrobLayout.open('east'); });
       $('#mjpeg').change(function() { knowrobLayout.open('east'); });
       $('#chart').change(function() { centerLayout.open('south'); });
     };
     
-    function datgui(){
-        if(datgui_added) return;
-        datgui_added = true;
-        document.getElementById('markers').appendChild(datgui.domElement);
-    };
-    
     $(document).ready(function () {
-        ui = new KnowrobUI(parent.client, {
-            use_console_overlay: true
-        });
-        ui.init();
+        page.client.on_designator_received = function(obj) {
+            $('#designator').html('');
+            $('#designator').append(obj);
+            $('#designator').change();
+        };
+        page.client.on_image_received = function(imageHtml, imageWidth, imageHeight) {
+            page.imageWidth = imageWidth;
+            page.imageHeight = imageHeight;
+            document.getElementById('mjpeg').innerHTML = imageHtml;
+            $('#mjpeg').change();
+            $('#mjpeg').resize();
+        };
+        page.init();
         resize();
         // make sure editor size is also updated
         ace.edit("history").resize(true);
         ace.edit("user_query").resize(true);
-        
-        datgui = new dat.GUI({ autoPlace: false });
-        datgui.domElement.id = 'datgui';
-        
-        if(parent.client.nodesRegistered && !visClient) {
-            on_register_nodes();
-        }
-    });
-    
-    LEFT_MENU_LIST.push({
-        text: "Settings",
-        submenu: [{ text: 'Canvas', id: 'datgui-menu', onclick: datgui}]
     });
 </script>
 
@@ -278,5 +237,4 @@
       <div id="library-editor-content"></div>
   </div>
 </div>
-
 {% endblock %}

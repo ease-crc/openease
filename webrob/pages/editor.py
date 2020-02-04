@@ -12,7 +12,6 @@ from flask_user import current_app
 from webrob.app_and_db import app
 from webrob.docker import docker_interface
 from webrob.docker.docker_interface import LFTransfer
-from webrob.docker.docker_application import ensure_application_started
 from webrob.utility import admin_required
 from webrob.utility import copy_template_file
 from webrob.models.teaching import CourseExercise

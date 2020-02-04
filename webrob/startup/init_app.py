@@ -78,15 +78,16 @@ def init_app(app, db_instance, extra_config_settings={}):
     from webrob.models import experiments
 
     # Load all views.py files to register @app.routes() with Flask
+    from webrob.pages import main
     from webrob.pages import api
-    from webrob.pages import db
+    from webrob.pages import neems
+    from webrob.pages import QA
     from webrob.pages import editor
-    from webrob.pages import experiments
-    from webrob.pages import knowrob
-    from webrob.pages import login
     from webrob.pages import meshes
     from webrob.pages import tutorials
     from webrob.pages import oauth
+    from webrob.pages.admin import db
+    from webrob.pages.admin import cookies
     
     init_db(app, db_instance)
     

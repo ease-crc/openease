@@ -1,0 +1,77 @@
+{% extends "openease_base.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block nav_right %}
+    <form class="form-inline">
+      <div class="md-form my-0">
+        <input name="neem_query" id="neem_query" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      </div>
+    </form>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid p-4">
+  <div class="row">
+{% for neem in neems %}
+    <div class="col-6 col-md-4 col-lg-3 mb-4">
+      <div class="card">
+         <div class="card-header bg-openease-light">
+           {{ neem.repo_path }}
+        </div>
+        <div class="card-body">
+          <h6 class="card-title">{{ neem.name }}</h6>
+          <table class="card-table table">
+            <tbody>
+              {% for activity in neem.activities %}
+              <tr>
+                <td>Activity</td>
+                <td><a href="{{ activity.iri }}" class="card-link">{{ activity.name }}</a>
+                </td>
+              </tr>
+              {% endfor %}
+              {% for env in neem.environments %}
+              <tr>
+                <td>Environment</td>
+                <td><a href="{{ env.iri }}" class="card-link">{{ env.name }}</a>
+                {% if env.short_name %}
+                ({{ env.short_name }})
+                {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+              {% for agent in neem.agents %}
+              <tr>
+                <td>Agent</td>
+                <td><a href="{{ agent.iri }}" class="card-link">{{ agent.name }}</a>
+                {% if agent.short_name %}
+                ({{ agent.short_name }})
+                {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>Maintainer</td>
+                <td>{{ neem.maintainer.name }}</td>
+              </tr>
+            </table>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="card-link" data-toggle="popover" title="{{ neem.name }}" data-placement="top" data-content="{{ neem.description }}">Read More</a>
+          <a href="#" class="card-link">Download</a>
+          <a href="{{ url_for('render_QA_page') }}?neem_group={{ neem.repo_group }}&neem_name={{ neem.repo_name }}" class="card-link">Explore</a>
+        </div>
+      </div>
+    </div>
+{% endfor %}
+  </div>
+{{ pagination.links }}
+</div>
+
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+});
+</script>
+{% endblock %}

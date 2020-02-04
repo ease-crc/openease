@@ -27,9 +27,5 @@ USER_ENABLE_USERNAME = True
 USER_ENABLE_EMAIL = True
 USER_ENABLE_CONFIRM_EMAIL = False
 
-MAX_HISTORY_LINES = 100
-
 MESH_REPOSITORIES = map(lambda x: tuple(x.split(' ')),
                         os.getenv('OPENEASE_MESHES', 'git https://github.com/PR2/pr2_common').split(','))
-
-ROS_DISTRIBUTION = os.getenv('OPENEASE_ROS_DISTRIBUTION', 'indigo')
