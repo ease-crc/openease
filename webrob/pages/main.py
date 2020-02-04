@@ -37,7 +37,7 @@ def redirect_unhandled_exception(e):
 @app.route('/userdata')
 @login_required
 def render_user_data():
-    return render_template('show_user_data.html', **locals())
+    return render_template('flask_user/user_data.html', **locals())
 
 @app.route('/userdata/<path:filename>')
 def download_user_data(filename):
