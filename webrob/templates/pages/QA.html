@@ -1,16 +1,6 @@
 {% extends "pages/knowrob_base.html" %}
 
-{% block head %}
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/BarChart.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/TreeDiagram.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/Timeline.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DataVisClient.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/TaskTreeVisClient.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/array-nonstandard.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/Control.js') }}"></script>
-
+{% block head_inner %}
   <script type="text/javascript" src="{{ url_for('static', filename='lib/EASE.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/utility.js') }}"></script>
   
@@ -20,32 +10,20 @@
   <script type="text/javascript" src="{{ url_for('static', filename='lib/canvas.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/console.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/client.js') }}"></script>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/Viewer.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/BasicShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/CopyShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/FXAAShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/SAOShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/SSAOShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/SepiaShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/CelShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/OutlineShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/UnpackDepthRGBAShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/shader/DepthLimitedBlurShader.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/EffectComposer.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/ShaderPass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/TexturePass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/ClearPass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/HighlightingPass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/RenderPass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/SAOPass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/SSAOPass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/OutlinePass.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/vis/passes/CelShadingPass.js') }}"></script>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/designator/desig.js') }}"></script>
   
   <script type="text/javascript" src="{{ url_for('static', filename='lib/pages/QA.js') }}"></script>
+
+  <!--TODO: openEASE must run offline, replace this!
+            But there are some difficulties getting the google charts
+            into the current build procedure using browserify.
+  -->
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script>
+    google.load("visualization", "1", {packages:["timeline"]});
+//     google.load("visualization", "1", {packages:["corechart","timeline"]});
+  </script>
 {% endblock %}
 
 {% block content %}
