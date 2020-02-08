@@ -24,21 +24,20 @@ RUN useradd -m -d /home/ros -p ros ros && chsh -s /bin/bash ros
 ENV HOME /home/ros
 
 ## install npm dendencies
-RUN mkdir /tmp/npm
+RUN mkdir -p /tmp/npm/node_modules
 WORKDIR /tmp/npm
-ADD ./webrob/static/package.json /tmp/npm/
+COPY ./webrob/static/package.json /tmp/npm/
+# copy local node modules into the image
+COPY ./node_modules /tmp/npm/node_modules
 RUN npm install
-RUN ls /tmp/npm/node_modules/@fortawesome/
-RUN ls /tmp/npm/node_modules/@fortawesome/fontawesome-free
-RUN ls /tmp/npm/node_modules/@fortawesome/fontawesome-free/webfonts
 
-ADD ./webrob/static/index.js /tmp/npm/
+COPY ./webrob/static/index.js /tmp/npm/
 RUN npm run build
 RUN chown -R ros:ros /tmp/npm
 WORKDIR /opt/webapp
 
 ## copy this folder to the container
-ADD . /opt/webapp/
+COPY . /opt/webapp/
 RUN chown -R ros:ros /opt/webapp/
 
 RUN mkdir /home/ros/mesh_data
@@ -46,9 +45,7 @@ RUN chown -R ros:ros /home/ros/mesh_data
 
 USER ros
 
-# install JS libraries using npm
-# TODO why need to copy?
-# RUN cd /opt/webapp/webrob/static && npm install
+# install JS libraries to static dir of webserver
 RUN mv /tmp/npm/openease*.js /opt/webapp/webrob/static/
 
 RUN cd /home/ros
