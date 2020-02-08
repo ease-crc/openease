@@ -1,6 +1,8 @@
 {% extends "openease_base.html" %}
 
 {% block head %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/layout.css') }}"/>
+  
   <script type="text/javascript">
 
     function updateQueryString() {
@@ -41,6 +43,8 @@
         $(window).bind('hashchange', updateLocation);
     });
   </script>
+{% block head_inner %}
+{% endblock %}
 {% endblock %}
 
 {% block body %}
