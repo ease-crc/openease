@@ -70,6 +70,11 @@ global.aceLangTools = ace.acequire("ace/ext/language_tools");
 // Diagram visualization
 global.d3 = require('d3');
 global.d3tip = require('d3-tip')(d3);
+global.DataVisClient = require('@openease/charts');
+
+/////////////////////////
+// Canvas visualization
+global.EASEViewer = require('@openease/canvas-three');
 
 /////////////////////////
 // diffing things
