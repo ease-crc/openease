@@ -11,10 +11,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q postgresql
 
 WORKDIR /opt/webapp
 
-# flag used in nginx configuration
-# TODO: is this still needed?
-ENV OPEN_EASE_WEBAPP true
-
 # install python-dependencies including flask
 COPY requirements.txt .
 RUN pip install -r requirements.txt
