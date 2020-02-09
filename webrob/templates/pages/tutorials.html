@@ -26,6 +26,21 @@
     var ui;
     var visClient, graphClient;
     var current_exercise_id = 0;
+
+    function highlightElement(name, type, highlight) {
+        if(typeof type == "string") {
+            if(type === "class") {
+              var elems = document.getElementsByClassName(name);
+              for (i = 0; i < elems.length; i++) {
+                elems[i].style.backgroundColor = highlight ? "#144F78" : "#BBB";
+                elems[i].style.border = highlight ? "5px solid #144F78" : "1px solid #BBB";
+              }
+            }
+            else if(type === "id") {
+              document.getElementById(name).style.border = highlight ? "5px solid #144F78" : "1px solid #BBB";
+            }
+        }
+    };
     
     $(document).ready(function () {
         ui = new KnowrobUI(parent.client, {
