@@ -1,23 +1,13 @@
 {% extends "pages/knowrob_base.html" %}
 
 {% block head_inner %}
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/EASE.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/utility.js') }}"></script>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/MarkerArrayClient.js') }}"></script>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/canvas.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/console.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/client.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/pages/QA.js') }}"></script>
 
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/designator/desig.js') }}"></script>
-  
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/pages/QA.js') }}"></script>
-
-  <!--TODO: openEASE must run offline, replace this!
-            But there are some difficulties getting the google charts
-            into the current build procedure using browserify.
+  <!--FIXME: openEASE must run offline, replace this!
+             But there are some difficulties getting the google charts
+             into the current build procedure using browserify.
   -->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script>
@@ -104,18 +94,6 @@
     };
     
     $(document).ready(function () {
-        page.client.on_designator_received = function(obj) {
-            $('#designator').html('');
-            $('#designator').append(obj);
-            $('#designator').change();
-        };
-        page.client.on_image_received = function(imageHtml, imageWidth, imageHeight) {
-            page.imageWidth = imageWidth;
-            page.imageHeight = imageHeight;
-            document.getElementById('mjpeg').innerHTML = imageHtml;
-            $('#mjpeg').change();
-            $('#mjpeg').resize();
-        };
         page.init();
         resize();
         // make sure editor size is also updated
@@ -139,12 +117,12 @@
             <div id="console_bottom">
                 <div id="query_buttons">
                     <ul class="query_button_group query_button_left">
-                        <li><a href="#" class="query_button icon_question" id="btn_query" onclick="ui.console.query()" title="Ask a query (ctrl+enter)"></a></li>
-                        <li><a href="#" class="query_button icon_redo" id="btn_query_next" onclick="ui.console.nextSolution()" title="Infer next solution"></a></li>
+                        <li><a href="#" class="query_button fas fa-question" style="width: 32px;" id="btn_query" onclick="page.console.query()" title="Ask a query (ctrl+enter)"></a></li>
+                        <li><a href="#" class="query_button fas fa-redo" style="width: 32px;" id="btn_query_next" onclick="page.console.nextSolution()" title="Infer next solution"></a></li>
                     </ul>
                     <ul class="query_button_group query_button_right">
-                        <li><a href="#" class="query_button icon_zoom_in" id="btn_zoom_in" onclick="ui.console.zoomIn()"></a></li>
-                        <li><a href="#" class="query_button icon_zoom_out" id="btn_zoom_out" onclick="ui.console.zoomOut()"></a></li>
+                        <li><a href="#" class="query_button fas fa-search-plus" style="width: 32px;" id="btn_zoom_in" onclick="page.console.zoomIn()"></a></li>
+                        <li><a href="#" class="query_button fas fa-search-minus" style="width: 32px;" id="btn_zoom_out" onclick="page.console.zoomOut()"></a></li>
                     </ul>
                 </div>
             </div>
@@ -156,13 +134,13 @@
             <div id="library_bottom">
                 <div id="library_buttons">
                     <ul class="query_button_group">
-                        <li><a href="#" class="query_button admin_button icon_edit" id="btn_query_edit" onclick="ui.editLibrary()" title="Edit the query library"></a></li>
-                        <li><a href="#" class="query_button admin_button icon_diff" id="btn_query_diff" onclick="ui.diffQueries()" title="Diff the query library against the openEASE server"></a></li>
+                        <li><a href="#" class="query_button admin_button icon_edit" id="btn_query_edit" onclick="page.editLibrary()" title="Edit the query library"></a></li>
+                        <li><a href="#" class="query_button admin_button icon_diff" id="btn_query_diff" onclick="page.diffQueries()" title="Diff the query library against the openEASE server"></a></li>
                     {% if current_user.is_authenticated and current_user.has_role('admin') %}
-                        <li><a href="#" class="query_button admin_button icon_download" id="btn_query_download" onclick="ui.downloadQueries()" title="Download the query library from the FTP server"></a></li>
-                        <li><a href="#" class="query_button admin_button icon_upload" id="btn_query_upload" onclick="ui.uploadQueries()" title="Upload the query library to the FTP server"></a></li>
+                        <li><a href="#" class="query_button admin_button icon_download" id="btn_query_download" onclick="page.downloadQueries()" title="Download the query library from the FTP server"></a></li>
+                        <li><a href="#" class="query_button admin_button icon_upload" id="btn_query_upload" onclick="page.uploadQueries()" title="Upload the query library to the FTP server"></a></li>
                     {% endif %}
-                        <li><a href="#" class="query_button admin_button icon_reset" id="btn_query_reset" onclick="ui.initQueryLibrary()" title="Reset to the episode query library"></a></li>
+                        <li><a href="#" class="query_button admin_button icon_reset" id="btn_query_reset" onclick="page.initQueryLibrary()" title="Reset to the episode query library"></a></li>
                     </ul>
                 </div>
             </div>
