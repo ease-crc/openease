@@ -56,6 +56,14 @@ global.ROS3D  = require('ros3d');
 global.ROSLIB = require('roslib');
 global.EventEmitter2 = require('eventemitter2');
 
+var ros_client = require('@openease/ros-clients');
+global.ROSClient       = ros_clients.ROSClient;
+global.ROSPrologClient = ros_clients.ROSPrologClient;
+
+/////////////////////////
+// QA console
+global.PrologConsole = require('@openease/rosprolog-console');
+
 /////////////////////////
 // Code editor
 global.ace = require('brace');
