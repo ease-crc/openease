@@ -90,10 +90,10 @@ def render_change_password_post():
         user.password = app.user_manager.hash_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        os.write(2, b'  Password has been updated! \n')
+        app.logger.info('  Password has been updated!')
         return redirect(url_for('render_user_data'))
     elif "Cancel" in request.form:
-        os.write(2, b'  Cancelling the request! \n')
+        app.logger.info('  Cancelling the request!')
         return redirect(url_for('render_user_data'))
  
 #def _get_user_roles():
