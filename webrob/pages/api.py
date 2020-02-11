@@ -132,7 +132,7 @@ def refresh_by_token(token):
 @login_required
 def create_api_token():
     _create_token()
-    return render_template('show_user_data.html', **locals())
+    return render_template('flask_user/user_data.html', **locals())
 
 
 def _create_token():
