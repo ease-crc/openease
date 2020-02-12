@@ -11,8 +11,15 @@ from random import choice
 from string import lowercase
 
 from webrob.app_and_db import app
+from webrob.app_and_db import db
 from webrob.docker import docker_interface
+from flask_wtf import Form
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo, Email
 
+class PasswordForm(Form):
+    password = PasswordField('Password', validators=[DataRequired()])
+    
 @user_logged_in.connect_via(app)
 def track_login(sender, user, **extra):
     app.logger.info("Logged in " + str(user.username))
@@ -64,7 +71,31 @@ def render_main():
     
     #return render_template('main.html', **locals())
     return redirect(url_for('render_QA_page'))
+    
+    
+# get call handling method for changing password
+@app.route('/change_password_get')
+@login_required
+def render_change_password_get():
+    form = PasswordForm()
+    return render_template('flask_user/change_password.html', title='Change Password', form=form)
 
+# post call handling method for changing password    
+@app.route('/change_password_post', methods=["POST"])
+@login_required
+def render_change_password_post():
+    form = PasswordForm()
+    if "Update" in request.form:
+        user = current_user
+        user.password = app.user_manager.hash_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        app.logger.info('  Password has been updated!')
+        return redirect(url_for('render_user_data'))
+    elif "Cancel" in request.form:
+        app.logger.info('  Cancelling the request!')
+        return redirect(url_for('render_user_data'))
+ 
 #def _get_user_roles():
 #    role_names = []
 #    if hasattr(current_user, 'roles'):

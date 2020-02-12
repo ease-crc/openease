@@ -32,6 +32,7 @@ body {
                         <input type="text" readonly class="form-control-plaintext" id="staticToken" value="{{ session.api_token }}">
                     </div>
                 </div>
+                <a href="{{ url_for('render_change_password_get') }}" class="btn btn-default">Change Password</a>
                 <a href="{{ url_for('create_api_token') }}" class="btn btn-default">Create API Token</a>
             </form>
         </div>
