@@ -1,0 +1,43 @@
+/* Header for openease/institute/university logo */
+#navbar-tool{
+  width:100%;
+  height:52px;
+  background: linear-gradient(to bottom,
+          #549FC8 0%,
+          #246F98 50%,
+          #246F98 51%,
+          #144F78 100%);
+}
+.navbar-tool-brand {
+  float: left;
+  padding: 15px 20px;
+  font-size: 18px;
+  line-height: 20px;
+  height: 50px;
+}
+a.navbar-tool-brand {
+  font-family: 'Oswald', sans-serif;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 34px;
+}
+.navbar-tool-brand img{
+  width: auto;
+  height: 30px;
+}
+.navbar-tool-brand-2 {
+  float: right;
+  padding: 5px 20px;
+}
+.navbar-tool-brand-2 img{
+  width: auto;
+  height: 40px;
+}
+
+.content-frame {
+  border-style: none;
+  border-color: inherit;
+  border-width: 0px;
+  height:100%;
+  width:100%;
+}

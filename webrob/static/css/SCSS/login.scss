@@ -1,0 +1,272 @@
+// login css
+@import 'font';
+//@import '../node_modules/@fortawesome/fontawesome-free/css/fontawesome.css';
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  //background-color: #0003FF;
+  background-color: #0277bd;
+}
+
+
+
+.container {
+  position: relative;
+  padding-top: 60px;
+  padding-bottom: 100px; /* Height of the footer */
+  overflow: hidden;
+}
+
+// forms
+
+.form-control:focus {
+
+  border: 1px solid #0277bd !important;
+  box-shadow: 0 0 1px #0277bd !important;
+}
+
+.form-control {
+  box-shadow: 0 0 0.5px #0277bd !important;
+}
+
+.login-content {
+  margin-bottom: 90px;
+}
+
+.page-background {
+  padding: 10px;
+}
+
+#login {
+  line-height: 1;
+  margin-bottom: 20px;
+  letter-spacing: -2px;
+  text-align: center;
+  font-weight: 300;
+  padding-bottom: 10px;
+  font-size: 2.0em;
+}
+
+.ease-brand {
+  display: inline-block;
+  padding: 15px 20px;
+  font-size: 18px;
+  line-height: 20px;
+  height: 50px;
+}
+
+#ease-logo {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+a.ease-brand {
+  font-family: 'Oswald', sans-serif;
+  color: #FFFFFF !important;
+  text-decoration: none;
+  font-size: 34px;
+}
+
+.ease-brand img {
+  width: auto;
+  height: 30px;
+}
+
+#new-user-row{
+  flex-wrap: nowrap;
+}
+
+#new-user {
+  display: inline;
+  float: left;
+  color: #757575;
+}
+
+.text-login {
+  text-align: center;
+  line-height: 1.5;
+  font-size: 1.5em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #757575;
+}
+
+div#login {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 1.6em;
+}
+
+.card#setup-login {
+  background-color: #eceff1;
+  color: #0277bd;
+  width: 430px;
+  max-width: 100%;
+  margin: 0 auto 20px;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+#login-div {
+  width: 430px !important;
+  max-width: 100%;
+  height: auto;
+  margin: 0px auto 20px !important;
+}
+
+#remember-me {
+    color: #757575;
+  font-size: 0.9rem;
+}
+
+.custom-control {
+  padding-bottom: 5px;
+}
+
+.custom-control-label::before {
+  background-color: #cdcdcd;
+}
+
+.card-footer {
+  //font-size: 18px;
+  & a {
+    text-decoration: none;
+  }
+}
+
+.btn-info {
+  background-color: #0277bd !important;
+}
+
+#forgot-password-link {
+  display: inline;
+  float: right;
+}
+
+#footer-style {
+  position: absolute;
+  height: 100px; /* Height of the footer */
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 430px;
+  max-width: 100%;
+  margin-top: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #0277bd;
+  //text-align: left;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 15px;
+}
+
+.legal {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#terms-of-service a {
+  padding-right: 15px;
+  color: #eceff1 !important;
+  text-decoration: none !important;
+}
+
+#privacy a {
+  text-align: center;
+  color: #eceff1 !important;
+  text-decoration: none;
+}
+
+p#copyright {
+  float: right;
+}
+
+#copyright{
+  color: #eceff1;
+  padding-right: 15px;
+}
+
+
+//extra small devices
+@media (max-width: 767px) {
+
+  #login {
+    font-size: 1.2em;
+  }
+  a.ease-brand {
+    font-family: 'Oswald', sans-serif;
+    color: #FFFFFF !important;
+    text-decoration: none;
+    font-size: 1.4em;
+  }
+
+  .ease-brand img {
+    width: auto;
+    height: 25px;
+  }
+  #remember-me {
+    font-size: 0.9em;
+  }
+
+  .btn-primary {
+    font-size: 0.9em !important;
+  }
+
+}
+
+//end extra small devices
+
+/********** Super extra small devices Only :-) (e.g., iPhone 4) i changed from 479  **********/
+@media (max-width: 576px) {
+
+  .text-login {
+    font-size: 1.2em !important;
+  }
+  a.ease-brand {
+    font-family: 'Oswald', sans-serif;
+    color: #FFFFFF !important;
+    text-decoration: none;
+    font-size: 1.6em;
+  }
+
+  .ease-brand img {
+    width: auto;
+    height: 25px;
+  }
+  #remember-me {
+    font-size: 0.9em;
+  }
+
+  .btn-primary {
+    font-size: 0.9em !important;
+  }
+  //p#new-user {
+  //  width: 100%;
+  //  text-align: left;
+  //}
+  //p#forgot-password-link {
+  //  float: left;
+  //  width: 100%;
+  //  text-align: left;
+  //  margin-bottom: 0px;
+  //}
+
+  //#terms-of-service, #privacy {
+  //  float: left;
+  //  width: 100%;
+  //  text-align: center;
+  //  text-decoration: none;
+  //}
+  //
+  //p#copyright {
+  //  float: left;
+  //  width: 100%;
+  //  text-align: center;
+  //}
+
+}
+
+// end of super extra small

@@ -9,6 +9,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q subversion git
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q nodejs nodejs-legacy npm
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q postgresql
 
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y ruby-full build-essential rubygems && \
+  gem install sass --no-user-install -v 3.5.5 && \
+  apt-get clean
+
+  
 WORKDIR /opt/webapp
 
 # install python-dependencies including flask
@@ -45,8 +51,10 @@ USER ros
 RUN mv /tmp/npm/openease*.js /opt/webapp/webrob/static/
 
 RUN cd /home/ros
-# Expose volumes for maintenance
-VOLUME /opt/webapp/
+
+# configure scss to css file conversion here with sass
+WORKDIR /opt/webapp/webrob/static/css/SCSS
+RUN sass --update .:.
 
 EXPOSE 5000
 
