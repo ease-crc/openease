@@ -20,7 +20,8 @@ from webrob.models.users import Role, User
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-admin_user_default_pw = '1234'
+# default password for admin user
+ADMIN_USER_DEFAULT_PW = '1234'
 
 def add_user(app,db,user_manager,name,mail,pw,displayname='',remoteapp='',roles=[]):
     if pw==None or len(pw)<4:
@@ -96,7 +97,7 @@ def init_app(app, db_instance, extra_config_settings={}):
     add_user(app=app,db=db_instance,user_manager=app.user_manager,
              name='admin',
              mail=os.environ.get('OPENEASE_MAIL_USERNAME', 'admin@openease.org'),
-             pw=admin_user_default_pw,
+             pw=ADMIN_USER_DEFAULT_PW,
              roles=['admin'])
 
     app.logger.info("Webapp started.")
