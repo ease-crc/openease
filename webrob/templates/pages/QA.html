@@ -3,8 +3,11 @@
 {% block head_inner %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/QueryCard.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/pages/QA.js') }}"></script>
 
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/split.css') }}"/>
+  
   <!--FIXME: openEASE must run offline, replace this!
              But there are some difficulties getting the google charts
              into the current build procedure using browserify.
@@ -14,183 +17,153 @@
     google.load("visualization", "1", {packages:["timeline"]});
 //     google.load("visualization", "1", {packages:["corechart","timeline"]});
   </script>
+  
+  <style>
+#page-content {
+  width:100%;
+  height: -o-calc(100% - 108px); /* opera */
+  height: -webkit-calc(100% - 108px); /* google, safari */
+  height: -moz-calc(100% - 108px); /* firefox */
+  height: calc(100% - 108px); /* firefox 53 and newer*/
+}
+#history {
+  background: url("{{ url_for('static', filename='logos/ease-light.png') }}");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+}
+#user_query {
+  width:100%;
+  height:100%;
+  border-bottom: 1px solid #CCC;
+  font-size: 20px;
+}
+.history-query {
+  width: 100%;
+  height: 22px;
+  font-size: 20px;
+}
+#markers {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #BBB;
+  overflow: hidden;
+}
+#chart {
+  width:100%;
+  height:100%;
+}
+#neem-tab-content {
+  border-bottom: 1px solid #CCC;
+}
+#neem-tab li {
+  margin: 0 0 0 2px;
+}
+#neem-tab li a {
+  border: 1px solid transparent !important;
+}
+  </style>
 {% endblock %}
 
 {% block content %}
 <script type="text/javascript">
     var page = new KnowrobUI(flask_user, {
-        use_console_overlay: true,
         authentication: '{{ authentication }}',
         ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
                  '://{{ host_url }}/ws/{{ container_name }}/'
     });
-
-    function resize() {
-      var knowrobLayout = $('#page-content').layout({
-        stateManagement__enabled: true,
-        south: {
-          minSize: 60,
-          maxSize: 60
-        },
-        west: {
-          minSize: 250,
-          size: 500,
-          // INNER-LAYOUT
-          childOptions: {
-            center: {
-              paneSelector: "#console",
-              onresize: function() {
-                ace.edit("history").resize(true);
-                ace.edit("user_query").resize(true);
-              },
-              minSize: 250
-            },
-            south: {
-              paneSelector: "#library",
-              minSize: 150
-            }
-          }
-        },
-        center: {},
-        east: {
-          minSize: 250,
-          size: 500,
-          initClosed: true,
-          // INNER-LAYOUT
-          childOptions: {
-            center: {
-              paneSelector: "#designator",
-              minSize: 250
-            },
-            south: {
-              paneSelector: "#mjpeg",
-              minSize: 150,
-              onresize: function() {
-                $('#mjpeg').resize();
-              }
-            }
-          }
-        }
-      });
-      var centerLayout = $('#editor-container').layout({
-            center: {
-              paneSelector: "#markers",
-              onresize: function() {
-                page.resizeCanvas();
-              },
-              minSize: 50
-            },
-            south: {
-              paneSelector: "#chart",
-              initClosed: true,
-              minSize: 50
-            }
-      });
-      page.resizeCanvas();
-      
-      $('#designator').change(function() { knowrobLayout.open('east'); });
-      $('#mjpeg').change(function() { knowrobLayout.open('east'); });
-      $('#chart').change(function() { centerLayout.open('south'); });
-    };
-    
-    $(document).ready(function () {
-        page.init();
-        resize();
-        // make sure editor size is also updated
-        ace.edit("history").resize(true);
-        ace.edit("user_query").resize(true);
-    });
+    // call page.init() when the document is ready
+    $(document).ready(page.init);
 </script>
 
 <div id="page-content">
-    <div class="ui-layout-center" id="editor-container">
-        <div id="markers"></div>
-        <div id="chart"></div>	
+
+    <div id="container-west" class="split split-content split-horizontal">
+        <div class="h-100 d-flex flex-column">
+            <div class="tab-content flex-grow-1" id="neem-tab-content">
+                <div id="neem-info"  class="tab-pane fade show active" role="tabpanel" aria-labelledby="neem-info-tab">
+                TODO: show NEEM info page
+                </div>
+                <div id="neem-media" class="tab-pane fade" role="tabpanel" aria-labelledby="neem-media-tab">
+                TODO: show NEEM media page
+                </div>
+            </div>
+            <div class="btn-toolbar nav nav-tabs" role="toolbar">
+                <ul class="nav nav-tabs" id="neem-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="btn btn-light nav-link active" id="neem-info-tab" data-toggle="tab" href="#neem-info" role="tab" aria-controls="neem-info" aria-selected="true">Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-light nav-link" id="neem-media-tab" data-toggle="tab" href="#neem-media" role="tab" aria-controls="neem-media" aria-selected="false">Media</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <div class="ui-layout-west">
-        <div id="console">
-            <div id="console_top">
-                <div class="console_text" id="history"></div>
-                <div class="console_text" id="user_query">member(A, [a,b,c]).</div>
+    <div id="container-east" class="split split-horizontal"> 
+        <div id="vis-container" class="split w-100">
+            <div id="history" class="split split-horizontal split-content h-100 container-fluid p-3">
             </div>
-            <div id="console_bottom">
-                <div id="query_buttons">
-                    <ul class="query_button_group query_button_left">
-                        <li><a href="#" class="query_button fas fa-question" style="width: 32px;" id="btn_query" onclick="page.console.query()" title="Ask a query (ctrl+enter)"></a></li>
-                        <li><a href="#" class="query_button fas fa-redo" style="width: 32px;" id="btn_query_next" onclick="page.console.nextSolution()" title="Infer next solution"></a></li>
-                    </ul>
-                    <ul class="query_button_group query_button_right">
-                        <li><a href="#" class="query_button fas fa-search-plus" style="width: 32px;" id="btn_zoom_in" onclick="page.console.zoomIn()"></a></li>
-                        <li><a href="#" class="query_button fas fa-search-minus" style="width: 32px;" id="btn_zoom_out" onclick="page.console.zoomOut()"></a></li>
-                    </ul>
+            <div id="markers" class="split split-horizontal split-content h-100">
+            </div>
+        </div>
+
+        <div id="console" class="container-fluid p-0 split split-content">
+            <div class="h-100 d-flex flex-column">
+                <div id="user_query" class="flex-grow-1">member(A, [a,b,c]).</div>
+                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button id="query-examples" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Examples</button>
+                            <div class="dropdown-menu" aria-labelledby="query-examples">
+                                <a class="dropdown-item" href="#">Dropdown link</a>
+                                <a class="dropdown-item" href="#">Dropdown link</a>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button id="query-view" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">View</button>
+                            <div class="dropdown-menu" aria-labelledby="query-view">
+                                <a class="dropdown-item" href="#"
+                                onclick="page.console.zoomIn()"><i class="fas fa-plus"></i> Larger Text</a>
+                                <a class="dropdown-item" href="#"
+                                onclick="page.console.zoomOut()"><i class="fas fa-minus"></i> Smaller Text</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Third group">
+                        <button id="btn_query" type="button" class="btn btn-primary"
+                                onclick="page.console.query()"><i class="fas fa-question"></i></button>
+                        <button id="btn_query_next" type="button" class="btn btn-primary"
+                                onclick="page.console.nextSolution()"><i class="fas fa-redo"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="library">
-            <div id="library_top">
-                <div id="library_content"></div>
-            </div>
-            <div id="library_bottom">
-                <div id="library_buttons">
-                    <ul class="query_button_group">
-                        <li><a href="#" class="query_button admin_button icon_edit" id="btn_query_edit" onclick="page.editLibrary()" title="Edit the query library"></a></li>
-                        <li><a href="#" class="query_button admin_button icon_diff" id="btn_query_diff" onclick="page.diffQueries()" title="Diff the query library against the openEASE server"></a></li>
-                    {% if current_user.is_authenticated and current_user.has_role('admin') %}
-                        <li><a href="#" class="query_button admin_button icon_download" id="btn_query_download" onclick="page.downloadQueries()" title="Download the query library from the FTP server"></a></li>
-                        <li><a href="#" class="query_button admin_button icon_upload" id="btn_query_upload" onclick="page.uploadQueries()" title="Upload the query library to the FTP server"></a></li>
-                    {% endif %}
-                        <li><a href="#" class="query_button admin_button icon_reset" id="btn_query_reset" onclick="page.initQueryLibrary()" title="Reset to the episode query library"></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-  
-    <div class="ui-layout-east">
-        <div id="designator"></div>
-        <div id="mjpeg"></div>
-    </div>
-    
-    <div class="pane ui-layout-south">
-        <div id="logo_container">            
-            <a href="http://www.robohow.eu" class="media" title="http://www.robohow.eu"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/robohow-logo.png') }}" class="media" alt="" />
-            </a>
-            <a href="http://www.roboearth.org" class="media" title="http://www.roboearth.org"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/roboearth-logo.png') }}" class="media" alt="" />
-            </a>
-            <a href="http://www.sherpa-project.eu" class="media" title="http://www.sherpa-project.eu"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/sherpa-logo.png') }}" class="media" alt="" />
-            </a>
-            <a href="http://ease-crc.org/" class="media" title="http://ease-crc.org/"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/ease.png') }}" height="60" hspace="35" alt="" />
-            </a>
-            <a href="http://www.refills-project.eu/" class="media" title="http://www.refills-project.eu/"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/refills.png') }}" height="60" hspace="35" alt="" />
-            </a>
-            <a href="http://www.saphari.eu" class="media" title="http://www.saphari.eu"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/saphari-logo.png') }}" class="media" alt="" />
-            </a>    
-            <a href="http://www.acat-project.eu/" class="media" title="http://www.acat-project.eu/"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/acat-logo.png') }}" class="media" alt="" />
-            </a>
-            <a href="https://ec.europa.eu/programmes/horizon2020/" class="media" title="https://ec.europa.eu/programmes/horizon2020/"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/h2020.png') }}" class="media" alt="" />
-            </a>
-            <a href="http://dfg.de/" class="media" title="http://dfg.de/"  rel="nofollow">
-                <img src="{{ url_for('static', filename='logos/dfg.jpg') }}" class="media" alt="" />
-            </a>
-        <div>
     </div>
 </div>
-    
-<div id="library-editor" class="modal">
-  <div class="modal-content">
-      <span class="library-editor-header"></span>
-      <span class="library-editor-button icon_close"></span>
-      <span class="library-editor-button icon_add"></span>
-      <div id="library-editor-content"></div>
-  </div>
-</div>
+
+<!-- setup split.js -->
+<script type="text/javascript">
+    Split(['#container-west', '#container-east'], {
+            gutterSize: 8,
+            cursor: 'col-resize',
+            sizes: [30,70],
+            onDragEnd: page.resizeCanvas
+    });
+    Split(['#vis-container', '#console'], {
+            gutterSize: 8,
+            cursor: 'row-resize',
+            direction: 'vertical',
+            sizes: [70,30],
+            onDragEnd: page.resizeCanvas
+    });
+    Split(['#history', '#markers'], {
+            gutterSize: 8,
+            cursor: 'col-resize',
+            sizes: [50,50],
+            onDragEnd: page.resizeCanvas
+    });
+</script>
+
 {% endblock %}
