@@ -88,19 +88,20 @@ def start_container(token):
     user = _user_by_token(token)
     if user is None:
         return jsonify({'error': 'wrong api token'})
-
-    return jsonify({'error': 'fix me'})
+    
+    # FIXME: ensure container is started
     #docker_interface.start_user_container(_generate_user_image_name(), user.username, ROS_DISTRIBUTION)
-    #host_url = urlparse(request.host_url).hostname
-    #return jsonify({'result': 'success',
-    #                'url': '//' + host_url + '/ws/' + user.username + '/'})
+    
+    host_url = urlparse(request.host_url).hostname
+    return jsonify({'result': 'success',
+                   'url': '//' + host_url + '/ws/' + user.username + '_knowrob/'})
 
 
-def _generate_user_image_name():
-    """
-    Returns the image name to be used for user containers
-    """
-    return 'openease/' + ROS_DISTRIBUTION + '-knowrob-daemon'
+#def _generate_user_image_name():
+    #"""
+    #Returns the image name to be used for user containers
+    #"""
+    #return 'openease/' + ROS_DISTRIBUTION + '-knowrob-daemon'
 
 
 @app.route('/api/v1.0/stop_container/<string:token>', methods=['GET'])
@@ -111,7 +112,9 @@ def stop_container(token):
     user = _user_by_token(token)
     if user is None:
         return jsonify({'error': 'wrong api token'})
-    docker_interface.stop_container(user.username)
+    
+    #docker_interface.stop_container(user.username)
+    
     return jsonify({'result': 'success'})
 
 
