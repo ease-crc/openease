@@ -26,6 +26,7 @@
     "jquery": "2.2.4",
     "jquery-ui-bundle": "1.12.1-migrate",
     "layout": "git://github.com/benmaurer/layout.git#master",
+    "split.js": "1.5.11",
     "datatables.net": "1.10.19",
     "datatables.net-buttons": "1.5.3",
     "popper.js": "1.14.3",
