@@ -16,6 +16,7 @@ global.bootstrap = require('bootstrap');
 require('bootstrap/dist/css/bootstrap.css');
 global.fontawesome = require('@fortawesome/fontawesome-free');
 require('@fortawesome/fontawesome-free/js/all.js');
+require('typeface-oswald');
 
 /////////////////////////
 // 

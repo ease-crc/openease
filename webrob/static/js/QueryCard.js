@@ -32,7 +32,9 @@ function QueryCard(container,qid,query_string) {
         var card = $("<div>");
         card.addClass("card border-info");
         card.append(header);
+        //
         that.query_card = $("<div>");
+        that.query_card.addClass("collapse show");
         that.query_card.attr("id",that.card_id);
         card.append(that.query_card);
         //
@@ -53,15 +55,29 @@ function QueryCard(container,qid,query_string) {
         ace_edit.setTheme("ace/theme/solarized_light");
         ace_edit.getSession().setMode("ace/mode/prolog");
         ace_edit.setOptions({
-            maxLines: 15,
-            autoScrollEditorIntoView: true,
-            readOnly: true,
-            showGutter: false,
-            printMarginColumn: false,
+            // editor options
+            selectionStyle: "text",
             highlightActiveLine: false,
-            highlightGutterLine: false
+            highlightSelectedWord: false,
+            readOnly: true,
+            cursorStyle: "slim",
+            behavioursEnabled: false,
+            wrapBehavioursEnabled: false,
+            autoScrollEditorIntoView: false,
+            enableMultiselect: false,
+            // renderer options
+            highlightGutterLine: false,
+            maxLines: 15,
+            showGutter: false,
+            showLineNumbers: false,
+            showFoldWidgets: false,
+            printMarginColumn: false,
+            showPrintMargin: false
         });
+        ace_edit.setShowPrintMargin(false);
+        ace_edit.setOption("showPrintMargin", false);
         ace_edit.setValue(query_string);
+        ace_edit.clearSelection();
     };
     
     this.createHeader = function(text) {
@@ -74,7 +90,7 @@ function QueryCard(container,qid,query_string) {
     this.createQueryDiv = function() {
         var query_text = $("<div>");
         query_text.attr("id",qid);
-        query_text.addClass("card-text history-query");
+        query_text.addClass("card-text bg-transparent w-100 query-font");
         //
         var body = $("<div>");
         body.addClass("card-body");
@@ -175,12 +191,12 @@ function QueryCard(container,qid,query_string) {
             tbody.append(tr);
         }
         //
-        var caption = $("<caption>");
-        caption.text("Bindings");
         //
         var table = $("<table>");
         table.addClass("card-table table table-sm table-hover table-striped");
-        table.append(caption);
+//         var caption = $("<caption>");
+//         caption.text("Bindings");
+//         table.append(caption);
         table.append(tbody);
         return table;
     };
@@ -251,7 +267,8 @@ function QueryCard(container,qid,query_string) {
     
     this.collapse = function () {
         // FIXME: collapses without animation.
-        this.query_card.addClass("collapse");
+//         this.query_card.addClass("collapse");
+        this.query_card.collapse('hide');
     };
     
     that.create();
