@@ -72,7 +72,7 @@ function ROSCanvas(options){
         angularThres : 0.01,
         transThres : 0.01,
         rate : 10.0,
-        fixedFrame : '/my_frame'
+        fixedFrame : 'map' // FIXME
       });
       // Setup the marker array client.
       that.markerArrayClient = new MarkerArrayClient({
@@ -162,8 +162,9 @@ function ROSCanvas(options){
     ///////////////////////////////
     
     this.selectMarker = function(marker) {
-        if(that.selectedMarker == marker)
-          return;
+        if(that.selectedMarker) {
+            that.unselectMarker();
+        }
         that.selectedMarker = marker;
         // inform the active iframe about selection (e.g., to show object query library)
         if(that.on_select_marker)

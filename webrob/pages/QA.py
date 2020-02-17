@@ -1,12 +1,15 @@
 import os
 import json
 
-from flask import session, request, redirect, render_template, url_for
+from flask import session, request, redirect, render_template, url_for, jsonify
 from flask_user import current_user
 from urlparse import urlparse
 
 from webrob.app_and_db import app
 from webrob.pages.neems import neem_manager
+from webrob.docker import docker_interface
+
+from webrob.config.settings import MAX_HISTORY_LINES
 
 __author__ = 'danielb@uni-bremen.de'
 
@@ -24,69 +27,42 @@ def render_QA_page():
     container_name = current_user.username + "_knowrob"
     return render_template('pages/QA.html', **locals())
 
-# TODO: I think docker-io needs to be used
-#@app.route('/knowrob/add_history_item', methods=['POST'])
-#def add_history_item():
-    #query = json.loads(request.data)['query']
-    #hfile = get_history_file()
-    ## Remove newline characters
-    ## query.replace("\n", " ")
+@app.route('/QA/history/add', methods=['POST'])
+def post_qa_history_add():
+    query = json.loads(request.data)['query']
+    # read history from user data container
+    # FIXME: this is terrible slow, better directly interact with knowrob container
+    history_data = docker_interface.file_read(current_user.username, 'query.history')
+    if history_data != None:
+        lines = history_data.split("\n\n")
+    else:
+        lines = []
+    # add the query
+    lines.append(query + ".")
+    # truncate
+    numLines = len(lines)
+    lines = lines[max(0, numLines - MAX_HISTORY_LINES):numLines]
+    new_data = "\n\n".join(lines)
+    # write to user data container
+    docker_interface.file_write(current_user.username, new_data, 'query.history')
+    return jsonify(result=None)
 
-    ## Read history
-    #lines = []
-    #if os.path.isfile(hfile):
-        #f = open(hfile)
-        #lines = f.readlines()
-        #f.close()
-    ## Remove old history items
-    #history = ''.join(lines).split("\n\n")
-    #history = map(lambda x: x + '\n\n', history)
-    ## Append the last query
-    #history.append(query + ".")
+@app.route('/QA/history/get', methods=['POST'])
+def post_qa_history_get():
+    index = json.loads(request.data)['index']
+    if index < 0:
+        return jsonify(item="", index=-1)
+    
+    # FIXME: this is terrible slow, better directly interact with knowrob container
+    history_data = docker_interface.file_read(current_user.username, 'query.history')
+    if history_data==None:
+        return jsonify(item="", index=-1)
+    lines = history_data.split("\n\n")
+    # Clamp index
+    if index < 0:
+        index = 0
+    if index >= len(lines):
+        index = len(lines) - 1
+    item = lines[len(lines) - index - 1]
 
-    #numLines = len(history)
-    #history = history[max(0, numLines - MAX_HISTORY_LINES):numLines]
-
-    #with open(hfile, "w") as f:
-        #f.writelines(history)
-
-    #return jsonify(result=None)
-
-
-#@app.route('/knowrob/get_history_item', methods=['POST'])
-#def get_history_item():
-    #index = json.loads(request.data)['index']
-
-    #if index < 0:
-        #return jsonify(item="", index=-1)
-
-    #hfile = get_history_file()
-    #if os.path.isfile(hfile):
-        ## Read file content
-        #f = open(hfile)
-        #lines = f.readlines()
-        #f.close()
-
-        ## Clamp index
-        #if index < 0:
-            #index = 0
-        #if index >= len(lines):
-            #index = len(lines) - 1
-        #if index < 0:
-            #return jsonify(item="", index=-1)
-
-        ## History items are separated with empty line (\n\n)
-        #history = ''.join(lines).split("\n\n")
-
-        #item = history[len(history) - index - 1]
-        #if len(item) > 0 and item[len(item) - 1] == '\n':
-            #item = item[:len(item) - 1]
-
-        #return jsonify(item=item, index=index)
-
-    #else:
-        #return jsonify(item="", index=-1)
-
-#def get_history_file():
-    #userDir = get_user_dir()
-    #return os.path.join(get_user_dir(), "query.history")
+    return jsonify(item=item, index=index)

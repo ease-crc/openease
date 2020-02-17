@@ -3,8 +3,7 @@ import os
 from flask import session
 from webrob.neems.neem import NEEM
 
-NEEM_CHECKOUT_DIR="/neems"
-NEEM_META_DIR="/neems_meta"
+NEEM_DIR="/neems"
 
 class NEEM_Manager:
     def __init__(self):
@@ -15,10 +14,10 @@ class NEEM_Manager:
     
     def __get_neem_ids__(self):
         neem_ids=[]
-        neem_groups = os.listdir(NEEM_META_DIR)
+        neem_groups = os.listdir(NEEM_DIR)
         neem_groups.sort()
         for neem_group in neem_groups:
-            group_dir = os.path.join(NEEM_META_DIR,neem_group)
+            group_dir = os.path.join(NEEM_DIR,neem_group)
             if os.path.isdir(group_dir):
                 neem_names = os.listdir(group_dir)
                 neem_names.sort()
@@ -48,8 +47,7 @@ class NEEM_Manager:
         return NEEM(neem_group,
                     neem_name_plain,
                     neem_version,
-                    meta_dir=NEEM_META_DIR,
-                    checkout_dir=NEEM_CHECKOUT_DIR)
+                    repo_dir=NEEM_DIR)
     
     def query_neem_ids(self, query_string):
         if query_string is '':

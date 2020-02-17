@@ -78,7 +78,14 @@ a.openease-brand {
           NEEMs
         </a>
       </li>
-{% if current_user.is_authenticated and current_user.has_role('admin') %}
+    </ul>
+  </div>
+  <!-- right side of navbar: Login/Logout space -->
+  <div class="collapse navbar-collapse flex-grow-0">
+{% block nav_right %}{% endblock %}
+    <ul class="navbar-nav text-right">
+{% if current_user.is_authenticated %}
+{% if current_user.has_role('admin') %}
       <!-- Admin Dropdown -->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
@@ -92,22 +99,16 @@ a.openease-brand {
         </div>
       </li>
 {% endif %}
-    </ul>
-  </div>
-  <!-- right side of navbar: Login/Logout space -->
-  <div class="collapse navbar-collapse flex-grow-0">
-{% block nav_right %}{% endblock %}
-    <ul class="navbar-nav text-right">
-{% if current_user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('render_user_data') }}">
-          <span class="fas fa-user-plus"></span> User info
+      <!-- User Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          <i class="fas fa-user"></i>
+          User
         </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('user.logout') }}">
-          <span class="fas fa-sign-out-alt"></span> Logout
-        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('render_user_data') }}">User Info</a>
+          <a class="dropdown-item" href="{{ url_for('user.logout') }}"><span class="fas fa-sign-out-alt"></span> Logout</a>
+        </div>
       </li>
 {% else %}
       <li class="nav-item">
@@ -127,7 +128,7 @@ a.openease-brand {
 
 {% block body %}{% endblock %}
 
-<footer class="page-footer font-small blue pt-4">
+<footer class="bg-dark text-white-50">
   <div class="footer-copyright text-center py-3">
     © <span id="myYear"> </span> Copyright: University of Bremen
   </div>

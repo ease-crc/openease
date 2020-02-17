@@ -59,4 +59,4 @@ def route_activate_neem(neem_group,neem_name):
 def send_from_neem_directory(neem_group,neem_name, filename):
     neem = neem_manager.get(neem_group,neem_name)
     neem.checkout()
-    return send_from_directory(neem.get_checkout_directory(), filename)
+    return send_from_directory(neem.get_directory(), filename)

@@ -10,18 +10,16 @@ class NEEM:
                  repo_group,
                  repo_name,
                  repo_tag,
-                 meta_dir,
-                 checkout_dir):
+                 repo_dir):
         self.repo_group    = repo_group
         self.repo_name     = repo_name
         self.repo_path     = repo_group+"/"+repo_name
         self.repo_tag      = repo_tag
-        self.meta_dir      = meta_dir
-        self.checkout_dir  = checkout_dir
+        self.repo_dir      = repo_dir
         self.knowrob_image = 'knowrob'
         self.knowrob_tag   = 'latest'
         #
-        with open(os.path.join(self.get_meta_directory(), 'NEEM.yaml')) as yaml_file:
+        with open(os.path.join(self.get_directory(), 'NEEM.yaml')) as yaml_file:
             yaml_data = yaml.load(yaml_file)
             self.name             = yaml_data.get('name',None)
             self.description      = yaml_data.get('description',None)
@@ -40,11 +38,8 @@ class NEEM:
                 # TODO: handle knowrob version
                 #self.knowrob_tag   = image.get('tag',self.knowrob_tag)
     
-    def get_meta_directory(self):
-        return os.path.join(self.meta_dir, self.repo_group+'/'+self.repo_name)
-    
-    def get_checkout_directory(self):
-        return os.path.join(self.checkout_dir, self.repo_group+'/'+self.repo_name+"/"+self.repo_tag)
+    def get_directory(self):
+        return os.path.join(self.repo_dir, self.repo_group+'/'+self.repo_name)
     
     def get_info(self):
         return {
@@ -65,7 +60,7 @@ class NEEM:
     
     def activate(self):
         session['neem_group'] = self.repo_group
-        session['neem_name']  = self.repo_name + ":" + self.repo_tag
+        session['neem_name']  = self.repo_name #+ ":" + self.repo_tag
         start_user_container(current_user.username,
                              self.repo_group,
                              self.repo_name,

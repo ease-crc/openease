@@ -18,6 +18,10 @@ global.fontawesome = require('@fortawesome/fontawesome-free');
 require('@fortawesome/fontawesome-free/js/all.js');
 
 /////////////////////////
+// 
+global.Split = require('split.js')
+
+/////////////////////////
 // overlay loading bar
 global.iosOverlay = require('ios-overlay');
 global.Spinner = require('spin');
@@ -57,8 +61,9 @@ global.ROSLIB = require('roslib');
 global.EventEmitter2 = require('eventemitter2');
 
 var ros_clients = require('@openease/ros-clients');
-global.ROSClient       = ros_clients.ROSClient;
-global.ROSPrologClient = ros_clients.ROSPrologClient;
+global.ROSClient         = ros_clients.ROSClient;
+global.ROSPrologClient   = ros_clients.ROSPrologClient;
+global.MarkerArrayClient = ros_clients.MarkerArrayClient;
 
 /////////////////////////
 // QA console
@@ -78,7 +83,7 @@ global.aceLangTools = ace.acequire("ace/ext/language_tools");
 // Diagram visualization
 global.d3 = require('d3');
 global.d3tip = require('d3-tip')(d3);
-global.DataVisClient = require('@openease/charts');
+global.DataVis = require('@openease/charts');
 
 /////////////////////////
 // Canvas visualization

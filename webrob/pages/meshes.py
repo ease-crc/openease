@@ -3,6 +3,7 @@ import os
 import sys
 import traceback
 
+from flask import request
 from flask import send_from_directory, jsonify
 from flask_user import login_required
 from urllib import urlopen, urlretrieve
@@ -12,6 +13,7 @@ import thread
 
 from webrob.app_and_db import app
 from webrob.config.settings import MESH_REPOSITORIES
+from webrob.pages.neems import neem_manager
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -66,6 +68,14 @@ def download_mesh(mesh):
     if meshFile == None:
         if os.path.exists(mesh): meshFile = mesh
         elif os.path.exists('/'+mesh): meshFile = '/'+mesh
+    
+    if meshFile == None:
+        neem = neem_manager.get_requested(request)
+        if neem is not None:
+            neemAssets = os.path.join(neem.get_directory(),'assets')
+            meshPath = os.path.join(neemAssets, mesh)
+            if os.path.exists(meshPath):
+                meshFile = meshPath
     
     if meshFile == None:
         app.logger.info("Unable to download mesh " + mesh)
