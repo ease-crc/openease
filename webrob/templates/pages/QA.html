@@ -19,6 +19,11 @@
   </script>
   
   <style>
+/* font used to display Prolog code */
+.query-font {
+  font-size: 20px;
+}
+
 #page-content {
   width:100%;
   height: -o-calc(100% - 108px); /* opera */
@@ -36,11 +41,6 @@
   width:100%;
   height:100%;
   border-bottom: 1px solid #CCC;
-  font-size: 20px;
-}
-.history-query {
-  width: 100%;
-  height: 22px;
   font-size: 20px;
 }
 #markers {
@@ -117,8 +117,16 @@
                         <div class="btn-group">
                             <button id="query-examples" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Examples</button>
                             <div class="dropdown-menu" aria-labelledby="query-examples">
-                                <a class="dropdown-item" href="#">Dropdown link</a>
-                                <a class="dropdown-item" href="#">Dropdown link</a>
+                                <!-- TODO: store example queries in some text file. -->
+                                <!-- TODO: include NEEM example queries here? -->
+                                <!-- TODO: include contextual queries here? (e.g. about selected object etc.) -->
+                                <h5 class="dropdown-header">Charts</h5>
+                                <a class="dropdown-item" href="#"
+                                  onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Pie Chart</a>
+                                <a class="dropdown-item" href="#"
+                                  onclick="page.console.query('data_vis(barchart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Bar Chart</a>
+                                <a class="dropdown-item" href="#"
+                                  onclick="page.console.query('data_vis(timeline(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],['0_10','5_15','0_20']]]).')">Timeline</a>
                             </div>
                         </div>
                         <div class="btn-group">
