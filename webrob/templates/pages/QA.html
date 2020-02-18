@@ -8,6 +8,8 @@
 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/split.css') }}"/>
   
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
   <!--FIXME: openEASE must run offline, replace this!
              But there are some difficulties getting the google charts
              into the current build procedure using browserify.
@@ -18,13 +20,19 @@
 //     google.load("visualization", "1", {packages:["corechart","timeline"]});
   </script>
   
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
   <style>
 /* font used to display Prolog code */
 .query-font {
-  font-size: 20px;
+    font-size: 20px;
 }
 
+
 #page-content {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  min-width: 320px;
   width:100%;
   height: -o-calc(100% - 108px); /* opera */
   height: -webkit-calc(100% - 108px); /* google, safari */
@@ -32,18 +40,22 @@
   height: calc(100% - 108px); /* firefox 53 and newer*/
 }
 #history {
+  min-width: 320px;
   background: url("{{ url_for('static', filename='logos/ease-light.png') }}");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 50%;
+  background-size: 40%;
 }
 #user_query {
+  min-width: 320px;
   width:100%;
   height:100%;
   border-bottom: 1px solid #CCC;
   font-size: 20px;
 }
+
 #markers {
+  min-width: 320px;
   width: 100%;
   height: 100%;
   border: 1px solid #BBB;
@@ -78,7 +90,7 @@
 
 <div id="page-content">
 
-    <div id="container-west" class="split split-content split-horizontal">
+    <!--div id="container-west" class="split split-content split-horizontal">
         <div class="h-100 d-flex flex-column">
             <div class="tab-content flex-grow-1" id="neem-tab-content">
                 <div id="neem-info"  class="tab-pane fade show active" role="tabpanel" aria-labelledby="neem-info-tab">
@@ -99,9 +111,9 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div-->
 
-    <div id="container-east" class="split split-horizontal"> 
+    <div id="container-east" class="col-md-12 split split-horizontal"> 
         <div id="vis-container" class="split w-100">
             <div id="history" class="split split-horizontal split-content h-100 container-fluid p-3">
             </div>
@@ -153,12 +165,12 @@
 
 <!-- setup split.js -->
 <script type="text/javascript">
-    Split(['#container-west', '#container-east'], {
+    /*Split(['#container-west', '#container-east'], {
             gutterSize: 8,
             cursor: 'col-resize',
             sizes: [30,70],
             onDragEnd: page.resizeCanvas
-    });
+    });*/
     Split(['#vis-container', '#console'], {
             gutterSize: 8,
             cursor: 'row-resize',
@@ -169,7 +181,7 @@
     Split(['#history', '#markers'], {
             gutterSize: 8,
             cursor: 'col-resize',
-            sizes: [50,50],
+            sizes: [40,60],
             onDragEnd: page.resizeCanvas
     });
 </script>
