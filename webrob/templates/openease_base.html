@@ -79,9 +79,7 @@ a.openease-brand {
         </a>
       </li>
     </ul>
-  </div>
-  <!-- right side of navbar: Login/Logout space -->
-  <div class="collapse navbar-collapse flex-grow-0">
+  
 {% block nav_right %}{% endblock %}
     <ul class="navbar-nav text-right">
 {% if current_user.is_authenticated %}
