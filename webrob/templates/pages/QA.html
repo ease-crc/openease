@@ -32,7 +32,7 @@
 #page-content {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  min-width: 320px;
+  min-width: 320px; //smallest screen size
   width:100%;
   height: -o-calc(100% - 108px); /* opera */
   height: -webkit-calc(100% - 108px); /* google, safari */
@@ -40,14 +40,14 @@
   height: calc(100% - 108px); /* firefox 53 and newer*/
 }
 #history {
-  min-width: 320px;
+  min-width: 320px; //smallest screen size
   background: url("{{ url_for('static', filename='logos/ease-light.png') }}");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 40%;
 }
 #user_query {
-  min-width: 320px;
+  min-width: 320px; //smallest screen size
   width:100%;
   height:100%;
   border-bottom: 1px solid #CCC;
@@ -55,7 +55,7 @@
 }
 
 #markers {
-  min-width: 320px;
+  min-width: 320px; //smallest screen size
   width: 100%;
   height: 100%;
   border: 1px solid #BBB;
@@ -187,17 +187,17 @@
             onDragEnd: page.resizeCanvas
     });
     
-    // min window widht for mobile applications
-    var minimumWindowWidth = 320;
+    // min window width for smaller screens
+    var minimumWindowWidth = 750;
     $(window).resize(function() {
         //console.log('window was resized : ' + $(window).width());
         
         if($(window).width() < minimumWindowWidth) {                    
             // do not show the gutter
-            splitInstance.pairs[0].gutter.style.height= '0px';
+            splitInstance.pairs[0].gutter.style.display= 'none';
         } else {      
             // show the gutter
-            splitInstance.pairs[0].gutter.style.height= '8px';  
+            splitInstance.pairs[0].gutter.style.display= 'block';
         } // end of else
     }); // eof window resize
 </script>

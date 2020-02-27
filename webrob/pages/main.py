@@ -1,14 +1,11 @@
-from flask import session, request, redirect, url_for, render_template
+from flask import session, request, redirect, url_for, render_template, send_from_directory
 from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
 
-from urlparse import urlparse
+
 import traceback
 import os
-
-from random import choice
-from string import lowercase
 
 from webrob.app_and_db import app
 from webrob.app_and_db import db
@@ -16,10 +13,13 @@ from webrob.docker import docker_interface
 from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
+from webrob.typeface_oswald_fonts.manager import FONTS_Manager
+
+fonts_manager = FONTS_Manager()
 
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
-    
+
 @user_logged_in.connect_via(app)
 def track_login(sender, user, **extra):
     app.logger.info("Logged in " + str(user.username))
@@ -40,6 +40,14 @@ def redirect_unhandled_exception(e):
     app.logger.error(traceback.format_exc())
     # TODO: show an appology page to the user
     return redirect(url_for('user.login'))
+
+# @app.route('/node_modules/<path:npmpath>')
+@app.route('/node_modules/typeface-oswald/files/<path:file_name>')
+def send_woff_file_from_neem_directory(file_name):
+    app.logger.info("in the method send_woff_file_from_neem_directory: " + file_name )
+    with open("/opt/webapp/webrob/static/node_modules/typeface-oswald/files/"+file_name, 'r') as f:
+        file_content = f.read()
+    return file_content
 
 @app.route('/userdata')
 @login_required
