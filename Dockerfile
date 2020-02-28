@@ -26,17 +26,16 @@ RUN useradd -m -d /home/ros -p ros ros && chsh -s /bin/bash ros
 ENV HOME /home/ros
 
 ## install npm dendencies
-RUN mkdir -p /opt/webapp/webrob/static/node_modules
-WORKDIR /opt/webapp/webrob/static/
-RUN chown -R ros:ros /opt/webapp/
-COPY ./webrob/static/package.json /opt/webapp/webrob/static/
+RUN mkdir -p /tmp/npm/node_modules
+WORKDIR /tmp/npm
+COPY ./webrob/static/package.json /tmp/npm/
 # copy local node modules into the image
-COPY ./node_modules /opt/webapp/webrob/static/node_modules
+COPY ./node_modules /tmp/npm/node_modules
 RUN npm install
 
-COPY ./webrob/static/index.js /opt/webapp/webrob/static/
+COPY ./webrob/static/index.js /tmp/npm/
 RUN npm run build
-RUN chown -R ros:ros /opt/webapp/webrob/static/
+RUN chown -R ros:ros /tmp/npm
 WORKDIR /opt/webapp
 
 ## copy this folder to the container
@@ -46,12 +45,10 @@ RUN chown -R ros:ros /opt/webapp/
 RUN mkdir /home/ros/mesh_data
 RUN chown -R ros:ros /home/ros/mesh_data
 
-#USER ros
+USER ros
 
 # install JS libraries to static dir of webserver
-WORKDIR /opt/webapp/webrob/static/
-RUN chmod +x /opt/webapp/webrob/static/openease*.js
-#RUN /opt/webapp/webrob/static/openease*.js
+RUN mv /tmp/npm/openease*.js /opt/webapp/webrob/static/
 
 RUN cd /home/ros
 

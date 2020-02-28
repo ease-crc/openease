@@ -11,7 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 import logging
 
 # This is the WSGI compliant web application object
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler())
 app.logger.setLevel(logging.INFO)
 
