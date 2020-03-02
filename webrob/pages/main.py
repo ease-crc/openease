@@ -19,7 +19,10 @@ from wtforms.validators import DataRequired, Length, EqualTo, Email
 
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
-    
+
+# path for node modules stored in openease container
+NODE_MODULES_STORAGE_PATH_TAG = "/tmp/npm/"
+
 @user_logged_in.connect_via(app)
 def track_login(sender, user, **extra):
     app.logger.info("Logged in " + str(user.username))
@@ -122,3 +125,12 @@ def render_change_password_post():
 
     ## TODO: show_user_data never shown, could be re-enabled as iframe
     #return render_template('main.html', **locals())
+
+# method to send woff font files from node_modules
+@app.route('/user/<node_modules>/<typeface_oswald>/<files>/<path:file_name>')
+@app.route('/<node_modules>/<typeface_oswald>/<files>/<path:file_name>')
+def send_woff_file_from_neem_directory(node_modules, typeface_oswald, files, file_name):
+    app.logger.info("Send_woff_file_from_neem_directory: " + file_name)
+    with open(os.path.join(NODE_MODULES_STORAGE_PATH_TAG, node_modules, typeface_oswald, files, file_name), 'r') as f:
+        file_content = f.read()
+    return file_content
