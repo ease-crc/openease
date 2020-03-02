@@ -51,9 +51,7 @@ def redirect_unhandled_exception(e):
 @app.route('/<node_modules>/<typeface_oswald>/<files>/<path:file_name>')
 def send_woff_file_from_neem_directory(node_modules, typeface_oswald, files, file_name):
     app.logger.info("Send_woff_file_from_neem_directory: " + file_name)
-    file_path = NODE_MODULES_STORAGE_PATH_TAG + node_modules + "/" + typeface_oswald + "/" + files + "/"
-    app.logger.info("path file_path : " + file_path)
-    with open(file_path + file_name, 'r') as f:
+    with open(os.path.join(NODE_MODULES_STORAGE_PATH_TAG, node_modules, typeface_oswald, files, file_name), 'r') as f:
         file_content = f.read()
     return file_content
 
