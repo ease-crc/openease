@@ -127,10 +127,12 @@ def render_change_password_post():
     #return render_template('main.html', **locals())
 
 # method to send woff font files from node_modules
-@app.route('/user/node_modules/<typeface_oswald>/<files>/<path:file_name>')
-@app.route('/node_modules/<typeface_oswald>/<files>/<path:file_name>')
-def send_woff_file_from_neem_directory(typeface_oswald, files, file_name):
-    app.logger.info("Send_woff_file_from_neem_directory: " + file_name)
-    with open(os.path.join(NODE_MODULES_STORAGE_PATH_TAG, typeface_oswald, files, file_name), 'r') as f:
+@app.route('/user/node_modules/<path:file_path>')
+@app.route('/node_modules/<path:file_path>')
+def send_woff_file_from_neem_directory(file_path):
+    app.logger.info("Send_woff_file_from_neem_directory: " + file_path)
+    # remove possibility for miss use of file_path by removing any sort of directory path manipulation
+    file_path.replace("..", "").replace("./", "")
+    with open(os.path.join(NODE_MODULES_STORAGE_PATH_TAG, file_path), 'r') as f:
         file_content = f.read()
     return file_content
