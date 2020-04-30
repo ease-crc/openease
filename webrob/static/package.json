@@ -23,7 +23,7 @@
     "uglify-js": "latest",
     "browserify": "latest",
     "browserify-css": "latest",
-    "jquery": "2.2.4",
+    "jquery": "3.5.0",
     "jquery-ui-bundle": "1.12.1-migrate",
     "layout": "git://github.com/benmaurer/layout.git#master",
     "datatables.net": "1.10.19",
