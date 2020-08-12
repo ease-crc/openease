@@ -22,14 +22,15 @@ def render_neems():
     current_offset = (current_page - 1) * per_page
     next_offset = current_offset + per_page
     # get neems meta information from mongo collection
-    neemsMeta = mongoDbClient["meta"]
+    mongoDBMetaCollection = mongoDbClient["meta"]
 
-    matching_neems = neemsMeta.find()
+    # todo: get flask mongodb pagination working
+    matching_neems = mongoDBMetaCollection.find()
     neems = matching_neems
 
-    # for each doc from neemsMeta, create a NEEM instance
+    # for each doc from mongoDBMetaCollection, create a NEEM instance
     # todo: see why we can not use neems list here instread have to call from db
-    for neem in neemsMeta.find():
+    for neem in mongoDBMetaCollection.find():
         NEEM('test', neem['description'], neem['created_by'])
 
     # TODO: what does this mean?
@@ -40,7 +41,7 @@ def render_neems():
     pagination = Pagination(page=current_page,
                             per_page=per_page,
                             offset=current_offset,
-                            total=neemsMeta.count(),
+                            total=mongoDBMetaCollection.count(),
                             css_framework='bootstrap4',
                             search=search)
     return render_template('neems/search.html', **locals())
