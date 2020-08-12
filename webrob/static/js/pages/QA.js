@@ -98,7 +98,25 @@ function KnowrobUI(flask_user,options) {
     this.registerROSClients = function (ros) {
         that.registerChartClient(ros);
         that.registerImageClient(ros);
-        that.loadNEEM();
+        // make sure rosprolog is alive
+        that.waitForProlog(ros, function() {
+            that.loadNEEM();
+        });
+    };
+    
+    this.waitForProlog = function (ros, then) {
+        var pl = new ROSPrologClient(ros, {});
+        if(!pl) return;
+        pl.jsonQuery("true", function(result) {
+            pl.finishClient();
+            if(result.error) {
+                // Service /json_prolog/simple_query does not exist
+                setTimeout(that.waitForProlog, 500);
+            }
+            else {
+                then();
+            }
+        });
     };
     
     // listen to data_vis_msgs topic and add charts to currently
