@@ -20,7 +20,7 @@ def render_QA_page():
         return redirect(url_for('render_neems'))
     # TODO show progress to user, probably better do REST calls in QA.html
     neem.checkout()
-    neem.activate()
+#    neem.activate()
     # determine hostname/IP we are currently using
     # (needed for accessing container)
     host_url = urlparse(request.host_url).hostname

@@ -69,13 +69,13 @@ def download_mesh(mesh):
         if os.path.exists(mesh): meshFile = mesh
         elif os.path.exists('/'+mesh): meshFile = '/'+mesh
     
-    if meshFile == None:
-        neem = neem_manager.get_requested(request)
-        if neem is not None:
-            neemAssets = os.path.join(neem.get_directory(),'assets')
-            meshPath = os.path.join(neemAssets, mesh)
-            if os.path.exists(meshPath):
-                meshFile = meshPath
+#   if meshFile == None:
+#        neem = neem_manager.get_requested(request)
+#        if neem is not None:
+#            neemAssets = os.path.join(neem.get_directory(),'assets')
+#            meshPath = os.path.join(neemAssets, mesh)
+#            if os.path.exists(meshPath):
+#                meshFile = meshPath
     
     if meshFile == None:
         app.logger.info("Unable to download mesh " + mesh)
