@@ -23,15 +23,15 @@ def _config_is_debug():
 def _run_debug_server():
     # print 'Run web server in DEBUG mode'
     # app.run(host='0.0.0.0', debug=True)
-    print 'DEBUG mode currently does not work'
-    print 'Start normal web server'
+    print ('DEBUG mode currently does not work')
+    print ('Start normal web server')
     _run_server()
 
 
 def _run_server():
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(5000)
-    print 'Web server is running. Listening on {}'.format(5000)
+    print ('Web server is running. Listening on {}'.format(5000))
     IOLoop.instance().start()
 
 
