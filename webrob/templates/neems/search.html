@@ -1,6 +1,12 @@
 {% extends "openease_base.html" %}
 
 {% block head %}
+<style>
+    .card-words-break {
+    word-wrap: break-word;
+    word-break: break-all;
+    }
+</style>
 {% endblock %}
 
 {% block nav_right %}
@@ -22,18 +28,18 @@
         </div>
         <div class="card-body">
           <h6 class="card-title">{{ neem.name }}</h6>
-          <table class="card-table table">
+          <table class="card-table card-words-break table">
             <tbody>
               {% for activity in neem.activities %}
               <tr>
-                <td>Activity</td>
+                <td class="col-lg-6">Activity</td>
                 <td><a href="{{ activity.iri }}" class="card-link">{{ activity.name }}</a>
                 </td>
               </tr>
               {% endfor %}
               {% for env in neem.environments %}
               <tr>
-                <td>Environment</td>
+                <td class="col-lg-6">Environment</td>
                 <td><a href="{{ env.iri }}" class="card-link">{{ env.name }}</a>
                 {% if env.short_name %}
                 ({{ env.short_name }})
@@ -51,9 +57,18 @@
                 </td>
               </tr>
               {% endfor %}
+              <tr style="word-wrap: break-word;">
+                <td class="col-lg-6">CreatedBy</td>
+                <td>{{ neem.created_by }}</td>
+              </tr>
               <tr>
-                <td>Maintainer</td>
-                <td>{{ neem.maintainer.name }}</td>
+                <td class="col-lg-6">CreatedAt</td>
+                <td>{{ neem.created_at }}</td>
+              </tr>
+
+              <tr>
+                <td class="col-lg-6">model version</td>
+                <td>{{ neem.model_version }}</td>
               </tr>
             </tbody>
           </table>
@@ -61,7 +76,7 @@
         <div class="card-footer">
           <a href="#" class="card-link" data-toggle="popover" title="{{ neem.name }}" data-placement="top" data-content="{{ neem.description }}">Read More</a>
           <a href="#" class="card-link">Download</a>
-          <a href="{{ url_for('render_QA_page') }}?neem_group={{ neem.repo_group }}&neem_name={{ neem.repo_name }}" class="card-link">Explore</a>
+          <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.id }}}" class="card-link">Explore</a>
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ neem_manager = NEEM_Manager()
 
 @app.route('/neems')
 def render_neems():
+    app.logger.info("calling neems from mongoDb collection")
     show_all = request.args.get('show_all', default=True, type=bool)
     per_page = request.args.get('limit', default=12, type=int)
     query = request.args.get('neem_query', default='', type=str)
@@ -20,8 +21,9 @@ def render_neems():
     next_offset = current_offset + per_page
     # get neems
     matching_neems = neem_manager.query_neem_ids(query)
-    neems = list(map(lambda (x,y): neem_manager.get(x,y),
+    neems = list(map(lambda (x): neem_manager.get(x),
                      matching_neems[current_offset:next_offset]))
+
     # TODO: what does this mean?
     search = False
     q = request.args.get('q')
