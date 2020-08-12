@@ -13,7 +13,7 @@ neem_manager = NEEM_Manager()
 
 @app.route('/neems')
 def render_neems():
-    app.logger.info("calling neems from local storage")
+    app.logger.info("calling neems from mongoDb collection")
     show_all = request.args.get('show_all', default=True, type=bool)
     per_page = request.args.get('limit', default=12, type=int)
     query = request.args.get('neem_query', default='', type=str)
