@@ -11,13 +11,17 @@ class NEEM:
     def __init__(self,
                  neem_id):
         # collect neem by id
+        app.logger.info('getting neem from mongo with id: ')
+        app.logger.info(neem_id)
         neem = mongoDBMetaCollection.find_one({"_id": neem_id})
+        app.logger.info(neem)
 
-        self.name = ''
+        self.name = neem['name']
         self.description = neem['description']
         self.created_by = neem['created_by']
         self.created_at = neem['created_at']
         self.model_version = neem['model_version']
+        self.downloadUrl = neem['url']
         self.knowrob_image = 'knowrob'
         self.knowrob_tag = 'latest'
         self.maintainer = neem['created_by']
@@ -38,7 +42,8 @@ class NEEM:
             'image_tag': self.knowrob_tag,
             'environments': self.environments,
             'activities': self.activities,
-            'agents': self.agents
+            'agents': self.agents,
+            'downloadUrl': self.downloadUrl
         }
 
     def checkout(self):

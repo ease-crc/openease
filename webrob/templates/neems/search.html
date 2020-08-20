@@ -32,14 +32,14 @@
             <tbody>
               {% for activity in neem.activities %}
               <tr>
-                <td class="col-lg-6">Activity</td>
+                <td>Activity</td>
                 <td><a href="{{ activity.iri }}" class="card-link">{{ activity.name }}</a>
                 </td>
               </tr>
               {% endfor %}
               {% for env in neem.environments %}
               <tr>
-                <td class="col-lg-6">Environment</td>
+                <td>Environment</td>
                 <td><a href="{{ env.iri }}" class="card-link">{{ env.name }}</a>
                 {% if env.short_name %}
                 ({{ env.short_name }})
@@ -58,16 +58,17 @@
               </tr>
               {% endfor %}
               <tr style="word-wrap: break-word;">
-                <td class="col-lg-6">CreatedBy</td>
+                <td>CreatedBy</td>
                 <td>{{ neem.created_by }}</td>
               </tr>
-              <tr>
-                <td class="col-lg-6">CreatedAt</td>
+              <!--tr>
+                fixMe: use library to display datetime str into more user friendly way
+                <td>CreatedAt</td>
                 <td>{{ neem.created_at }}</td>
-              </tr>
+              </tr-->
 
               <tr>
-                <td class="col-lg-6">model version</td>
+                <td>model version</td>
                 <td>{{ neem.model_version }}</td>
               </tr>
             </tbody>
@@ -75,7 +76,7 @@
         </div>
         <div class="card-footer">
           <a href="#" class="card-link" data-toggle="popover" title="{{ neem.name }}" data-placement="top" data-content="{{ neem.description }}">Read More</a>
-          <a href="#" class="card-link">Download</a>
+          <a href={{ neem.downloadUrl }} class="card-link">Download</a>
           <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.id }}}" class="card-link">Explore</a>
         </div>
       </div>
