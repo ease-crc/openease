@@ -15,7 +15,7 @@ class NEEM:
         app.logger.info(neem_id)
         neem = mongoDBMetaCollection.find_one({"_id": neem_id})
         app.logger.info(neem)
-
+        self.neem_id = neem['_id']
         self.name = neem['name']
         self.description = neem['description']
         self.created_by = neem['created_by']
@@ -33,6 +33,7 @@ class NEEM:
 
     def get_info(self):
         return {
+            'neem_id': self.neem_id,
             'name': self.name,
             'description': self.description,
             'maintainer': self.maintainer,
