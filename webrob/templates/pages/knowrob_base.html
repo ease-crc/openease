@@ -32,9 +32,20 @@
         var urlQuery = updateQueryString();
         // update NEEM selection from URL query
         // e.g., https://data.openease.org/QA?neem="ACAT/PR2-pipetting:latest"
-        if(urlQuery['neem']) {
+        if(urlQuery['neem_id']) {
+            $(window).open("google.de")
+            console.error('neeeeeeeeeem');
           // TODO
-          //knowrob_client.setNEEM(urlQuery['neem']);
+            $.ajax({
+                url : "/neems/{{ neem_id }}/activate",
+                type : 'POST',
+                data : {
+                    id: neem_id
+                },
+                success : function(data) {
+                // ... some code on success
+                }
+            });        
         }
     };
     

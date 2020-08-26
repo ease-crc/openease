@@ -6,16 +6,25 @@ from flask_user import current_user
 from webrob.docker.docker_interface import start_user_container
 from webrob.app_and_db import app, mongoDBMetaCollection
 
+import bson
 
 class NEEM:
     def __init__(self,
                  neem_id):
         # collect neem by id
-        app.logger.info('getting neem from mongo with id: ')
-        app.logger.info(neem_id)
-        neem = mongoDBMetaCollection.find_one({"_id": neem_id})
+        if isinstance(neem_id, unicode):
+            app.logger.info('getting neem from mongo with id: ')
+            app.logger.info(neem_id)
+            b_id = bson.objectid.ObjectId(neem_id)
+        else:
+            b_id = neem_id
+        neem = mongoDBMetaCollection.find_one({"_id": b_id})
         app.logger.info(neem)
-        self.neem_id = neem['_id']
+        self.neem_id = str(neem['_id'])
+        app.logger.info("self neemid is ")
+        app.logger.info(type(self.neem_id))
+        # TODO: Tag could be useful for versioning
+        self.neem_tag = ''
         self.name = neem['name']
         self.description = neem['description']
         self.created_by = neem['created_by']
@@ -34,6 +43,7 @@ class NEEM:
     def get_info(self):
         return {
             'neem_id': self.neem_id,
+            'neem_tag': self.neem_tag,
             'name': self.name,
             'description': self.description,
             'maintainer': self.maintainer,
@@ -48,15 +58,14 @@ class NEEM:
         }
 
     def checkout(self):
+        app.logger.info('Checkout neem')
         pass
 
     def activate(self):
-        session['neem_group'] = self.repo_group
-        session['neem_name'] = self.repo_name  # + ":" + self.repo_tag
+        app.logger.info('Activate neem')
         start_user_container(current_user.username,
-                             self.repo_group,
-                             self.repo_name,
-                             self.repo_tag,
+                             self.neem_id,
+                             self.neem_tag,
                              self.knowrob_image,
                              self.knowrob_tag)
 
