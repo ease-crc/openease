@@ -16,7 +16,7 @@ MONGO_HOST = "mongodb://data.open-ease.org"
 MONGO_PORT = 28015
 MONGO_DB = "neems"
 MONGO_USER = "neemReader"
-MONGO_PASS = os.environ.get('NEEMHUB_MONGO_PASS')
+MONGO_PASS = os.environ.get('KNOWROB_MONGO_PASS')
 
 # This is the WSGI compliant web application object
 app = Flask(__name__)
