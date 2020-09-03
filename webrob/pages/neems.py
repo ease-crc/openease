@@ -49,16 +49,17 @@ def route_neem_meta(neem_group,neem_name):
     #neem.pull()
     #return jsonify(result=None)
 
-@app.route('/neems/<neem_group>/<neem_name>/activate')
-def route_activate_neem(neem_group,neem_name):
-    neem = neem_manager.get(neem_group,neem_name)
+@app.route('/neems/<neem_id>/activate')
+def route_activate_neem(neem_id):
+    neem = neem_manager.get(neem_id)
     # TODO show progress to user
+    app.logger.info('Activate neem rout')
     neem.checkout()
     neem.activate()
     return jsonify(success=True)
 
-@app.route('/neems/<neem_group>/<neem_name>/static/<path:filename>')
-def send_from_neem_directory(neem_group,neem_name, filename):
-    neem = neem_manager.get(neem_group,neem_name)
+@app.route('/neems/<neem_id>/static/<path:filename>')
+def send_from_neem_directory(neem_id, filename):
+    neem = neem_manager.get(neem_id)
     neem.checkout()
     return send_from_directory(neem.get_directory(), filename)
