@@ -12,11 +12,11 @@ from flask_sqlalchemy import SQLAlchemy
 import logging
 from pymongo import MongoClient
 
-MONGO_HOST = "mongodb://data.open-ease.org"
-MONGO_PORT = 28015
-MONGO_DB = "neems"
-MONGO_USER = "neemReader"
-MONGO_PASS = os.environ.get('NEEMHUB_MONGO_PASS')
+MONGO_HOST = os.environ.get('KNOWROB_MONGO_HOST')
+MONGO_PORT = os.environ.get('KNOWROB_MONGO_PORT')
+MONGO_DB = os.environ.get('KNOWROB_MONGO_DB')
+MONGO_USER = os.environ.get('KNOWROB_MONGO_USER')
+MONGO_PASS = os.environ.get('KNOWROB_MONGO_PASS')
 
 # This is the WSGI compliant web application object
 app = Flask(__name__)
