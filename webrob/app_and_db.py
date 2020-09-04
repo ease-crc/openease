@@ -13,7 +13,7 @@ import logging
 from pymongo import MongoClient
 
 MONGO_HOST = os.environ.get('KNOWROB_MONGO_HOST')
-MONGO_PORT = os.environ.get('KNOWROB_MONGO_PORT')
+MONGO_PORT = int(os.environ.get('KNOWROB_MONGO_PORT'))
 MONGO_DB = os.environ.get('KNOWROB_MONGO_DB')
 MONGO_USER = os.environ.get('KNOWROB_MONGO_USER')
 MONGO_PASS = os.environ.get('KNOWROB_MONGO_PASS')
