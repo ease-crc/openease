@@ -36,6 +36,7 @@ class NEEM:
         self.environments = ''
         self.activities = ''
         self.agents = ''
+        self.image = 'https://blogs.3ds.com/northamerica/wp-content/uploads/sites/4/2019/08/Robots-Square-300x300.jpg'
 
     def get_info(self):
         return {
@@ -46,7 +47,7 @@ class NEEM:
             'maintainer': self.maintainer,
             'authors': self.authors,
             'acknowledgements': self.acknowledgements,
-            'image': self.knowrob_image,
+            'image': 'https://blogs.3ds.com/northamerica/wp-content/uploads/sites/4/2019/08/Robots-Square-300x300.jpg',
             'image_tag': self.knowrob_tag,
             'environments': self.environments,
             'activities': self.activities,
