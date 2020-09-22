@@ -1,9 +1,9 @@
 {% extends "pages/knowrob_base.html" %}
 
-{% block head %}
-  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
+{% block head_inner %}
+ <!-- <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>  -->
   
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
+  <!-- <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
 
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/google-jsapi.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/chart/DonutChart.js') }}"></script>
@@ -18,7 +18,59 @@
   <script type="text/javascript" src="{{ url_for('static', filename='lib/utility.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/console.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/iframes/kb-frame.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/iframes/teaching.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/pages/teaching.js') }}"></script> -->
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/pages/QA.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/split.css') }}" />
+
+
+
+<style>
+
+.query-font {
+  font-size: 20px;
+}
+
+.smaller-screen-size {
+  min-width: 320px; //smallest screen size
+}
+
+#page-content {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+  height: -o-calc(100% - 108px); /* opera */
+  height: -webkit-calc(100% - 108px); /* google, safari */
+  height: -moz-calc(100% - 108px); /* firefox */
+  height: calc(100% - 108px); /* firefox 53 and newer*/
+}
+
+#user_query {
+  width:100%;
+  height:100%;
+  border-bottom: 1px solid #CCC;
+  font-size: 20px;
+}
+
+#history {
+  background: url("{{ url_for('static', filename='logos/ease-light.png') }}");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40%;
+}
+
+#markers {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #BBB;
+  overflow: hidden;
+}
+
+</style>
 {% endblock %}
 
 {% block content %}
@@ -42,18 +94,29 @@
         }
     };
     
-    $(document).ready(function () {
-        ui = new KnowrobUI(parent.client, {
-            use_console_overlay: true
+    debugger;
+    
+        ui =  new KnowrobUI(flask_user, {
+            authentication: '{{ authentication }}',
+            ros_url: 'ws' + (location.protocol === 'https:' ? 's' : '') +
+                '://{{ host_url }}/ws/{{ container_name }}/'
         });
-        ui.init();
-        loadTutorial('overview', 1);
-        resize();
         
-        if(parent.client.nodesRegistered && !visClient) {
-            on_register_nodes();
-        }
-    });
+       $(document).ready(ui.init);
+       
+       $(document).ready(function(){          
+           loadTutorial('overview', 1);
+           resize();
+       });
+        //    if (parent.client.nodesRegistered && !visClient) {
+        //        on_register_nodes();
+        //    }
+        
+        
+        
+   
+
+
     
     function selectMarker(marker) {
         var prolog = parent.client.newProlog();
@@ -164,7 +227,7 @@
             url: "/tutorials/get",
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({category: category, page: page}),  
+            data: JSON.stringify({ page: page}),  
             dataType: "json"
         }).done( function (data) {
             var lib = document.getElementById('library');
@@ -217,9 +280,8 @@
             // hook for links of class "show_code" that pastes the content of the
             // previous code block into the query field
             $( "a.show_code" ).click(function( event ) {
-                ui.console.setQueryValue(
-                    $(this).closest("pre + *").prev().find('code').html(),
-                    true);
+                var query_text = $(this).closest("pre + *").prev().find('code').html();
+                $("#user_query").replaceWith(query_text);
                 event.preventDefault();
             });
         });
@@ -251,6 +313,82 @@
   </script>
 
 <div id="page-content">
+    <div class="ui-layout-center" id="editor-container">
+        <div id="library" class="black_border tutorial-library"></div>
+        <div id="QA-container" class="w-100 split split-horizontal">
+            <div id="vis-container" class="split w-100">
+                <div id="history"></div>
+                <div id="markers"></div>
+            </div>
+        
+            <div id="console" class="container-fluid p-0 split split-content">
+                <div class="h-100 d-flex flex-column">
+                    <div id="user_query" class="flex-grow-1 smaller-screen-size">member(A, [a,b,c]).</div>
+                    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group">
+                            <div class="btn-group">
+                                <button id="query-examples" type="button" class="btn btn-light dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Examples</button>
+                                <div class="dropdown-menu" aria-labelledby="query-examples">
+                                    <!-- TODO: store example queries in some text file. -->
+                                    <!-- TODO: include NEEM example queries here? -->
+                                    <!-- TODO: include contextual queries here? (e.g. about selected object etc.) -->
+                                    <h5 class="dropdown-header">Charts</h5>
+                                    <a class="dropdown-item" href="#"
+                                        onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Pie
+                                        Chart</a>
+                                    <a class="dropdown-item" href="#"
+                                        onclick="page.console.query('data_vis(barchart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Bar
+                                        Chart</a>
+                                    <a class="dropdown-item" href="#"
+                                        onclick="page.console.query('data_vis(timeline(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[\'0_10\',\'5_15\',\'0_20\']]]).')">Timeline</a>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button id="query-view" type="button" class="btn btn-light dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">View</button>
+                                <div class="dropdown-menu" aria-labelledby="query-view">
+                                    <a class="dropdown-item" href="#" onclick="page.console.zoomIn()"><i
+                                            class="fas fa-plus"></i> Larger Text</a>
+                                    <a class="dropdown-item" href="#" onclick="page.console.zoomOut()"><i
+                                            class="fas fa-minus"></i> Smaller Text</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group" role="group" aria-label="Third group">
+                            <button id="btn_query" type="button" class="btn btn-primary" onclick="page.console.query()"><i
+                                    class="fas fa-question"></i></button>
+                            <button id="btn_query_next" type="button" class="btn btn-primary"
+                                onclick="page.console.nextSolution()"><i class="fas fa-redo"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div id="tutorial_page" class="split w-100">
+        <div id="tutorial" class="split split-horizontal split-content h-100 smaller-screen-size">
+            <p>{{ tutorial_md }}</p>
+        </div>
+        <div id="tutorial_query" class="split split-horizontal split-content h-100 smaller-screen-size">
+            <h2>Column 2</h2>
+            <p id="load_query">Some text.. testing </p>
+        </div>
+    </div> -->
+
+    <div class="ui-layout-east">
+        <div id="designator">
+            This pane enables the user to inspect the internal data structures of the robot's beliefs
+            including object, action, and location descriptions used by the robot.
+        </div>
+        <div id="mjpeg">
+            This pane is used for displaying images captured by the robot's camera.
+            It's also possible to play videos in this pane (captured during task execution or generated
+            by openEASE episode replay).
+        </div>
+    </div>
+</div>
+<!-- <div id="page-content">
     <div class="ui-layout-center" id="editor-container">
         <div id="library" class="black_border tutorial-library">
         </div>
@@ -287,7 +425,7 @@ This pane is used for displaying images captured by the robot's camera.
 It's also possible to play videos in this pane (captured during task execution or generated
 by openEASE episode replay).
         </div>
-    </div>
+    </div> -->
     
     <div id="dom-highlight">
 </div>

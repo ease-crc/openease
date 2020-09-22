@@ -25,28 +25,34 @@ def tutorials():
 
     # Use the user container if user is authenticated
     if current_user.is_authenticated:
-        container_name = session['user_container_name']
+        container_name = current_user.username + "_knowrob"
+        #container_name = session['user_container_name']
         authentication = True
-
-    return render_template('knowrob_tutorial.html', **locals())
+    
+   
+    return render_template('pages/tutorials.html', **locals())
 
 
 @app.route('/tutorials/get', methods=['POST'])
 def get_tutorial():
-    data = json.loads(request.data)
-    response = read_tutorial(data['category'], data['page'])
+    data = ""
+    with open('/opt/webapp/webrob/tutorials/tutorial-semweb.md', 'r') as f:
+        data = f.read()
+    
+    response = read_tutorial(data)
+    # data = json.loads(request.data)
+    # response = read_tutorial(data['category'], data['page'])
     if response is None:
         return jsonify({})
     else:
         return jsonify(response)
 
 
-def read_tutorial(cat_id, page):
-    tut = read_tutorial_page(cat_id, page)
-    if tut is None:
-        app.logger.info("No tutorial available for %s/%s" % (cat_id, str(page)))
+def read_tutorial(page):
+    if page is None:
+        app.logger.info("No tutorial available")
         return None
-    content = markdown(tut.text, fenced_code=True)
+    content = markdown(page, fenced_code=True)
 
     # automatically add event handler for highlighting DOM elements
     tmp = re.findall('<em>(.*?)</em>', str(content))
@@ -68,28 +74,30 @@ def read_tutorial(cat_id, page):
                      str(content))
     content = Markup(content)
     # check whether there is another tutorial in this category
-    nxt = read_tutorial_page(cat_id, int(page) + 1)
-    prev = read_tutorial_page(cat_id, int(page) - 1)
+    #nxt = read_tutorial_page(cat_id, int(page) + 1)
+    #prev = read_tutorial_page(cat_id, int(page) - 1)
 
     out = dict()
     out['this'] = {
-        'cat_id': tut.cat_title,
-        'page': tut.page,
-        'title': tut.title,
+        'cat_id': "overview",
+        'page': 1,
+        'title': "Semantic Web Introduction",
         'text': content
     }
-    if nxt is not None:
-        out['next'] = {
-            'cat_id': nxt.cat_id,
-            'page': nxt.page,
-            'title': nxt.title
-        }
-    if prev is not None:
-        out['prev'] = {
-            'cat_id': prev.cat_id,
-            'page': prev.page,
-            'title': prev.title
-        }
+    # nxt = {}
+    # prev = {}
+    # if nxt is not None:
+    #     out['next'] = {
+    #         'cat_id': nxt.cat_id,
+    #         'page': nxt.page,
+    #         'title': nxt.title
+    #     }
+    # if prev is not None:
+    #     out['prev'] = {
+    #         'cat_id': prev.cat_id,
+    #         'page': prev.page,
+    #         'title': prev.title
+    #     }
 
     return out
 
