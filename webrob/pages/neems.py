@@ -11,7 +11,6 @@ neem_manager = NEEM_Manager()
 
 @app.route('/neems')
 def render_neems():
-    app.logger.info("calling neems from mongoDb collection")
     show_all = request.args.get('show_all', default=True, type=bool)
     per_page = request.args.get('limit', default=12, type=int)
     query = request.args.get('neem_query', default='', type=str)
@@ -48,15 +47,6 @@ def route_neem_meta(neem_group,neem_name):
     #neem = neem_manager.get(neem_group,neem_name)
     #neem.pull()
     #return jsonify(result=None)
-
-@app.route('/neems/<neem_id>/activate')
-def route_activate_neem(neem_id):
-    neem = neem_manager.get(neem_id)
-    # TODO show progress to user
-    app.logger.info('Activate neem rout')
-    neem.checkout()
-    neem.activate()
-    return jsonify(success=True)
 
 @app.route('/neems/<neem_id>/static/<path:filename>')
 def send_from_neem_directory(neem_id, filename):
