@@ -9,7 +9,7 @@ from webrob.app_and_db import app
 from webrob.pages.neems import neem_manager
 from webrob.docker import docker_interface
 
-from webrob.config.settings import MAX_HISTORY_LINES
+from webrob.config.settings import MAX_HISTORY_LINES, USE_HOST_KNOWROB
 
 __author__ = 'danielb@uni-bremen.de'
 
@@ -24,7 +24,11 @@ def render_QA_page():
     # determine hostname/IP we are currently using
     # (needed for accessing container)
     host_url = urlparse(request.host_url).hostname
-    container_name = current_user.username + "_knowrob"
+    if USE_HOST_KNOWROB:
+        container_name = "host"
+        authentication = False
+    else:
+        container_name = current_user.username + "_knowrob"
     return render_template('pages/QA.html', **locals())
 
 @app.route('/QA/history/add', methods=['POST'])

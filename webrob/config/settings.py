@@ -18,6 +18,8 @@ MAIL_USERNAME = os.environ.get('OPENEASE_MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('OPENEASE_MAIL_PASSWORD')
 MAIL_DEFAULT_SENDER = '"Sender" <openease.iai@gmail.com>'
 
+USE_HOST_KNOWROB = bool(os.environ.get('OPENEASE_USE_HOST_KNOWROB', 'False'))
+
 FACEBOOK_APP_TOKENS = (os.environ.get('FACEBOOK_APP_ID'), os.environ.get('FACEBOOK_APP_SECRET'))
 TWITTER_APP_TOKENS  = (os.environ.get('TWITTER_APP_ID'), os.environ.get('TWITTER_APP_SECRET'))
 GITHUB_APP_TOKENS   = (os.environ.get('GITHUB_APP_ID'), os.environ.get('GITHUB_APP_SECRET'))
