@@ -30,7 +30,8 @@
          <div class="card-header bg-openease-light">
            {{ neem.repo_path }}
         </div>
-        <div class="card-body" style="background-image: url( {{ neem.image }});">
+        <div class="card-body">
+        <img src={{ neem.image }}  alt="Avatar" style="width:100%"><br><br>
           <h6 class="card-title">{{ neem.name }}</h6>
           <table class="card-table card-words-break table">
             <tbody>
@@ -64,6 +65,17 @@
               <tr style="word-wrap: break-word;">
                 <td>CreatedBy</td>
                 <td>{{ neem.created_by }}</td>
+              </tr>
+              <tr>
+                <td>Keywords</td>
+                <td>
+                    {% for keyword in neem.keywords %}
+                        <span>{{ keyword }}</span>
+                        {% if not loop.last %}
+                            ,
+                        {% endif %}
+                    {% endfor %}
+                </td>
               </tr>
               <!--tr>
                 fixMe: use library to display datetime str into more user friendly way

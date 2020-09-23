@@ -36,6 +36,7 @@ class NEEM:
         self.environments = ''
         self.activities = ''
         self.agents = ''
+        self.keywords = neem['keywords']
         self.image = 'https://blogs.3ds.com/northamerica/wp-content/uploads/sites/4/2019/08/Robots-Square-300x300.jpg'
 
     def get_info(self):
@@ -52,7 +53,8 @@ class NEEM:
             'environments': self.environments,
             'activities': self.activities,
             'agents': self.agents,
-            'downloadUrl': self.downloadUrl
+            'downloadUrl': self.downloadUrl,
+            'keywords': self.keywords
         }
 
     def checkout(self):
