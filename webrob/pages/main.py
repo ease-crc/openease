@@ -102,23 +102,3 @@ def render_change_password_post():
 #        role_names = map(lambda x: str(x.name), current_user.roles)
 #    return role_names
 
-# TODO: look how to re-enable this (connect to host ROS)
-#@app.route('/remote')
-#def openease_remote():
-    #if not current_user.is_authenticated:
-        #return redirect(url_for('user.login'))
-    #if 'user_container_name' not in session:
-        #return redirect(url_for('user.logout'))
-
-    #error = ""
-    ## determine hostname/IP we are currently using
-    ## (needed for accessing container)
-    #host_url = urlparse(request.host_url).hostname
-    #container_name = 'remote/172.17.42.1'
-    #role_names = _get_user_roles()
-
-    #category = _get_exp_category()
-    #exp = _get_exp_name()
-
-    ## TODO: show_user_data never shown, could be re-enabled as iframe
-    #return render_template('main.html', **locals())

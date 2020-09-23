@@ -3,6 +3,8 @@ from flask_user import current_user
 from webrob.docker.docker_interface import start_user_container
 from webrob.app_and_db import app, mongoDBMetaCollection
 
+from webrob.config.settings import USE_HOST_KNOWROB
+
 import bson
 
 class NEEM:
@@ -10,16 +12,11 @@ class NEEM:
                  neem_id):
         # collect neem by id
         if isinstance(neem_id, unicode):
-            app.logger.info('getting neem from mongo with id: ')
-            app.logger.info(neem_id)
             b_id = bson.objectid.ObjectId(neem_id)
         else:
             b_id = neem_id
         neem = mongoDBMetaCollection.find_one({"_id": b_id})
-        app.logger.info(neem)
         self.neem_id = str(neem['_id'])
-        app.logger.info("self neemid is ")
-        app.logger.info(type(self.neem_id))
         # TODO: Tag could be useful for versioning
         self.neem_tag = ''
         self.name = neem['name']
@@ -63,11 +60,12 @@ class NEEM:
 
     def activate(self):
         app.logger.info('Activate neem')
-        start_user_container(current_user.username,
-                             self.neem_id,
-                             self.neem_tag,
-                             self.knowrob_image,
-                             self.knowrob_tag)
+        if not USE_HOST_KNOWROB:
+            start_user_container(current_user.username,
+                                 self.neem_id,
+                                 self.neem_tag,
+                                 self.knowrob_image,
+                                 self.knowrob_tag)
 
     def matches(self, query_string):
         # TODO
