@@ -31,5 +31,4 @@ USER_ENABLE_CONFIRM_EMAIL = False
 
 MAX_HISTORY_LINES = 100
 
-MESH_REPOSITORIES = map(lambda x: tuple(x.split(' ')),
-                        os.getenv('OPENEASE_MESHES', 'git https://github.com/PR2/pr2_common').split(','))
+MESH_URDF_SERVER = os.environ.get('MESH_URDF_SERVER', 'http://neem-1.informatik.uni-bremen.de/data/')
