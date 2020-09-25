@@ -10,7 +10,6 @@ from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
 
 from webrob.app_and_db import app, db
-from webrob.pages.meshes import update_meshes
 from webrob.startup.init_app import init_app
 
 
@@ -39,7 +38,6 @@ init_app(app, db)
 
 # Start a development web server if executed from the command line
 if __name__ == '__main__':
-    update_meshes()
     if _config_is_debug():
         _run_debug_server()
     else:

@@ -52,6 +52,10 @@ RUN mv /tmp/npm/openease*.js /opt/webapp/webrob/static/
 
 RUN cd /home/ros
 
+# Clone meshes to local path
+# WORKDIR /home/ros/mesh_data
+# RUN git clone https://github.com/PR2/pr2_common.git
+
 # configure scss to css file conversion here with sass
 WORKDIR /opt/webapp/webrob/static/css/SCSS
 RUN sass --update .:.
