@@ -25,10 +25,6 @@
   font-size: 20px;
 }
 
-.smaller-screen-size {
-  min-width: 320px; //smallest screen size
-}
-
 #page-content {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -83,18 +79,18 @@
     $(document).ready(page.init);
 </script>
 
-<div id="page-content" class="smaller-screen-size">
+<div id="page-content">
     <div id="QA-container" class="w-100 split split-horizontal">
         <div id="vis-container" class="split w-100">
-            <div id="history" class="split split-horizontal split-content h-100 container-fluid p-3 smaller-screen-size">
+            <div id="history" class="split split-horizontal split-content h-100 container-fluid p-3">
             </div>
-            <div id="markers" class="split split-horizontal split-content h-100 smaller-screen-size">
+            <div id="markers" class="split split-horizontal split-content h-100">
             </div>
         </div>
 
         <div id="console" class="container-fluid p-0 split split-content">
             <div class="h-100 d-flex flex-column">
-                <div id="user_query" class="flex-grow-1 smaller-screen-size">member(A, [a,b,c]).</div>
+                <div id="user_query" class="flex-grow-1">member(A, [a,b,c]).</div>
                 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group">
                         <div class="btn-group">
@@ -151,16 +147,16 @@
     });
 
     // min window width for smaller screens
-    var minimumWindowWidth = 750;
+    var minimumWindowWidth = 992;
     $(window).resize(function() {
         //console.log('window was resized : ' + $(window).width());
 
         if($(window).width() < minimumWindowWidth) {
             // do not show the gutter
-            splitInstance.pairs[0].gutter.style.display= 'none';
+            splitInstance.setSizes([5, 95]);
         } else {
             // show the gutter
-            splitInstance.pairs[0].gutter.style.display= 'block';
+            splitInstance.setSizes([40, 60]);
         } // end of else
     }); // eof window resize
 </script>
