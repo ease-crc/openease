@@ -23,7 +23,7 @@ class NEEM:
         self.name = 'This is neem name, please test if it works in case of long neem names'
         self.description = neem['description']
         self.created_by = neem['created_by']
-        self.created_at = neem['created_at']
+        self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
         self.model_version = neem['model_version']
         self.downloadUrl = neem['url']
         self.knowrob_image = 'knowrob'

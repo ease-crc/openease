@@ -56,5 +56,8 @@ RUN cd /home/ros
 WORKDIR /opt/webapp/webrob/static/css/SCSS
 RUN sass --update .:.
 
+# use dateutil to convert date string to desired format
+RUN pip install python-dateutil
+
 EXPOSE 5000
 
