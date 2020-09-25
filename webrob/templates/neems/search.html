@@ -17,8 +17,11 @@
         object-fit: cover;
     }
 
-
-
+    .card-title {
+        height:50px;
+        padding-bottom: 15px;
+        overflow: scroll;
+    }
 
 </style>
 {% endblock %}
@@ -42,87 +45,48 @@
                     {{ neem.neem_id }}
                 </div>
                 <div class="card-body col-md-12 col-sm-12">
-                    <img alt="" class="card-img-top img-fluid" src={{ neem.image }}/>
+                    <img src={{ neem.image }} alt="" class="card-img-top img-fluid" />
                     <br><br>
                     <h6 class="card-title">{{ neem.name }}</h6>
-                    <br>
                     <center>
-                    <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
-                        <!-- Agent icons-->
-                        {% if neem.agent == "Robot" %}
-                        <a href="http://wiki.ros.org/Robots/PR2" target="_blank"><i
-                                class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i></a>
-                        {% elif neem.agent == "Human" %}
-                        <a href=""><i class="fas fa-2x fa-user" title="Agent: {{neem.agent}}"></i></a>
-                        {% elif neem.agent == "VR" %}
-                        <a href=""><i class="fas fa-2x fa-vr-cardboard"
-                                      title="Agent: {{neem.agent}}"></i></a>
-                        {% else %}
-                        <a href=""><i class="fas fa-2x fa-bookmark" title="Agent: {{neem.agent}}"></i></a>
-                        {% endif %}
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
-                        <!-- Activity icon-->
-                        <a href="{{neem.activity.url}}" target="_blank"><i
-                                class="fas fa-2x fa-tasks" title="Activity: {{neem.activity.name}}"></i></a>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
-                        <!-- Env icon-->
-                        {% if neem.environment == "Kitchen" %}
-                        <a href="" target="_blank"><i
-                                class="fas fa-2x fa-utensils" title="Env: {{neem.environment}}"></i></a>
-                        {% elif neem.environment == "Home" %}
-                        <a href=""><i class="fas fa-2x fa-home" title="Env: {{neem.environment}}"></i></a>
-                        {% elif neem.environment == "VR" %}
-                        <a href=""><i class="fas fa-2x fa-vr-cardboard" title="Env: {{neem.environment}}"></i></a>
-                        {% elif neem.environment == "lab" %}
-                        <a href=""><i class="fas fa-2x fa-vial" title="Env: {{neem.environment}}"></i></a>
-                        {% else %}
-                        <a href=""><i class="fas fa-2x fa-industry" title="Env: {{neem.environment}}"></i></a>
-                        {% endif %}
-                    </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
+                            <!-- Agent icons-->
+                            {% if neem.agent == "Robot" %}
+                            <a href="http://wiki.ros.org/Robots/PR2" target="_blank"><i
+                                    class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i></a>
+                            {% elif neem.agent == "Human" %}
+                            <a href=""><i class="fas fa-2x fa-user" title="Agent: {{neem.agent}}"></i></a>
+                            {% elif neem.agent == "VR" %}
+                            <a href=""><i class="fas fa-2x fa-vr-cardboard"
+                                          title="Agent: {{neem.agent}}"></i></a>
+                            {% else %}
+                            <a href=""><i class="fas fa-2x fa-bookmark" title="Agent: {{neem.agent}}"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
+                            <!-- Activity icon-->
+                            <a href="{{neem.activity.url}}" target="_blank"><i
+                                    class="fas fa-2x fa-tasks" title="Activity: {{neem.activity.name}}"></i></a>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
+                            <!-- Env icon-->
+                            {% if neem.environment == "Kitchen" %}
+                            <a href="" target="_blank"><i
+                                    class="fas fa-2x fa-utensils" title="Env: {{neem.environment}}"></i></a>
+                            {% elif neem.environment == "Home" %}
+                            <a href=""><i class="fas fa-2x fa-home" title="Env: {{neem.environment}}"></i></a>
+                            {% elif neem.environment == "VR" %}
+                            <a href=""><i class="fas fa-2x fa-vr-cardboard" title="Env: {{neem.environment}}"></i></a>
+                            {% elif neem.environment == "Lab" %}
+                            <a href=""><i class="fas fa-2x fa-vial" title="Env: {{neem.environment}}"></i></a>
+                            {% else %}
+                            <a href=""><i class="fas fa-2x fa-industry" title="Env: {{neem.environment}}"></i></a>
+                            {% endif %}
+                        </div>
                     </center>
                     <br>
                     <table class="card-table card-words-break table">
                         <tbody>
-                        <!--              <tr>-->
-                        <!--                <td class="col-md-6 col-lg-6">Activity</td>-->
-                        <!--                <td class="col-md-6 col-lg-6">-->
-                        <!--                {% for activity in neem.activities %}-->
-                        <!--                    <a href="{{ activity.iri }}" class="card-link">{{ activity.name }}</a>-->
-                        <!--                {% endfor %}-->
-                        <!--                </td>-->
-                        <!--              </tr>-->
-
-                        <!--              <tr>-->
-                        <!--                <td class="col-md-6 col-lg-6">Environment</td>-->
-                        <!--                <td class="col-md-6 col-lg-6">-->
-                        <!--                {% for env in neem.environments %}-->
-                        <!--                    <a href="{{ env.iri }}" class="card-link">{{ env.name }}</a>-->
-                        <!--                {% endfor %}-->
-                        <!--                </td>-->
-                        <!--              </tr>-->
-
-
-                        <!--              <tr>-->
-                        <!--                <td class="col-md-6 col-lg-6">Agent</td>-->
-                        <!--                <td class="col-md-6 col-lg-6">-->
-                        <!--                {% for agent in neem.agents %}-->
-                        <!--                    <a href="{{ agent.iri }}" class="card-link">{{ agent.name }}</a>-->
-                        <!--                {% endfor %}-->
-                        <!--                </td>-->
-                        <!--              </tr>-->
-
-                        <tr>
-                            <!--                            <td class="col-md-6 col-lg-6">Activity</td>-->
-                            <!--                            <td class="col-md-6 col-lg-6">-->
-                            <!--                                {% for activity in neem.activities %}-->
-                            <!--                                <a href="{{ activity.url }}">{{ activity.name }}</a>-->
-                            <!--                                <span title={{ activity.url }}>{{ activity.name }}</span>-->
-                            <!--                                {% endfor %}-->
-                            <!--                            </td>-->
-                        </tr>
-
                         <tr style="word-wrap: break-word;">
                             <td>CreatedBy</td>
                             <td>{{ neem.created_by }}</td>
@@ -139,18 +103,18 @@
                             </td>
                         </tr>
                         <tr>
-<!--                          fixMe: use library to display datetime str into more user friendly way-->
-                          <td>Created At</td>
-                          <td>{{ neem.created_at }}</td>
+                            <td>Created At</td>
+                            <td>{{ neem.created_at }}</td>
                         </tr>
 
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="card-link" data-toggle="popover" title="{{ neem.name }}" data-trigger="focus" data-placement="top"
+                    <a href="#" class="card-link" data-toggle="popover" title="{{ neem.name }}" data-trigger="focus"
+                       data-placement="top"
                        data-content="{{ neem.description }}">Read More</a>
-                    <a href={{ neem.downloadUrl }} class="card-link">Download</a>
+                    <a href={{ neem.downloadUrl }} class="card-link" target="_blank">Download</a>
                     <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}" class="card-link">Explore</a>
                 </div>
             </div>
@@ -164,6 +128,7 @@
 $(function () {
   $('[data-toggle="popover"]').popover()
 });
+
 
 
 

@@ -35,9 +35,9 @@ class NEEM:
         self.acknowledgements = ''
         self.environment = neem['environment']
         self.activity = neem['activity']
-        self.agent = "Robot"
+        self.agent = neem['agent']
         self.keywords = neem['keywords']
-        self.image = ''
+        self.image = neem['image']
 
     def get_info(self):
         return {
@@ -48,7 +48,7 @@ class NEEM:
             'maintainer': self.maintainer,
             'authors': self.authors,
             'acknowledgements': self.acknowledgements,
-            'image': '',
+            'image': self.image,
             'image_tag': self.knowrob_tag,
             'environment': self.environment,
             'activity': self.activity,
