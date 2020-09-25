@@ -8,6 +8,8 @@ import bson
 import json
 from dateutil import parser
 
+NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
+
 class NEEM:
     def __init__(self,
                  neem_id):
@@ -20,19 +22,19 @@ class NEEM:
         self.neem_id = str(neem['_id'])
         # TODO: Tag could be useful for versioning
         self.neem_tag = ''
-        self.name = 'This is neem name, please test if it works in case of long neem names'
+        self.name = neem['name']
         self.description = neem['description']
         self.created_by = neem['created_by']
         self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
         self.model_version = neem['model_version']
-        self.downloadUrl = neem['url']
+        self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem['url']
         self.knowrob_image = 'knowrob'
         self.knowrob_tag = 'latest'
         self.maintainer = neem['created_by']
         self.authors = neem['created_by']
         self.acknowledgements = ''
-        self.environment = "Kitchen"
-        self.activity = "{'name':'Pizza making', 'url':'https://ease-crc.github.io/soma/owl/current/SOMA.owl'}"
+        self.environment = neem['environment']
+        self.activity = neem['activity']
         self.agent = "Robot"
         self.keywords = neem['keywords']
         self.image = ''
