@@ -4,8 +4,11 @@ from webrob.docker.docker_interface import start_user_container
 from webrob.app_and_db import app, mongoDBMetaCollection
 
 from webrob.config.settings import USE_HOST_KNOWROB
-
 import bson
+import json
+from dateutil import parser
+
+NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 
 class NEEM:
     def __init__(self,
@@ -22,17 +25,19 @@ class NEEM:
         self.name = neem['name']
         self.description = neem['description']
         self.created_by = neem['created_by']
-        self.created_at = neem['created_at']
+        self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
         self.model_version = neem['model_version']
-        self.downloadUrl = neem['url']
+        self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem['url']
         self.knowrob_image = 'knowrob'
         self.knowrob_tag = 'latest'
         self.maintainer = neem['created_by']
         self.authors = neem['created_by']
         self.acknowledgements = ''
-        self.environments = ''
-        self.activities = ''
-        self.agents = ''
+        self.environment = neem['environment']
+        self.activity = neem['activity']
+        self.agent = neem['agent']
+        self.keywords = neem['keywords']
+        self.image = neem['image']
 
     def get_info(self):
         return {
@@ -43,12 +48,13 @@ class NEEM:
             'maintainer': self.maintainer,
             'authors': self.authors,
             'acknowledgements': self.acknowledgements,
-            'image': self.knowrob_image,
+            'image': self.image,
             'image_tag': self.knowrob_tag,
-            'environments': self.environments,
-            'activities': self.activities,
-            'agents': self.agents,
-            'downloadUrl': self.downloadUrl
+            'environment': self.environment,
+            'activity': self.activity,
+            'agent': self.agent,
+            'downloadUrl': self.downloadUrl,
+            'keywords': self.keywords
         }
 
     def checkout(self):

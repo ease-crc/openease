@@ -2,93 +2,137 @@
 
 {% block head %}
 <style>
+    .card-div {
+        padding: 5px;
+    }
+
     .card-words-break {
     word-wrap: break-word;
     word-break: break-all;
     }
+
+    .card-img-top {
+        width: 100%;
+        height: 12vw;
+        object-fit: cover;
+    }
+
+    .card-title {
+        height:50px;
+        padding-bottom: 15px;
+        overflow: scroll;
+    }
+
 </style>
 {% endblock %}
 
 {% block nav_right %}
-    <form class="form-inline">
-      <div class="md-form my-0">
-        <input name="neem_query" id="neem_query" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      </div>
-    </form>
+<form class="form-inline">
+    <div class="md-form my-0">
+        <input name="neem_query" id="neem_query" class="form-control mr-sm-2" type="text" placeholder="Search"
+               aria-label="Search">
+    </div>
+</form>
 {% endblock %}
 
 {% block body %}
 <div class="container-fluid p-4">
-  <div class="row">
-{% for neem in neems %}
-    <div class="col-md-3 col-lg-3">
-      <div class="card">
-         <div class="card-header bg-openease-light">
-           {{ neem.neem_id }}
-        </div>
-        <div class="card-body">
-          <h6 class="card-title">{{ neem.name }}</h6>
-          <table class="card-table card-words-break table">
-            <tbody>
-              {% for activity in neem.activities %}
-              <tr>
-                <td>Activity</td>
-                <td><a href="{{ activity.iri }}" class="card-link">{{ activity.name }}</a>
-                </td>
-              </tr>
-              {% endfor %}
-              {% for env in neem.environments %}
-              <tr>
-                <td>Environment</td>
-                <td><a href="{{ env.iri }}" class="card-link">{{ env.name }}</a>
-                {% if env.short_name %}
-                ({{ env.short_name }})
-                {% endif %}
-                </td>
-              </tr>
-              {% endfor %}
-              {% for agent in neem.agents %}
-              <tr>
-                <td>Agent</td>
-                <td><a href="{{ agent.iri }}" class="card-link">{{ agent.name }}</a>
-                {% if agent.short_name %}
-                ({{ agent.short_name }})
-                {% endif %}
-                </td>
-              </tr>
-              {% endfor %}
-              <tr style="word-wrap: break-word;">
-                <td>CreatedBy</td>
-                <td>{{ neem.created_by }}</td>
-              </tr>
-              <!--tr>
-                fixMe: use library to display datetime str into more user friendly way
-                <td>CreatedAt</td>
-                <td>{{ neem.created_at }}</td>
-              </tr-->
+    <div class="row">
+        {% for neem in neems %}
+        <div class="col-md-3 col-lg-3 card-div">
+            <div class="card">
+                <div class="card-header bg-openease-light">
+                    {{ neem.neem_id }}
+                </div>
+                <div class="card-body col-md-12 col-sm-12">
+                    <img src={{ neem.image }} alt="" class="card-img-top img-fluid" />
+                    <br><br>
+                    <h6 class="card-title">{{ neem.name }}</h6>
+                    <center>
+                        <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
+                            <!-- Agent icons-->
+                            {% if neem.agent == "Robot" %}
+                            <a href="http://wiki.ros.org/Robots/PR2" target="_blank"><i
+                                    class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i></a>
+                            {% elif neem.agent == "Human" %}
+                            <a href=""><i class="fas fa-2x fa-user" title="Agent: {{neem.agent}}"></i></a>
+                            {% elif neem.agent == "VR" %}
+                            <a href=""><i class="fas fa-2x fa-vr-cardboard"
+                                          title="Agent: {{neem.agent}}"></i></a>
+                            {% else %}
+                            <a href=""><i class="fas fa-2x fa-bookmark" title="Agent: {{neem.agent}}"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
+                            <!-- Activity icon-->
+                            <a href="{{neem.activity.url}}" target="_blank"><i
+                                    class="fas fa-2x fa-tasks" title="Activity: {{neem.activity.name}}"></i></a>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4" style="display: inline">
+                            <!-- Env icon-->
+                            {% if neem.environment == "Kitchen" %}
+                            <a href="" target="_blank"><i
+                                    class="fas fa-2x fa-utensils" title="Env: {{neem.environment}}"></i></a>
+                            {% elif neem.environment == "Home" %}
+                            <a href=""><i class="fas fa-2x fa-home" title="Env: {{neem.environment}}"></i></a>
+                            {% elif neem.environment == "VR" %}
+                            <a href=""><i class="fas fa-2x fa-vr-cardboard" title="Env: {{neem.environment}}"></i></a>
+                            {% elif neem.environment == "Lab" %}
+                            <a href=""><i class="fas fa-2x fa-vial" title="Env: {{neem.environment}}"></i></a>
+                            {% else %}
+                            <a href=""><i class="fas fa-2x fa-industry" title="Env: {{neem.environment}}"></i></a>
+                            {% endif %}
+                        </div>
+                    </center>
+                    <br>
+                    <table class="card-table card-words-break table">
+                        <tbody>
+                        <tr style="word-wrap: break-word;">
+                            <td>CreatedBy</td>
+                            <td>{{ neem.created_by }}</td>
+                        </tr>
+                        <tr>
+                            <td>Keywords</td>
+                            <td>
+                                {% for keyword in neem.keywords %}
+                                <span>{{ keyword }}</span>
+                                {% if not loop.last %}
+                                ,
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Created At</td>
+                            <td>{{ neem.created_at }}</td>
+                        </tr>
 
-              <tr>
-                <td>model version</td>
-                <td>{{ neem.model_version }}</td>
-              </tr>
-            </tbody>
-          </table>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="card-link" data-toggle="popover" title="{{ neem.name }}" data-trigger="focus"
+                       data-placement="top"
+                       data-content="{{ neem.description }}">Read More</a>
+                    <a href={{ neem.downloadUrl }} class="card-link" target="_blank">Download</a>
+                    <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}" class="card-link">Explore</a>
+                </div>
+            </div>
         </div>
-        <div class="card-footer">
-          <a href="#" class="card-link" data-toggle="popover" title="{{ neem.name }}" data-placement="top" data-content="{{ neem.description }}">Read More</a>
-          <a href={{ neem.downloadUrl }} class="card-link">Download</a>
-          <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}" class="card-link">Explore</a>
-        </div>
-      </div>
+        {% endfor %}
     </div>
-{% endfor %}
-  </div>
-{{ pagination.links }}
+    {{ pagination.links }}
 </div>
 
 <script>
 $(function () {
   $('[data-toggle="popover"]').popover()
 });
+
+
+
+
+
+
 </script>
 {% endblock %}
