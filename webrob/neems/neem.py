@@ -28,6 +28,7 @@ class NEEM:
         self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
         self.model_version = neem['model_version']
         self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem['url']
+        self.neem_repo_path = neem['url']
         self.knowrob_image = 'knowrob'
         self.knowrob_tag = 'latest'
         self.maintainer = neem['created_by']
@@ -54,7 +55,8 @@ class NEEM:
             'activity': self.activity,
             'agent': self.agent,
             'downloadUrl': self.downloadUrl,
-            'keywords': self.keywords
+            'keywords': self.keywords,
+            'neem_repo_path': self.neem_repo_path
         }
 
     def checkout(self):
