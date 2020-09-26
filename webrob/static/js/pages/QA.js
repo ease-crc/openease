@@ -18,11 +18,14 @@ function KnowrobUI(flask_user,options) {
         authentication: options.authentication,
         auth_url: '/api/v1.0/auth_by_session'
     });
+    // Neem id 
+    this.neem_id = '';
     // query id of most recent query
     this.last_qid = undefined;
     // a console used to send queries to KnowRob
     this.console = new PrologConsole(that.client, {
         query_div: 'user_query',
+        neem_id: options.neem_id,
         on_query: function(qid,q) {
             $('#btn_query_next').prop('disabled', false);
             var last_query_card = that.queryCards[that.last_qid];

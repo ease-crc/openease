@@ -72,6 +72,7 @@
 <script type="text/javascript">
     var page = new KnowrobUI(flask_user, {
         authentication: '{{ authentication }}',
+        neem_id: '{{ neem.neem_id }}',
         ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
                  '://{{ host_url }}/ws/{{ container_name }}/'
     });
