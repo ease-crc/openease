@@ -120,48 +120,52 @@
                             <ul class="dropdown-menu">
                                 <!-- TODO: store example queries in some text file. -->
                                 <!-- TODO: include contextual queries here? (e.g. about selected object etc.) -->
+                                <!-------------------------------------------->
+                                <!-------------------------------------------->
                                 <h5 class="dropdown-header">NEEM Background</h5>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Appearance <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What are the shapes of an object?</a></li>
+                                            onclick="page.console.query('object_shape(Obj,Shape,Origin,Material).')">What are the shapes of an object?</a></li>
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What colors does an object have?</a></li>
+                                            onclick="page.console.query('object_color_rgb(Obj,RGB).')">What colors does an object have?</a></li>
                                     </ul>
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Structure <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What are the components of an object?</a></li>
+                                            onclick="page.console.query('has_component(Obj,Component).')">What are the components of an object?</a></li>
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Does an object have a sensor component?</a></li>
+                                            onclick="page.console.query('has_sensor(Obj,Sensor).')">Does an object have a sensor component?</a></li>
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What are the features of an object?</a></li>
+                                            onclick="page.console.query('has_feature(Obj,Feature).')">What are the features of an object?</a></li>
                                     </ul>
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Kinematics <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What is the position of an object?</a></li>
+                                            onclick="page.console.query('is_at(Obj,Pose).')">What is the position of an object?</a></li>
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Is an object linked via a joint?</a></li>
+                                            onclick="page.console.query('has link(Joint,Obj).')">Is an object linked via a joint?</a></li>
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What are the limits of a joint?</a></li>
+                                            onclick="page.console.query('has joint position limit(Joint,Limit).')">What are the limits of a joint?</a></li>
                                         <li><a class="dropdown-item" href="#"
                                             onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What is the kinematic structure of an object?</a></li>
                                     </ul>
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Dynamics <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What is the mass of an object?</a></li>
+                                            onclick="page.console.query('has_mass(Obj,Mass)).')">What is the mass of an object?</a></li>
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What is the force acting upon an object?</a></li>
+                                            onclick="page.console.query('has_net_force(Obj,Force).')">What is the force acting upon an object?</a></li>
                                     </ul>
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Naive physics <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What can an object be used for?</a></li>
+                                            onclick="page.console.query('affords(Obj,Affordance).')">What can an object be used for?</a></li>
                                     </ul>
                                 </li>
+                                <!-------------------------------------------->
+                                <!-------------------------------------------->
                                 <h5 class="dropdown-header">NEEM Narrative</h5>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Occurence <span class="caret"></span></a>
