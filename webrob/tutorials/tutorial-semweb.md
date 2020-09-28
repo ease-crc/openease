@@ -94,10 +94,10 @@ as `Value^^Type`.
 
 Triples can be dynamically asserted into the triple store.
 
-    rdf_assert(knowrob:'FallSchool', rdf:type, owl:'Class'),
-    rdf_assert(knowrob:'FallSchool', rdfs:subClassOf, knowrob:'Event').
+    rdf_assert(knowrob:'TransAIR', rdf:type, owl:'Class'),
+    rdf_assert(knowrob:'TransAIR', rdfs:subClassOf, knowrob:'Event').
 
-Here we state that the `knowrob:'FallSchool'` is a class resource,
+Here we state that the `knowrob:'TransAIR'` is a class resource,
 and that all fall schools are also "events".
 Note that this statement has no semantics in the RDF layer,
 the meaning of `rdfs:subClassOf` is handled in the RDFS layer above.
@@ -123,9 +123,9 @@ and `rdfs_subproperty_of/2`.
 These predicates exploit transitivity of `subClassOf` and
 `subPropertyOf`, and thus also yield sub-classes of sub-classes.
 
-    rdfs_subclass_of(knowrob:'FallSchool', knowrob:'Event'),
-    rdfs_subclass_of(knowrob:'FallSchool', knowrob:'Situation'),
-    rdfs_subclass_of(knowrob:'FallSchool', knowrob:'TemporalThing').
+    rdfs_subclass_of(knowrob:'TransAIR', knowrob:'Event'),
+    rdfs_subclass_of(knowrob:'TransAIR', knowrob:'Situation'),
+    rdfs_subclass_of(knowrob:'TransAIR', knowrob:'TemporalThing').
 
 *Note* There is also a variant of `rdf/3` that takes into account the class and property hierarchy:
 `rdf_has/3`.
@@ -244,8 +244,8 @@ w.r.t. a ROS package.
 In this course we are going to use an ontology in which
 one of our robots, the PR2, is described.
 
-    owl_parse('package://knowrob_srdl/owl/PR2.owl'),
-    owl_parse('/home/ros/user_data/fall_school/owl/PR2Poses.owl'),
+    tripledb_load('package://knowrob_srdl/owl/PR2.owl'),
+    tripledb_load('/home/ros/user_data/fall_school/owl/PR2Poses.owl'),
     show(agent(pr2:'PR2Robot1')).
 
 The ontology defines the kinematic structure of the robot in terms of
