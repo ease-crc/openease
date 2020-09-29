@@ -62,73 +62,49 @@ a URI pointing to the definition of the resource.
 An example IRI is the following one:
 
 <pre>
-http://knowrob.org/kb/knowrob.owl#Dishwasher
+http://www.ease-crc.org/ont/SOMA.owl#Dishwasher
 </pre>
 
-In Prolog, IRIs are represented as atom, i.e. `'http://knowrob.org/kb/PR2.owl#PR2Robot1'`.
+In Prolog, IRIs are represented as atom, i.e. `'http://knowrob.org/kb/PR2.owl#PR2_0'`.
 To avoid writing the full IRI, namespace prefixes are used
 which can be dynamically registered in case some external ontology is used
 for which the prefix was not registered in advance.
 You can use `rdf_current_prefix/2` to list existing namespaces:
 
-    rdf_current_prefix(knowrob,_).
+    rdf_current_prefix(soma,_).
 
-I.e. we can also write `knowrob:'Dishwasher'`.
+i.e. we can also write `soma:'Dishwasher'`. SOMA is an ontological model for defining 
+everyday activities for robots to perform, inspired by DUL foundational ontology. 
+More information about SOMA can be accessed at [SOMA](https://ease-crc.github.io/soma/)
 
 Unfortunately, the automated term expansion won't work for the rules
-you write during the fall school.
+you write during the TransAIR conference.
 The KB `RDF` declares a rule `expand/2` that needs to be used
 for arguments using the prefix notation,
 because rdf predicates expect IRI atoms, and not terms.
 
-The core of the SWI-Prolog package `semweb` is an efficient
-main-memory RDF store that is tightly integrated with Prolog.
-It provides a predicate `rdf/3` to query the RDF store:
+The core of KnowRob is an extendable querying interface that
+provides basic operations *ask*, *tell*, *forget*, and *remember* implemented 
+in SWI-Prolog. It provides a predicate `triple/3` to query the RDF triple store:
 
-    rdf(knowrob:'Dishwasher',Predicate,Object).
+    triple(soma:'Dishwasher',Predicate,Object).
 
 The "object" of triples may also be a data value instead of a resource.
 Depending on the Prolog version, these are repesented either
 as term `literal(type(Type,Value))` or, in a newer version,
 as `Value^^Type`.
 
-Triples can be dynamically asserted into the triple store.
-
-    rdf_assert(knowrob:'TransAIR', rdf:type, owl:'Class'),
-    rdf_assert(knowrob:'TransAIR', rdfs:subClassOf, knowrob:'Event').
-
-Here we state that the `knowrob:'TransAIR'` is a class resource,
-and that all fall schools are also "events".
-Note that this statement has no semantics in the RDF layer,
-the meaning of `rdfs:subClassOf` is handled in the RDFS layer above.
-
 The semantic web supports distributed class definitions.
 Meaning that different aspects of some class can be defined
 in separate modules.
-We can, for example, state that dish washers are also physical
-devices by asserting the corresponding triple:
 
-    rdf_assert(knowrob:'Dishwasher',rdfs:subClassOf,knowrob:'PhysicalDevice').
-
-This is possible even though the class was defined in some
-external ontology.
-
-SWI Prolog offers some predicates to query the RDF triple store
+Language interface of Knowrob offers some predicates to query the RDF triple store
 with RDFS semantics.
-These are `rdfs_individual_of/2`, `rdfs_subclass_of/2`,
-and `rdfs_subproperty_of/2`.
+These are `is_a/2`, `instance_of/2`, `subclass_of/2`,
+and `subproperty_of/2`.
 
-    rdfs_subclass_of(knowrob:'Dishwasher', knowrob:'PhysicalDevice').
-
-These predicates exploit transitivity of `subClassOf` and
-`subPropertyOf`, and thus also yield sub-classes of sub-classes.
-
-    rdfs_subclass_of(knowrob:'TransAIR', knowrob:'Event'),
-    rdfs_subclass_of(knowrob:'TransAIR', knowrob:'Situation'),
-    rdfs_subclass_of(knowrob:'TransAIR', knowrob:'TemporalThing').
-
-*Note* There is also a variant of `rdf/3` that takes into account the class and property hierarchy:
-`rdf_has/3`.
+    is_a(soma:'Dishwasher', soma:'Appliance'),
+    instance_of(soma:'Dishwasher', owl:'class').
 
 `Task 1:` Write a recursive rule `subclass_path(Parent,Child,Path)` that yields
 all paths from `Parent` to `Child` following the sub-class relation.
@@ -138,27 +114,20 @@ Test your declaration with following queries
 
 `a)`
 
-    subclass_path(knowrob:'PhysicalDevice',knowrob:'Dishwasher',
-      ['http://knowrob.org/kb/knowrob.owl#PhysicalDevice',
-       'http://knowrob.org/kb/knowrob.owl#CleaningDevice',
-       'http://knowrob.org/kb/knowrob.owl#Dishwasher']).
+    subclass_path(soma:'Appliance',soma:'Dishwasher',
+      ['http://www.ease-crc.org/ont/SOMA.owl#Appliance',
+       'http://www.ease-crc.org/ont/SOMA.owl#DesignedContainer',
+       'http://www.ease-crc.org/ont/SOMA.owl#Dishwasher']).
+
 
 `b)`
 
-    subclass_path(knowrob:'PhysicalDevice',knowrob:'Dishwasher',
-      ['http://knowrob.org/kb/knowrob.owl#PhysicalDevice',
-       'http://knowrob.org/kb/knowrob.owl#HouseholdAppliance',
-       'http://knowrob.org/kb/knowrob.owl#ElectricalHouseholdAppliance',
-       'http://knowrob.org/kb/knowrob.owl#Dishwasher']).
-
-`c)`
-
     subclass_path(X,Y,
-      ['http://knowrob.org/kb/knowrob.owl#PhysicalDevice',
-       'http://knowrob.org/kb/knowrob.owl#CleaningDevice',
-       'http://knowrob.org/kb/knowrob.owl#Dishwasher']),
-    rdf_equal(X,knowrob:'PhysicalDevice'),
-    rdf_equal(Y,knowrob:'Dishwasher').
+      ['http://www.ease-crc.org/ont/SOMA.owl#Appliance',
+       'http://www.ease-crc.org/ont/SOMA.owl#DesignedContainer',
+       'http://www.ease-crc.org/ont/SOMA.owl#Dishwasher']),
+    rdf_equal(X,'http://www.ease-crc.org/ont/SOMA.owl#Appliance'),
+    rdf_equal(Y,'http://www.ease-crc.org/ont/SOMA.owl#Dishwasher').
 
 `Task 2:` Write a predicate `shortest_path/3` that only yields the shortest path between
 class resources.
@@ -168,18 +137,11 @@ Test your declaration with following queries
 
 `a)`
 
-    shortest_path(knowrob:'Artifact',knowrob:'Dishwasher',
-      ['http://knowrob.org/kb/knowrob.owl#Artifact',
-       'http://knowrob.org/kb/knowrob.owl#PhysicalDevice',
-       'http://knowrob.org/kb/knowrob.owl#Dishwasher']).
+    shortest_path(dul:'DesignedArtifact',soma:'Dishwasher',
+      ['http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#DesignedArtifact',
+       'http://www.ease-crc.org/ont/SOMA.owl#Appliance',
+       'http://www.ease-crc.org/ont/SOMA.owl#Dishwasher']).
 
-`b)`
-
-    \\+ shortest_path(knowrob:'Artifact',knowrob:'Dishwasher',
-      ['http://knowrob.org/kb/knowrob.owl#Artifact',
-       'http://knowrob.org/kb/knowrob.owl#FurniturePiece',
-       'http://knowrob.org/kb/knowrob.owl#ElectricalHouseholdAppliance',
-       'http://knowrob.org/kb/knowrob.owl#Dishwasher']).
 
 -----------------------------------------------------------------
 Semantic Web -- Web Ontology Language (OWL)	
@@ -244,37 +206,35 @@ w.r.t. a ROS package.
 In this course we are going to use an ontology in which
 one of our robots, the PR2, is described.
 
-    tripledb_load('package://knowrob_srdl/owl/PR2.owl'),
-    tripledb_load('/home/ros/user_data/fall_school/owl/PR2Poses.owl'),
-    show(agent(pr2:'PR2Robot1')).
+    tripledb_load('http://knowrob.org/kb/PR2.owl', 
+                  [namespace(pr2,'http://knowrob.org/kb/PR2.owl#')] ).
 
 The ontology defines the kinematic structure of the robot in terms of
 links and joints, and groups them into semantic components such
 as arms or legs.
-The semantic components of a robot are denoted by `srdl2comp:subComponent`.
+The semantic components of a robot are denoted by `dul:'hasComponent'`.
+    
+    triple(pr2:'PR2_0',dul:'hasComponent',Component).
 
-    rdf_has(pr2:'PR2Robot1',srdl2comp:subComponent,Component).
+The components are often further classified, e.g. as arm or hand.
 
-Each comonent has a `srdl2comp:baseLinkOfComposition` and a
-`srdl2comp:endLinkOfComposition` between which a path exists
-along the `srdl2comp:succeedingLink` and `srdl2comp:succeedingJoint`
-predicates.
-All links are indiviudal of `srdl2comp:'UrdfLink'`, and
-all joints are indiviudal `srdl2comp:'UrdfJoint'`.
+    triple(pr2:'PR2_0',dul:'hasComponent', Component),
+    instance_of(Component, PR2Arm),
+    subclass_of(PR2Arm, soma:'Arm').
 
-Every semantic component is a `srdl2comp:'ComponentComposition'`,
-but components are often further classified, e.g. as arm or hand.
+Each component has a `urdf:hasBaseLinkName` and a
+`urdf:hasEndLinkName` between which a path exists
+along the succeeding link and joints.
 
-    rdf_has(pr2:'PR2Robot1',srdl2comp:subComponent,Component),
-    rdfs_individual_of(Component,knowrob:'Hand').
+  triple(pr2:'PR2Arm_0_L',urdf:'hasEndLinkName' , EndLink),
+  urdf_link_parent_joint(pr2, EndLink, SucceedingJoint),
+  urdf_joint_parent_link(pr2,SucceedingJoint,SucceedingLink).
 
-Links can be highlighted in the canvas. The IRIs of links must be wrapped in `object_without_children` terms. E.g.
+We cna continue querying for the consecutive joints and links 
+until the base link from the end link.
 
-    rdf_has(pr2:'pr2_left_arm',srdl2comp:baseLinkOfComposition,Link),
-    highlight([object_without_children(Link)]).
-
-This yields all components of the robot which are classified as `knowrob:'Hand'`
-and highlights them in the canvas.
+All links are indiviudal of `urdf:'Link'`, and
+all joints are indiviudal `urdf:'Joint'`.
 
 `Task 1:` Write a predicate `component_links(Component,Links)` that yields all links that belong to a component,
 and a predicate `highlight_component(Component)` that highlights all links belonging to a component in the canvas.
