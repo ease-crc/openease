@@ -113,7 +113,6 @@ function KnowrobUI(flask_user,options) {
         pl.jsonQuery("true", function(result) {
             pl.finishClient();
             if(result.error) {
-                // Service /json_prolog/simple_query does not exist
                 setTimeout(that.waitForProlog, 500);
             }
             else {
@@ -193,13 +192,14 @@ function KnowrobUI(flask_user,options) {
 //     };
     
     this.loadNEEM = function() {
+        /*
         var prolog = new ROSPrologClient(that.client.ros, {});
-        // FIXME: "belief_existing_objects(_Os), mark_dirty_objects(_Os)" should not be required.
         prolog.jsonQuery("mem_import_owl('/neem/neem-narrative'), belief_existing_objects(_Os), mark_dirty_objects(_Os).",
             function(result) {
                 prolog.finishClient();
             }
         );
+         */
     };
     
     ///////////////////////////////

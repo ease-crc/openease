@@ -8,6 +8,23 @@ body {
   overflow: auto;
 }
 
+#page-content {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+  height: -o-calc(100% - 108px); /* opera */
+  height: -webkit-calc(100% - 108px); /* google, safari */
+  height: -moz-calc(100% - 108px); /* firefox */
+  height: calc(100% - 108px); /* firefox 53 and newer*/
+}
+
+#markers {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #BBB;
+  overflow: hidden;
+}
+
 /* Header for openease/institute/university logo */
 #navbar-tool{
   width:100%;

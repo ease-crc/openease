@@ -18,8 +18,6 @@ def render_QA_page():
     neem = neem_manager.get_requested(request)
     if neem is None:
         return redirect(url_for('render_neems'))
-    # TODO show progress to user, probably better do REST calls in QA.html
-    neem.checkout()
     neem.activate()
     # determine hostname/IP we are currently using
     # (needed for accessing container)
@@ -30,6 +28,22 @@ def render_QA_page():
     else:
         container_name = current_user.username + "_knowrob"
     return render_template('pages/QA.html', **locals())
+
+@app.route('/video')
+def render_video_page():
+    neem = neem_manager.get_requested(request)
+    if neem is None:
+        return redirect(url_for('render_neems'))
+    neem.activate()
+    # determine hostname/IP we are currently using
+    # (needed for accessing container)
+    host_url = urlparse(request.host_url).hostname
+    if USE_HOST_KNOWROB:
+        container_name = "host"
+        authentication = False
+    else:
+        container_name = current_user.username + "_knowrob"
+    return render_template('pages/video.html', **locals())
 
 @app.route('/QA/history/add', methods=['POST'])
 def post_qa_history_add():

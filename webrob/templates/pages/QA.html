@@ -25,15 +25,6 @@
   font-size: 20px;
 }
 
-#page-content {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  width:100%;
-  height: -o-calc(100% - 108px); /* opera */
-  height: -webkit-calc(100% - 108px); /* google, safari */
-  height: -moz-calc(100% - 108px); /* firefox */
-  height: calc(100% - 108px); /* firefox 53 and newer*/
-}
 #history {
   background: url("{{ url_for('static', filename='logos/ease-light.png') }}");
   background-repeat: no-repeat;
@@ -45,12 +36,6 @@
   height:100%;
   border-bottom: 1px solid #CCC;
   font-size: 20px;
-}
-#markers {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #BBB;
-  overflow: hidden;
 }
 #chart {
   width:100%;
