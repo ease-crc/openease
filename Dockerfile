@@ -6,7 +6,8 @@ RUN apt-get -qq update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q curl python-all python-pip python-dev wget gcc imagemagick mongodb libffi-dev libpq-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q subversion git
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q nodejs npm
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
+RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q nodejs
 RUN DEBIAN_FRONTEND=noninteractive apt-get -qq install -y -q postgresql
 
 RUN apt-get update && \
@@ -14,7 +15,6 @@ RUN apt-get update && \
   gem install sass --no-user-install -v 3.5.5 && \
   apt-get clean
 
-  
 WORKDIR /opt/webapp
 
 # install python-dependencies including flask
