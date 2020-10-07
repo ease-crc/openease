@@ -91,9 +91,7 @@ function KnowrobReplayUI(flask_user,options) {
     };
     
     this.formatInitialQuery = function(t) {
-        var fps = parseInt(document.getElementById("replay-fps").value, 10);
-        var init_query = "openease_video_fps(" + fps +
-            "), openease_video_start, !, openease_clear_canvas, T = " + t + ", " +
+        var init_query = "openease_video_start, clear_canvas, Time = " + t + ", " +
             ace.edit('init_query').getValue().trim();
         init_query = init_query.substr(0, init_query.length - 1);
         return init_query;
@@ -102,8 +100,9 @@ function KnowrobReplayUI(flask_user,options) {
     this.stopStreaming = function() {
         if(isStreaming) {
            var prolog = that.client.newProlog();
-           prolog.jsonQuery('openease_video_stop.', function(result) {
-              window.open('/knowrob/local_data/video_created/video.mp4','_blank')
+           var fps = parseInt(document.getElementById("replay-fps").value, 10);
+           prolog.jsonQuery("openease_video_stop(" + fps + ").", function(result) {
+              window.open('/userdata/video/video.mp4','_blank')
            }, mode=1);
         }
         isStreaming = false;
@@ -141,7 +140,7 @@ function KnowrobReplayUI(flask_user,options) {
           if(t>t1) return;
           that.updateProgressBar(t0, t1, t);
           
-          var query = "T = " + t.toString() + ", " + video_query;
+          var query = "Time = " + t.toString() + ", " + video_query;
           query = query.trim();
           query = query.substr(0, query.length - 1);
           
@@ -182,7 +181,7 @@ function KnowrobReplayUI(flask_user,options) {
         document.getElementById('replay-video-title-text').value = '';
 
         ace.edit('init_query').setValue('');
-        ace.edit('user_query').setValue('');
+        ace.edit('user_query').setValue('show(Time).');
 
         var firstrange = document.getElementById('replay-start-time');
         var secondrange = document.getElementById('replay-end-time');
