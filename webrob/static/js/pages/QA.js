@@ -7,7 +7,7 @@
  * displaying graphics and statistics.
  **/
 function KnowrobUI(flask_user,options) {
-    var that = this;
+    let that = this;
     
     // qid-QueryCard map
     this.queryCards = {};
@@ -28,7 +28,7 @@ function KnowrobUI(flask_user,options) {
         neem_id: options.neem_id,
         on_query: function(qid,q) {
             $('#btn_query_next').prop('disabled', false);
-            var last_query_card = that.queryCards[that.last_qid];
+            const last_query_card = that.queryCards[that.last_qid];
             if(last_query_card) {
                 last_query_card.collapse();
             }
@@ -70,50 +70,25 @@ function KnowrobUI(flask_user,options) {
         that.rosViewer.on_camera_pose_received = that.setCameraPose;
         that.rosViewer.on_unselect_marker = function(marker) {
             that.rosViewer.rosViewer.unhighlight(marker);
-            that.initQueryLibrary(marker);
         };
         that.rosViewer.on_select_marker = function(marker) {
             that.rosViewer.rosViewer.highlight(marker);
-            that.loadMarkerQueries(marker);
-        };
-        that.rosViewer.on_remove_marker = function(marker) {
-            if(marker === that.rosViewer.selectedMarker) {
-                that.initQueryLibrary();
-            }
         };
         that.rosViewer.on_window_dblclick = function() {
             if(that.rosViewer.selectedMarker) {
-                that.initQueryLibrary();
                 that.rosViewer.unselectMarker();
             }
         };
-    };
-
-    this.resizeCanvas = function () {
-        that.rosViewer.resize($('#markers').width(), $('#markers').height());
-    };
-    
-    this.setCameraPose = function (pose) {
-        that.rosViewer.setCameraPose(pose);
-    };
-
-    this.snapshot = function () {
-        that.rosViewer.snapshot(1,1 );
-        window.open("/userdata/snapshots/1.jpeg");
     };
     
     // listen to some ROS topics
     this.registerROSClients = function (ros) {
         that.registerChartClient(ros);
         that.registerImageClient(ros);
-        // make sure rosprolog is alive
-        that.waitForProlog(ros, function() {
-            that.loadNEEM();
-        });
     };
     
     this.waitForProlog = function (ros, then) {
-        var pl = new ROSPrologClient(ros, {});
+        const pl = new ROSPrologClient(ros, {});
         if(!pl) return;
         pl.jsonQuery("true", function(result) {
             pl.finishClient();
@@ -124,6 +99,18 @@ function KnowrobUI(flask_user,options) {
                 then();
             }
         });
+    };
+
+    this.resizeCanvas = function () {
+        const markers = $('#markers');
+        that.rosViewer.resize(markers.width(), markers.height());
+    };
+    this.setCameraPose = function (pose) {
+        that.rosViewer.setCameraPose(pose);
+    };
+    this.snapshot = function () {
+        that.rosViewer.snapshot(1,1 );
+        window.open("/userdata/snapshots/1.jpeg");
     };
     
     // listen to data_vis_msgs topic and add charts to currently
@@ -154,16 +141,16 @@ function KnowrobUI(flask_user,options) {
         });
         that.imageVis.subscribe(function(image_uri) {
             if(that.last_qid) {
-                var ext = image_uri.data.substr(
+                const ext = image_uri.data.substr(
                     image_uri.data.lastIndexOf('.') + 1).toLowerCase();
-                if(ext=='jpg' || ext =='png') {
+                if(ext==='jpg' || ext ==='png') {
                     that.queryCards[that.last_qid].addImage(image_uri);
                 }
-                else if(ext =='ogg' || ext =='ogv' || ext =='mp4' || ext =='mov') {
+                else if(ext ==='ogg' || ext ==='ogv' || ext ==='mp4' || ext ==='mov') {
                     that.queryCards[that.last_qid].addVideo(image_uri);
                 }
                 else {
-                    console.warn("Unknown data format on /logged_images topic: " + message.data);
+                    console.warn("Unknown data format on /logged_images topic: " + image_uri.data);
                 }
             }
             else {
@@ -195,148 +182,4 @@ function KnowrobUI(flask_user,options) {
 //           }
 //         });
 //     };
-    
-    this.loadNEEM = function() {
-        /*
-        var prolog = new ROSPrologClient(that.client.ros, {});
-        prolog.jsonQuery("mem_import_owl('/neem/neem-narrative'), belief_existing_objects(_Os), mark_dirty_objects(_Os).",
-            function(result) {
-                prolog.finishClient();
-            }
-        );
-         */
-    };
-    
-    ///////////////////////////////
-    //////////// Query Library
-    ///////////////////////////////
-    
-//     this.loadQueriesForObject = function(objectName) {
-//         var prolog = new ROSPrologClient(that.client.ros, {});
-//         prolog.jsonQuery("object_queries("+objectName+",Queries).",
-//             function(result) {
-//                 prolog.finishClient();
-//                 if(result.solution)
-//                     that.loadObjectQueries(result.solution.Queries);
-//             }
-//         );
-//     };
-    
-//     this.loadObjectQueries = function(queries) {
-//         // parse query and add to category--queries map
-//         var queryLibMap = {};
-//         for(var i=0; i<queries.length; i++) {
-//             var category = queries[i][0];
-//             var title = queries[i][1];
-//             var query = queries[i][2];
-//             if(!query.endsWith(".")) query += ".";
-//             
-//             if(queryLibMap[category]==undefined) queryLibMap[category]=[];
-//             queryLibMap[category].push({q: query, text: title});
-//         }
-//         // flatten the map into queryLib array
-//         var queryLib = [];
-//         var categories = Object.keys(queryLibMap);
-//         categories.sort();
-//         for(var i=0; i<categories.length; i++) {
-//             queryLib.push({q: "", text: "----- " + categories[i] + " -----"});
-//             queryLib.push.apply(queryLib, queryLibMap[categories[i]]);
-//         }
-//         
-//         that.initQueryLibrary(queryLib);
-//     };
-    
-//     this.loadMarkerQueries = function(marker) {
-//         var prolog = new ROSPrologClient(that.client.ros, {});
-//         prolog.jsonQuery("term_to_atom("+marker.ns+",MarkerName), "+
-//             "marker_queries(MarkerName, MarkerQueries).",
-//             function(result) {
-//                 prolog.finishClient();
-//                 if(result.solution)
-//                     that.loadObjectQueries(result.solution.MarkerQueries);
-//             }
-//         );
-//     };
-    
-//     this.initQueryLibrary = function (queries) {
-//         function loadQueries(query_lib) {
-//             var lib_div = document.getElementById('library_content');
-//             if(lib_div !== null && query_lib) {
-//                 lib_div.innerHTML = '';
-//                 
-//                 var query = query_lib.query || query_lib;
-//                 for (var i = 0; i < query.length; i++) {
-//                     if(!query[i].text) continue;
-// 
-//                     var text = query[i].text.trim();
-//                     if(text.length==0) continue;
-//                     
-//                     if(text.startsWith('-----')) {
-//                         // insert space between sections
-//                         if(i>0) {
-//                             var x = document.createElement('div');
-//                             x.className = 'query_lib_space';
-//                             lib_div.appendChild(x);
-//                         }
-//                         
-//                         var x = document.createElement('div');
-//                         x.className = 'query_lib_header';
-//                         x.innerHTML = text.split("-----")[1].trim();
-//                         lib_div.appendChild(x);
-//                     }
-//                     else if(query[i].q) {
-//                         var x = document.createElement('button');
-//                         x.type = 'button';
-//                         x.value = query[i].q;
-//                         x.className = 'query_lib_button';
-//                         x.innerHTML = text;
-//                         lib_div.appendChild(x);
-//                     }
-//                 }
-//                 that.queryLibrary = query;
-//             }
-//             
-//             $( "button.query_lib_button" )
-//                 .focus(function( ) {
-//                     that.console.setQueryValue( $(this)['0'].value );
-//                 });
-//         };
-//         
-//         if(queries == undefined) {
-//           // TODO: only dowload if required!
-//             // FIXME
-//           //that.client.episode.queryEpisodeData(loadQueries);
-//         }
-//         else {
-//             loadQueries(queries);
-//         }
-//     };
-    
-//     $("#library_content").keydown(function(e) {
-//         var button = $(".query_lib_button:focus");
-//         if (e.keyCode == 40) { // down
-//             for(var next=button.next(); next.length>0; next=next.next()) {
-//                 if(next.hasClass('query_lib_button')) {
-//                     next.focus();
-//                     next.click();
-//                     break;
-//                 }
-//             }
-//             e.preventDefault();
-//         }
-//         else if (e.keyCode == 38) { // up
-//             for(var prev=button.prev(); prev.length>0; prev=prev.prev()) {
-//                 if(prev.hasClass('query_lib_button')) {
-//                     prev.focus();
-//                     prev.click();
-//                     break;
-//                 }
-//             }
-//             e.preventDefault();
-//         }
-//         else if (e.keyCode == 32) { // space
-//             e.preventDefault();
-//             that.console.query();
-//         }
-//     });
-};
+}
