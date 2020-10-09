@@ -110,7 +110,12 @@ function KnowrobUI(flask_user,options) {
     };
     this.snapshot = function () {
         that.rosViewer.snapshot(1,1 );
-        window.open("/userdata/snapshots/1.jpeg");
+        let a = document.createElement('a')
+        a.href = 'userdata/snapshots/1.jpeg'
+        a.download = 'snapshot.jpeg'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
     };
     
     // listen to data_vis_msgs topic and add charts to currently

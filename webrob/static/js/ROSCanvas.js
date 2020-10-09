@@ -24,7 +24,7 @@ function ROSCanvas(options){
         div : options.divID,
         width : 1920,
         height : 1080,
-        antialias : false,
+        antialias : true,
         background : options.background || '#ffffff',
         useShader : false,
         camera: {
@@ -101,7 +101,10 @@ function ROSCanvas(options){
      **/
     this.snapshot = function (frameNumber, fps) {
       console.log("Publishing canvas snapshot frame:" + frameNumber + " fps:" + fps);
-      
+
+      // make sure the frame buffer has some content
+      this.rosViewer.render();
+
       var gl = this.rosViewer.renderer.getContext("webgl", {preserveDrawingBuffer: true});
       var width  = gl.drawingBufferWidth;
       var height = gl.drawingBufferHeight;

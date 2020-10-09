@@ -29,9 +29,9 @@ ENV HOME /home/ros
 RUN mkdir -p /tmp/npm/node_modules
 WORKDIR /tmp/npm
 COPY ./webrob/static/package.json /tmp/npm/
+RUN npm install
 # copy local node modules into the image
 COPY ./node_modules /tmp/npm/node_modules
-RUN npm install
 
 COPY ./webrob/static/index.js /tmp/npm/
 RUN npm run build
