@@ -24,7 +24,7 @@ function ROSCanvas(options){
         div : options.divID,
         width : 1920,
         height : 1080,
-        antialias : true,
+        antialias : false,
         background : options.background || '#ffffff',
         useShader : false,
         camera: {
@@ -136,9 +136,9 @@ function ROSCanvas(options){
           // Two-integer timestamp
           stamp: { secs:secs, nsecs:nsecs },
           // Frame this data is associated with
-          frame_id: "image",
+          frame_id: String(frameNumber),
           // Consecutively increasing ID
-          seq: frameNumber
+          seq: 0
         },
         // image height, that is, number of rows
         height: height,

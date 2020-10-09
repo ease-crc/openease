@@ -96,6 +96,11 @@ function KnowrobUI(flask_user,options) {
     this.setCameraPose = function (pose) {
         that.rosViewer.setCameraPose(pose);
     };
+
+    this.snapshot = function () {
+        that.rosViewer.snapshot(1,1 );
+        window.open("/userdata/snapshots/1.jpeg");
+    };
     
     // listen to some ROS topics
     this.registerROSClients = function (ros) {
