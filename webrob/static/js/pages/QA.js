@@ -19,13 +19,12 @@ function KnowrobUI(flask_user,options) {
         auth_url: '/api/v1.0/auth_by_session'
     });
     // Neem id 
-    this.neem_id = '';
+    this.neem_id = options.neem_id || '5f22b1f512db5aed7cd1961a';
     // query id of most recent query
     this.last_qid = undefined;
     // a console used to send queries to KnowRob
     this.console = new PrologConsole(that.client, {
         query_div: 'user_query',
-        neem_id: options.neem_id,
         on_query: function(qid,q) {
             $('#btn_query_next').prop('disabled', false);
             const last_query_card = that.queryCards[that.last_qid];
@@ -85,6 +84,14 @@ function KnowrobUI(flask_user,options) {
     this.registerROSClients = function (ros) {
         that.registerChartClient(ros);
         that.registerImageClient(ros);
+        that.waitForProlog(ros, function() {
+            console.info('Connected to KnowRob.');
+            const pl = new ROSPrologClient(ros, {});
+            pl.jsonQuery("set_setting(mng_client:collection_prefix, '"
+                + that.neem_id + "')", function(result) {
+                pl.finishClient();
+            });
+        });
     };
     
     this.waitForProlog = function (ros, then) {
