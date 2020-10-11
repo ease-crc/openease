@@ -7,7 +7,7 @@
  * displaying graphics and statistics.
  **/
 function KnowrobUI(flask_user,options) {
-    let that = this;
+    var that = this;
     
     // qid-QueryCard map
     this.queryCards = {};
@@ -87,20 +87,22 @@ function KnowrobUI(flask_user,options) {
         that.waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             const pl = new ROSPrologClient(ros, {});
+            // TODO: also call urdf_init to trigger loading neem URDF files
             pl.jsonQuery("set_setting(mng_client:collection_prefix, '"
-                + that.neem_id + "')", function(result) {
+                + that.neem_id + "'), marker_plugin:republish.", function(result) {
                 pl.finishClient();
             });
         });
     };
     
     this.waitForProlog = function (ros, then) {
+        if(!ros) return;
         const pl = new ROSPrologClient(ros, {});
         if(!pl) return;
         pl.jsonQuery("true", function(result) {
             pl.finishClient();
             if(result.error) {
-                setTimeout(that.waitForProlog, 500);
+                setTimeout(function() { that.waitForProlog(ros, then) }, 500);
             }
             else {
                 then();

@@ -31,6 +31,7 @@ WORKDIR /tmp/npm
 COPY ./webrob/static/package.json /tmp/npm/
 RUN npm install
 # copy local node modules into the image
+# FIXME: needs to be done after npm install
 COPY ./node_modules /tmp/npm/node_modules
 
 COPY ./webrob/static/index.js /tmp/npm/

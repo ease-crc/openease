@@ -40,9 +40,3 @@ def render_neems():
 def route_neem_meta(neem_group,neem_name):
     neem = neem_manager.get(neem_group,neem_name)
     return jsonify(result=neem.get_info())
-
-@app.route('/neems/<neem_id>/static/<path:filename>')
-def send_from_neem_directory(neem_id, filename):
-    neem = neem_manager.get(neem_id)
-    neem.checkout()
-    return send_from_directory(neem.get_directory(), filename)
