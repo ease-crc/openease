@@ -94,6 +94,7 @@ a.openease-brand {
           <a class="dropdown-item" href="/admin/roles">User Roles</a>
           <a class="dropdown-item" href="/admin/sql">SQL</a>
           <a class="dropdown-item" href="/admin/cookies">Cookies</a>
+          <a class="dropdown-item" href="{{ url_for('render_neem_hub_settings_page_get') }}">NEEM Hub Settings</a>
         </div>
       </li>
 {% endif %}
@@ -124,6 +125,19 @@ a.openease-brand {
   </div>
 </nav>
 
+<!-- let all flash messages rander here -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 {% block body %}{% endblock %}
 
 <footer class="bg-dark text-white-50">
@@ -142,5 +156,15 @@ a.openease-brand {
 <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
 
 </body>
+
+<!-- remove flash alert after 5 seconds -->
+<script>
+    $("document").ready(function(){
+    setTimeout(function(){
+        $("div.alert").remove();
+    }, 5000 ); // 5 secs
+
+});
+</script>
 </html>
 

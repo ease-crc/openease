@@ -1,13 +1,19 @@
-from flask import request, render_template, jsonify, abort
+from flask import request, render_template, jsonify, abort, redirect, url_for, flash
 
 import json
 
 from webrob.app_and_db import app
 from webrob.utility import admin_required
 from webrob.models.db import *
+from webrob.models.NEEMHubSettings import NEEMHubSettings
+from wtforms.validators import DataRequired
+from flask_wtf import Form
+from wtforms import PasswordField
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
+class PasswordForm(Form):
+    password = PasswordField('Password', validators=[DataRequired()])
 
 @app.route('/db/docu/<key>', methods=['POST'])
 def db_docu_text(key):
@@ -39,8 +45,8 @@ def db_page_user_roles():
 def db_find_user_roles():
     users = _get_all_users()
     user_roles = []
-    for u in users:     # find user roles
-        user_roles.append({
+    for u in users:  # find user roles
+        user_roles.neemsappend({
             'id': u.id,
             'name': u.username,
             'roles': map(lambda r: {'name': r.name}, u.roles)
@@ -145,3 +151,17 @@ def db_remove_route(table):
     if data is not None and 'id' in data and db_find(cls, data['id']):
         db_remove(cls, data['id'])
     return jsonify(result=None)
+
+
+@app.route('/db/page/get_neem_hub_settings')
+@admin_required
+def render_neem_hub_settings_page_get():
+    form = PasswordForm()
+    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings = NEEMHubSettings())
+
+
+@app.route('/db/page/post_neem_hub_settings', methods=['POST'])
+@admin_required
+def render_neem_hub_settings_post():
+    flash('NEEM Hub configuration setting is stored!', "success")
+    return redirect(url_for('render_neems'))
