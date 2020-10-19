@@ -101,7 +101,10 @@ function ROSCanvas(options){
      **/
     this.snapshot = function (frameNumber, fps) {
       console.log("Publishing canvas snapshot frame:" + frameNumber + " fps:" + fps);
-      
+
+      // make sure the frame buffer has some content
+      this.rosViewer.render();
+
       var gl = this.rosViewer.renderer.getContext("webgl", {preserveDrawingBuffer: true});
       var width  = gl.drawingBufferWidth;
       var height = gl.drawingBufferHeight;
@@ -136,9 +139,9 @@ function ROSCanvas(options){
           // Two-integer timestamp
           stamp: { secs:secs, nsecs:nsecs },
           // Frame this data is associated with
-          frame_id: "image",
+          frame_id: String(frameNumber),
           // Consecutively increasing ID
-          seq: frameNumber
+          seq: 0
         },
         // image height, that is, number of rows
         height: height,

@@ -34,8 +34,12 @@ class NEEM_Manager:
         if query_string is '':
             return self.neem_ids
         else:
-            return self.filter_neems(self.neem_ids, query_string)
+            return self.filter_neems(query_string)
 
-    def filter_neems(self, neem_ids, query_string):
-        return neem_ids  # TODO
-        # return filter(lambda x: x.matches(query_string), neem_ids)
+    def filter_neems(self, query_string):
+        # FIXME: keywords are ignored at the moment
+        #   - can an array be added to text index?
+        #   - regex search possible, but only without index!!
+        #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
+        return map(lambda doc: doc["_id"], mongoDBMetaCollection.find(
+            {"$text": {"$search": query_string}}, {"_id": 1}))

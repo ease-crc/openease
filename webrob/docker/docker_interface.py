@@ -82,15 +82,14 @@ def stop_user_container(user_name):
         app.logger.error("ConnectionError during stop: " + str(e) + "\n")
 
 
-def container_started(user_name, base_image=None):
+def container_started(user_name):
     """
     Returns true if the container exists and is running. If a base_image is specified, it only return true if the
     container exists and is directly derived from the given base_image
     :param user_name: Name of the container.
-    :param base_image: Image the container is based on
     """
     try:
-        return client.container_started(user_container_name, base_image)
+        return client.container_started(user_name)
     except JsonRpcError, e:
         flash("Error: Connection to your application failed.")
         app.logger.error("ConnectionError during started: " + str(e.message) + str(e.data) + "\n")

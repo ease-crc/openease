@@ -65,7 +65,6 @@
 
 
 <script type="text/javascript">
-    debugger;
     var ui = new KnowrobUI(flask_user, {
             authentication: '{{ authentication }}',
             ros_url: 'ws' + (location.protocol === 'https:' ? 's' : '') +
@@ -143,14 +142,14 @@
                     event.preventDefault();
                 });
             });
-        };
+        }
 
 </script>
 
 <div id="page-content">
     <div id="QA-container" class="w-100 split split-horizontal">
     	<div id="vis-container" class="split w-100">
-			<div id="library" style=background-color:white class="split-horizontal split-content split h-100 container-fluid p-3">
+			<div id="library" style="background-color:white" class="split-horizontal split-content split h-100 container-fluid p-3">
 			</div>
         	<div id="history" class="split split-horizontal split-content h-100">
         	</div>
