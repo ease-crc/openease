@@ -1,9 +1,18 @@
 from webrob.app_and_db import db
 
-class NEEMHubSettings:
-    def __init__(self):
-        self.MONGO_HOST = "mongodb://data.open-ease.org"
-        self.MONGO_PORT = 28015
-        self.MONGO_DB = "neems"
-        self.MONGO_USER = "neemReader"
-        self.MONGO_PASS = "qEWRqc9UdN5TD7No7cjymUA8QEweNz"
+
+class NEEMHubSettings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    MONGO_HOST = db.Column(db.String(255), nullable=False, default='')
+    MONGO_PORT = db.Column(db.Integer())
+    MONGO_DB = db.Column(db.String(255), nullable=False, default='')
+    MONGO_USER = db.Column(db.String(255), nullable=False, default='')
+    MONGO_PASS = db.Column(db.String(255), nullable=False, default='')
+
+
+def get_settings(id):
+    return NEEMHubSettings.query.filter_by(id=id).one()
+
+
+def get_settings_count():
+    return len(NEEMHubSettings.query.all())

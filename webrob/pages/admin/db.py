@@ -1,11 +1,12 @@
-from flask import request, render_template, jsonify, abort, redirect, url_for, flash
+from flask import request, render_template, jsonify, abort, redirect, url_for, flash, session
 
 import json
 
 from webrob.app_and_db import app
+from webrob.app_and_db import db
 from webrob.utility import admin_required
 from webrob.models.db import *
-from webrob.models.NEEMHubSettings import NEEMHubSettings
+from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings_count, get_settings
 from wtforms.validators import DataRequired
 from flask_wtf import Form
 from wtforms import PasswordField
@@ -157,11 +158,34 @@ def db_remove_route(table):
 @admin_required
 def render_neem_hub_settings_page_get():
     form = PasswordForm()
-    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings = NEEMHubSettings())
+    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings = get_settings(1))
 
 
 @app.route('/db/page/post_neem_hub_settings', methods=['POST'])
 @admin_required
 def render_neem_hub_settings_post():
+    app.logger.info('render neem hub settings post method.... ')
+    req = request.form
+
+    rows = get_settings_count()
+
+    app.logger.info('total no of rows in db..... ')
+
+    app.logger.info(rows)
+    if rows == 1 :
+        neemHubSettings = get_settings(1)
+        neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
+        neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
+        neemHubSettings.MONGO_USER = req.get("MONGO_USER")
+        neemHubSettings.MONGO_DB = req.get("MONGO_DB")
+        neemHubSettings.MONGO_PASS = app.user_manager.hash_password(req.get("MONGO_PASS"))
+        db.session.add(neemHubSettings)
+        db.session.commit()
+        app.logger.info('Configuration has been stored!')
+            #
+            # flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
+            # return redirect(url_for('render_neem_hub_settings_page_get'))
+
     flash('NEEM Hub configuration setting is stored!', "success")
     return redirect(url_for('render_neems'))
+

@@ -44,6 +44,10 @@ a.openease-brand {
   background: #246F98;
   color: white;
 }
+
+#flash_alert_span {
+    text-align: center;
+}
   </style>
   
   {% block head %}{% endblock %}
@@ -130,7 +134,7 @@ a.openease-brand {
     {% if messages %}
         {% for category, message in messages %}
             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                <span>{{ message }}</span>
+                <span id="flash_alert_span">{{ message }}</span>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>

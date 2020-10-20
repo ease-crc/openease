@@ -20,28 +20,28 @@ body {
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">MONGO HOST</label>
                     <div class="col-sm-10">
-                        <input type="text" placeholder="Provide host name for NEEM Hub configuration" class="form-control" value="{{ neemHubSettings.MONGO_HOST }}">
+                        <input type="text" placeholder="Provide host name for NEEM Hub configuration" class="form-control" name="MONGO_HOST" value="{{ neemHubSettings.MONGO_HOST }}">
                     </div>
                 </div>
                 <!-- MONGO_PORT -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">MONGO PORT</label>
                     <div class="col-sm-10">
-                        <input type="text" placeholder="Provide port for NEEM Hub configuration" class="form-control" value="{{ neemHubSettings.MONGO_PORT }}">
+                        <input type="text" placeholder="Provide port for NEEM Hub configuration" class="form-control" name="MONGO_PORT" value="{{ neemHubSettings.MONGO_PORT }}">
                     </div>
                 </div>
                 <!-- MONGO_DB -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">MONGO DB</label>
                     <div class="col-sm-10">
-                        <input type="text" placeholder="Provide db name for NEEM Hub configuration" class="form-control" value="{{ neemHubSettings.MONGO_DB }}">
+                        <input type="text" placeholder="Provide db name for NEEM Hub configuration" class="form-control" name="MONGO_DB" value="{{ neemHubSettings.MONGO_DB }}">
                     </div>
                 </div>
                 <!-- MONGO_USER -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">MONGO USER</label>
                     <div class="col-sm-10">
-                        <input type="text" placeholder="Provide user name for NEEM Hub configuration" class="form-control" value="{{ neemHubSettings.MONGO_USER }}">
+                        <input type="text" placeholder="Provide user name for NEEM Hub configuration" class="form-control" name="MONGO_USER" value="{{ neemHubSettings.MONGO_USER }}">
                     </div>
                 </div>
                 <!-- MONGO_PASS -->
@@ -50,7 +50,7 @@ body {
                     {# Password field #}
                     {% set field = neemHubSettings.MONGO_PASS %}
                     <div id="pw-field" class="col-sm-10 {% if field.errors %}has-error{% endif %}">
-                        <input placeholder="Change the password" class="col-sm-6 form-control" id="psw" name="password"
+                        <input placeholder="Change the password" class="col-sm-6 form-control" id="psw" name="MONGO_PASS"
                                 type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" value="{{ neemHubSettings.MONGO_PASS }}" required/>
                         <div class="invalid-feedback">
                             Password is Invalid, it must contain atleast one Uppercase, lowercase, and digit. Additionally, it should be atleast 6 characters long.
