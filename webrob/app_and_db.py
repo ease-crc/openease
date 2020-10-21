@@ -32,36 +32,51 @@ db = SQLAlchemy(app)
 from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings_count, get_settings
 
 
-# check for neem hub configuration
-rows = get_settings_count()
-# if rows == 1 :
-#     neemHubSettings = get_settings(1)
-#     app.logger.info('retrived object from postgresql......' )
-#
-#     MONGO_HOST = neemHubSettings.MONGO_HOST
-#     MONGO_PORT = neemHubSettings.MONGO_PORT
-#     MONGO_DB = neemHubSettings.MONGO_DB
-#     MONGO_USER = neemHubSettings.MONGO_USER
-#     MONGO_PASS = neemHubSettings.MONGO_PASS
-# # else :
-MONGO_HOST = "mongodb://data.open-ease.org"
-MONGO_PORT = 28015
-MONGO_DB = "neems"
-MONGO_USER = "neemReader"
-MONGO_PASS = "qEWRqc9UdN5TD7No7cjymUA8QEweNz"
+
+def getNeemHubSettingFromDb():
+    # check for neem hub configuration
+    settings_count = get_settings_count()
+    if settings_count == 1 :
+        neemHubSettings = get_settings(1)
+        app.logger.info('retrieved object from postgresql......')
+        app.logger.info(neemHubSettings.MONGO_HOST)
+        app.logger.info(neemHubSettings.MONGO_PORT)
+        app.logger.info(neemHubSettings.MONGO_DB)
+        app.logger.info(neemHubSettings.MONGO_USER)
+        app.logger.info(neemHubSettings.MONGO_PASS)
+        return neemHubSettings
+    else:
+        return None
+
+
+def checkConnection(neemHubSettings):
+    if neemHubSettings is not None:
+        try:
+            connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
+            mongoDbClient = connection[neemHubSettings.MONGO_DB]
+            mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
+
+            mongoDBMetaCollection = mongoDbClient["meta"]
+
+            if mongoDBMetaCollection.count() > 0:
+                app.logger.info('------------ mongoDb collection contains some document values ------------')
+                return mongoDBMetaCollection
+            else:
+                app.logger.info('---  MongoDB connection is established but collection does not contain any values  ---')
+                return mongoDBMetaCollection
+        except:
+            app.logger.error('------------ mongoDb connection can not be created ------------')
+            return None
+    else:
+        return None
+# else :
+# MONGO_HOST = "mongodb://data.open-ease.org"
+# MONGO_PORT = 28015
+# MONGO_DB = "neems"
+# MONGO_USER = "neemReader"
+# MONGO_PASS = "qEWRqc9UdN5TD7No7cjymUA8QEweNz"
 
 # remote mongo client connection
-try:
-    connection = MongoClient(MONGO_HOST, MONGO_PORT)
-    mongoDbClient = connection[MONGO_DB]
-    mongoDbClient.authenticate(MONGO_USER, MONGO_PASS)
-    mongoDBMetaCollection = mongoDbClient["meta"]
 
-    if mongoDBMetaCollection.count() > 0:
-        app.logger.info('------------ mongoDb collection contains some document values ------------')
-
-
-except pymongo.errors.ConnectionFailure:
-    app.logger.error('------------ mongoDb connection can not be created ------------')
 
 

@@ -1,7 +1,7 @@
 import os
 from flask import session
 from webrob.neems.neem import NEEM
-from webrob.app_and_db import app, mongoDBMetaCollection
+from webrob.app_and_db import app, checkConnection, getNeemHubSettingFromDb
 
 NEEM_DIR = "/neems"
 
@@ -16,7 +16,10 @@ class NEEM_Manager:
     def __get_neem_ids__(self):
         neem_ids = []
         # get all neem ids information from collection
-        neem_ids = mongoDBMetaCollection.find().distinct('_id')
+        neemHubSettings = getNeemHubSettingFromDb()
+        mongoDBMetaCollection = checkConnection(neemHubSettings)
+        if mongoDBMetaCollection is not None:
+            neem_ids = mongoDBMetaCollection.find().distinct('_id')
         return neem_ids
 
     def get_requested(self, request):
@@ -41,5 +44,8 @@ class NEEM_Manager:
         #   - can an array be added to text index?
         #   - regex search possible, but only without index!!
         #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
-        return map(lambda doc: doc["_id"], mongoDBMetaCollection.find(
-            {"$text": {"$search": query_string}}, {"_id": 1}))
+        neemHubSettings = getNeemHubSettingFromDb()
+        mongoDBMetaCollection = checkConnection(neemHubSettings)
+        if mongoDBMetaCollection is not None:
+            return map(lambda doc: doc["_id"], checkConnection().find(
+                {"$text": {"$search": query_string}}, {"_id": 1}))

@@ -2,7 +2,8 @@ from flask import request, render_template, jsonify, abort, redirect, url_for, f
 
 import json
 
-from webrob.app_and_db import app
+from webrob.app_and_db import app, checkConnection, getNeemHubSettingFromDb
+import webrob.app_and_db
 from webrob.app_and_db import db
 from webrob.utility import admin_required
 from webrob.models.db import *
@@ -10,6 +11,7 @@ from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings_count, g
 from wtforms.validators import DataRequired
 from flask_wtf import Form
 from wtforms import PasswordField
+from pymongo import MongoClient
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -167,24 +169,60 @@ def render_neem_hub_settings_post():
     app.logger.info('render neem hub settings post method.... ')
     req = request.form
 
-    rows = get_settings_count()
+    neemHubSettings = getNeemHubSettingFromDb()
+    neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
+    neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
+    neemHubSettings.MONGO_USER = req.get("MONGO_USER")
+    neemHubSettings.MONGO_DB = req.get("MONGO_DB")
+    neemHubSettings.MONGO_PASS = req.get("MONGO_PASS")
+    db.session.add(neemHubSettings)
+    db.session.commit()
+    app.logger.info('Configuration has been stored!')
 
-    app.logger.info('total no of rows in db..... ')
+    mongoDBMetaCollection = checkConnection(neemHubSettings)
+    if mongoDBMetaCollection is None:
+        app.logger.error('------------ mongoDb connection can not be created ------------')
+        flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
+        return redirect(url_for('render_neem_hub_settings_page_get'))
 
-    app.logger.info(rows)
-    if rows == 1 :
-        neemHubSettings = get_settings(1)
-        neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
-        neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
-        neemHubSettings.MONGO_USER = req.get("MONGO_USER")
-        neemHubSettings.MONGO_DB = req.get("MONGO_DB")
-        neemHubSettings.MONGO_PASS = app.user_manager.hash_password(req.get("MONGO_PASS"))
-        db.session.add(neemHubSettings)
-        db.session.commit()
-        app.logger.info('Configuration has been stored!')
-            #
-            # flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
-            # return redirect(url_for('render_neem_hub_settings_page_get'))
+    # rows = get_settings_count()
+    #
+    # app.logger.info('total no of rows in db..... ')
+    #
+    # app.logger.info(rows)
+    #
+    #
+    #
+    # if rows == 1 :
+    #     neemHubSettings = get_settings(1)
+    #     neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
+    #     neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
+    #     neemHubSettings.MONGO_USER = req.get("MONGO_USER")
+    #     neemHubSettings.MONGO_DB = req.get("MONGO_DB")
+    #     # todo: use has password but find way to get pw back for further operation
+    #     # neemHubSettings.MONGO_PASS = app.user_manager.hash_password(req.get("MONGO_PASS"))
+    #     neemHubSettings.MONGO_PASS = req.get("MONGO_PASS")
+    #     # once connection is established with new credentials and there is something in collection then store those credentials to db
+    #     db.session.add(neemHubSettings)
+    #     db.session.commit()
+    #     app.logger.info('Configuration has been stored!')
+    #     # remote mongo client connection
+    #     try:
+    #         connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
+    #         mongoDbClient = connection[neemHubSettings.MONGO_DB]
+    #         mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
+    #         mongoDBMetaCollection = mongoDbClient["meta"]
+    #
+    #         if mongoDBMetaCollection.count() > 0:
+    #             app.logger.info('------------ mongoDb collection contains some document values ------------')
+    #
+    #         else:
+    #             app.logger.info('---  MongoDB connection is established but collection does not contain any values  ---')
+    #
+    #     except:
+    #         app.logger.error('------------ mongoDb connection can not be created ------------')
+    #         flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
+    #         return redirect(url_for('render_neem_hub_settings_page_get'))
 
     flash('NEEM Hub configuration setting is stored!', "success")
     return redirect(url_for('render_neems'))
