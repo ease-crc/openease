@@ -23,10 +23,10 @@ def render_neems():
     if neemHubSettings is not None:
         if checkConnection(neemHubSettings) is None:
             flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
-            return redirect(url_for('render_neem_hub_settings_page_get'))
+            return render_template('admin/neems_without_settings_page.html', **locals())
     else:
         flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
-        return redirect(url_for('render_neem_hub_settings_page_get'))
+        return render_template('admin/neems_without_settings_page.html', **locals())
 
     # settings_count = get_settings_count()
     # if settings_count == 1:
@@ -72,9 +72,13 @@ def render_neems():
     next_offset = current_offset + per_page
     # get neems
     matching_neems = neem_manager.query_neem_ids(query)
+    app.logger.info('neems.py matching neems....')
+    app.logger.info(matching_neems)
     neems = list(map(lambda (x): neem_manager.get(x),
                      matching_neems[current_offset:next_offset]))
 
+    app.logger.info('neems.py neems....')
+    app.logger.info(neems)
     # TODO: what does this mean?
     search = False
     q = request.args.get('q')

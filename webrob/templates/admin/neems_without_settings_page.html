@@ -1,0 +1,24 @@
+{% extends "openease_base.html" %}
+
+{% block head %}
+<style>
+body {
+  background-color: #0277bd;
+}
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container p-4">
+    <div class="card" id="user-data">
+        <div class="card-header bg-openease-light">{% trans %}NEEM Hub configuration settings{% endtrans %}</div>
+        <div class="card-body">
+            <p>It seems you have either not configured NEEM Hub settings properly or at all. Please press button to go to configuration page.</p>
+            <button class="col-sm-2 btn btn-sm btn-primary" type="button" onclick="window.location.href='{{ url_for('render_neem_hub_settings_page_get') }}';" name="Go to settings" value="Go to settings">Go to settings</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

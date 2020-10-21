@@ -19,9 +19,12 @@ class NEEM_Manager:
         neemHubSettings = getNeemHubSettingFromDb()
         mongoDBMetaCollection = checkConnection(neemHubSettings)
         if mongoDBMetaCollection is not None:
+            app.logger.info('neem ids are not  null .....')
             neem_ids = mongoDBMetaCollection.find().distinct('_id')
-        return neem_ids
-
+            app.logger.info(neem_ids)
+            return neem_ids
+        else:
+            return []
     def get_requested(self, request):
         neem_id = request.args.get('neem_id',
                                       default=session.get('neem_id', None))
@@ -31,12 +34,18 @@ class NEEM_Manager:
             return self.get(neem_id)
 
     def get(self, neem_id):
+        app.logger.info('manager.py get neem....')
+        app.logger.info(NEEM(neem_id))
         return NEEM(neem_id)
 
     def query_neem_ids(self, query_string):
         if query_string is '':
+            app.logger.info('manager.py query self.neem_ids....')
+            app.logger.info(self.neem_ids)
             return self.neem_ids
         else:
+            app.logger.info('manager.py filter_neems(query_string)....')
+            app.logger.info(self.filter_neems(query_string))
             return self.filter_neems(query_string)
 
     def filter_neems(self, query_string):
@@ -47,5 +56,5 @@ class NEEM_Manager:
         neemHubSettings = getNeemHubSettingFromDb()
         mongoDBMetaCollection = checkConnection(neemHubSettings)
         if mongoDBMetaCollection is not None:
-            return map(lambda doc: doc["_id"], checkConnection().find(
+            return map(lambda doc: doc["_id"], mongoDBMetaCollection.find(
                 {"$text": {"$search": query_string}}, {"_id": 1}))

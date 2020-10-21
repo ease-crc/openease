@@ -38,12 +38,12 @@ def getNeemHubSettingFromDb():
     settings_count = get_settings_count()
     if settings_count == 1 :
         neemHubSettings = get_settings(1)
-        app.logger.info('retrieved object from postgresql......')
-        app.logger.info(neemHubSettings.MONGO_HOST)
-        app.logger.info(neemHubSettings.MONGO_PORT)
-        app.logger.info(neemHubSettings.MONGO_DB)
-        app.logger.info(neemHubSettings.MONGO_USER)
-        app.logger.info(neemHubSettings.MONGO_PASS)
+        # app.logger.info('retrieved object from postgresql......')
+        # app.logger.info(neemHubSettings.MONGO_HOST)
+        # app.logger.info(neemHubSettings.MONGO_PORT)
+        # app.logger.info(neemHubSettings.MONGO_DB)
+        # app.logger.info(neemHubSettings.MONGO_USER)
+        # app.logger.info(neemHubSettings.MONGO_PASS)
         return neemHubSettings
     else:
         return None
