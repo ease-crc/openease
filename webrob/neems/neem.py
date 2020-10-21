@@ -1,7 +1,7 @@
 from flask_user import current_user
 
 from webrob.docker.docker_interface import start_user_container, container_started
-from webrob.app_and_db import app, getNeemHubSettingFromDb, checkConnection
+from webrob.app_and_db import app, mongoDBMetaCollection, getNeemHubSettingFromDb, checkConnection
 
 from webrob.config.settings import USE_HOST_KNOWROB
 import bson
@@ -19,30 +19,27 @@ class NEEM:
         else:
             b_id = neem_id
 
-        neemHubSettings = getNeemHubSettingFromDb()
-        mongoDBMetaCollection = checkConnection(neemHubSettings)
-        if mongoDBMetaCollection is not None:
-            neem = mongoDBMetaCollection.find_one({"_id": b_id})
-            self.neem_id = str(neem['_id'])
-            # TODO: Tag could be useful for versioning
-            self.neem_tag = ''
-            self.name = neem['name']
-            self.description = neem['description']
-            self.created_by = neem['created_by']
-            self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
-            self.model_version = neem['model_version']
-            self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem['url']
-            self.neem_repo_path = neem['url']
-            self.knowrob_image = 'knowrob'
-            self.knowrob_tag = 'latest'
-            self.maintainer = neem['created_by']
-            self.authors = neem['created_by']
-            self.acknowledgements = ''
-            self.environment = neem['environment']
-            self.activity = neem['activity']
-            self.agent = neem['agent']
-            self.keywords = neem['keywords']
-            self.image = neem['image']
+        neem = mongoDBMetaCollection.find_one({"_id": b_id})
+        self.neem_id = str(neem['_id'])
+        # TODO: Tag could be useful for versioning
+        self.neem_tag = ''
+        self.name = neem['name']
+        self.description = neem['description']
+        self.created_by = neem['created_by']
+        self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
+        self.model_version = neem['model_version']
+        self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem['url']
+        self.neem_repo_path = neem['url']
+        self.knowrob_image = 'knowrob'
+        self.knowrob_tag = 'latest'
+        self.maintainer = neem['created_by']
+        self.authors = neem['created_by']
+        self.acknowledgements = ''
+        self.environment = neem['environment']
+        self.activity = neem['activity']
+        self.agent = neem['agent']
+        self.keywords = neem['keywords']
+        self.image = neem['image']
 
     def get_info(self):
         return {

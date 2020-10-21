@@ -20,13 +20,10 @@ def render_neems():
     # TODO: check if NEEM Hub configuration is correctly set or not?
     # at first check if there is settings stored in db
     neemHubSettings = getNeemHubSettingFromDb()
-    if neemHubSettings is not None:
-        if checkConnection(neemHubSettings) is None:
-            flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
-            return render_template('admin/neems_without_settings_page.html', **locals())
-    else:
+    if checkConnection(neemHubSettings) is None:
         flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
         return render_template('admin/neems_without_settings_page.html', **locals())
+
 
     # settings_count = get_settings_count()
     # if settings_count == 1:
@@ -90,6 +87,7 @@ def render_neems():
                             total=len(matching_neems),
                             css_framework='bootstrap4',
                             search=search)
+
     return render_template('neems/search.html', **locals())
 
 @app.route('/neems/<neem_group>/<neem_name>/info')

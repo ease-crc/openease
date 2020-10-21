@@ -1,7 +1,7 @@
 import os
 from flask import session
 from webrob.neems.neem import NEEM
-from webrob.app_and_db import app, checkConnection, getNeemHubSettingFromDb
+from webrob.app_and_db import app, getNeemHubSettingFromDb, checkConnection
 
 NEEM_DIR = "/neems"
 
@@ -16,15 +16,15 @@ class NEEM_Manager:
     def __get_neem_ids__(self):
         neem_ids = []
         # get all neem ids information from collection
+        app.logger.info('neem ids are not  null .....')
         neemHubSettings = getNeemHubSettingFromDb()
-        mongoDBMetaCollection = checkConnection(neemHubSettings)
-        if mongoDBMetaCollection is not None:
-            app.logger.info('neem ids are not  null .....')
-            neem_ids = mongoDBMetaCollection.find().distinct('_id')
+        if checkConnection(neemHubSettings) is not None:
+            neem_ids = checkConnection(neemHubSettings).find().distinct('_id')
             app.logger.info(neem_ids)
             return neem_ids
         else:
             return []
+
     def get_requested(self, request):
         neem_id = request.args.get('neem_id',
                                       default=session.get('neem_id', None))
@@ -54,7 +54,6 @@ class NEEM_Manager:
         #   - regex search possible, but only without index!!
         #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
         neemHubSettings = getNeemHubSettingFromDb()
-        mongoDBMetaCollection = checkConnection(neemHubSettings)
-        if mongoDBMetaCollection is not None:
-            return map(lambda doc: doc["_id"], mongoDBMetaCollection.find(
+        if checkConnection(neemHubSettings) is not None:
+            return map(lambda doc: doc["_id"], checkConnection(neemHubSettings).find(
                 {"$text": {"$search": query_string}}, {"_id": 1}))

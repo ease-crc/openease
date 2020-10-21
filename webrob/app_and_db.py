@@ -69,6 +69,10 @@ def checkConnection(neemHubSettings):
             return None
     else:
         return None
+
+
+neemHubSettings = getNeemHubSettingFromDb()
+mongoDBMetaCollection = checkConnection(neemHubSettings)
 # else :
 # MONGO_HOST = "mongodb://data.open-ease.org"
 # MONGO_PORT = 28015

@@ -2,7 +2,7 @@ from flask import request, render_template, jsonify, abort, redirect, url_for, f
 
 import json
 
-from webrob.app_and_db import app, checkConnection, getNeemHubSettingFromDb
+from webrob.app_and_db import app, checkConnection, getNeemHubSettingFromDb, mongoDBMetaCollection, neemHubSettings
 import webrob.app_and_db
 from webrob.app_and_db import db
 from webrob.utility import admin_required
@@ -169,7 +169,6 @@ def render_neem_hub_settings_post():
     app.logger.info('render neem hub settings post method.... ')
     req = request.form
 
-    neemHubSettings = getNeemHubSettingFromDb()
     neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
     neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
     neemHubSettings.MONGO_USER = req.get("MONGO_USER")
