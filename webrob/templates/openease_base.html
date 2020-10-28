@@ -44,6 +44,11 @@ a.openease-brand {
   background: #246F98;
   color: white;
 }
+
+#openease-logo {
+    width: 120px;
+    height: auto;
+}
   </style>
   
   {% block head %}{% endblock %}
@@ -53,8 +58,8 @@ a.openease-brand {
 
 <nav class="navbar navbar-expand-lg navbar-dark" id="openease-navbar">
   <a class="navbar-brand openease-brand" href="http://www.open-ease.org">
-    <img src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">
-    openEASE
+    <img src="{{ url_for('static', filename='logos/logo_openEASE_neu2018.png') }}" id="openease-logo">
+
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
