@@ -91,9 +91,8 @@ a.openease-brand {
           Admin
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="/admin/roles">User Roles</a>
-          <a class="dropdown-item" href="/admin/sql">SQL</a>
-          <a class="dropdown-item" href="/admin/cookies">Cookies</a>
+          <a class="dropdown-item" href="{{ url_for('db_page_user_roles') }}">User Roles</a>
+          <a class="dropdown-item" href="{{ url_for('admin_cookie') }}">Cookies</a>
         </div>
       </li>
 {% endif %}
