@@ -44,6 +44,13 @@ a.openease-brand {
   background: #246F98;
   color: white;
 }
+
+.footer-position {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
   </style>
   
   {% block head %}{% endblock %}
@@ -125,10 +132,16 @@ a.openease-brand {
 
 {% block body %}{% endblock %}
 
-<footer class="bg-dark text-white-50">
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
+
+</body>
+
+<footer class="bg-dark text-white-50 footer-position">
   <div class="footer-copyright text-center py-3">
     © <span id="myYear"> </span> Copyright: University of Bremen
   </div>
+    {% block footer %}{% endblock %}
 <!--
   <a class="navbar-brand openease-brand" href="http://ai.uni-bremen.de/">
     <img src="{{ url_for('static', filename='logos/ai-logo-small.png') }}">
@@ -138,8 +151,5 @@ a.openease-brand {
   </a>
 -->
 </footer>
-<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
-
-</body>
 </html>
 
