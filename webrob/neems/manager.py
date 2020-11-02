@@ -16,11 +16,9 @@ class NEEM_Manager:
     def __get_neem_ids__(self):
         neem_ids = []
         # get all neem ids information from collection
-        app.logger.info('neem ids are not  null .....')
         neemHubSettings = getNeemHubSettingFromDb()
         if checkConnection(neemHubSettings) is not None:
             neem_ids = checkConnection(neemHubSettings).find().distinct('_id')
-            app.logger.info(neem_ids)
             return neem_ids
         else:
             return []
@@ -34,18 +32,12 @@ class NEEM_Manager:
             return self.get(neem_id)
 
     def get(self, neem_id):
-        app.logger.info('manager.py get neem....')
-        app.logger.info(NEEM(neem_id))
         return NEEM(neem_id)
 
     def query_neem_ids(self, query_string):
         if query_string is '':
-            app.logger.info('manager.py query self.neem_ids....')
-            app.logger.info(self.neem_ids)
             return self.neem_ids
         else:
-            app.logger.info('manager.py filter_neems(query_string)....')
-            app.logger.info(self.filter_neems(query_string))
             return self.filter_neems(query_string)
 
     def filter_neems(self, query_string):

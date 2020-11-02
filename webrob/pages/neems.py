@@ -69,13 +69,10 @@ def render_neems():
     next_offset = current_offset + per_page
     # get neems
     matching_neems = neem_manager.query_neem_ids(query)
-    app.logger.info('neems.py matching neems....')
-    app.logger.info(matching_neems)
+
     neems = list(map(lambda (x): neem_manager.get(x),
                      matching_neems[current_offset:next_offset]))
 
-    app.logger.info('neems.py neems....')
-    app.logger.info(neems)
     # TODO: what does this mean?
     search = False
     q = request.args.get('q')
