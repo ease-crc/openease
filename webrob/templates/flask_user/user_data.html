@@ -29,8 +29,8 @@
                     <label for="staticToken" class="col-sm-2 col-form-label">API token</label>
                     <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticToken" value="{{ session.api_token }}">
                 </div>
-                <a href="{{ url_for('render_change_password_get') }}" class="btn btn-default">Change Password</a>
-                <a href="{{ url_for('create_api_token') }}" class="btn btn-default">Create API Token</a>
+                <button href="{{ url_for('render_change_password_get') }}" class="col-sm-2 btn btn-sm btn-success">Change Password</button>
+                <button href="{{ url_for('create_api_token') }}" class="col-sm-2 btn btn-sm btn-success">Create API Token</button>
             </form>
         </div>
     </div>
