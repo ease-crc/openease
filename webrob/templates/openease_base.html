@@ -44,13 +44,6 @@ a.openease-brand {
   background: #246F98;
   color: white;
 }
-
-.footer-position {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-}
   </style>
   
   {% block head %}{% endblock %}
@@ -58,7 +51,7 @@ a.openease-brand {
 
 <body{% block bodyargs %}{% endblock %}>
 
-<nav class="navbar navbar-expand-lg navbar-dark" id="openease-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="openease-navbar">
   <a class="navbar-brand openease-brand" href="http://www.open-ease.org">
     <img src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">
     openEASE
@@ -137,7 +130,7 @@ a.openease-brand {
 
 </body>
 
-<footer class="bg-dark text-white-50 footer-position">
+<footer class="bg-dark text-white-50 fixed-bottom">
   <div class="footer-copyright text-center py-3">
     © <span id="myYear"> </span> Copyright: University of Bremen
   </div>
