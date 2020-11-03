@@ -66,8 +66,5 @@ def checkConnection(neemHubSettings):
         return None
 
 
-neemHubSettings = getNeemHubSettingFromDb()
-mongoDBMetaCollection = checkConnection(neemHubSettings)
-
 
 

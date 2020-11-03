@@ -1,7 +1,7 @@
 from flask_user import current_user
 
 from webrob.docker.docker_interface import start_user_container, container_started
-from webrob.app_and_db import app, mongoDBMetaCollection, neemHubSettings,checkConnection
+from webrob.app_and_db import app, checkConnection
 
 from webrob.config.settings import USE_HOST_KNOWROB
 import bson
@@ -65,6 +65,7 @@ class NEEM:
 
     def activate(self):
         app.logger.info('Activate neem')
+        neemHubSettings = get_settings(1)
         if not USE_HOST_KNOWROB and not container_started(current_user.username) and neemHubSettings:
             start_user_container(current_user.username,
                                  self.neem_id,
