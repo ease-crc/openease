@@ -2,6 +2,7 @@ import os
 from flask import session
 from webrob.neems.neem import NEEM
 from webrob.app_and_db import app, getNeemHubSettingFromDb, checkConnection
+from webrob.models.NEEMHubSettings import get_settings_count, get_settings
 
 NEEM_DIR = "/neems"
 
@@ -16,7 +17,7 @@ class NEEM_Manager:
     def __get_neem_ids__(self):
         neem_ids = []
         # get all neem ids information from collection
-        neemHubSettings = getNeemHubSettingFromDb()
+        neemHubSettings = get_settings(1)
         if checkConnection(neemHubSettings) is not None:
             neem_ids = checkConnection(neemHubSettings).find().distinct('_id')
             return neem_ids
@@ -45,7 +46,7 @@ class NEEM_Manager:
         #   - can an array be added to text index?
         #   - regex search possible, but only without index!!
         #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
-        neemHubSettings = getNeemHubSettingFromDb()
+        neemHubSettings = get_settings(1)
         if checkConnection(neemHubSettings) is not None:
             return map(lambda doc: doc["_id"], checkConnection(neemHubSettings).find(
                 {"$text": {"$search": query_string}}, {"_id": 1}))

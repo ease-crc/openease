@@ -31,25 +31,27 @@ db = SQLAlchemy(app)
 
 from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings_count, get_settings
 
+isConnected = False
 
+def isConnected_method():
+    return isConnected
 
 def getNeemHubSettingFromDb():
-    # check for neem hub configuration
-    settings_count = get_settings_count()
-    if settings_count == 1 :
-        neemHubSettings = get_settings(1)
-        # app.logger.info('retrieved object from postgresql......')
-        # app.logger.info(neemHubSettings.MONGO_HOST)
-        # app.logger.info(neemHubSettings.MONGO_PORT)
-        # app.logger.info(neemHubSettings.MONGO_DB)
-        # app.logger.info(neemHubSettings.MONGO_USER)
-        # app.logger.info(neemHubSettings.MONGO_PASS)
-        return neemHubSettings
+    # if connection is not set to true then no need to check for settings count
+    if isConnected:
+        # check if there is only one entry in NEEMHubSettings table
+        settings_count = get_settings_count()
+        if settings_count == 1 :
+            # get all settings from DB if there is any
+            neemHubSettings = get_settings(1)
+            return neemHubSettings
+        else:
+            return NEEMHubSettings()
     else:
-        return None
-
+        return NEEMHubSettings()
 
 def checkConnection(neemHubSettings):
+    global isConnected
     if neemHubSettings is not None:
         try:
             connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
@@ -60,12 +62,15 @@ def checkConnection(neemHubSettings):
 
             if mongoDBMetaCollection.count() > 0:
                 app.logger.info('------------ mongoDb collection contains some document values ------------')
+                isConnected = True
                 return mongoDBMetaCollection
             else:
                 app.logger.info('---  MongoDB connection is established but collection does not contain any values  ---')
+                isConnected = True
                 return mongoDBMetaCollection
         except:
             app.logger.error('------------ mongoDb connection can not be created ------------')
+            isConnected = False
             return None
     else:
         return None
@@ -73,14 +78,6 @@ def checkConnection(neemHubSettings):
 
 neemHubSettings = getNeemHubSettingFromDb()
 mongoDBMetaCollection = checkConnection(neemHubSettings)
-# else :
-# MONGO_HOST = "mongodb://data.open-ease.org"
-# MONGO_PORT = 28015
-# MONGO_DB = "neems"
-# MONGO_USER = "neemReader"
-# MONGO_PASS = "qEWRqc9UdN5TD7No7cjymUA8QEweNz"
-
-# remote mongo client connection
 
 
 

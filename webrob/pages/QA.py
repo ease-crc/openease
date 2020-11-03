@@ -6,7 +6,7 @@ from flask_user import current_user
 from urlparse import urlparse
 
 from webrob.app_and_db import app
-from webrob.pages.neems import neem_manager
+from webrob.neems.manager import NEEM_Manager
 from webrob.docker import docker_interface
 
 from webrob.config.settings import MAX_HISTORY_LINES, USE_HOST_KNOWROB
@@ -15,6 +15,7 @@ __author__ = 'danielb@uni-bremen.de'
 
 @app.route('/QA')
 def render_QA_page():
+    neem_manager = NEEM_Manager()
     neem = neem_manager.get_requested(request)
     if neem is None:
         return redirect(url_for('render_neems'))
@@ -31,6 +32,7 @@ def render_QA_page():
 
 @app.route('/video')
 def render_video_page():
+    neem_manager = NEEM_Manager()
     neem = neem_manager.get_requested(request)
     if neem is None:
         return redirect(url_for('render_neems'))

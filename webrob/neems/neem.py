@@ -1,13 +1,15 @@
 from flask_user import current_user
 
 from webrob.docker.docker_interface import start_user_container, container_started
-from webrob.app_and_db import app, mongoDBMetaCollection, neemHubSettings
+from webrob.app_and_db import app, mongoDBMetaCollection, neemHubSettings,checkConnection
 
 from webrob.config.settings import USE_HOST_KNOWROB
 import bson
 import json
 from dateutil import parser
 from webrob.AlchemyEncoder import AlchemyEncoder
+from webrob.models.NEEMHubSettings import get_settings_count, get_settings
+
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 
 class NEEM:
@@ -18,7 +20,8 @@ class NEEM:
             b_id = bson.objectid.ObjectId(neem_id)
         else:
             b_id = neem_id
-
+        neemHubSettings = get_settings(1)
+        mongoDBMetaCollection = checkConnection(neemHubSettings)
         neem = mongoDBMetaCollection.find_one({"_id": b_id})
         self.neem_id = str(neem['_id'])
         # TODO: Tag could be useful for versioning
