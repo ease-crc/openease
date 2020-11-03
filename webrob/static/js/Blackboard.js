@@ -16,7 +16,11 @@ function Blackboard(parent, qid, query_string) {
     this.create = function() {
         //
         var card = $("<div>");
-        card.addClass("card border-info");
+        card.addClass("card border-light");
+        // FIXME: somehow it does not work to add CSS class in static and use it here!?!
+        card.css(
+            "box-shadow",
+            "0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6)");
         //
         that.blackboard_div = $("<div>");
         that.blackboard_div.addClass("collapse show");
@@ -48,7 +52,7 @@ function Blackboard(parent, qid, query_string) {
 
     this.createHeader = function(text) {
         var header = $("<div>");
-        header.addClass("card-header ease-dark v");
+        header.addClass("card-header ease-dark");
         header.text(text);
         // TODO: clickable header
         //header.attr("data-toggle", "collapse");
@@ -91,13 +95,13 @@ function Blackboard(parent, qid, query_string) {
         }
         else if(response.status == "NO_SOLUTION") {
             if(that.answer_count==0) {
-                that.push("Bindings", that.createFailedWidget());
+                that.push("Results", that.createFailedWidget());
             }
             that.finish();
             return;
         }
         else {
-            that.push("Bindings", that.createSolutionWidget(response.solution));
+            that.push("Results", that.createSolutionWidget(response.solution));
         }
         that.answer_count += 1;
     };
