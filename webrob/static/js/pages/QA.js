@@ -9,8 +9,8 @@
 function KnowrobUI(flask_user,options) {
     var that = this;
     
-    // qid-QueryCard map
-    this.queryCards = {};
+    // Blackboard object
+    this.blackboard = undefined;
     // connect to ROS on host via websocket
     this.client = new ROSClient({
         flask_user:     flask_user,
@@ -27,35 +27,35 @@ function KnowrobUI(flask_user,options) {
         query_div: 'user_query',
         on_query: function(qid,q) {
             $('#btn_query_next').prop('disabled', false);
-            const last_query_card = that.queryCards[that.last_qid];
-            if(last_query_card) {
-                last_query_card.collapse();
+            if(that.blackboard) {
+                that.blackboard.delete();
             }
             that.last_qid = qid;
-            that.queryCards[qid] = new QueryCard("#history",qid,q);
+            that.blackboard = new Blackboard("#history",qid,q);
         },
         on_query_answer: function(qid,answer) {
-            that.queryCards[qid].addQueryResponse(answer);
+            that.blackboard.addQueryResponse(answer);
         },
         on_query_finish: function(qid) {
             $('#btn_query_next').prop('disabled', true);
-            that.queryCards[qid].finish();
+            that.blackboard.finish();
         }
     });
     // the 3D visualization canvas
-    this.rosViewer = undefined;
+    //this.rosViewer = undefined;
 
     this.init = function () {
         that.console.init();
-        that.initCanvas();
+        //that.initCanvas();
         that.client.connect(function(ros) {
             that.registerROSClients(ros);
-            that.rosViewer.registerNodes(ros);
+            //that.rosViewer.registerNodes(ros);
         });
-        that.resizeCanvas();
+        //that.resizeCanvas();
     };
     
     // create a ROSCanvas in the "markers" div.
+    /*
     this.initCanvas = function() {
         if(that.rosViewer) {
           delete that.rosViewer;
@@ -79,6 +79,7 @@ function KnowrobUI(flask_user,options) {
             }
         };
     };
+    */
     
     // listen to some ROS topics
     this.registerROSClients = function (ros) {
@@ -88,6 +89,7 @@ function KnowrobUI(flask_user,options) {
             console.info('Connected to KnowRob.');
             const pl = new ROSPrologClient(ros, {});
             // TODO: also call urdf_init to trigger loading neem URDF files
+            // TODO: show user progress
             pl.jsonQuery("set_setting(mng_client:collection_prefix, '"
                 + that.neem_id + "'), marker_plugin:republish.", function(result) {
                 pl.finishClient();
@@ -110,6 +112,7 @@ function KnowrobUI(flask_user,options) {
         });
     };
 
+    /*
     this.resizeCanvas = function () {
         const markers = $('#markers');
         that.rosViewer.resize(markers.width(), markers.height());
@@ -126,6 +129,7 @@ function KnowrobUI(flask_user,options) {
         a.click()
         document.body.removeChild(a)
     };
+     */
     
     // listen to data_vis_msgs topic and add charts to currently
     // active query card
@@ -137,7 +141,7 @@ function KnowrobUI(flask_user,options) {
         });
         that.dataVis.subscribe(function(data_vis_msg) {
             if(that.last_qid) {
-                that.queryCards[that.last_qid].addChart(data_vis_msg);
+                that.blackboard.addChart("Charts", data_vis_msg);
             }
             else {
                 console.warn("Received DataVis msg, but no query is active.");
@@ -158,10 +162,10 @@ function KnowrobUI(flask_user,options) {
                 const ext = image_uri.data.substr(
                     image_uri.data.lastIndexOf('.') + 1).toLowerCase();
                 if(ext==='jpg' || ext ==='png') {
-                    that.queryCards[that.last_qid].addImage(image_uri);
+                    that.blackboard.addImage("Images", image_uri);
                 }
                 else if(ext ==='ogg' || ext ==='ogv' || ext ==='mp4' || ext ==='mov') {
-                    that.queryCards[that.last_qid].addVideo(image_uri);
+                    that.blackboard.addVideo("Videos", image_uri);
                 }
                 else {
                     console.warn("Unknown data format on /logged_images topic: " + image_uri.data);

@@ -3,7 +3,7 @@
 {% block head_inner %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/QueryCard.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/pages/QA.js') }}"></script>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/page.css') }}"/>
@@ -38,30 +38,65 @@
 </script>
 
 <div id="page-content">
-    <div id="QA-container" class="w-100 split split-horizontal">
-        <div id="vis-container" class="split w-100">
-            <div id="history" class="split split-horizontal split-content h-100 container-fluid p-3">
-            </div>
-            <div id="markers" class="split split-horizontal split-content h-100">
-                <p class="icon-links marker-links">
-                    <a href="#" onclick="page.snapshot()"><i
-                            class="fa fa-camera" title="Download Document"></i></a>
-                </p>
-            </div>
-        </div>
+    <div id="QA-container" class="w-100 h-100 container-fluid">
+        <div class="row h-100" style="overflow: auto">
+            <!-- left column -->
+            <div class="col-sm-2"></div>
+            <!-- central column -->
+            <div class="col-sm-8">
+                <div class="text-center p-2">
+                    <!-- FIXME: seems loading the SVG is slow, better use PNG -->
+                    <!-- TODO: design a banner image? -->
+                    <img src="static/logos/oe-logo.svg" class="img-fluid" >
+                </div>
+                <div>
+                    <div id="user_query">is_event(Evt).</div>
+                    <div id="query_buttons">
+                        <!-- <a id="btn_query_next" href="#" onclick="page.console.nextSolution()"><i class="fas fa-redo"></i></a> -->
+                        <a id="btn_query" href="#" onclick="page.console.query()"><i class="fas fa-question"></i></a>
+                    </div>
+                </div>
+                <div id="query_links" class="text-right">
+                    <a href="#"><i class="fas fa-th"></i> Examples</a>
+                </div>
 
-        <div id="console" class="container-fluid p-0 split split-content">
-            <div class="h-100 d-flex flex-column">
-                <div id="user_query" class="flex-grow-1">is_event(Evt).</div>
+                <!--
+                <div id="markers" class="h-100">
+                    <p class="icon-links marker-links">
+                        <a href="#" onclick="page.snapshot()">
+                            <i class="fa fa-camera" title="Download Document"></i></a>
+                    </p>
+                </div>
+                -->
+                <div id="history" class="container-fluid p-3">
+                </div>
+            </div>
+            <!-- right column -->
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+</div>
+
+    <!--
+<script type="text/javascript">
+    $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+        if (!$(this).next().hasClass('show')) {
+            $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+        }
+        const $subMenu = $(this).next(".dropdown-menu");
+        $subMenu.toggleClass('show');
+        $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+            $('.dropdown-submenu .show').removeClass("show");
+        });
+        return false;
+    });
+</script>
+
                 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group">
                         <div class="btn-group dropdown">
                             <button id="query-examples" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">Examples <span class="caret"></span></button>
                             <ul class="dropdown-menu">
-                                <!-- TODO: store example queries in some text file. -->
-                                <!-- TODO: include contextual queries here? (e.g. about selected object etc.) -->
-                                <!-------------------------------------------->
-                                <!-------------------------------------------->
                                 <h5 class="dropdown-header">NEEM Background</h5>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Appearance <span class="caret"></span></a>
@@ -104,8 +139,6 @@
                                             onclick="page.console.query('affords(Obj,Affordance).')">What can an object be used for?</a></li>
                                     </ul>
                                 </li>
-                                <!-------------------------------------------->
-                                <!-------------------------------------------->
                                 <h5 class="dropdown-header">NEEM Narrative</h5>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item dropdown-toggle" tabindex="-1" href="#">Occurence <span class="caret"></span></a>
@@ -149,15 +182,6 @@
                                             onclick="page.console.query('is_setting_for(Episode,Entity).')">What entities are included?</a></li>
                                         <li><a class="dropdown-item" href="#"
                                             onclick="page.console.query('satisfies_plan(Episode,Plan).')">What is the plan that was executed?</a></li>
-                                            
-                                            <!--
-                                        <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What entities are included?</a></li>
-                                        <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(barchart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">What is the plan that was executed?</a></li>
-                                        <li><a class="dropdown-item" href="#"
-                                            onclick="page.console.query('data_vis(timeline(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[\'0_10\',\'5_15\',\'0_20\']]]).')">What are the mistakes that happened?</a></li>
-                                            -->
                                     </ul>
                                 </li>
                             </ul>
@@ -179,50 +203,6 @@
                                 onclick="page.console.nextSolution()"><i class="fas fa-redo"></i></button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- setup split.js -->
-<script type="text/javascript">
-    Split(['#vis-container', '#console'], {
-            gutterSize: 8,
-            cursor: 'row-resize',
-            direction: 'vertical',
-            sizes: [70,30],
-            onDragEnd: page.resizeCanvas
-    });
-    const splitInstance = Split(['#history', '#markers'], {
-            gutterSize: 8,
-            cursor: 'col-resize',
-            sizes: [40,60],
-            onDragEnd: page.resizeCanvas
-    });
-
-    // min window width for smaller screens
-    const minimumWindowWidth = 992;
-    $(window).resize(function() {
-        if($(window).width() < minimumWindowWidth) {
-            // do not show the gutter
-            splitInstance.setSizes([5, 95]);
-        } else {
-            // show the gutter
-            splitInstance.setSizes([40, 60]);
-        } // end of else
-    }); // eof window resize
-    
-    $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-        if (!$(this).next().hasClass('show')) {
-            $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
-        }
-        const $subMenu = $(this).next(".dropdown-menu");
-        $subMenu.toggleClass('show');
-        $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-            $('.dropdown-submenu .show').removeClass("show");
-        });
-        return false;
-    });
-</script>
+                -->
 
 {% endblock %}
