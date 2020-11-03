@@ -2,7 +2,7 @@ from flask import request, render_template, jsonify, abort, redirect, url_for, f
 
 import json
 
-from webrob.app_and_db import app, checkConnection, getNeemHubSettingFromDb
+from webrob.app_and_db import app, checkConnection
 from webrob.app_and_db import db
 from webrob.utility import admin_required
 from webrob.models.db import *

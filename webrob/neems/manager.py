@@ -1,7 +1,7 @@
 import os
 from flask import session
 from webrob.neems.neem import NEEM
-from webrob.app_and_db import app, getNeemHubSettingFromDb, checkConnection
+from webrob.app_and_db import app, checkConnection
 from webrob.models.NEEMHubSettings import get_settings_count, get_settings
 
 NEEM_DIR = "/neems"

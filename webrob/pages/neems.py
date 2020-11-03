@@ -1,14 +1,13 @@
 from flask import session, send_from_directory, jsonify, request, render_template, redirect, url_for, flash
 from flask_paginate import Pagination, get_page_args
 
-from webrob.app_and_db import app, getNeemHubSettingFromDb, checkConnection
+from webrob.app_and_db import app, checkConnection
 
 
 from webrob.neems.manager import NEEM_Manager
 
 from webrob.models.NEEMHubSettings import get_settings_count, get_settings
 
-from pymongo import MongoClient
 
 __author__ = 'danielb@cs.uni-bremen.de'
 

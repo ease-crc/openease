@@ -29,20 +29,8 @@ os.environ['POSTGRES_PORT_5432_TCP_PORT'] + '/docker'
 db = SQLAlchemy(app)
 
 
-from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings_count, get_settings
-
-
-def getNeemHubSettingFromDb():
-
-    # check if there is only one entry in NEEMHubSettings table
-    settings_count = get_settings_count()
-    if settings_count == 1 :
-        # get all settings from DB if there is any
-        neemHubSettings = get_settings(1)
-        return neemHubSettings
-    else:
-        return NEEMHubSettings()
-
+# This method will check db connection with given settings.
+# If settings are correct then will return meta collection from the db
 def checkConnection(neemHubSettings):
 
     if neemHubSettings is not None:
