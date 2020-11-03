@@ -31,27 +31,20 @@ db = SQLAlchemy(app)
 
 from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings_count, get_settings
 
-isConnected = False
-
-def isConnected_method():
-    return isConnected
 
 def getNeemHubSettingFromDb():
-    # if connection is not set to true then no need to check for settings count
-    if isConnected:
-        # check if there is only one entry in NEEMHubSettings table
-        settings_count = get_settings_count()
-        if settings_count == 1 :
-            # get all settings from DB if there is any
-            neemHubSettings = get_settings(1)
-            return neemHubSettings
-        else:
-            return NEEMHubSettings()
+
+    # check if there is only one entry in NEEMHubSettings table
+    settings_count = get_settings_count()
+    if settings_count == 1 :
+        # get all settings from DB if there is any
+        neemHubSettings = get_settings(1)
+        return neemHubSettings
     else:
         return NEEMHubSettings()
 
 def checkConnection(neemHubSettings):
-    global isConnected
+
     if neemHubSettings is not None:
         try:
             connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
@@ -62,15 +55,12 @@ def checkConnection(neemHubSettings):
 
             if mongoDBMetaCollection.count() > 0:
                 app.logger.info('------------ mongoDb collection contains some document values ------------')
-                isConnected = True
                 return mongoDBMetaCollection
             else:
                 app.logger.info('---  MongoDB connection is established but collection does not contain any values  ---')
-                isConnected = True
                 return mongoDBMetaCollection
         except:
             app.logger.error('------------ mongoDb connection can not be created ------------')
-            isConnected = False
             return None
     else:
         return None

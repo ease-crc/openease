@@ -23,7 +23,7 @@ def get_settings(id):
         return values
 
     except SQLAlchemyError as e:
-        app.logger.info("error in connecting to sql db return values are null")
+        app.logger.info("get_settings: while connecting to sql db returns null")
         return NEEMHubSettings()
 
 def get_settings_count():
@@ -31,5 +31,5 @@ def get_settings_count():
         value = len(NEEMHubSettings.query.all())
         return value
     except SQLAlchemyError as e:
-        app.logger.info("error in connecting to sql db return values are ZERO")
+        app.logger.info("get_settings_count: while connecting to sql db returns ZERO count")
         return 0
