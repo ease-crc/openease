@@ -1,6 +1,12 @@
 from webrob.app_and_db import db, app
 from sqlalchemy.exc import SQLAlchemyError
 
+# DB model class for storing neem-hub configuration into postgresql.
+# Here at the moment only one entry should be stored in this table for neem-hub settings
+
+# default settings id points to db id here, since we are only retrieving first raw of the table
+settings_Id = 1
+
 class NEEMHubSettings(db.Model):
     def __init__(self):
         self.MONGO_HOST = ""
@@ -16,20 +22,12 @@ class NEEMHubSettings(db.Model):
     MONGO_USER = db.Column(db.String(255), nullable=False, default='')
     MONGO_PASS = db.Column(db.String(255), nullable=False, default='')
 
-
-def get_settings(id):
+# get setting values from db(with id==1)
+def get_settings():
     try:
-        values = NEEMHubSettings.query.filter_by(id=id).one()
+        values = NEEMHubSettings.query.filter_by(id=settings_Id).one()
         return values
 
     except SQLAlchemyError as e:
         app.logger.info("get_settings: while connecting to sql db returns null")
         return NEEMHubSettings()
-
-def get_settings_count():
-    try:
-        value = len(NEEMHubSettings.query.all())
-        return value
-    except SQLAlchemyError as e:
-        app.logger.info("get_settings_count: while connecting to sql db returns ZERO count")
-        return 0

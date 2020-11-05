@@ -1,7 +1,7 @@
 from flask_user import current_user
 
 from webrob.docker.docker_interface import start_user_container, container_started
-from webrob.app_and_db import app, checkConnection
+from webrob.app_and_db import app, getMongoDBMetaCollection
 
 from webrob.config.settings import USE_HOST_KNOWROB
 import bson
@@ -20,8 +20,8 @@ class NEEM:
             b_id = bson.objectid.ObjectId(neem_id)
         else:
             b_id = neem_id
-        neemHubSettings = get_settings(1)
-        mongoDBMetaCollection = checkConnection(neemHubSettings)
+        neemHubSettings = get_settings()
+        mongoDBMetaCollection = getMongoDBMetaCollection(neemHubSettings)
         neem = mongoDBMetaCollection.find_one({"_id": b_id})
         self.neem_id = str(neem['_id'])
         # TODO: Tag could be useful for versioning
@@ -65,7 +65,7 @@ class NEEM:
 
     def activate(self):
         app.logger.info('Activate neem')
-        neemHubSettings = get_settings(1)
+        neemHubSettings = get_settings()
         if not USE_HOST_KNOWROB and not container_started(current_user.username) and neemHubSettings:
             start_user_container(current_user.username,
                                  self.neem_id,

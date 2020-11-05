@@ -2,7 +2,7 @@ from flask import request, render_template, jsonify, abort, redirect, url_for, f
 
 import json
 
-from webrob.app_and_db import app, checkConnection
+from webrob.app_and_db import app, getMongoDBMetaCollection
 from webrob.app_and_db import db
 from webrob.utility import admin_required
 from webrob.models.db import *
@@ -13,6 +13,7 @@ from wtforms import PasswordField
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
+# PasswordForm used for validating given password field
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
@@ -47,7 +48,7 @@ def db_find_user_roles():
     users = _get_all_users()
     user_roles = []
     for u in users:  # find user roles
-        user_roles.neemsappend({
+        user_roles.append({
             'id': u.id,
             'name': u.username,
             'roles': map(lambda r: {'name': r.name}, u.roles)
@@ -157,8 +158,9 @@ def db_remove_route(table):
 @app.route('/db/page/get_neem_hub_settings')
 @admin_required
 def render_neem_hub_settings_page_get():
+    # PasswordForm used for validating given password field
     form = PasswordForm()
-    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings = get_settings(1))
+    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings = get_settings())
 
 
 @app.route('/db/page/post_neem_hub_settings', methods=['POST'])
@@ -167,7 +169,7 @@ def render_neem_hub_settings_post():
     app.logger.info('render neem hub settings post method.... ')
     req = request.form
     if req is not None:
-        neemHubSettings = get_settings(1)
+        neemHubSettings = get_settings()
         neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
         neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
         neemHubSettings.MONGO_USER = req.get("MONGO_USER")
@@ -177,7 +179,7 @@ def render_neem_hub_settings_post():
         db.session.add(neemHubSettings)
         db.session.commit()
         app.logger.info('Configuration has been stored!')
-        mongoDBMetaCollection = checkConnection(neemHubSettings)
+        mongoDBMetaCollection = getMongoDBMetaCollection(neemHubSettings)
         if mongoDBMetaCollection is None:
             app.logger.error('------------ mongoDb connection can not be created ------------')
             flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")

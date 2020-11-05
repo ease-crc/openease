@@ -1,6 +1,7 @@
 from sqlalchemy.ext.declarative import DeclarativeMeta
 import json
 
+# encoder used for encoding class objects to Json objects
 class AlchemyEncoder(json.JSONEncoder):
 
     def default(self, obj):
