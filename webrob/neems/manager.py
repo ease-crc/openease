@@ -10,9 +10,6 @@ NEEM_DIR = "/neems"
 class NEEM_Manager:
     def __init__(self):
         self.neem_ids = self.__set_neem_ids__()
-        # TODO: remove again, just for testing pagination as long as only few neems
-        #        are there
-        self.neem_ids = self.neem_ids * 20
 
     def __set_neem_ids__(self):
         self.neem_ids = []
@@ -25,9 +22,8 @@ class NEEM_Manager:
             # TODO: remove again multiply with 20 and return only self.neem_ids,
             #  just for testing pagination as long as only few neems are there
             self.neem_ids = self.neem_ids * 20
-            return self.neem_ids
-        else:
-            return []
+
+        return self.neem_ids
 
     def get_requested(self, request):
         neem_id = request.args.get('neem_id',
