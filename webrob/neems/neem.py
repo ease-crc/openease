@@ -8,7 +8,7 @@ import bson
 import json
 from dateutil import parser
 from webrob.AlchemyEncoder import AlchemyEncoder
-from webrob.models.NEEMHubSettings import get_settings_count, get_settings
+from webrob.models.NEEMHubSettings import get_settings
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 

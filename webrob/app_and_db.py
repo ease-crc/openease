@@ -11,7 +11,7 @@ from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure, PyMongoError
 import pymongo
 
 
@@ -36,7 +36,7 @@ def getMongoDBMetaCollection(neemHubSettings):
 
     if neemHubSettings is not None:
         try:
-            connection = MongoClient(neemHubSettings.MONGO_HOST, 1212)
+            connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
             mongoDbClient = connection[neemHubSettings.MONGO_DB]
             mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
 
@@ -52,6 +52,11 @@ def getMongoDBMetaCollection(neemHubSettings):
             app.logger.error('------------ mongoDb connection can not be created ------------')
             app.logger.error(e)
             return None
+        except PyMongoError as e:
+            app.logger.error('------------ mongoDb connection can not be created ------------')
+            app.logger.error(e)
+            return None
+
     else:
         return None
 

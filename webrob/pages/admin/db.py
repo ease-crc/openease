@@ -6,10 +6,11 @@ from webrob.app_and_db import app, getMongoDBMetaCollection
 from webrob.app_and_db import db
 from webrob.utility import admin_required
 from webrob.models.db import *
-from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings_count, get_settings
+from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings
 from wtforms.validators import DataRequired
 from flask_wtf import Form
 from wtforms import PasswordField
+from webrob.pages.neems import neem_manager
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -160,8 +161,11 @@ def db_remove_route(table):
 def render_neem_hub_settings_page_get():
     # PasswordForm used for validating given password field
     form = PasswordForm()
-    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings = get_settings())
-
+    neemHubSettings = get_settings()
+    if neemHubSettings is not None:
+        return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings = get_settings())
+    else:
+        return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=NEEMHubSettings())
 
 @app.route('/db/page/post_neem_hub_settings', methods=['POST'])
 @admin_required
@@ -170,6 +174,8 @@ def render_neem_hub_settings_post():
     req = request.form
     if req is not None:
         neemHubSettings = get_settings()
+        if neemHubSettings is None:
+            neemHubSettings = NEEMHubSettings()
         neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
         neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
         neemHubSettings.MONGO_USER = req.get("MONGO_USER")
@@ -180,10 +186,15 @@ def render_neem_hub_settings_post():
         db.session.commit()
         app.logger.info('Configuration has been stored!')
         mongoDBMetaCollection = getMongoDBMetaCollection(neemHubSettings)
+
         if mongoDBMetaCollection is None:
             app.logger.error('------------ mongoDb connection can not be created ------------')
             flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
             return redirect(url_for('render_neem_hub_settings_page_get'))
+        else:
+            # if connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
+            neem_manager.__set_neem_ids__()
+            app.logger.info('------------ neem manager updated ------------')
     else:
         flash('Form submission causes problems!', "warning")
         return redirect(url_for('render_neem_hub_settings_page_get'))

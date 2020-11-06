@@ -6,7 +6,7 @@ from webrob.app_and_db import app, getMongoDBMetaCollection
 
 from webrob.neems.manager import NEEM_Manager
 
-from webrob.models.NEEMHubSettings import get_settings_count, get_settings
+from webrob.models.NEEMHubSettings import get_settings
 
 
 __author__ = 'danielb@cs.uni-bremen.de'

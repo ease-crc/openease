@@ -30,4 +30,4 @@ def get_settings():
 
     except SQLAlchemyError as e:
         app.logger.info("get_settings: while connecting to sql db returns null")
-        return NEEMHubSettings()
+        return None

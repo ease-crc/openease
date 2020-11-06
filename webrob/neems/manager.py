@@ -2,25 +2,30 @@ import os
 from flask import session
 from webrob.neems.neem import NEEM
 from webrob.app_and_db import app, getMongoDBMetaCollection
-from webrob.models.NEEMHubSettings import get_settings_count, get_settings
+from webrob.models.NEEMHubSettings import get_settings
 
 NEEM_DIR = "/neems"
 
 
 class NEEM_Manager:
     def __init__(self):
-        self.neem_ids = self.__get_neem_ids__()
+        self.neem_ids = self.__set_neem_ids__()
         # TODO: remove again, just for testing pagination as long as only few neems
         #        are there
         self.neem_ids = self.neem_ids * 20
 
-    def __get_neem_ids__(self):
-        neem_ids = []
+    def __set_neem_ids__(self):
+        self.neem_ids = []
         # get all neem ids information from collection
         neemHubSettings = get_settings()
-        if getMongoDBMetaCollection(neemHubSettings) is not None:
-            neem_ids = getMongoDBMetaCollection(neemHubSettings).find().distinct('_id')
-            return neem_ids
+
+        mongoDBMetaCollection = getMongoDBMetaCollection(neemHubSettings)
+        if mongoDBMetaCollection is not None:
+            self.neem_ids = mongoDBMetaCollection.find().distinct('_id')
+            # TODO: remove again multiply with 20 and return only self.neem_ids,
+            #  just for testing pagination as long as only few neems are there
+            self.neem_ids = self.neem_ids * 20
+            return self.neem_ids
         else:
             return []
 
