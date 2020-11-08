@@ -3,6 +3,10 @@
   background-color: #FFF;
 }
 
+#btn_query:focus {
+  outline: none;
+}
+
 /*
 .node {
     stroke: #fff;
@@ -14,13 +18,22 @@
 }
  */
 
+svg {
+  pointer-events: all;
+}
+
+.chart {
+  background-color: rgb(255, 255, 255);
+  outline: thin solid #eaeaea;
+}
+
 .node {
   cursor: pointer;
 }
 .node circle {
   fill: #fff;
-  stroke: steelblue;
-  stroke-width: 3px;
+  stroke: #508cbd;
+  stroke-width: 2px;
 }
 .node text {
   font: 12px sans-serif;

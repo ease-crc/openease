@@ -141,8 +141,7 @@ function Blackboard(parent, qid, query_string) {
         chart_item.data_vis_msg.width = parent.width();
         //chart_item.data_vis_msg.height = 100;
         chart_item.data_vis_div = chart;
-        var item = that.createItem(chart_item);
-        that.push(data_vis_msg.title, item);
+        that.push(data_vis_msg.title, chart_item);
         chart_item.data_vis = new DataVis(
             chart_item.data_vis_div,
             chart_item.data_vis_msg);
