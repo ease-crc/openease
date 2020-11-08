@@ -1,7 +1,32 @@
 
 #QA-container {
-  background: url("/static/logos/ease-light.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 40%;
+  background-color: #FFF;
+}
+
+/*
+.node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+.link {
+    stroke: #999;
+    stroke-opacity: .6;
+}
+ */
+
+.node {
+  cursor: pointer;
+}
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+.node text {
+  font: 12px sans-serif;
+}
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
 }
