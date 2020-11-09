@@ -92,7 +92,7 @@ function ROSCanvas(options){
             var markerName = message.ns + message.id;
             if(message.action === 0) {
                 var updated = false;
-                if(markerName in this.markers) { // "MODIFY"
+                if(markerName in that.markers) { // "MODIFY"
                     var markerItem = that.markers[markerName];
                     var marker = markerItem[0];
                     var node   = markerItem[1];
@@ -120,14 +120,14 @@ function ROSCanvas(options){
                         tfClient : that.tfClient,
                         object : newMarker
                     });
-                    this.markers[markerName] = [newMarker,newNode];
+                    that.markers[markerName] = [newMarker,newNode];
                     that.rosViewer.addMarker(newMarker,newNode);
                 }
             }
             else if(message.action === 1) { // "DEPRECATED"
                 console.warn('Received marker message with deprecated action identifier "1"');
             }
-            else if(message.action === 2 && markerName in this.markers) { // "DELETE"
+            else if(message.action === 2 && markerName in that.markers) { // "DELETE"
                 var markerItem = that.markers[markerName];
                 var marker = markerItem[0];
                 var node   = markerItem[1];
