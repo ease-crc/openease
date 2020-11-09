@@ -106,7 +106,7 @@ function ROSCanvas(options){
                 if(!updated) { // "ADD"
                     var newMarker = new ROS3D.Marker({
                         message : message,
-                        path : this.path,
+                        path : meshPath,
                     });
                     newMarker.id = message.id;
                     newMarker.ns = message.ns;
