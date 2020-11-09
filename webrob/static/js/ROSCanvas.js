@@ -117,7 +117,7 @@ function ROSCanvas(options){
                     newMarker.isSceneOrtho = false;
                     var newNode = new ROS3D.SceneNode({
                         frameID : message.header.frame_id,
-                        tfClient : this.tfClient,
+                        tfClient : that.tfClient,
                         object : newMarker
                     });
                     this.markers[markerName] = [newMarker,newNode];
