@@ -1,7 +1,45 @@
 
-#history {
-  background: url("/static/logos/ease-light.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 40%;
+#QA-container {
+  background-color: #FFF;
+}
+
+#btn_query:focus {
+  outline: none;
+}
+
+/*
+.node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+.link {
+    stroke: #999;
+    stroke-opacity: .6;
+}
+ */
+
+svg {
+  pointer-events: all;
+}
+
+.chart {
+  background-color: rgb(255, 255, 255);
+  outline: thin solid #eaeaea;
+}
+
+.node {
+  cursor: pointer;
+}
+.node circle {
+  fill: #fff;
+  stroke: #508cbd;
+  stroke-width: 2px;
+}
+.node text {
+  font: 12px sans-serif;
+}
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
 }
