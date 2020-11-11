@@ -16,7 +16,6 @@ neem_manager = NEEM_Manager()
 @app.route('/neems')
 def render_neems():
 
-    # TODO: check if NEEM Hub configuration is correctly set or not?
     # at first check if there is settings stored in db
     if get_mongo_db_meta_collection() is None:
         flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")

@@ -180,7 +180,6 @@ def render_neem_hub_settings_post():
     app.logger.debug('render neem hub settings post method.... ')
     req = request.form
     if req is not None:
-        # TODO: Check here!!!
         neemHubSettings = NEEMHubSettings()
         try:
             neemHubSettings = get_settings()
