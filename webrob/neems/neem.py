@@ -2,6 +2,7 @@ from flask_user import current_user
 
 from webrob.docker.docker_interface import start_user_container, container_started
 from webrob.app_and_db import app, get_mongo_db_meta_collection
+from pymongo.errors import ConnectionFailure, PyMongoError
 
 from webrob.config.settings import USE_HOST_KNOWROB
 import bson
@@ -21,28 +22,38 @@ class NEEM:
             b_id = bson.objectid.ObjectId(neem_id)
         else:
             b_id = neem_id
-        mongoDBMetaCollection = get_mongo_db_meta_collection()
-        neem = mongoDBMetaCollection.find_one({"_id": b_id})
-        self.neem_id = str(neem['_id'])
-        # TODO: Tag could be useful for versioning
-        self.neem_tag = ''
-        self.name = neem['name']
-        self.description = neem['description']
-        self.created_by = neem['created_by']
-        self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
-        self.model_version = neem['model_version']
-        self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem['url']
-        self.neem_repo_path = neem['url']
-        self.knowrob_image = 'knowrob'
-        self.knowrob_tag = 'latest'
-        self.maintainer = neem['created_by']
-        self.authors = neem['created_by']
-        self.acknowledgements = ''
-        self.environment = neem['environment']
-        self.activity = neem['activity']
-        self.agent = neem['agent']
-        self.keywords = neem['keywords']
-        self.image = neem['image']
+
+        try:
+            mongoDBMetaCollection = get_mongo_db_meta_collection()
+            if mongoDBMetaCollection is not None and mongoDBMetaCollection.count() > 0:
+                neem = mongoDBMetaCollection.find_one({"_id": b_id})
+                self.neem_id = str(neem['_id'])
+                # TODO: Tag could be useful for versioning
+                self.neem_tag = ''
+                self.name = neem['name']
+                self.description = neem['description']
+                self.created_by = neem['created_by']
+                self.created_at = parser.parse(neem['created_at']).strftime('%m/%d/%y %H:%M')
+                self.model_version = neem['model_version']
+                self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem['url']
+                self.neem_repo_path = neem['url']
+                self.knowrob_image = 'knowrob'
+                self.knowrob_tag = 'latest'
+                self.maintainer = neem['created_by']
+                self.authors = neem['created_by']
+                self.acknowledgements = ''
+                self.environment = neem['environment']
+                self.activity = neem['activity']
+                self.agent = neem['agent']
+                self.keywords = neem['keywords']
+                self.image = neem['image']
+        except ConnectionFailure as e:
+            app.logger.error('------------ mongoDb connection can not be created ------------')
+            app.logger.error(e)
+
+        except PyMongoError as e:
+            app.logger.error('------------ mongoDb connection can not be created ------------')
+            app.logger.error(e)
 
     def get_info(self):
         return {

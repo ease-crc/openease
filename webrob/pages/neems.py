@@ -2,11 +2,10 @@ from flask import session, send_from_directory, jsonify, request, render_templat
 from flask_paginate import Pagination, get_page_args
 
 from webrob.app_and_db import app, get_mongo_db_meta_collection
+from pymongo.errors import ConnectionFailure, PyMongoError
 
 
 from webrob.neems.manager import NEEM_Manager
-
-from webrob.models.NEEMHubSettings import get_settings
 
 
 __author__ = 'danielb@cs.uni-bremen.de'
@@ -17,9 +16,26 @@ neem_manager = NEEM_Manager()
 def render_neems():
 
     # at first check if there is settings stored in db
-    if get_mongo_db_meta_collection() is None:
-        flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
-        return render_template('admin/neems_without_settings_page.html', **locals())
+    try:
+        mongoDBMetaCollection = get_mongo_db_meta_collection()
+        if mongoDBMetaCollection is None:
+            return render_neems_without_settings_page(
+                'Failure connecting with mongodb with given credentials, please check inputs!')
+        elif mongoDBMetaCollection.count() <= 0:
+            return render_neems_without_settings_page(
+                'Mongo meta collection does not contain any values, please check!')
+
+    except ConnectionFailure as e:
+        app.logger.error('------------ mongoDb connection can not be created ------------')
+        app.logger.error(e)
+        return render_neems_without_settings_page(
+            'An exception has occurred during connection with mongodb collection, please check!')
+
+    except PyMongoError as e:
+        app.logger.error('------------ mongoDb connection can not be created ------------')
+        app.logger.error(e)
+        return render_neems_without_settings_page(
+            'An exception has occurred during connection with mongodb collection, please check!')
 
     show_all = request.args.get('show_all', default=True, type=bool)
     per_page = request.args.get('limit', default=12, type=int)
@@ -52,3 +68,7 @@ def render_neems():
 def route_neem_meta(neem_group,neem_name):
     neem = neem_manager.get(neem_group,neem_name)
     return jsonify(result=neem.get_info())
+
+def render_neems_without_settings_page(flash_msg):
+    flash(flash_msg, "warning")
+    return render_template('admin/neems_without_settings_page.html', **locals())

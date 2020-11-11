@@ -12,6 +12,7 @@ from flask_wtf import Form
 from wtforms import PasswordField
 from webrob.pages.neems import neem_manager
 from sqlalchemy.exc import SQLAlchemyError
+from pymongo.errors import ConnectionFailure, PyMongoError
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -196,15 +197,35 @@ def render_neem_hub_settings_post():
         db.session.add(neemHubSettings)
         db.session.commit()
         app.logger.info('Configuration has been stored!')
-        mongoDBMetaCollection = get_mongo_db_meta_collection()
-        if mongoDBMetaCollection is None:
+
+        try:
+            mongoDBMetaCollection = get_mongo_db_meta_collection()
+            if mongoDBMetaCollection is None:
+                app.logger.error('------------ mongoDb connection can not be created ------------')
+                return render_neem_hub_settings_page_get_with_flash_message(
+                    'Failure connecting with mongodb with given credentials, please check inputs!')
+
+            elif mongoDBMetaCollection.count() <= 0:
+                app.logger.error(
+                    '------------ mongoDb collection does not contain any values  ------------')
+                return render_neem_hub_settings_page_get_with_flash_message(
+                    'Mongodb collection with given credentials does not contain any values!')
+            else:
+                # if connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
+                neem_manager.set_neem_ids()
+                app.logger.debug('------------ neem manager updated ------------')
+
+        except ConnectionFailure as e:
             app.logger.error('------------ mongoDb connection can not be created ------------')
-            flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
-            return redirect(url_for('render_neem_hub_settings_page_get'))
-        else:
-            # if connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
-            neem_manager.set_neem_ids()
-            app.logger.debug('------------ neem manager updated ------------')
+            app.logger.error(e)
+            return render_neem_hub_settings_page_get_with_flash_message(
+                'An exception has occurred during connection with mongodb collection, please check!')
+
+        except PyMongoError as e:
+            app.logger.error('------------ mongoDb connection can not be created ------------')
+            app.logger.error(e)
+            return render_neem_hub_settings_page_get_with_flash_message(
+                'An exception has occurred during connection with mongodb collection, please check!')
 
     else:
         flash('Null request is submitted while form submission!', "warning")
@@ -212,3 +233,7 @@ def render_neem_hub_settings_post():
 
     flash('NEEM Hub configuration setting is stored!', "success")
     return redirect(url_for('render_neems'))
+
+def render_neem_hub_settings_page_get_with_flash_message(flash_msg):
+    flash(flash_msg, "warning")
+    return redirect(url_for('render_neem_hub_settings_page_get'))
