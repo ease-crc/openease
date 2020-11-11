@@ -13,6 +13,7 @@ import logging
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure, PyMongoError
 import pymongo
+from sqlalchemy.exc import SQLAlchemyError
 
 
 
@@ -29,36 +30,44 @@ os.environ['POSTGRES_PORT_5432_TCP_PORT'] + '/docker'
 # This is the SQLAlchemy ORM object
 db = SQLAlchemy(app)
 
+from webrob.models.NEEMHubSettings import get_settings
 
 # This method will check db connection with given settings.
 # If settings are correct then will return meta collection from the db
-def getMongoDBMetaCollection(neemHubSettings):
+def get_mongo_db_meta_collection():
 
-    if neemHubSettings is not None:
-        try:
-            connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
-            mongoDbClient = connection[neemHubSettings.MONGO_DB]
-            mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
+    # get settings from postgresql db
+    try:
+        neemHubSettings = get_settings()
+        if neemHubSettings is not None:
+            try:
+                connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
+                mongoDbClient = connection[neemHubSettings.MONGO_DB]
+                mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
 
-            mongoDBMetaCollection = mongoDbClient["meta"]
+                mongoDBMetaCollection = mongoDbClient["meta"]
 
-            if mongoDBMetaCollection.count() > 0:
-                app.logger.info('------------ mongoDb collection contains some document values ------------')
-                return mongoDBMetaCollection
-            else:
-                app.logger.info('---  MongoDB connection is established but collection does not contain any values  ---')
-                return mongoDBMetaCollection
-        except ConnectionFailure as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
-            return None
-        except PyMongoError as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
-            return None
+                if mongoDBMetaCollection.count() > 0:
+                    app.logger.debug('------------ mongoDb collection contains some document values ------------')
+                    return mongoDBMetaCollection
+                else:
+                    app.logger.debug(
+                        '---  MongoDB connection is established but collection does not contain any values  ---')
+                    return mongoDBMetaCollection
+            except ConnectionFailure as e:
+                app.logger.error('------------ mongoDb connection can not be created ------------')
+                app.logger.error(e)
+            except PyMongoError as e:
+                app.logger.error('------------ mongoDb connection can not be created ------------')
+                app.logger.error(e)
 
-    else:
-        return None
+    except SQLAlchemyError as e:
+        app.logger.error("while connecting to sql db returns null")
+        app.logger.error(e)
+
+
+
+
 
 
 

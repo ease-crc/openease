@@ -1,7 +1,7 @@
 from flask import session, send_from_directory, jsonify, request, render_template, redirect, url_for, flash
 from flask_paginate import Pagination, get_page_args
 
-from webrob.app_and_db import app, getMongoDBMetaCollection
+from webrob.app_and_db import app, get_mongo_db_meta_collection
 
 
 from webrob.neems.manager import NEEM_Manager
@@ -18,8 +18,7 @@ def render_neems():
 
     # TODO: check if NEEM Hub configuration is correctly set or not?
     # at first check if there is settings stored in db
-    neemHubSettings = get_settings()
-    if getMongoDBMetaCollection(neemHubSettings) is None:
+    if get_mongo_db_meta_collection() is None:
         flash('Failure connecting with mongodb with given credentials, please check inputs!', "warning")
         return render_template('admin/neems_without_settings_page.html', **locals())
 

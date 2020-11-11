@@ -1,5 +1,4 @@
 from webrob.app_and_db import db, app
-from sqlalchemy.exc import SQLAlchemyError
 
 # DB model class for storing neem-hub configuration into postgresql.
 # Here at the moment only one entry should be stored in this table for neem-hub settings
@@ -24,10 +23,4 @@ class NEEMHubSettings(db.Model):
 
 # get setting values from db(with id==1)
 def get_settings():
-    try:
-        values = NEEMHubSettings.query.filter_by(id=settings_Id).one()
-        return values
-
-    except SQLAlchemyError as e:
-        app.logger.info("get_settings: while connecting to sql db returns null")
-        return None
+        return NEEMHubSettings.query.filter_by(id=settings_Id).one()
