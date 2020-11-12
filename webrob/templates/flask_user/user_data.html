@@ -2,38 +2,35 @@
   
 {% block head %}
 <style>
-body {
-  background-color: #0277bd;
+.form-striped div:nth-child(even){
+    background-color: #ffffff;
+}
+.form-striped div:nth-child(odd){
+    background-color: #dcdcdc;
 }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container p-4">  
+<div class="container p-4 body-user-bg-color body-container-margin">
     <div class="card" id="user-data">
         <div class="card-header bg-openease-light">{% trans %}Signed in as{% endtrans %}</div>
         <div class="card-body">
-            <form>
+            <form class="form-striped">
                 <div class="form-group row">
                     <label for="staticUsername" class="col-sm-2 col-form-label">Username</label>
-                    <div class="col-sm-10">
-                        <input type="text" readonly class="form-control-plaintext" id="staticUsername" value="{{ current_user.username }}">
-                    </div>
+                    <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticUsername" value="{{ current_user.username }}">
                 </div>
                 <div class="form-group row">
                     <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ current_user.email }}">
-                    </div>
+                    <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticEmail" value="{{ current_user.email }}">
                 </div>
                 <div class="form-group row">
                     <label for="staticToken" class="col-sm-2 col-form-label">API token</label>
-                    <div class="col-sm-10">
-                        <input type="text" readonly class="form-control-plaintext" id="staticToken" value="{{ session.api_token }}">
-                    </div>
+                    <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticToken" value="{{ session.api_token }}">
                 </div>
-                <a href="{{ url_for('render_change_password_get') }}" class="btn btn-default">Change Password</a>
-                <a href="{{ url_for('create_api_token') }}" class="btn btn-default">Create API Token</a>
+                <a href="{{ url_for('render_change_password_get') }}" class="col-sm-2 btn btn-sm btn-success">Change Password</a>
+                <a href="{{ url_for('create_api_token') }}" class="col-sm-2 btn btn-sm btn-success">Create API Token</a>
             </form>
         </div>
     </div>

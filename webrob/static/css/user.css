@@ -8,6 +8,10 @@ body {
   overflow: auto;
 }
 
+.body-user-bg-color {
+    background-color: #bcdcf078;
+}
+
 /* Header for openease/institute/university logo */
 #navbar-tool{
   width:100%;
