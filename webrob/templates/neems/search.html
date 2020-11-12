@@ -23,6 +23,10 @@
         overflow: scroll;
     }
 
+    .body-container-row-padding {
+        padding-bottom: 5px;
+    }
+
 </style>
 {% endblock %}
 
@@ -121,7 +125,7 @@
         </div>
         {% endfor %}
     </div>
-    <div class="row" style="padding-bottom: 5px;">
+    <div class="row body-container-row-padding">
         {{ pagination.links }}
     </div>
 </div>

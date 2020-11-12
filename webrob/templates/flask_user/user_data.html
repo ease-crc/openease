@@ -2,10 +2,10 @@
   
 {% block head %}
 <style>
-.form-stripped div:nth-child(even){
+.form-striped div:nth-child(even){
     background-color: #ffffff;
 }
-.form-stripped div:nth-child(odd){
+.form-striped div:nth-child(odd){
     background-color: #dcdcdc;
 }
 </style>
@@ -16,7 +16,7 @@
     <div class="card" id="user-data">
         <div class="card-header bg-openease-light">{% trans %}Signed in as{% endtrans %}</div>
         <div class="card-body">
-            <form class="form-stripped">
+            <form class="form-striped">
                 <div class="form-group row">
                     <label for="staticUsername" class="col-sm-2 col-form-label">Username</label>
                     <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticUsername" value="{{ current_user.username }}">
