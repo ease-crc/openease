@@ -9,8 +9,8 @@
 function KnowrobUI(flask_user,options) {
     var that = this;
     
-    // qid-QueryCard map
-    this.queryCards = {};
+    // Blackboard object
+    this.blackboard = undefined;
     // connect to ROS on host via websocket
     this.client = new ROSClient({
         flask_user:     flask_user,
@@ -22,47 +22,98 @@ function KnowrobUI(flask_user,options) {
     this.neem_id = options.neem_id || '5f22b1f512db5aed7cd1961a';
     // query id of most recent query
     this.last_qid = undefined;
+    this.last_query = undefined;
     // a console used to send queries to KnowRob
     this.console = new PrologConsole(that.client, {
         query_div: 'user_query',
         on_query: function(qid,q) {
-            $('#btn_query_next').prop('disabled', false);
-            const last_query_card = that.queryCards[that.last_qid];
-            if(last_query_card) {
-                last_query_card.collapse();
-            }
             that.last_qid = qid;
-            that.queryCards[qid] = new QueryCard("#history",qid,q);
+            that.last_query = q;
+            //
+            var ace_edit = ace.edit("input-text");
+            ace_edit.setValue(q);
+            ace_edit.clearSelection();
+            $('#input').collapse('show');
+            //
+            that.initBlackboard();
+            $('#blackboard-container').collapse('show');
+            $('#btn_query_next').collapse('hide');
+            $('#query-icon').removeClass('fa-question').addClass('fa-spinner fa-spin');
         },
         on_query_answer: function(qid,answer) {
-            that.queryCards[qid].addQueryResponse(answer);
+            that.blackboard.addQueryResponse(that.console, answer);
+            // run a query to generate visualization messages
+            var bindings=[];
+            for (var key in answer.solution) {
+                bindings.push([key,answer.solution[key]]);
+            }
+            const pl = new ROSPrologClient(that.client.ros, {});
+            const query_string = "openease_query(("+that.last_query+"),"+JSON.stringify(bindings)+")";
+            pl.jsonQuery(query_string, function(result) {
+                pl.finishClient();
+                $('#query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+                $('#btn_query_next').collapse('show');
+            });
         },
         on_query_finish: function(qid) {
-            $('#btn_query_next').prop('disabled', true);
-            that.queryCards[qid].finish();
+            if(qid==that.last_qid) {
+                $('#btn_query_next').collapse('hide');
+                that.blackboard.finish();
+            }
         }
     });
     // the 3D visualization canvas
-    this.rosViewer = undefined;
+    this.canvas = undefined;
+
+    this.nextSolution = function () {
+        that.initBlackboard();
+        that.console.nextSolution();
+    };
 
     this.init = function () {
         that.console.init();
-        that.initCanvas();
+        that.setupInputWidget();
         that.client.connect(function(ros) {
             that.registerROSClients(ros);
-            that.rosViewer.registerNodes(ros);
+            //that.rosViewer.registerNodes(ros);
         });
-        that.resizeCanvas();
+        //that.resizeCanvas();
+    };
+
+    this.initBlackboard = function () {
+        if(that.blackboard) {
+            that.blackboard.delete();
+            delete that.canvas;
+            that.canvas = undefined;
+        }
+        that.blackboard = new Blackboard($("#blackboard"),
+            that.last_qid, that.last_query);
     };
     
     // create a ROSCanvas in the "markers" div.
+    this.getCanvas = function() {
+        if(!that.canvas) {
+            var canvas_item = $("<div>");
+            canvas_item.attr("id", "markers");
+            that.blackboard.push('Scene', that.blackboard.createItem(canvas_item));
+            that.canvas = new ROSCanvas({
+                parent: document.getElementById('markers'),
+                //parent: canvas_item,
+                // meshPath is the prefix for GET requests
+                meshPath: '/meshes/'
+            });
+            that.canvas.registerNodes(that.client.ros);
+        }
+        return that.canvas;
+    };
+    /*
     this.initCanvas = function() {
         if(that.rosViewer) {
           delete that.rosViewer;
           document.getElementById('markers').innerHTML = "";
         }
         that.rosViewer = new ROSCanvas({
-            divID: document.getElementById('markers'),
+            parent: document.getElementById('markers'),
             // meshPath is the prefix for GET requests
             meshPath: '/meshes/'
         });
@@ -79,17 +130,18 @@ function KnowrobUI(flask_user,options) {
             }
         };
     };
+    */
     
     // listen to some ROS topics
     this.registerROSClients = function (ros) {
         that.registerChartClient(ros);
         that.registerImageClient(ros);
+        that.registerMarkerClient(ros);
         that.waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             const pl = new ROSPrologClient(ros, {});
-            // TODO: also call urdf_init to trigger loading neem URDF files
             pl.jsonQuery("set_setting(mng_client:collection_prefix, '"
-                + that.neem_id + "'), marker_plugin:republish.", function(result) {
+                + that.neem_id + "'), urdf_init.", function(result) {
                 pl.finishClient();
             });
         });
@@ -110,6 +162,7 @@ function KnowrobUI(flask_user,options) {
         });
     };
 
+    /*
     this.resizeCanvas = function () {
         const markers = $('#markers');
         that.rosViewer.resize(markers.width(), markers.height());
@@ -126,6 +179,7 @@ function KnowrobUI(flask_user,options) {
         a.click()
         document.body.removeChild(a)
     };
+     */
     
     // listen to data_vis_msgs topic and add charts to currently
     // active query card
@@ -137,7 +191,7 @@ function KnowrobUI(flask_user,options) {
         });
         that.dataVis.subscribe(function(data_vis_msg) {
             if(that.last_qid) {
-                that.queryCards[that.last_qid].addChart(data_vis_msg);
+                that.blackboard.addChart(data_vis_msg);
             }
             else {
                 console.warn("Received DataVis msg, but no query is active.");
@@ -158,10 +212,10 @@ function KnowrobUI(flask_user,options) {
                 const ext = image_uri.data.substr(
                     image_uri.data.lastIndexOf('.') + 1).toLowerCase();
                 if(ext==='jpg' || ext ==='png') {
-                    that.queryCards[that.last_qid].addImage(image_uri);
+                    that.blackboard.addImage("Images", image_uri);
                 }
                 else if(ext ==='ogg' || ext ==='ogv' || ext ==='mp4' || ext ==='mov') {
-                    that.queryCards[that.last_qid].addVideo(image_uri);
+                    that.blackboard.addVideo("Videos", image_uri);
                 }
                 else {
                     console.warn("Unknown data format on /logged_images topic: " + image_uri.data);
@@ -170,6 +224,18 @@ function KnowrobUI(flask_user,options) {
             else {
                 console.warn("Received logged_image msg, but no query is active.");
             }
+        });
+    };
+
+    this.registerMarkerClient = function(ros) {
+        that.markerVis = new ROSLIB.Topic({
+            ros : ros,
+            name : '/visualization_marker_array',
+            messageType : 'visualization_msgs/MarkerArray',
+            compression : 'png'
+        });
+        that.markerVis.subscribe(function(marker_msg) {
+            that.getCanvas().addMarkerArray(marker_msg);
         });
     };
     
@@ -196,4 +262,34 @@ function KnowrobUI(flask_user,options) {
 //           }
 //         });
 //     };
+
+    this.setupInputWidget = function () {
+        // Use ace editor for stylized display
+        // of query string.
+        var ace_edit = ace.edit("input-text");
+        ace_edit.setTheme("ace/theme/solarized_light");
+        ace_edit.getSession().setMode("ace/mode/prolog");
+        ace_edit.setOptions({
+            // editor options
+            selectionStyle: "text",
+            highlightActiveLine: false,
+            highlightSelectedWord: false,
+            readOnly: true,
+            cursorStyle: "slim",
+            behavioursEnabled: false,
+            wrapBehavioursEnabled: false,
+            autoScrollEditorIntoView: false,
+            enableMultiselect: false,
+            // renderer options
+            highlightGutterLine: false,
+            maxLines: 15,
+            showGutter: false,
+            showLineNumbers: false,
+            showFoldWidgets: false,
+            printMarginColumn: false,
+            showPrintMargin: false
+        });
+        ace_edit.setShowPrintMargin(false);
+        ace_edit.setOption("showPrintMargin", false);
+    };
 }
