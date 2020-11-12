@@ -14,14 +14,14 @@ function ROSCanvas(options){
     this.tfClient = undefined;
     this.cameraPoseClient = undefined;
     this.snapshotTopic = undefined;
-    this.markerArrayClient = undefined;
     // The selected marker object or undefined
     this.selectedMarker = undefined;
+    this.markers = {};
     
     // The canvas object
     this.rosViewer = new EASEViewer({
         client: that,
-        div : options.divID,
+        div : options.parent,
         width : 1920,
         height : 1080,
         antialias : true,
@@ -74,14 +74,6 @@ function ROSCanvas(options){
         rate : 10.0,
         fixedFrame : 'map' // FIXME
       });
-      // Setup the marker array client.
-      that.markerArrayClient = new MarkerArrayClient({
-        ros : ros,
-        tfClient : that.tfClient,
-        topic : '/visualization_marker_array',
-        canvas : that,
-        path : meshPath
-      });
       // Setup the /camera/pose client.
       that.cameraPoseClient = new ROSLIB.Topic({
         ros : ros,
@@ -93,6 +85,70 @@ function ROSCanvas(options){
           //if(that.on_camera_pose_received)
           //  that.on_camera_pose_received(message);
       });
+    };
+
+    this.addMarkerArray = function(arrayMessage){
+        arrayMessage.markers.forEach(function(message) {
+            var markerName = message.ns + message.id;
+            if(message.action === 0) {
+                var updated = false;
+                if(markerName in that.markers) { // "MODIFY"
+                    var markerItem = that.markers[markerName];
+                    var marker = markerItem[0];
+                    var node   = markerItem[1];
+                    updated = marker.update(message);
+                    if(!updated) { // "REMOVE"
+                        node.unsubscribeTf();
+                        that.rosViewer.removeMarker(marker,node);
+                        delete that.markers[markerName];
+                    }
+                }
+                if(!updated) { // "ADD"
+                    var newMarker = new ROS3D.Marker({
+                        message : message,
+                        path : meshPath,
+                    });
+                    newMarker.id = message.id;
+                    newMarker.ns = message.ns;
+                    newMarker.frame_id = message.header.frame_id;
+                    newMarker.marker_type = message.type;
+                    // XXX: below flags are HACKS
+                    newMarker.isSelectable = true;
+                    newMarker.isSceneOrtho = false;
+                    var newNode = new ROS3D.SceneNode({
+                        frameID : message.header.frame_id,
+                        tfClient : that.tfClient,
+                        object : newMarker
+                    });
+                    that.markers[markerName] = [newMarker,newNode];
+                    that.rosViewer.addMarker(newMarker,newNode);
+                }
+            }
+            else if(message.action === 1) { // "DEPRECATED"
+                console.warn('Received marker message with deprecated action identifier "1"');
+            }
+            else if(message.action === 2 && markerName in that.markers) { // "DELETE"
+                var markerItem = that.markers[markerName];
+                var marker = markerItem[0];
+                var node   = markerItem[1];
+                node.unsubscribeTf();
+                that.rosViewer.removeMarker(marker,node);
+                delete that.markers[markerName];
+            }
+            else if(message.action === 3) { // "DELETE ALL"
+                for (var markerItem in that.markers){
+                    var marker = markerItem[0];
+                    var node   = markerItem[1];
+                    node.unsubscribeTf();
+                    that.rosViewer.removeMarker(marker,node);
+                }
+                that.markers = {};
+            }
+            else {
+                console.warn('Received marker message with unknown action identifier "'+message.action+'"');
+            }
+        });
+        //this.emit('change');
     };
     
     /**
