@@ -1,7 +1,7 @@
-# class is the custom NEEM meta exception handler. It basically is raised when there is problem with connecting to
-# neems mongodb meta collection
+# class is the custom SQL Alchemy exception handler.
+# It basically is raised when there is problem with SQLAlchemy exception
 
-class NEEMMetaException(Exception):
+class SQLAlchemyErrorException(Exception):
     # Bad Request
     status_code = 400
 
@@ -13,7 +13,6 @@ class NEEMMetaException(Exception):
             self.status_code = status_code
         if exc is not None:
             self.exc = exc
-
 
     def get_exc(self):
         return self.exc

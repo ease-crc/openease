@@ -12,9 +12,10 @@ from flask_sqlalchemy import SQLAlchemy
 import logging
 from pymongo import MongoClient
 import pymongo
+from webrob.models.NEEMMetaException import NEEMMetaException
+from sqlalchemy.orm.exc import NoResultFound
+from webrob.models.SQLAlchemyErrorException import SQLAlchemyErrorException
 from sqlalchemy.exc import SQLAlchemyError
-
-
 
 # This is the WSGI compliant web application object
 app = Flask(__name__)
@@ -29,7 +30,7 @@ os.environ['POSTGRES_PORT_5432_TCP_PORT'] + '/docker'
 # This is the SQLAlchemy ORM object
 db = SQLAlchemy(app)
 
-from webrob.models.NEEMHubSettings import get_settings
+from webrob.models.NEEMHubSettings import get_settings, get_settings_count
 
 # This method will check db connection with given settings.
 # If settings are correct then will return meta collection from the db
@@ -38,17 +39,24 @@ def get_mongo_db_meta_collection():
     # get settings from postgresql db
     try:
         neemHubSettings = get_settings()
-        if neemHubSettings is not None:
-                connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
-                mongoDbClient = connection[neemHubSettings.MONGO_DB]
-                mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
+        connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
+        mongoDbClient = connection[neemHubSettings.MONGO_DB]
+        mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
 
-                mongoDBMetaCollection = mongoDbClient["meta"]
-                return mongoDBMetaCollection
+        mongoDBMetaCollection = mongoDbClient["meta"]
 
+        if mongoDBMetaCollection is None:
+            raise NEEMMetaException(
+                'Failure connecting with mongodb with given credentials, please check inputs!')
+        elif mongoDBMetaCollection.count() <= 0:
+            raise NEEMMetaException('Mongo meta collection does not contain any values, please check!')
+
+        return mongoDBMetaCollection
     except SQLAlchemyError as e:
-        app.logger.error("while connecting to sql db returns null")
-        app.logger.error(e)
+        raise SQLAlchemyErrorException('while connecting to sql db raises an exception', exc=e)
+    except NoResultFound as e:
+        raise SQLAlchemyErrorException('while connecting to sql db returns no result found', exc=e)
+
 
 
 

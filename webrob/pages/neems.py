@@ -19,11 +19,6 @@ def render_neems():
     # at first check if there is settings stored in db
     try:
         mongoDBMetaCollection = get_mongo_db_meta_collection()
-        if mongoDBMetaCollection is None:
-            raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!')
-        elif mongoDBMetaCollection.count() <= 0:
-            raise NEEMMetaException('Mongo meta collection does not contain any values, please check!')
-
     except ConnectionFailure as e:
         raise NEEMMetaException('An exception has occurred during connection with mongodb collection, please check!', exc=e)
 

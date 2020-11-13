@@ -6,7 +6,7 @@ from webrob.app_and_db import app, get_mongo_db_meta_collection
 from webrob.app_and_db import db
 from webrob.utility import admin_required
 from webrob.models.db import *
-from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings
+from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings, get_settings_count
 from wtforms.validators import DataRequired
 from flask_wtf import Form
 from wtforms import PasswordField
@@ -14,12 +14,15 @@ from webrob.pages.neems import neem_manager
 from sqlalchemy.exc import SQLAlchemyError
 from pymongo.errors import ConnectionFailure, PyMongoError
 from webrob.models.NEEMMetaException import NEEMMetaException
+from webrob.models.SQLAlchemyErrorException import SQLAlchemyErrorException
+from sqlalchemy.orm.exc import NoResultFound
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
 # PasswordForm used for validating given password field
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
+
 
 @app.route('/db/docu/<key>', methods=['POST'])
 def db_docu_text(key):
@@ -166,15 +169,13 @@ def render_neem_hub_settings_page_get():
     form = PasswordForm()
     try:
         neemHubSettings = get_settings()
-        if neemHubSettings is not None:
-            return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=get_settings())
-        else:
-            return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=NEEMHubSettings())
     except SQLAlchemyError as e:
-        app.logger.error("while connecting to sql db returns null")
-        app.logger.error(e)
-        flash('while connecting to sql db returns null', "warning")
-        return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=NEEMHubSettings())
+        raise SQLAlchemyErrorException('while connecting to sql db raises an exception', exc=e)
+    except NoResultFound as e:
+        raise SQLAlchemyErrorException('while connecting to sql db returns no result found', exc=e)
+
+    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=neemHubSettings)
+
 
 @app.route('/save_edited_neem_hub_settings', methods=['POST'])
 @admin_required
@@ -183,11 +184,11 @@ def render_neem_hub_settings_post():
     req = request.form
     if req is not None:
         neemHubSettings = NEEMHubSettings()
-        try:
+
+        # first find if there is any existing entry in db
+        count = get_settings_count()
+        if count > 0:
             neemHubSettings = get_settings()
-        except SQLAlchemyError as e:
-            app.logger.error("while connecting to sql db returns null")
-            app.logger.error(e)
 
         neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
         neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
@@ -200,18 +201,10 @@ def render_neem_hub_settings_post():
         app.logger.info('Configuration has been stored!')
 
         try:
-            mongoDBMetaCollection = get_mongo_db_meta_collection()
-            if mongoDBMetaCollection is None:
-                raise NEEMMetaException(
-                    'Failure connecting with mongodb with given credentials, please check inputs!')
-
-            elif mongoDBMetaCollection.count() <= 0:
-                raise NEEMMetaException(
-                    'Mongodb collection with given credentials does not contain any values!')
-            else:
-                # if connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
-                neem_manager.set_neem_ids()
-                app.logger.debug('------------ neem manager updated ------------')
+            get_mongo_db_meta_collection()
+            # if connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
+            neem_manager.set_neem_ids()
+            app.logger.debug('------------ neem manager updated ------------')
 
         except ConnectionFailure as e:
             raise NEEMMetaException(
@@ -234,3 +227,13 @@ def handle_neem_hub_meta_exception_with_mongodb(neemMetaException):
     app.logger.error(neemMetaException.get_exc())
     flash(neemMetaException.get_message(), "warning")
     return render_template('admin/neems_without_settings_page.html', **locals())
+
+
+@app.errorhandler(SQLAlchemyErrorException)
+def handle_neem_hub_sqlalchemy_exception_with_mongodb(sqlAlchemyErrorException):
+    # PasswordForm used for validating given password field
+    form = PasswordForm()
+
+    app.logger.error(sqlAlchemyErrorException.get_exc())
+    flash(sqlAlchemyErrorException.get_message(), "warning")
+    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=NEEMHubSettings())
