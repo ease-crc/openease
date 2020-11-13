@@ -13,6 +13,7 @@ from wtforms import PasswordField
 from webrob.pages.neems import neem_manager
 from sqlalchemy.exc import SQLAlchemyError
 from pymongo.errors import ConnectionFailure, PyMongoError
+from webrob.models.NEEMMetaException import NEEMMetaException
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -201,14 +202,11 @@ def render_neem_hub_settings_post():
         try:
             mongoDBMetaCollection = get_mongo_db_meta_collection()
             if mongoDBMetaCollection is None:
-                app.logger.error('------------ mongoDb connection can not be created ------------')
-                return render_neem_hub_settings_page_get_with_flash_message(
+                raise NEEMMetaException(
                     'Failure connecting with mongodb with given credentials, please check inputs!')
 
             elif mongoDBMetaCollection.count() <= 0:
-                app.logger.error(
-                    '------------ mongoDb collection does not contain any values  ------------')
-                return render_neem_hub_settings_page_get_with_flash_message(
+                raise NEEMMetaException(
                     'Mongodb collection with given credentials does not contain any values!')
             else:
                 # if connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
@@ -216,16 +214,12 @@ def render_neem_hub_settings_post():
                 app.logger.debug('------------ neem manager updated ------------')
 
         except ConnectionFailure as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
-            return render_neem_hub_settings_page_get_with_flash_message(
-                'An exception has occurred during connection with mongodb collection, please check!')
+            raise NEEMMetaException(
+                'An exception has occurred during connection with mongodb collection, please check!', exc=e)
 
         except PyMongoError as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
-            return render_neem_hub_settings_page_get_with_flash_message(
-                'An exception has occurred during connection with mongodb collection, please check!')
+            raise NEEMMetaException(
+                'An exception has occurred during connection with mongodb collection, please check!', exc=e)
 
     else:
         flash('Null request is submitted while form submission!', "warning")
@@ -234,6 +228,9 @@ def render_neem_hub_settings_post():
     flash('NEEM Hub configuration setting is stored!', "success")
     return redirect(url_for('render_neems'))
 
-def render_neem_hub_settings_page_get_with_flash_message(flash_msg):
-    flash(flash_msg, "warning")
-    return redirect(url_for('render_neem_hub_settings_page_get'))
+
+@app.errorhandler(NEEMMetaException)
+def handle_neem_hub_meta_exception_with_mongodb(neemMetaException):
+    app.logger.error(neemMetaException.get_exc())
+    flash(neemMetaException.get_message(), "warning")
+    return render_template('admin/neems_without_settings_page.html', **locals())

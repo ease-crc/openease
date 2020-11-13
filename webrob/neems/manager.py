@@ -3,6 +3,7 @@ from flask import session
 from webrob.neems.neem import NEEM
 from webrob.app_and_db import app, get_mongo_db_meta_collection
 from pymongo.errors import ConnectionFailure, PyMongoError
+from webrob.models.NEEMMetaException import NEEMMetaException
 
 NEEM_DIR = "/neems"
 
@@ -24,12 +25,10 @@ class NEEM_Manager:
                 self.neem_ids = self.neem_ids * 20
 
         except ConnectionFailure as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
+            raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!')
 
         except PyMongoError as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
+            raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!')
 
         return self.neem_ids
 
@@ -62,10 +61,7 @@ class NEEM_Manager:
                     {"$text": {"$search": query_string}}, {"_id": 1}))
 
         except ConnectionFailure as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
+            raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!')
 
         except PyMongoError as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
-
+            raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!')

@@ -11,6 +11,7 @@ from dateutil import parser
 from webrob.AlchemyEncoder import AlchemyEncoder
 from webrob.models.NEEMHubSettings import get_settings
 from sqlalchemy.exc import SQLAlchemyError
+from webrob.models.NEEMMetaException import NEEMMetaException
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 
@@ -48,12 +49,10 @@ class NEEM:
                 self.keywords = neem['keywords']
                 self.image = neem['image']
         except ConnectionFailure as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
+            raise NEEMMetaException('An exception has occurred during connection with mongodb collection, please check!', exc=e)
 
         except PyMongoError as e:
-            app.logger.error('------------ mongoDb connection can not be created ------------')
-            app.logger.error(e)
+            raise NEEMMetaException('An exception has occurred during connection with mongodb collection, please check!', exc=e)
 
     def get_info(self):
         return {
