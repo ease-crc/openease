@@ -13,9 +13,6 @@ import logging
 from pymongo import MongoClient
 import pymongo
 from webrob.models.NEEMMetaException import NEEMMetaException
-from sqlalchemy.orm.exc import NoResultFound
-from webrob.models.SQLAlchemyErrorException import SQLAlchemyErrorException
-from sqlalchemy.exc import SQLAlchemyError
 
 # This is the WSGI compliant web application object
 app = Flask(__name__)
@@ -37,25 +34,22 @@ from webrob.models.NEEMHubSettings import get_settings, get_settings_count
 def get_mongo_db_meta_collection():
 
     # get settings from postgresql db
-    try:
-        neemHubSettings = get_settings()
-        connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
-        mongoDbClient = connection[neemHubSettings.MONGO_DB]
-        mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
 
-        mongoDBMetaCollection = mongoDbClient["meta"]
+    neemHubSettings = get_settings()
+    connection = MongoClient(neemHubSettings.MONGO_HOST, neemHubSettings.MONGO_PORT)
+    mongoDbClient = connection[neemHubSettings.MONGO_DB]
+    mongoDbClient.authenticate(neemHubSettings.MONGO_USER, neemHubSettings.MONGO_PASS)
 
-        if mongoDBMetaCollection is None:
-            raise NEEMMetaException(
-                'Failure connecting with mongodb with given credentials, please check inputs!')
-        elif mongoDBMetaCollection.count() <= 0:
-            raise NEEMMetaException('Mongo meta collection does not contain any values, please check!')
+    mongoDBMetaCollection = mongoDbClient["meta"]
 
-        return mongoDBMetaCollection
-    except SQLAlchemyError as e:
-        raise SQLAlchemyErrorException('while connecting to sql db raises an exception', exc=e)
-    except NoResultFound as e:
-        raise SQLAlchemyErrorException('while connecting to sql db returns no result found', exc=e)
+    # throw an error and redirect to neem hub settings page if mongoDBMetaCollection is null or does not have any values
+    if mongoDBMetaCollection is None:
+        raise NEEMMetaException(
+            'Failure connecting with mongodb with given credentials, please check inputs!')
+    elif mongoDBMetaCollection.count() <= 0:
+        raise NEEMMetaException('Mongo meta collection does not contain any values, please check!')
+
+    return mongoDBMetaCollection
 
 
 

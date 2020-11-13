@@ -17,13 +17,7 @@ neem_manager = NEEM_Manager()
 def render_neems():
 
     # at first check if there is settings stored in db
-    try:
-        mongoDBMetaCollection = get_mongo_db_meta_collection()
-    except ConnectionFailure as e:
-        raise NEEMMetaException('An exception has occurred during connection with mongodb collection, please check!', exc=e)
-
-    except PyMongoError as e:
-        raise NEEMMetaException('An exception has occurred during connection with mongodb collection, please check!', exc=e)
+    mongoDBMetaCollection = get_mongo_db_meta_collection()
 
     show_all = request.args.get('show_all', default=True, type=bool)
     per_page = request.args.get('limit', default=12, type=int)

@@ -14,8 +14,6 @@ from webrob.pages.neems import neem_manager
 from sqlalchemy.exc import SQLAlchemyError
 from pymongo.errors import ConnectionFailure, PyMongoError
 from webrob.models.NEEMMetaException import NEEMMetaException
-from webrob.models.SQLAlchemyErrorException import SQLAlchemyErrorException
-from sqlalchemy.orm.exc import NoResultFound
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -167,12 +165,8 @@ def db_remove_route(table):
 def render_neem_hub_settings_page_get():
     # PasswordForm used for validating given password field
     form = PasswordForm()
-    try:
-        neemHubSettings = get_settings()
-    except SQLAlchemyError as e:
-        raise SQLAlchemyErrorException('while connecting to sql db raises an exception', exc=e)
-    except NoResultFound as e:
-        raise SQLAlchemyErrorException('while connecting to sql db returns no result found', exc=e)
+
+    neemHubSettings = get_settings()
 
     return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=neemHubSettings)
 
@@ -200,19 +194,11 @@ def render_neem_hub_settings_post():
         db.session.commit()
         app.logger.info('Configuration has been stored!')
 
-        try:
-            get_mongo_db_meta_collection()
-            # if connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
-            neem_manager.set_neem_ids()
-            app.logger.debug('------------ neem manager updated ------------')
-
-        except ConnectionFailure as e:
-            raise NEEMMetaException(
-                'An exception has occurred during connection with mongodb collection, please check!', exc=e)
-
-        except PyMongoError as e:
-            raise NEEMMetaException(
-                'An exception has occurred during connection with mongodb collection, please check!', exc=e)
+        # check if connection is secured
+        get_mongo_db_meta_collection()
+        # once connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
+        neem_manager.set_neem_ids()
+        app.logger.debug('------------ neem manager updated ------------')
 
     else:
         flash('Null request is submitted while form submission!', "warning")
@@ -221,7 +207,15 @@ def render_neem_hub_settings_post():
     flash('NEEM Hub configuration setting is stored!', "success")
     return redirect(url_for('render_neems'))
 
+# handles all ConnectionFailure and redirects to neems without settings page
+@app.errorhandler(ConnectionFailure)
+def handle_neem_hub_meta_exception_with_mongodb(e):
+    app.logger.error(e)
+    flash(e, "warning")
+    return render_template('admin/neems_without_settings_page.html', **locals())
 
+
+# handles all NEEMMetaException and redirects to neems without settings page
 @app.errorhandler(NEEMMetaException)
 def handle_neem_hub_meta_exception_with_mongodb(neemMetaException):
     app.logger.error(neemMetaException.get_exc())
@@ -229,11 +223,17 @@ def handle_neem_hub_meta_exception_with_mongodb(neemMetaException):
     return render_template('admin/neems_without_settings_page.html', **locals())
 
 
-@app.errorhandler(SQLAlchemyErrorException)
-def handle_neem_hub_sqlalchemy_exception_with_mongodb(sqlAlchemyErrorException):
+# handles all pymongoerros and redirects to neems without settings page
+@app.errorhandler(PyMongoError)
+def handle_neem_hub_meta_exception_with_mongodb(e):
+    app.logger.error(e)
+    return render_template('admin/neems_without_settings_page.html', **locals())
+
+
+# handles all the SQLAlchemyErrors and redirects to neem hub settings page
+@app.errorhandler(SQLAlchemyError)
+def handle_neem_hub_sqlalchemy_exception_with_mongodb(e):
     # PasswordForm used for validating given password field
     form = PasswordForm()
-
-    app.logger.error(sqlAlchemyErrorException.get_exc())
-    flash(sqlAlchemyErrorException.get_message(), "warning")
+    app.logger.error(e)
     return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=NEEMHubSettings())

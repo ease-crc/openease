@@ -2,8 +2,6 @@ import os
 from flask import session
 from webrob.neems.neem import NEEM
 from webrob.app_and_db import app, get_mongo_db_meta_collection
-from pymongo.errors import ConnectionFailure, PyMongoError
-from webrob.models.NEEMMetaException import NEEMMetaException
 from webrob.models.NEEMHubSettings import get_settings_count
 
 NEEM_DIR = "/neems"
@@ -20,18 +18,11 @@ class NEEM_Manager:
         # first find if there is any existing entry in db
         count = get_settings_count()
         if count > 0:
-            try:
-                mongoDBMetaCollection = get_mongo_db_meta_collection()
-                self.neem_ids = mongoDBMetaCollection.find().distinct('_id')
-                # TODO: remove again multiply with 20 and return only self.neem_ids,
-                #  just for testing pagination as long as only few neems are there
-                self.neem_ids = self.neem_ids * 20
-
-            except ConnectionFailure as e:
-                raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!', exc=e)
-
-            except PyMongoError as e:
-                raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!', exc=e)
+            mongoDBMetaCollection = get_mongo_db_meta_collection()
+            self.neem_ids = mongoDBMetaCollection.find().distinct('_id')
+            # TODO: remove again multiply with 20 and return only self.neem_ids,
+            #  just for testing pagination as long as only few neems are there
+            self.neem_ids = self.neem_ids * 20
 
         return self.neem_ids
 
@@ -57,13 +48,7 @@ class NEEM_Manager:
         #   - can an array be added to text index?
         #   - regex search possible, but only without index!!
         #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
-        try:
-            mongoDBMetaCollection = get_mongo_db_meta_collection()
-            return map(lambda doc: doc["_id"], mongoDBMetaCollection.find(
-                {"$text": {"$search": query_string}}, {"_id": 1}))
 
-        except ConnectionFailure as e:
-            raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!', exc=e)
-
-        except PyMongoError as e:
-            raise NEEMMetaException('Failure connecting with mongodb with given credentials, please check inputs!', exc=e)
+        mongoDBMetaCollection = get_mongo_db_meta_collection()
+        return map(lambda doc: doc["_id"], mongoDBMetaCollection.find(
+            {"$text": {"$search": query_string}}, {"_id": 1}))
