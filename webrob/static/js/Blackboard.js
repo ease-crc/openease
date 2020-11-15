@@ -5,10 +5,20 @@
 function Blackboard(parent, qid, query_string) {
     var that = this;
 
+    this.charts = [];
     // number of received answers
     this.answer_count = 0;
     // 
     this.query_id = qid + "_query";
+
+    this.tick = function(time) {
+        for(var i in that.charts) {
+            var chart = that.charts[i];
+            if(chart.chart_obj && chart.chart_obj.tick) {
+                chart.chart_obj.tick(time);
+            }
+        }
+    };
 
     this.delete = function() {
         parent.html('');
@@ -145,6 +155,7 @@ function Blackboard(parent, qid, query_string) {
         chart_item.data_vis = new DataVis(
             chart_item.data_vis_div,
             chart_item.data_vis_msg);
+        that.charts.push(chart_item.data_vis);
     };
 
     /*********************************************/

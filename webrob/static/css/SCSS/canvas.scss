@@ -1,9 +1,10 @@
 
 #markers {
-  width: 100%;
+  width: min-content;
   height: 100%;
   border: 1px solid #BBB;
   overflow: hidden;
+  margin: auto;
 }
 
 .marker-links {

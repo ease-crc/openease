@@ -64,6 +64,10 @@ function KnowrobUI(flask_user,options) {
     });
     // the 3D visualization canvas
     this.canvas = undefined;
+    this.canvas_div = $("<div>");
+    this.canvas_div.attr("id", "markers");
+    this.canvas_div.addClass("row ease-border");
+    this.playback = undefined;
 
     this.nextSolution = function () {
         that.initBlackboard();
@@ -74,6 +78,7 @@ function KnowrobUI(flask_user,options) {
         that.console.init();
         that.setupInputWidget();
         that.client.connect(function(ros) {
+            console.info('Connected to ROS.');
             that.registerROSClients(ros);
             //that.rosViewer.registerNodes(ros);
         });
@@ -93,12 +98,10 @@ function KnowrobUI(flask_user,options) {
     // create a ROSCanvas in the "markers" div.
     this.getCanvas = function() {
         if(!that.canvas) {
-            var canvas_item = $("<div>");
-            canvas_item.attr("id", "markers");
-            that.blackboard.push('Scene', that.blackboard.createItem(canvas_item));
+            //that.blackboard.push('Scene', that.blackboard.createItem(canvas_item));
             that.canvas = new ROSCanvas({
-                parent: document.getElementById('markers'),
-                //parent: canvas_item,
+                //parent: document.getElementById('markers'),
+                parent: that.canvas_div,
                 // meshPath is the prefix for GET requests
                 meshPath: '/meshes/'
             });
@@ -137,12 +140,14 @@ function KnowrobUI(flask_user,options) {
         that.registerChartClient(ros);
         that.registerImageClient(ros);
         that.registerMarkerClient(ros);
+        that.registerTickClient(ros);
         that.waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             const pl = new ROSPrologClient(ros, {});
-            pl.jsonQuery("set_setting(mng_client:collection_prefix, '"
-                + that.neem_id + "'), urdf_init.", function(result) {
+            pl.jsonQuery("neem_init('" + that.neem_id + "').", function(result) {
+                console.info("NEEM has been initialized");
                 pl.finishClient();
+                $('#query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
             });
         });
     };
@@ -180,6 +185,23 @@ function KnowrobUI(flask_user,options) {
         document.body.removeChild(a)
     };
      */
+
+    // listen to republish_tick topic
+    this.registerTickClient = function(ros) {
+        that.tickClient = new ROSLIB.Topic({
+            ros : ros,
+            name : 'republisher_tick',
+            messageType : 'std_msgs/Float64'
+        });
+        that.tickClient.subscribe(function(time) {
+            if(that.playback) {
+                that.playback.tick(time.data);
+            }
+            if(that.blackboard) {
+                that.blackboard.tick(time.data);
+            }
+        });
+    };
     
     // listen to data_vis_msgs topic and add charts to currently
     // active query card
@@ -191,7 +213,17 @@ function KnowrobUI(flask_user,options) {
         });
         that.dataVis.subscribe(function(data_vis_msg) {
             if(that.last_qid) {
-                that.blackboard.addChart(data_vis_msg);
+                if(data_vis_msg.type == 989) {
+                    that.playback = new PlaybackWidget(that.canvas_div, {
+                        event: data_vis_msg.values[0].value1[0],
+                        time_min: parseFloat(data_vis_msg.values[0].value2[0]),
+                        time_max: parseFloat(data_vis_msg.values[0].value2[1])
+                    });
+                    that.blackboard.push('Scene', that.blackboard.createItem(that.playback.getWidget()));
+                }
+                else {
+                    that.blackboard.addChart(data_vis_msg);
+                }
             }
             else {
                 console.warn("Received DataVis msg, but no query is active.");
