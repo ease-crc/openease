@@ -288,44 +288,4 @@ function ROSCanvas(options){
 //             sprites[index].dispatchEvent(render_event);
 //         }
 //     };
-    
-    ///////////////////////////////
-    //////////// Frame Overlay
-    ///////////////////////////////
-    
-//     this.createOverlay = function() {
-//         // Create page iosOverlay
-//         var page = document.getElementById('page');
-//         if(page) {
-//             var pageOverlay = document.createElement("div");
-//             pageOverlay.setAttribute("id", "page-overlay");
-//             pageOverlay.className = "ios-overlay ios-overlay-hide div-overlay";
-//             pageOverlay.innerHTML += '<span class="title"></span';
-//             pageOverlay.style.display = 'none';
-//             page.appendChild(pageOverlay);
-//             var spinner = createSpinner();
-//             pageOverlay.appendChild(spinner.el);
-//         }
-//     };
-//     
-//     this.showPageOverlay = function(text) {
-//       var pageOverlay = document.getElementById('page-overlay');
-//       if(pageOverlay && !that.pageOverlayDisabled) {
-//           pageOverlay.children[0].innerHTML = text;
-//           pageOverlay.style.display = 'block';
-//           pageOverlay.className = pageOverlay.className.replace("hide","show");
-//           pageOverlay.style.pointerEvents = "auto";
-//           that.pageOverlayDisabled = true;
-//       }
-//     };
-//     
-//     this.hidePageOverlay = function() {
-//       var pageOverlay = document.getElementById('page-overlay');
-//       if(pageOverlay && that.pageOverlayDisabled) {
-//           //pageOverlay.style.display = 'none';
-//           pageOverlay.className = pageOverlay.className.replace("show","hide");
-//           pageOverlay.style.pointerEvents = "none";
-//           that.pageOverlayDisabled = false;
-//       }
-//     };
 };
