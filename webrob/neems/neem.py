@@ -1,12 +1,14 @@
 from flask_user import current_user
 
 from webrob.docker.docker_interface import start_user_container, container_started
-from webrob.app_and_db import app, mongoDBMetaCollection
+from webrob.app_and_db import app, get_mongo_db_meta_collection
 
 from webrob.config.settings import USE_HOST_KNOWROB
 import bson
 import json
 from dateutil import parser
+from webrob.AlchemyEncoder import AlchemyEncoder
+from webrob.models.NEEMHubSettings import get_settings
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 
@@ -18,6 +20,9 @@ class NEEM:
             b_id = bson.objectid.ObjectId(neem_id)
         else:
             b_id = neem_id
+
+
+        mongoDBMetaCollection = get_mongo_db_meta_collection()
         neem = mongoDBMetaCollection.find_one({"_id": b_id})
         self.neem_id = str(neem['_id'])
         # TODO: Tag could be useful for versioning
@@ -61,9 +66,12 @@ class NEEM:
 
     def activate(self):
         app.logger.info('Activate neem')
-        if not USE_HOST_KNOWROB and not container_started(current_user.username):
+
+        neemHubSettings = get_settings()
+        if not USE_HOST_KNOWROB and not container_started(current_user.username) and neemHubSettings:
             start_user_container(current_user.username,
                                  self.neem_id,
+                                 json.dumps(neemHubSettings, cls=AlchemyEncoder),
                                  self.neem_tag,
                                  self.knowrob_image,
                                  self.knowrob_tag)

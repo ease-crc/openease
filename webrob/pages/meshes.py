@@ -13,7 +13,6 @@ import thread
 
 from webrob.app_and_db import app
 from webrob.config.settings import MESH_URDF_SERVER
-from webrob.pages.neems import neem_manager
 
 __author__ = 'danielb@cs.uni-bremen.de'
 

@@ -1,23 +1,30 @@
 import os
 from flask import session
 from webrob.neems.neem import NEEM
-from webrob.app_and_db import app, mongoDBMetaCollection
+from webrob.app_and_db import app, get_mongo_db_meta_collection
+from webrob.models.NEEMHubSettings import get_settings_count
 
 NEEM_DIR = "/neems"
 
 
 class NEEM_Manager:
     def __init__(self):
-        self.neem_ids = self.__get_neem_ids__()
-        # TODO: remove again, just for testing pagination as long as only few neems
-        #        are there
-        self.neem_ids = self.neem_ids * 20
+        self.neem_ids = self.set_neem_ids()
 
-    def __get_neem_ids__(self):
-        neem_ids = []
+    def set_neem_ids(self):
+        self.neem_ids = []
+
         # get all neem ids information from collection
-        neem_ids = mongoDBMetaCollection.find().distinct('_id')
-        return neem_ids
+        # first find if there is any existing entry in db
+        count = get_settings_count()
+        if count > 0:
+            mongoDBMetaCollection = get_mongo_db_meta_collection()
+            self.neem_ids = mongoDBMetaCollection.find().distinct('_id')
+            # TODO: remove again multiply with 20 and return only self.neem_ids,
+            #  just for testing pagination as long as only few neems are there
+            self.neem_ids = self.neem_ids * 20
+
+        return self.neem_ids
 
     def get_requested(self, request):
         neem_id = request.args.get('neem_id',
@@ -41,5 +48,7 @@ class NEEM_Manager:
         #   - can an array be added to text index?
         #   - regex search possible, but only without index!!
         #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
+
+        mongoDBMetaCollection = get_mongo_db_meta_collection()
         return map(lambda doc: doc["_id"], mongoDBMetaCollection.find(
             {"$text": {"$search": query_string}}, {"_id": 1}))

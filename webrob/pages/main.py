@@ -17,6 +17,7 @@ from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 
+# PasswordForm used for validating given password field
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
     
@@ -77,6 +78,7 @@ def render_main():
 @app.route('/change_password_get')
 @login_required
 def render_change_password_get():
+    # PasswordForm used for validating given password field
     form = PasswordForm()
     return render_template('flask_user/change_password.html', title='Change Password', form=form)
 
@@ -84,6 +86,7 @@ def render_change_password_get():
 @app.route('/change_password_post', methods=["POST"])
 @login_required
 def render_change_password_post():
+    # PasswordForm used for validating given password field
     form = PasswordForm()
     if "Update" in request.form:
         user = current_user

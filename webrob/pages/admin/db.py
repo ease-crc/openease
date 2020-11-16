@@ -1,12 +1,25 @@
-from flask import request, render_template, jsonify, abort
+from flask import request, render_template, jsonify, abort, redirect, url_for, flash, session
 
 import json
 
-from webrob.app_and_db import app
+from webrob.app_and_db import app, get_mongo_db_meta_collection
+from webrob.app_and_db import db
 from webrob.utility import admin_required
 from webrob.models.db import *
+from webrob.models.NEEMHubSettings import NEEMHubSettings, get_settings, get_settings_count
+from wtforms.validators import DataRequired
+from flask_wtf import Form
+from wtforms import PasswordField
+from webrob.pages.neems import neem_manager
+from sqlalchemy.exc import SQLAlchemyError
+from pymongo.errors import ConnectionFailure, PyMongoError
+from webrob.models.NEEMMetaException import NEEMMetaException
 
 __author__ = 'danielb@cs.uni-bremen.de'
+
+# PasswordForm used for validating given password field
+class PasswordForm(Form):
+    password = PasswordField('Password', validators=[DataRequired()])
 
 
 @app.route('/db/docu/<key>', methods=['POST'])
@@ -39,7 +52,7 @@ def db_page_user_roles():
 def db_find_user_roles():
     users = _get_all_users()
     user_roles = []
-    for u in users:     # find user roles
+    for u in users:  # find user roles
         user_roles.append({
             'id': u.id,
             'name': u.username,
@@ -145,3 +158,82 @@ def db_remove_route(table):
     if data is not None and 'id' in data and db_find(cls, data['id']):
         db_remove(cls, data['id'])
     return jsonify(result=None)
+
+
+@app.route('/edit_neem_hub_settings')
+@admin_required
+def render_neem_hub_settings_page_get():
+    # PasswordForm used for validating given password field
+    form = PasswordForm()
+
+    neemHubSettings = get_settings()
+
+    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=neemHubSettings)
+
+
+@app.route('/save_edited_neem_hub_settings', methods=['POST'])
+@admin_required
+def render_neem_hub_settings_post():
+    app.logger.debug('render neem hub settings post method.... ')
+    req = request.form
+    if req is not None:
+        neemHubSettings = NEEMHubSettings()
+
+        # first find if there is any existing entry in db
+        count = get_settings_count()
+        if count > 0:
+            neemHubSettings = get_settings()
+
+        neemHubSettings.MONGO_HOST = req.get("MONGO_HOST")
+        neemHubSettings.MONGO_PORT = req.get("MONGO_PORT")
+        neemHubSettings.MONGO_USER = req.get("MONGO_USER")
+        neemHubSettings.MONGO_DB = req.get("MONGO_DB")
+        neemHubSettings.MONGO_PASS = req.get("MONGO_PASS")
+
+        db.session.add(neemHubSettings)
+        db.session.commit()
+        app.logger.info('Configuration has been stored!')
+
+        # check if connection is secured
+        get_mongo_db_meta_collection()
+        # once connection is secured then update neem_ids from mongodb meta collection so that neem discovery page has latest updates
+        neem_manager.set_neem_ids()
+        app.logger.debug('------------ neem manager updated ------------')
+
+    else:
+        flash('Null request is submitted while form submission!', "warning")
+        return redirect(url_for('render_neem_hub_settings_page_get'))
+
+    flash('NEEM Hub configuration setting is stored!', "success")
+    return redirect(url_for('render_neems'))
+
+# handles all ConnectionFailure and redirects to neems without settings page
+@app.errorhandler(ConnectionFailure)
+def handle_neem_hub_meta_exception_with_mongodb(e):
+    app.logger.error(e)
+    flash(e, "warning")
+    return render_template('admin/neems_without_settings_page.html', **locals())
+
+
+# handles all NEEMMetaException and redirects to neems without settings page
+@app.errorhandler(NEEMMetaException)
+def handle_neem_hub_meta_exception_with_mongodb(neemMetaException):
+    app.logger.error(neemMetaException.get_exc())
+    flash(neemMetaException.get_message(), "warning")
+    return render_template('admin/neems_without_settings_page.html', **locals())
+
+
+# handles all pymongoerros and redirects to neems without settings page
+@app.errorhandler(PyMongoError)
+def handle_neem_hub_meta_exception_with_mongodb(e):
+    app.logger.error(e)
+    return render_template('admin/neems_without_settings_page.html', **locals())
+
+
+# handles all the SQLAlchemyErrors and redirects to neem hub settings page
+@app.errorhandler(SQLAlchemyError)
+def handle_neem_hub_sqlalchemy_exception_with_mongodb(e):
+    # PasswordForm used for validating given password field
+    form = PasswordForm()
+    app.logger.error(e)
+    return render_template('admin/neem_hub_settings.html', form=form, neemHubSettings=NEEMHubSettings())

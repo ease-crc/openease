@@ -1,9 +1,13 @@
-from flask import session, send_from_directory, jsonify, request, render_template
+from flask import session, send_from_directory, jsonify, request, render_template, redirect, url_for, flash
 from flask_paginate import Pagination, get_page_args
 
-from webrob.app_and_db import app
+from webrob.app_and_db import app, get_mongo_db_meta_collection
+from pymongo.errors import ConnectionFailure, PyMongoError
+
 
 from webrob.neems.manager import NEEM_Manager
+from webrob.models.NEEMMetaException import NEEMMetaException
+
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -11,6 +15,10 @@ neem_manager = NEEM_Manager()
 
 @app.route('/neems')
 def render_neems():
+
+    # at first check if there is settings stored in db
+    mongoDBMetaCollection = get_mongo_db_meta_collection()
+
     show_all = request.args.get('show_all', default=True, type=bool)
     per_page = request.args.get('limit', default=12, type=int)
     query = request.args.get('neem_query', default='', type=str)
@@ -20,6 +28,7 @@ def render_neems():
     next_offset = current_offset + per_page
     # get neems
     matching_neems = neem_manager.query_neem_ids(query)
+
     neems = list(map(lambda (x): neem_manager.get(x),
                      matching_neems[current_offset:next_offset]))
 
@@ -34,9 +43,11 @@ def render_neems():
                             total=len(matching_neems),
                             css_framework='bootstrap4',
                             search=search)
+
     return render_template('neems/search.html', **locals())
 
 @app.route('/neems/<neem_group>/<neem_name>/info')
 def route_neem_meta(neem_group,neem_name):
     neem = neem_manager.get(neem_group,neem_name)
     return jsonify(result=neem.get_info())
+
