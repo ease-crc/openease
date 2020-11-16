@@ -22,8 +22,8 @@ function ROSCanvas(options){
     this.rosViewer = new EASEViewer({
         client: that,
         div : options.parent,
-        width : 1920,
-        height : 1080,
+        width : 400,
+        height : 250,
         antialias : true,
         background : options.background || '#ffffff',
         useShader : false,

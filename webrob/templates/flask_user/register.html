@@ -8,13 +8,13 @@
 {% block body %}
 {% from "flask_user/_macros.html" import render_field, render_submit_field %}
 
-<div class="container">
+<div class="container body-container-margin">
     <div>
         <div class="register-content">
             <div id="register-div">
                 <div id="ease-logo">
-                    <a class="ease-brand" href="http://www.open-ease.org"><img
-                            src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">openEASE</a>
+                    <a href="http://www.open-ease.org"><img id="openease-logo-enlarged"
+                            src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}"></a>
                 </div>
                 <div class="card card-register">
                     <div class="card-header register-text">{% trans %}Create an account{% endtrans %}</div>

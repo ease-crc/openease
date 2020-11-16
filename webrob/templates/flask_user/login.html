@@ -7,13 +7,13 @@
 {% block body %}
 {% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
 
-<div class="container">
+<div class="container body-container-margin">
     <div>
         <div class="login-content">
             <div id="login-div">
                 <div id="ease-logo">
-                    <a class="ease-brand" href="http://www.open-ease.org"><img
-                            src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">openEASE</a>
+                    <a href="http://www.open-ease.org"><img id="openease-logo-enlarged"
+                            src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}"></a>
                 </div>
                 <div class="card" id="setup-login">
                     <div class="card-header text-login">{% trans %}Login to your account{% endtrans %}</div>

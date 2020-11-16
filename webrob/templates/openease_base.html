@@ -44,9 +44,19 @@ a.openease-brand {
   background: #246F98;
   color: white;
 }
-
 #flash_alert_span {
     text-align: center;
+  }
+.body-container-margin {
+    margin-top: 50px;
+    margin-bottom:50px
+}
+#openease-logo {
+    width: 120px;
+    height: auto;
+}
+#openease-logo-enlarged {
+    width: 300px;
 }
   </style>
   
@@ -55,10 +65,10 @@ a.openease-brand {
 
 <body{% block bodyargs %}{% endblock %}>
 
-<nav class="navbar navbar-expand-lg navbar-dark" id="openease-navbar">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="openease-navbar">
   <a class="navbar-brand openease-brand" href="http://www.open-ease.org">
-    <img src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">
-    openEASE
+    <img src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}" id="openease-logo">
+
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -95,9 +105,8 @@ a.openease-brand {
           Admin
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="/admin/roles">User Roles</a>
-          <a class="dropdown-item" href="/admin/sql">SQL</a>
-          <a class="dropdown-item" href="/admin/cookies">Cookies</a>
+          <a class="dropdown-item" href="{{ url_for('db_page_user_roles') }}">User Roles</a>
+          <a class="dropdown-item" href="{{ url_for('admin_cookie') }}">Cookies</a>
           <a class="dropdown-item" href="{{ url_for('render_neem_hub_settings_page_get') }}">NEEM Hub Settings</a>
         </div>
       </li>
@@ -144,7 +153,12 @@ a.openease-brand {
 {% endwith %}
 {% block body %}{% endblock %}
 
-<footer class="bg-dark text-white-50">
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
+
+</body>
+
+<footer class="bg-dark text-white-50 fixed-bottom">
   <div class="footer-copyright text-center py-3">
     © <span id="myYear"> </span> Copyright: University of Bremen
   </div>
@@ -157,9 +171,7 @@ a.openease-brand {
   </a>
 -->
 </footer>
-<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
-
-</body>
+  
 
 <!-- remove flash alert after 5 seconds -->
 <script>

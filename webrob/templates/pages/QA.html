@@ -3,6 +3,7 @@
 {% block head_inner %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/Playback.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/pages/QA.js') }}"></script>
 
@@ -52,7 +53,9 @@
                 <div>
                     <div id="user_query">is_event(Evt).</div>
                     <div id="query_buttons">
-                        <a id="btn_query" href="#" onclick="page.console.query()"><i id="query-icon" class="fas fa-question"></i></a>
+                        <a id="btn_query" href="#" onclick="page.console.query()">
+                            <i id="query-icon" class="fas fa-spinner fa-spin"></i>
+                        </a>
                     </div>
                 </div>
                 <div id="query_links" class="text-right">
