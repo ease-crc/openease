@@ -3,13 +3,14 @@
  * WebGL canvas for marker visualization.
  **/
 function ROSCanvas(options){
-    var that = this;
+    let that = this;
     
     // Prefix for mesh GET URL's
-    var meshPath  = options.meshPath || '/';
+    const meshPath  = options.meshPath || '/';
     // sprite markers and render events
-    var sprites = [];
-    var render_event;
+    let sprites = [];
+    let render_event;
+
     // ROS messages
     this.tfClient = undefined;
     this.cameraPoseClient = undefined;
@@ -17,13 +18,42 @@ function ROSCanvas(options){
     // The selected marker object or undefined
     this.selectedMarker = undefined;
     this.markers = {};
+
+    // add button bar
+    this.canvas_links = $("<p>");
+    this.canvas_links.addClass("icon-links marker-links");
+    options.parent.append(this.canvas_links);
+    // add links to the button bar
+    var addLink = function(linkOpts) {
+        const link = $("<a>");
+        const icon = $("<i>");
+        link.addClass("marker-link p-1");
+        icon.addClass("fa " + linkOpts.icon);
+        icon.prop('title', linkOpts.title);
+        link.append(icon);
+        link.click(linkOpts.click);
+        that.canvas_links.append(link);
+    }
+    addLink({
+        title: 'Screenshot',
+        icon: 'fa-camera',
+        click: function() {that.snapshot()}});
+    addLink({
+        title: 'Maximize',
+        icon: 'fa-window-maximize',
+        click: function() {that.maximize()}});
+
+    var aspect_ratio = 16.0/9.0;
+    var canvas_width = 400;
+    var canvas_height = canvas_width/aspect_ratio;
+    var is_maximized = false;
     
     // The canvas object
     this.rosViewer = new EASEViewer({
         client: that,
         div : options.parent,
-        width : 400,
-        height : 250,
+        width : canvas_width,
+        height : canvas_height,
         antialias : true,
         background : options.background || '#ffffff',
         useShader : false,
@@ -53,10 +83,26 @@ function ROSCanvas(options){
     });
     // add some default objects to the scene
     this.rosViewer.scene.add(new ROS3D.Grid());
-    
-    this.resize = function (w,h) {
-      // update perspective projection
-      this.rosViewer.resize(w, h);
+
+    this.resize = function () {
+        // compute canvas size
+        const max_width = options.parent.parent().width();
+        const small_width = 400;
+        if(!is_maximized && small_width<max_width) {
+            canvas_width = 400;
+        }
+        else {
+            canvas_width = max_width;
+        }
+        canvas_height = canvas_width/aspect_ratio;
+        // resize
+        that.rosViewer.resize(canvas_width, canvas_height);
+    };
+    $(window).on('resize', that.resize);
+
+    this.maximize = function () {
+        is_maximized = !is_maximized;
+        that.resize();
     };
     
     this.registerNodes = function(ros) {
@@ -155,7 +201,7 @@ function ROSCanvas(options){
      * Create an image snapshot of this canvas, create a ROS image message
      * and send that message via dedicated topic to the server.
      **/
-    this.snapshot = function (frameNumber, fps) {
+    this.snapshot_publish = function (frameNumber, fps) {
       console.log("Publishing canvas snapshot frame:" + frameNumber + " fps:" + fps);
 
       // make sure the frame buffer has some content
@@ -214,6 +260,16 @@ function ROSCanvas(options){
       });
       
       that.snapshotTopic.publish(msg);
+    };
+
+    this.snapshot = function () {
+        that.snapshot_publish(1,1);
+        let a = document.createElement('a')
+        a.href = 'userdata/snapshots/1.jpeg'
+        a.download = 'snapshot.jpeg'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
     };
     
     ///////////////////////////////
@@ -287,45 +343,5 @@ function ROSCanvas(options){
 //             render_event.camera = camera;
 //             sprites[index].dispatchEvent(render_event);
 //         }
-//     };
-    
-    ///////////////////////////////
-    //////////// Frame Overlay
-    ///////////////////////////////
-    
-//     this.createOverlay = function() {
-//         // Create page iosOverlay
-//         var page = document.getElementById('page');
-//         if(page) {
-//             var pageOverlay = document.createElement("div");
-//             pageOverlay.setAttribute("id", "page-overlay");
-//             pageOverlay.className = "ios-overlay ios-overlay-hide div-overlay";
-//             pageOverlay.innerHTML += '<span class="title"></span';
-//             pageOverlay.style.display = 'none';
-//             page.appendChild(pageOverlay);
-//             var spinner = createSpinner();
-//             pageOverlay.appendChild(spinner.el);
-//         }
-//     };
-//     
-//     this.showPageOverlay = function(text) {
-//       var pageOverlay = document.getElementById('page-overlay');
-//       if(pageOverlay && !that.pageOverlayDisabled) {
-//           pageOverlay.children[0].innerHTML = text;
-//           pageOverlay.style.display = 'block';
-//           pageOverlay.className = pageOverlay.className.replace("hide","show");
-//           pageOverlay.style.pointerEvents = "auto";
-//           that.pageOverlayDisabled = true;
-//       }
-//     };
-//     
-//     this.hidePageOverlay = function() {
-//       var pageOverlay = document.getElementById('page-overlay');
-//       if(pageOverlay && that.pageOverlayDisabled) {
-//           //pageOverlay.style.display = 'none';
-//           pageOverlay.className = pageOverlay.className.replace("show","hide");
-//           pageOverlay.style.pointerEvents = "none";
-//           that.pageOverlayDisabled = false;
-//       }
 //     };
 };

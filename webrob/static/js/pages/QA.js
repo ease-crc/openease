@@ -82,7 +82,6 @@ function KnowrobUI(flask_user,options) {
             that.registerROSClients(ros);
             //that.rosViewer.registerNodes(ros);
         });
-        //that.resizeCanvas();
     };
 
     this.initBlackboard = function () {
@@ -168,21 +167,8 @@ function KnowrobUI(flask_user,options) {
     };
 
     /*
-    this.resizeCanvas = function () {
-        const markers = $('#markers');
-        that.rosViewer.resize(markers.width(), markers.height());
-    };
     this.setCameraPose = function (pose) {
         that.rosViewer.setCameraPose(pose);
-    };
-    this.snapshot = function () {
-        that.rosViewer.snapshot(1,1 );
-        let a = document.createElement('a')
-        a.href = 'userdata/snapshots/1.jpeg'
-        a.download = 'snapshot.jpeg'
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
     };
      */
 
