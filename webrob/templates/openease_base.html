@@ -152,15 +152,13 @@ a.openease-brand {
 {% endwith %}
 {% block body %}{% endblock %}
 
-
-<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
-
 {% block footer %}
-    <footer class="bg-dark text-white-50">
-      <div class="footer-copyright text-center py-3">
-        © <span id="myYear"> </span> Copyright: University of Bremen
-      </div>
-    </footer>
+<footer class="bg-dark text-white-50">
+  <div class="footer-copyright text-center py-3">
+    © <span id="myYear"> </span> Copyright: University of Bremen
+  </div>
+</footer>
+<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
 {% endblock %}
 
 </body>
