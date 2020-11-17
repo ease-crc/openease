@@ -203,7 +203,8 @@ function KnowrobUI(flask_user,options) {
                     that.playback = new PlaybackWidget(that.canvas_div, {
                         event: data_vis_msg.values[0].value1[0],
                         time_min: parseFloat(data_vis_msg.values[0].value2[0]),
-                        time_max: parseFloat(data_vis_msg.values[0].value2[1])
+                        time_max: parseFloat(data_vis_msg.values[0].value2[1]),
+                        ros: ros
                     });
                     that.blackboard.push('Scene', that.blackboard.createItem(that.playback.getWidget()));
                 }
