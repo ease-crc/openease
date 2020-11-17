@@ -37,9 +37,12 @@ function Blackboard(parent, qid, query_string) {
         return header;
     };
 
-    this.createItem = function(content_div) {
+    this.createItem = function(content_div,options) {
         var card_text = $("<div>");
         card_text.addClass("card-text");
+        if(options==undefined || options.border) {
+            card_text.addClass("ease-border");
+        }
         card_text.append(content_div);
         //
         var card = $("<div>");

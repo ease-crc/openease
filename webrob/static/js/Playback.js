@@ -8,7 +8,6 @@ function PlaybackWidget(canvas,options){
     var prolog = new ROSPrologClient(options.ros, {});
 
     var widget = $("<div>");
-    widget.addClass("col container-fluid");
     widget.attr("id", "playback-progress-container");
     widget.append(canvas);
 

@@ -206,7 +206,10 @@ function KnowrobUI(flask_user,options) {
                         time_max: parseFloat(data_vis_msg.values[0].value2[1]),
                         ros: ros
                     });
-                    that.blackboard.push('Scene', that.blackboard.createItem(that.playback.getWidget()));
+                    that.blackboard.push('Scene',
+                        that.blackboard.createItem(that.playback.getWidget(), {
+                            border: false
+                        }));
                 }
                 else {
                     that.blackboard.addChart(data_vis_msg);
