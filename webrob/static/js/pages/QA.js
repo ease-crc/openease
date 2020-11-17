@@ -67,32 +67,6 @@ function KnowrobUI(flask_user,options) {
     this.canvas_div = $("<div>");
     this.canvas_div.attr("id", "markers");
     this.canvas_div.addClass("row ease-border");
-    this.canvas_links = $("<p>");
-    this.canvas_links.addClass("icon-links marker-links");
-    this.canvas_div.append(this.canvas_links);
-
-    var canvas_link_snapshot = $("<a>");
-    var canvas_icon_snapshot = $("<i>");
-    canvas_link_snapshot.addClass("marker-link p-1");
-    canvas_icon_snapshot.addClass("fa fa-camera");
-    canvas_icon_snapshot.prop('title', 'Screenshot');
-    canvas_link_snapshot.append(canvas_icon_snapshot);
-    canvas_link_snapshot.click(function() {
-        that.snapshot();
-    });
-    this.canvas_links.append(canvas_link_snapshot);
-
-    var canvas_link_maximize = $("<a>");
-    var canvas_icon_maximize = $("<i>");
-    canvas_link_maximize.addClass("marker-link p-1");
-    canvas_icon_maximize.addClass("fa fa-window-maximize");
-    canvas_icon_maximize.prop('title', 'Maximize');
-    canvas_link_maximize.append(canvas_icon_maximize);
-    canvas_link_maximize.click(function() {
-        //that.snapshot();
-    });
-    this.canvas_links.append(canvas_link_maximize);
-
     this.playback = undefined;
 
     this.nextSolution = function () {
@@ -108,7 +82,6 @@ function KnowrobUI(flask_user,options) {
             that.registerROSClients(ros);
             //that.rosViewer.registerNodes(ros);
         });
-        //that.resizeCanvas();
     };
 
     this.initBlackboard = function () {
@@ -194,21 +167,8 @@ function KnowrobUI(flask_user,options) {
     };
 
     /*
-    this.resizeCanvas = function () {
-        const markers = $('#markers');
-        that.rosViewer.resize(markers.width(), markers.height());
-    };
     this.setCameraPose = function (pose) {
         that.rosViewer.setCameraPose(pose);
-    };
-    this.snapshot = function () {
-        that.rosViewer.snapshot(1,1 );
-        let a = document.createElement('a')
-        a.href = 'userdata/snapshots/1.jpeg'
-        a.download = 'snapshot.jpeg'
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
     };
      */
 
