@@ -5,6 +5,7 @@ function PlaybackWidget(canvas,options){
     var time_min = options.time_min;
     var time_max = options.time_max;
     var is_playing = true;
+    var prolog = new ROSPrologClient(options.ros, {});
 
     var widget = $("<div>");
     widget.addClass("col container-fluid");
@@ -27,12 +28,22 @@ function PlaybackWidget(canvas,options){
                 .removeClass("fa-pause")
                 .addClass("fa-play");
             // TODO: start playback
+            prolog.jsonQuery("tf_republish_set_realtime_factor(0).", function(result) {
+                console.info("Paused playback");
+                prolog.finishClient();
+                $('#query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+            });
         }
         else {
             $("#playback-play")
                 .removeClass("fa-play")
                 .addClass("fa-pause");
             // TODO: stop playback
+            prolog.jsonQuery("tf_republish_set_realtime_factor(1).", function(result) {
+                console.info("Paused playback");
+                prolog.finishClient();
+                $('#query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+            });
         }
         is_playing = !is_playing;
     });
