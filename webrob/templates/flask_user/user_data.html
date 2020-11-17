@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="container p-4 body-user-bg-color body-container-margin">
+<div class="container p-4 body-bg-color">
     <div class="card" id="user-data">
         <div class="card-header bg-openease-light">{% trans %}Signed in as{% endtrans %}</div>
         <div class="card-body">
@@ -37,3 +37,10 @@
 </div>
 {% endblock %}
 
+{% block footer %}
+    <footer class="bg-dark text-white-50 fixed-bottom">
+      <div class="footer-copyright text-center py-3">
+        © <span id="myYear"> </span> Copyright: University of Bremen
+      </div>
+    </footer>
+{% endblock %}

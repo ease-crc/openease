@@ -1,16 +1,10 @@
 {% extends "openease_base.html" %}
 
 {% block head %}
-<style>
-body {
-  background-color: #0277bd;
-}
-
-</style>
 {% endblock %}
 
 {% block body %}
-<div class="container p-4">
+<div class="container p-4 body-bg-color">
     <div class="card" id="user-data">
         <div class="card-header bg-openease-light">{% trans %}NEEM Hub configuration settings{% endtrans %}</div>
         <div class="card-body">
@@ -21,4 +15,10 @@ body {
 </div>
 {% endblock %}
 
-
+{% block footer %}
+    <footer class="bg-dark text-white-50 fixed-bottom">
+      <div class="footer-copyright text-center py-3">
+        © <span id="myYear"> </span> Copyright: University of Bremen
+      </div>
+    </footer>
+{% endblock %}
