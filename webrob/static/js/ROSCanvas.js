@@ -86,7 +86,7 @@ function ROSCanvas(options){
 
     this.resize = function () {
         // compute canvas size
-        const max_width = options.parent.parent().width();
+        const max_width = options.parent.parent().parent().width()-4;
         const small_width = 400;
         if(!is_maximized && small_width<max_width) {
             canvas_width = 400;
@@ -97,6 +97,8 @@ function ROSCanvas(options){
         canvas_height = canvas_width/aspect_ratio;
         // resize
         that.rosViewer.resize(canvas_width, canvas_height);
+        // HACK
+        $('.progress').width(canvas_width * 0.8);
     };
     $(window).on('resize', that.resize);
 

@@ -9,11 +9,17 @@ function PlaybackWidget(canvas,options){
 
     var widget = $("<div>");
     widget.attr("id", "playback-progress-container");
+    widget.addClass("ease-border m-auto");
     widget.append(canvas);
 
-    var controls = $("<div>");
-    controls.addClass("row m-auto btn-toolbar justify-content-center");
-    widget.append(controls);
+    var row = $("<div>");
+    row.addClass("row m-auto justify-content-center");
+    widget.attr("id", "playback-widget");
+    widget.append(row);
+
+    var toolbar = $("<div>");
+    toolbar.addClass("btn-toolbar playback-toolbar");
+    row.append(toolbar);
 
     var play_button = $("<a>");
     var play_icon = $("<div>");
@@ -37,7 +43,7 @@ function PlaybackWidget(canvas,options){
                 .removeClass("fa-play")
                 .addClass("fa-pause");
             prolog.jsonQuery("tf_republish_set_realtime_factor(1).", function(result) {
-                console.info("Paused playback");
+                console.info("Resumed playback");
                 prolog.finishClient();
                 $('#query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
             });
@@ -49,21 +55,22 @@ function PlaybackWidget(canvas,options){
     button_group1.addClass("btn-group");
     button_group1.attr("id", "playback-btn-group");
     button_group1.append(play_button);
-    controls.append(button_group1);
+    toolbar.append(button_group1);
 
     var progress_bar = $("<div>");
     var progress_bar0 = $("<div>");
     var progress_text = $("<span>");
-    progress_bar.addClass("progress m-auto");
+    progress_bar.addClass("progress playback-progress0 m-auto");
     progress_bar0.addClass("progress-bar bg-info no-transition");
     progress_bar0.attr("id", "playback-progress");
+    progress_text.attr("id", "playback-progress-value");
     progress_bar0.append(progress_text);
     progress_bar.append(progress_bar0);
 
     var button_group2 = $("<div>");
-    button_group2.addClass("btn-group");
+    button_group2.addClass("btn-group m-1");
     button_group2.append(progress_bar);
-    controls.append(button_group2);
+    toolbar.append(button_group2);
 
     this.getWidget = function() {
         return widget;

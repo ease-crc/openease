@@ -66,7 +66,7 @@ function KnowrobUI(flask_user,options) {
     this.canvas = undefined;
     this.canvas_div = $("<div>");
     this.canvas_div.attr("id", "markers");
-    this.canvas_div.addClass("row ease-border");
+    this.canvas_div.addClass("row");
     this.playback = undefined;
 
     this.nextSolution = function () {
@@ -210,6 +210,7 @@ function KnowrobUI(flask_user,options) {
                         that.blackboard.createItem(that.playback.getWidget(), {
                             border: false
                         }));
+                    that.getCanvas().resize();
                 }
                 else {
                     that.blackboard.addChart(data_vis_msg);

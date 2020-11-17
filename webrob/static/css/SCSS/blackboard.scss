@@ -8,12 +8,42 @@
 }
 
 #playback-progress-container {
+  width: max-content;
+  border-style: solid;
+  border-width: 1px;
+}
+#playback-progress {
+  background-color: #c5deff !important;
+  border-color: #bed7ec;
+  border-radius: 1px;
+  border-style: solid;
+  border-width: 2px;
+}
+#playback-progress0 {
+  text-align: center;
 }
 #playback-progress span {
-  width: 300px;
+  //width: 300px;
   color: black;
  }
 #playback-btn-group {
+  color: #154aa1;
+}
+#playback-btn-group .btn {
+  line-height: normal;
+}
+#playback-widget {
+  border: 1px solid #BBB;
+  border-top: none;
+  background-color: #e1eefd;
+  width: max-content;
+}
+#playback-progress-value {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+.playback-toolbar {
 }
 
 /*
