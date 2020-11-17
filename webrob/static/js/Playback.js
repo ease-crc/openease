@@ -27,7 +27,6 @@ function PlaybackWidget(canvas,options){
             $("#playback-play")
                 .removeClass("fa-pause")
                 .addClass("fa-play");
-            // TODO: start playback
             prolog.jsonQuery("tf_republish_set_realtime_factor(0).", function(result) {
                 console.info("Paused playback");
                 prolog.finishClient();
@@ -38,7 +37,6 @@ function PlaybackWidget(canvas,options){
             $("#playback-play")
                 .removeClass("fa-play")
                 .addClass("fa-pause");
-            // TODO: stop playback
             prolog.jsonQuery("tf_republish_set_realtime_factor(1).", function(result) {
                 console.info("Paused playback");
                 prolog.finishClient();
