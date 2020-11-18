@@ -17,6 +17,9 @@ from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 
+# path for node modules stored in openEASE container
+NODE_MODULES_PATH = "/tmp/npm/node_modules/"
+
 # PasswordForm used for validating given password field
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
@@ -55,6 +58,17 @@ def download_user_data(filename):
 @app.route('/static/<path:filename>')
 def send_from_static_directory(filename):
     return send_from_directory(os.path.join(app.root_path, "static"), filename)
+
+# method to send woff font files from node_modules
+@app.route('/user/node_modules/<path:file_path>')
+@app.route('/node_modules/<path:file_path>')
+def send_from_node_modules(file_path):
+    # remove possibility for miss use of file_path by removing any sort
+    # of directory path manipulation
+    file_path.replace("..", "").replace("./", "")
+    with open(os.path.join(NODE_MODULES_PATH, file_path), 'r') as f:
+        file_content = f.read()
+    return file_content
 
 @app.route('/')
 def render_main():
