@@ -4,13 +4,23 @@
 # - Heroku starts gunicorn, which loads Procfile, which starts runserver.py
 # - Developers can run it from the command line: python runserver.py
 
+import os
+import datetime
 
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
 
+from flask_mail import Mail
+from flask_user import UserManager, SQLAlchemyAdapter
+from flask.ext.babel import Babel
+
 from app_and_db import app, db
-from startup.init_app import init_app
+from utility import random_string
+from models.users import Role, User
+
+# default password for admin user
+ADMIN_USER_DEFAULT_PW = '1234'
 
 
 def _config_is_debug():
@@ -34,7 +44,88 @@ def _run_server():
     IOLoop.instance().start()
 
 
-init_app(app, db)
+def add_user(user_manager, name, mail, pw,
+             displayname='', remoteapp='', roles=[]):
+    if pw is None or len(pw) < 4:
+        app.logger.warn("User %s has no password specified." % name)
+        return
+
+    user = User.query.filter(User.username == name).first()
+    if user:
+        return user
+
+    user = User(username=name,
+                displayname=displayname,
+                remoteapp=remoteapp,
+                email=mail,
+                active=True,
+                password=user_manager.hash_password(pw),
+                confirmed_at=datetime.datetime.utcnow())
+    for r in roles:
+        x = Role.query.filter(Role.name == r).first()
+        if x is None:
+            app.logger.info("Unable to find role: " + str(r))
+        else:
+            user.roles.append(x)
+    db.session.add(user)
+    db.session.commit()
+
+    return user
+
+
+def init_app(extra_config_settings={}):
+    # Initialize app config settings
+    app.config.from_object('config.settings')  # Read config from 'app/settings.py' file
+    app.config.update(extra_config_settings)  # Overwrite with 'extra_config_settings' parameter
+    if app.testing:
+        app.config['WTF_CSRF_ENABLED'] = False  # Disable CSRF checks while testing
+    if os.environ['EASE_DEBUG'] == 'true':
+        app.config['DEBUG'] = True
+        app.config['SECRET_KEY'] = app.config['DEV_SECRET_KEY']
+    else:
+        try:
+            app.config['SECRET_KEY'] = open('/etc/ease_secret/secret', 'rb').read()
+        except IOError:
+            app.config['SECRET_KEY'] = random_string(64)
+
+    # Setup Flask-Mail
+    mail = Mail(app)
+    babel = Babel(app)
+
+    # Setup Flask-User to handle user account related forms
+    from models.users import User
+    db_adapter = SQLAlchemyAdapter(db, User)
+    app.user_manager = UserManager(db_adapter, app)  # Init Flask-User and bind to app
+
+    # Load all models.py files to register db.Models with SQLAlchemy
+    from models import users
+    from models import tutorials
+    from models import teaching
+    from models import settings
+    # Automatically create all registered DB tables
+    db.create_all()
+    db.session.commit()
+
+    # Load all views.py files to register @app.routes() with Flask
+    from pages import main
+    from pages import api
+    from pages import neem_discovery
+    from pages import editor
+    from pages import tutorials
+    from pages import oauth
+    from pages import postgres
+
+    add_user(user_manager=app.user_manager,
+             name='admin',
+             mail=os.environ.get('OPENEASE_MAIL_USERNAME', 'admin@openease.org'),
+             pw=ADMIN_USER_DEFAULT_PW,
+             roles=['admin'])
+
+    app.logger.info("Webapp started.")
+    return app
+
+
+init_app()
 
 # Start a development web server if executed from the command line
 if __name__ == '__main__':

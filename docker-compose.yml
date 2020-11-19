@@ -42,7 +42,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - NEEM_DIR=/NEEMs
       - EASE_DEBUG=${EASE_DEBUG}
 
 
@@ -106,7 +105,6 @@ services:
       # Mesh and URDF Server
       - MESH_URDF_SERVER=${MESH_URDF_SERVER}
 
-
   #docker_compose_ui:
     #restart: always
     #image: francescou/docker-compose-ui:1.13.0
@@ -125,6 +123,8 @@ services:
     #restart: always
     #volumes:
     #- /var/run/docker.sock:/var/run/docker.sock
+
+
 volumes:
   # large file transfer volume
   lft:

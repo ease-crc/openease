@@ -12,7 +12,6 @@ import requests
 from json import loads
 
 from app_and_db import app, db
-from startup.init_app import add_user
 from config.settings import FACEBOOK_APP_TOKENS, TWITTER_APP_TOKENS, GITHUB_APP_TOKENS, GOOGLE_APP_TOKENS
 
 __author__ = 'danielb@cs.uni-bremen.de'
@@ -119,6 +118,7 @@ def remote_app_authorized(response, oauth_token_key, get_user_information):
     session['username'] = name
 
     try:
+        from runserver import add_user
         flask_user = add_user(db=db,
                               user_manager=app.user_manager,
                               name=user_id,
