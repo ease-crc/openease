@@ -1,8 +1,11 @@
 from sqlalchemy.ext.declarative import DeclarativeMeta
 import json
 
-# encoder used for encoding class objects to Json objects
+
 class AlchemyEncoder(json.JSONEncoder):
+    """
+    encoder used for encoding class objects to Json objects
+    """
 
     def default(self, obj):
         if isinstance(obj.__class__, DeclarativeMeta):
@@ -11,7 +14,7 @@ class AlchemyEncoder(json.JSONEncoder):
             for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
                 data = obj.__getattribute__(field)
                 try:
-                    json.dumps(data) # this will fail on non-encodable values, like other classes
+                    json.dumps(data)  # this will fail on non-encodable values, like other classes
                     fields[field] = data
                 except TypeError:
                     fields[field] = None
