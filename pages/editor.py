@@ -191,7 +191,7 @@ def pkg_load_exercise():
     pkgName = exercise.title
     zipName = pkgName + '.zip'
     if docker_interface.file_exists(session['user_container_name'], pkgName):
-        raise PackageError("A package with the name '" + packageName + "' already exists.")
+        raise PackageError("A package with the name '" + pkgName + "' already exists.")
 
     try:
         with LFTransfer(session['user_container_name']) as lft:
@@ -242,7 +242,7 @@ def get_file_path(fileName):
     path = session['pkg']
     (_, ext) = os.path.splitext(fileName)
     if ext == ".pl":
-        path = os.path.join(path, "prolog")
+        path = os.path.join(path, "src")
     elif ext == ".owl":
         path = os.path.join(path, "owl")
     return os.path.join(path, fileName)
