@@ -5,7 +5,6 @@
 # - Developers can run it from the command line: python runserver.py
 
 import os
-import datetime
 
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -17,7 +16,7 @@ from flask.ext.babel import Babel
 
 from app_and_db import app, db
 from utility import random_string
-from models.users import Role, User
+from postgres.users import Role, User, add_user
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -44,35 +43,6 @@ def _run_server():
     IOLoop.instance().start()
 
 
-def add_user(user_manager, name, mail, pw,
-             displayname='', remoteapp='', roles=[]):
-    if pw is None or len(pw) < 4:
-        app.logger.warn("User %s has no password specified." % name)
-        return
-
-    user = User.query.filter(User.username == name).first()
-    if user:
-        return user
-
-    user = User(username=name,
-                displayname=displayname,
-                remoteapp=remoteapp,
-                email=mail,
-                active=True,
-                password=user_manager.hash_password(pw),
-                confirmed_at=datetime.datetime.utcnow())
-    for r in roles:
-        x = Role.query.filter(Role.name == r).first()
-        if x is None:
-            app.logger.info("Unable to find role: " + str(r))
-        else:
-            user.roles.append(x)
-    db.session.add(user)
-    db.session.commit()
-
-    return user
-
-
 def init_app(extra_config_settings={}):
     # Initialize app config settings
     app.config.from_object('config.settings')  # Read config from 'app/settings.py' file
@@ -93,15 +63,15 @@ def init_app(extra_config_settings={}):
     babel = Babel(app)
 
     # Setup Flask-User to handle user account related forms
-    from models.users import User
+    from postgres.users import User
     db_adapter = SQLAlchemyAdapter(db, User)
     app.user_manager = UserManager(db_adapter, app)  # Init Flask-User and bind to app
 
     # Load all models.py files to register db.Models with SQLAlchemy
-    from models import users
-    from models import tutorials
-    from models import teaching
-    from models import settings
+    from postgres import users
+    from postgres import tutorials
+    from postgres import teaching
+    from postgres import settings
     # Automatically create all registered DB tables
     db.create_all()
     db.session.commit()

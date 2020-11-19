@@ -7,7 +7,7 @@ from flask.ext.misaka import markdown
 from flask_user import current_user
 
 from app_and_db import app
-from models.teaching import find_courses, get_exercises, get_task
+from postgres.teaching import find_courses, get_exercises, get_task
 
 
 @app.route('/tutorials/')

@@ -4,9 +4,9 @@ from flask_user import login_required
 import time
 from urlparse import urlparse
 from app_and_db import app, db
-import docker.docker_interface as docker_interface
-from docker.docker_interface import generate_mac
-from models.users import User
+import knowrob.container as docker_interface
+from knowrob.container import generate_mac
+from postgres.users import User
 from utility import random_string
 
 __author__ = 'mhorst@cs.uni-bremen.de'

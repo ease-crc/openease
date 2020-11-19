@@ -3,7 +3,7 @@ import bson
 from pymongo import MongoClient
 from neems.neem import NEEM
 from app_and_db import db
-from models.settings import get_neemhub_settings
+from postgres.settings import get_neemhub_settings
 
 
 class NEEMHubConnectionError(Exception):

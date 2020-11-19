@@ -9,11 +9,11 @@ from flask import session, request, render_template, jsonify, send_file
 from flask_user import current_app
 
 from app_and_db import app
-import docker.docker_interface as docker_interface
-from docker.docker_interface import LFTransfer
+import knowrob.container as docker_interface
+from knowrob.container import LFTransfer
 from utility import admin_required
 from utility import copy_template_file
-from models.teaching import CourseExercise
+from postgres.teaching import CourseExercise
 
 __author__ = 'danielb@cs.uni-bremen.de'
 

@@ -1,6 +1,8 @@
+import datetime
+
 from flask_user import UserMixin
 
-from app_and_db import db
+from app_and_db import app, db
 
 # Define the User-Roles pivot table
 user_roles = db.Table('user_roles',
@@ -35,3 +37,32 @@ class User(db.Model, UserMixin):
             return None
         else:
             return self.roles[0].name
+
+
+def add_user(user_manager, name, mail, pw,
+             displayname='', remoteapp='', roles=[]):
+    if pw is None or len(pw) < 4:
+        app.logger.warn("User %s has no password specified." % name)
+        return
+
+    user = User.query.filter(User.username == name).first()
+    if user:
+        return user
+
+    user = User(username=name,
+                displayname=displayname,
+                remoteapp=remoteapp,
+                email=mail,
+                active=True,
+                password=user_manager.hash_password(pw),
+                confirmed_at=datetime.datetime.utcnow())
+    for r in roles:
+        x = Role.query.filter(Role.name == r).first()
+        if x is None:
+            app.logger.info("Unable to find role: " + str(r))
+        else:
+            user.roles.append(x)
+    db.session.add(user)
+    db.session.commit()
+
+    return user

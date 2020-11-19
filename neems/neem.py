@@ -1,13 +1,13 @@
 from flask_user import current_user
 
-from docker.docker_interface import start_user_container, container_started
+from knowrob.container import start_user_container, container_started
 from app_and_db import app
 
 from config.settings import USE_HOST_KNOWROB
 import json
 from dateutil import parser
 from AlchemyEncoder import AlchemyEncoder
-from models.settings import get_neemhub_settings
+from postgres.settings import get_neemhub_settings
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 

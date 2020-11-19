@@ -10,7 +10,7 @@ import os
 from app_and_db import app
 from app_and_db import db
 from utility import admin_required
-import docker.docker_interface as docker_interface
+import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
