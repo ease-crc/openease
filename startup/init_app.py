@@ -83,7 +83,6 @@ def init_app(app, db_instance, extra_config_settings={}):
     from pages import api
     from pages import neem_discovery
     from pages import editor
-    from pages import meshes
     from pages import tutorials
     from pages import oauth
     from pages import postgres

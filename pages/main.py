@@ -14,7 +14,7 @@ import docker.docker_interface as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
-from config.settings import USE_HOST_KNOWROB
+from config.settings import USE_HOST_KNOWROB, MESH_URDF_SERVER
 
 from neems.neemhub import instance as neemhub
 
@@ -61,6 +61,10 @@ def download_user_data(filename):
 @app.route('/static/<path:filename>')
 def send_from_static_directory(filename):
     return send_from_directory(os.path.join(app.root_path, "static"), filename)
+
+@app.route('/meshes/<path:mesh>')
+def download_mesh(mesh):
+    return redirect(MESH_URDF_SERVER + mesh)
 
 # method to send woff font files from node_modules
 @app.route('/user/node_modules/<path:file_path>')

@@ -15,8 +15,8 @@ services:
     volumes:
       - nginx:/etc/nginx/conf.d
       - ./certs:/etc/nginx/certs
-    # FIXME: For some reason this is required now, else nginx runs
-    #        into timeouts when talking to ROS.
+    # FIXME: For some reason this is required since switching to docker-compose,
+    #        else nginx runs into timeouts when talking to ROS.
     network_mode: "host"
   
   # dockergen updates nginx configuration when new docker container appear,
@@ -79,7 +79,6 @@ services:
     volumes:
       - secret:/etc/ease_secret:ro
       - lft:/tmp/openEASE/dockerbridge
-      - mesh_data:/home/ros/mesh_data
     environment:
       # these are for docker-gen to recognize this container
       - VIRTUAL_HOST=openease
@@ -127,8 +126,6 @@ services:
     #volumes:
     #- /var/run/docker.sock:/var/run/docker.sock
 volumes:
-  # TODO: this should be a more general NEEM data-depependencies volume.
-  mesh_data: 
   # large file transfer volume
   lft:
   # secret key volume
