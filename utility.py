@@ -13,19 +13,6 @@ from functools import wraps
 from app_and_db import app
 from Crypto.Random import random
 
-def copy_template_file(src, dst, args):
-    # Read the template file
-    src_f = open(src, 'r')
-    template = src_f.read()
-    src_f.close()
-    # Create the parent dir in user_data container
-    parent = os.path.dirname(dst)
-    if not os.path.exists(parent):  os.makedirs(parent)
-    # Copy template to user directory while replacing some keywords
-    dst_f = open(dst, 'w')
-    dst_f.write(template % args)
-    dst_f.close()
-
 
 def get_user_dir():
     userDir = "/home/ros/user_data/" + session['user_container_name']
@@ -34,8 +21,10 @@ def get_user_dir():
         os.makedirs(userDir)
     return userDir
 
+
 def random_string(length):
     return "".join([random.choice(string.ascii_letters + string.digits) for n in xrange(length)])
+
 
 def admin_required(f):
     @wraps(f)
