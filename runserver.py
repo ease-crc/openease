@@ -9,8 +9,8 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
 
-from webrob.app_and_db import app, db
-from webrob.startup.init_app import init_app
+from app_and_db import app, db
+from startup.init_app import init_app
 
 
 def _config_is_debug():

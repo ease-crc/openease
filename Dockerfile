@@ -28,19 +28,20 @@ ENV HOME /home/ros
 ## install npm dendencies
 RUN mkdir -p /tmp/npm/node_modules
 WORKDIR /tmp/npm
-COPY ./webrob/static/package.json /tmp/npm/
+COPY static/package.json /tmp/npm/
 RUN npm install
 # copy local node modules into the image
 # FIXME: needs to be done after npm install
 COPY ./node_modules /tmp/npm/node_modules
 
-COPY ./webrob/static/index.js /tmp/npm/
+COPY static/index.js /tmp/npm/
 RUN npm run build
 RUN chown -R ros:ros /tmp/npm
 WORKDIR /opt/webapp
 
 ## copy this folder to the container
-COPY . /opt/webapp/
+RUN mkdir /opt/webapp/webrob
+COPY . /opt/webapp/webrob
 RUN chown -R ros:ros /opt/webapp/
 
 RUN mkdir /home/ros/mesh_data
