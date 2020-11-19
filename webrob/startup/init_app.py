@@ -6,7 +6,6 @@
 # Authors: Ling Thio <ling.thio@gmail.com>
 
 
-from logging.handlers import SMTPHandler
 import os
 import datetime
 
@@ -17,8 +16,6 @@ from flask.ext.babel import Babel
 from webrob.utility import random_string
 from webrob.startup.init_db import *
 from webrob.models.users import Role, User
-
-from werkzeug.security import generate_password_hash, check_password_hash
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -78,7 +75,6 @@ def init_app(app, db_instance, extra_config_settings={}):
     from webrob.models import users
     from webrob.models import tutorials
     from webrob.models import teaching
-    from webrob.models import experiments
 
     # Load all views.py files to register @app.routes() with Flask
     from webrob.pages import main
@@ -89,9 +85,8 @@ def init_app(app, db_instance, extra_config_settings={}):
     from webrob.pages import meshes
     from webrob.pages import tutorials
     from webrob.pages import oauth
-    from webrob.pages.admin import db
-    from webrob.pages.admin import cookies
-    
+    from webrob.pages import postgres
+
     init_db(app, db_instance)
     
     add_user(app=app,db=db_instance,user_manager=app.user_manager,

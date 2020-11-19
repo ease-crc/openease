@@ -1,15 +1,7 @@
 
 import os
-import sys
-import traceback
-
-from flask import request
-from flask import redirect, jsonify, send_from_directory
-from flask_user import login_required
-from urllib import urlopen, urlretrieve
-from subprocess import call
-from posixpath import basename
-import thread
+from flask import redirect, send_from_directory
+from urllib import urlopen
 
 from webrob.app_and_db import app
 from webrob.config.settings import MESH_URDF_SERVER

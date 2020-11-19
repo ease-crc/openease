@@ -1,21 +1,18 @@
-from flask import session, request, redirect, url_for, render_template
+from flask import session, request, redirect, url_for, render_template, send_from_directory
 from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
 
-from urlparse import urlparse
 import traceback
 import os
 
-from random import choice
-from string import lowercase
-
 from webrob.app_and_db import app
 from webrob.app_and_db import db
+from webrob.utility import admin_required
 from webrob.docker import docker_interface
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
-from wtforms.validators import DataRequired, Length, EqualTo, Email
+from wtforms import PasswordField
+from wtforms.validators import DataRequired
 
 # path for node modules stored in openEASE container
 NODE_MODULES_PATH = "/tmp/npm/node_modules/"
@@ -118,4 +115,9 @@ def render_change_password_post():
 #    if hasattr(current_user, 'roles'):
 #        role_names = map(lambda x: str(x.name), current_user.roles)
 #    return role_names
+
+@app.route('/admin/cookie')
+@admin_required
+def admin_cookie():
+    return render_template('admin/cookie.html', **locals())
 
