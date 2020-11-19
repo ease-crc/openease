@@ -13,8 +13,7 @@ from json import loads
 
 from app_and_db import app, db
 from config.settings import FACEBOOK_APP_TOKENS, TWITTER_APP_TOKENS, GITHUB_APP_TOKENS, GOOGLE_APP_TOKENS
-
-from users import add_user
+from postgres.users import add_user
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
