@@ -92,4 +92,6 @@ def handle_neemhub_connection_error(err):
     """
     app.logger.error(err)
     flash(str(err), "warning")
-    return render_template('admin/neemhub_settings2.html', **locals())
+    settings_category = 'NEEM Hub'
+    settings_url = url_for('render_neem_hub_settings')
+    return render_template('invalid_settings.html', **locals())
