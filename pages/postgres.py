@@ -1,8 +1,9 @@
-from flask import request, render_template, jsonify, abort
+from flask import request, render_template, jsonify, abort, current_app
 
 import json
 
 from app_and_db import app
+from postgres.db import *
 from utility import admin_required
 
 __author__ = 'danielb@cs.uni-bremen.de'
