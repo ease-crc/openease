@@ -1,8 +1,8 @@
 // main SCSS
 
-@import 'screen';
-@import 'user_scss/user';
-
+html, body {
+  height: 100%;
+}
 body {
   display: flex;
   flex-direction: column;
