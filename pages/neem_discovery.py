@@ -59,7 +59,7 @@ def route_neem_meta(neem_group, neem_name):
 @admin_required
 def render_neem_hub_settings():
     # PasswordForm used for validating given password field
-    return render_template('admin/neemhub_settings.html',
+    return render_template('admin/../templates/settings/neemhub_settings.html',
                            form=PasswordForm(),
                            neem_hub=neem_hub)
 
@@ -94,4 +94,4 @@ def handle_neemhub_connection_error(err):
     flash(str(err), "warning")
     settings_category = 'NEEM Hub'
     settings_url = url_for('render_neem_hub_settings')
-    return render_template('invalid_settings.html', **locals())
+    return render_template('settings/invalid_settings.html', **locals())
