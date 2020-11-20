@@ -89,10 +89,3 @@ global.DataVis = require('@openease/charts');
 /////////////////////////
 // Canvas visualization
 global.EASEViewer = require('@openease/canvas-three');
-
-/////////////////////////
-// diffing things
-global.jsondiffpatch = require('jsondiffpatch');
-require('jsondiffpatch/public/formatters-styles/annotated.css');
-require('jsondiffpatch/public/formatters-styles/html.css');
-

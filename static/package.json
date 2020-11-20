@@ -40,7 +40,6 @@
     "brace": "0.11.1",
     "d3": "3",
     "d3-tip": "0.9.1",
-    "jsondiffpatch": "0.2.5",
     "@openease/charts": "1.0.1",
     "@openease/canvas-three": "1.0.0",
     "@openease/ros-clients": "1.0.1",
