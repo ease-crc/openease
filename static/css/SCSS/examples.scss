@@ -79,6 +79,22 @@
     cursor: pointer;
 }
 
+@media only screen and (min-width: 800px) {
+    .example-page {
+        width: 33%;
+    }
+}
+@media only screen and (max-width: 800px) {
+    .example-page {
+        width: 50%;
+    }
+}
+@media only screen and (max-width: 600px) {
+    .example-page {
+        width: 100%;
+    }
+}
+
 .example-link {
     text-decoration: none;
     line-height: 1;
@@ -86,4 +102,9 @@
     font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
     font-weight: 400;
     color: #777;
+}
+
+.example-link[aria-expanded="true"] {
+    color: #166899;
+    font-weight: bold;
 }

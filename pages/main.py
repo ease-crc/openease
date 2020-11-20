@@ -16,6 +16,8 @@ from wtforms import PasswordField
 from wtforms.validators import DataRequired
 from config.settings import USE_HOST_KNOWROB, MESH_URDF_SERVER
 
+from knowrob.queries import EXAMPLES as QUERY_EXAMPLES
+
 from neems.neemhub import instance as neemhub
 
 __author__ = 'danielb@uni-bremen.de'
@@ -104,6 +106,7 @@ def render_QA_page():
 
 @app.route('/examples')
 def render_examples_page():
+    query_sections = QUERY_EXAMPLES
     return render_template('pages/QA-examples.html', **locals())
 
 
