@@ -58,6 +58,7 @@ a.openease-brand {
     background-color: #ffffff;
 }
   </style>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/layout.css') }}"/>
   
   {% block head %}{% endblock %}
 </head>
@@ -104,7 +105,6 @@ a.openease-brand {
           Admin
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="{{ url_for('db_page_user_roles') }}">User Roles</a>
           <a class="dropdown-item" href="{{ url_for('admin_cookie') }}">Cookies</a>
           <a class="dropdown-item" href="{{ url_for('render_neem_hub_settings') }}">NEEM Hub Settings</a>
         </div>
@@ -150,10 +150,13 @@ a.openease-brand {
         {% endfor %}
     {% endif %}
 {% endwith %}
-{% block body %}{% endblock %}
+
+<div class="content">
+    {% block body %}{% endblock %}
+</div>
 
 {% block footer %}
-<footer class="bg-dark text-white-50">
+<footer class="footer bg-dark text-white-50">
   <div class="footer-copyright text-center py-3">
     © <span id="myYear"> </span> Copyright: University of Bremen
   </div>

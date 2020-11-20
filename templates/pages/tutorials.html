@@ -1,6 +1,6 @@
-{% extends "pages/../knowrob_base.html" %}
+{% extends "base.html" %}
 
-{% block head_inner %}
+{% block head %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
@@ -61,9 +61,7 @@
 </style>
 {% endblock %}
 
-{% block content %}
-
-
+{% block body %}
 <script type="text/javascript">
     var ui = new KnowrobUI(flask_user, {
             authentication: '{{ authentication }}',
@@ -146,7 +144,6 @@
 
 </script>
 
-<div id="page-content">
     <div id="QA-container" class="w-100 split split-horizontal">
     	<div id="vis-container" class="split w-100">
 			<div id="library" style="background-color:white" class="split-horizontal split-content split h-100 container-fluid p-3">
@@ -201,7 +198,6 @@
             </div>
         </div>
 	</div>
-</div>
 
 <!-- setup split.js -->
 <script type="text/javascript">

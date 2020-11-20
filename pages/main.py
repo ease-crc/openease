@@ -51,7 +51,7 @@ def redirect_unhandled_exception(e):
 @app.route('/userdata')
 @login_required
 def render_user_data():
-    return render_template('user/user_data.html', **locals())
+    return render_template('flask_user/user_data.html', **locals())
 
 @app.route('/userdata/<path:filename>')
 def download_user_data(filename):
@@ -108,7 +108,7 @@ def render_QA_page():
 def render_change_password_get():
     # PasswordForm used for validating given password field
     form = PasswordForm()
-    return render_template('user/change_password.html', title='Change Password', form=form)
+    return render_template('flask_user/change_password.html', title='Change Password', form=form)
 
 # post call handling method for changing password    
 @app.route('/change_password_post', methods=["POST"])

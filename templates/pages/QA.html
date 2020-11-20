@@ -1,6 +1,6 @@
-{% extends "pages/../knowrob_base.html" %}
+{% extends "base.html" %}
 
-{% block head_inner %}
+{% block head %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/Playback.js') }}"></script>
@@ -25,19 +25,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
-{% block content %}
-<script type="text/javascript">
-    const page = new KnowrobUI(flask_user, {
-        authentication: '{{ authentication }}',
-        neem_id: '{{ neem.neem_id }}',
-        ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
-                 '://{{ host_url }}/ws/{{ container_name }}/'
-    });
-    // call page.init() when the document is ready
-    $(document).ready(page.init);
-</script>
+{% block body %}
+    <script type="text/javascript">
+        const page = new KnowrobUI(flask_user, {
+            authentication: '{{ authentication }}',
+            neem_id: '{{ neem.neem_id }}',
+            ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
+                     '://{{ host_url }}/ws/{{ container_name }}/'
+        });
+        // call page.init() when the document is ready
+        $(document).ready(page.init);
+    </script>
 
-<div id="page-content">
     <div id="QA-container" class="w-100 h-100 container-fluid">
         <div class="row h-100" style="overflow: auto">
             <!-- left column -->
@@ -88,6 +87,5 @@
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}

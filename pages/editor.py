@@ -12,7 +12,6 @@ from app_and_db import app
 import knowrob.container as docker_interface
 from knowrob.container import LFTransfer
 from utility import admin_required
-from postgres.teaching import CourseExercise
 
 __author__ = 'danielb@cs.uni-bremen.de'
 

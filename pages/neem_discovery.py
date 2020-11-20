@@ -59,7 +59,7 @@ def route_neem_meta(neem_group, neem_name):
 @admin_required
 def render_neem_hub_settings():
     # PasswordForm used for validating given password field
-    return render_template('settings/neemhub_settings.html',
+    return render_template('settings/neemhub.html',
                            form=PasswordForm(),
                            neem_hub=neem_hub)
 

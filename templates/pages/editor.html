@@ -1,4 +1,4 @@
-{% extends "pages/../knowrob_base.html" %}
+{% extends "base.html" %}
 
 {% block bodyargs %}{% if overlay %} {% endif %}{% endblock %}
 
@@ -591,7 +591,7 @@
 </script>
 {% endblock %}
 
-{% block content %}
+{% block body %}
   <script type="text/javascript">
     LEFT_MENU_LIST.push({ "text": "Package", "submenu": [
         { text: "New", onclick: new_pkg },
@@ -611,7 +611,7 @@
     ]});
   </script>
   
-  <div id="page-content" style="width:100%; height:100%;">
+  <div class="container">
     <!-- A hidden form used for the download of packages. -->
     <form id="download" action="/pkg/down" method="POST">
         <input type="hidden" />

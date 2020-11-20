@@ -1,4 +1,4 @@
-{% extends "openease_base.html" %}
+{% extends "base.html" %}
 
 {% block head %}
 <!--    <link rel="stylesheet" href="{{ url_for('static', filename='lib/kendo/kendo.common.min.css') }}" />
@@ -8,7 +8,7 @@
     <script type="text/javascript"  src="{{ url_for('static', filename='lib/kendo/kendo.all.min.js') }}" ></script>-->
 {% endblock %}
 
-{% block content %}
+{% block body %}
 <script>
     $(document).ready(function () {
         var cookie_values = [
