@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
-  <link type="image/x-icon" rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.png') }}" />
+  <link type="image/x-icon" rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}" />
 
   <script type="text/javascript">
     function FlaskUser(){
@@ -67,10 +67,12 @@ a.openease-brand {
 
 <nav class="navbar navbar-expand-lg navbar-dark" id="openease-navbar">
   <a class="navbar-brand openease-brand" href="http://www.open-ease.org">
-    <img src="{{ url_for('static', filename='logos/oe-logo-small.svg') }}">
+    <img src="{{ url_for('static', filename='img/oe-logo-small.svg') }}">
     openEASE
   </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+          data-target="#navbarNav" aria-controls="navbarNav"
+          aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">

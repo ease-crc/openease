@@ -45,7 +45,8 @@
             <div class="col-sm-8">
                 <div class="text-center p-2">
                     <!-- TODO: design a banner image? -->
-                    <img src="static/logos/logo_openEASE_neu2018.png" class="img-fluid" id="openease-logo-enlarged">
+                    <img src="{{ url_for('static', filename='img/ease-logo_openEASE_neu2018.png') }}"
+                         class="img-fluid" id="openease-logo-enlarged">
                 </div>
                 <div>
                     <div id="user_query">is_event(Evt).</div>

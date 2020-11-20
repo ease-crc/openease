@@ -481,22 +481,22 @@
         var ext = fileName.split('.').pop();
         if(!elem) {}
         else if(ext === "pl") {
-            elem.style.backgroundImage = "url(static/images/code.png)";
+            elem.style.backgroundImage = "url(static/img/code.png)";
         }
         else if(ext === "owl") {
-            elem.style.backgroundImage = "url(static/images/owl.png)";
+            elem.style.backgroundImage = "url(static/img/owl.png)";
         }
         else if(ext === "xml") {
-            elem.style.backgroundImage = "url(static/images/xls.png)";
+            elem.style.backgroundImage = "url(static/img/xls.png)";
         }
         else if(ext === "java") {
-            elem.style.backgroundImage = "url(static/images/java.png)";
+            elem.style.backgroundImage = "url(static/img/java.png)";
         }
         else if(ext === "html") {
-            elem.style.backgroundImage = "url(static/images/html.png)";
+            elem.style.backgroundImage = "url(static/img/html.png)";
         }
         else {
-            elem.style.backgroundImage = "url(static/images/txt.png)";
+            elem.style.backgroundImage = "url(static/img/txt.png)";
         }
     };
     
@@ -504,7 +504,7 @@
      * Set file tree icon that indicates unsaved changes.
      **/
     function set_file_unsaved_icon(fileName) {
-        document.getElementById(activeFile).style.backgroundImage="url(static/images/save.png)";
+        document.getElementById(activeFile).style.backgroundImage="url(static/img/save.png)";
     };
     
     /**
