@@ -52,7 +52,7 @@ def pkg_new():
         raise PackageError("A package with the name '" + packageName + "' already exists.")
 
     # Make sure templates are available
-    templatePath = '/opt/webapp/webrob/templates/knowrob_package'
+    templatePath = '/opt/webapp/webrob/knowrob/pkg_template'
     if not os.path.exists(templatePath):
         raise PackageError("Package template could not be found.")
 
