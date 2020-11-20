@@ -39,6 +39,14 @@ class User(db.Model, UserMixin):
             return self.roles[0].name
 
 
+def create_role(role_name):
+    if not Role.query.filter(Role.name == role_name).first():
+        role = Role()
+        role.name = role_name
+        db.session.add(role)
+        db.session.commit()
+
+
 def add_user(user_manager, name, mail, pw,
              displayname='', remoteapp='', roles=[]):
     if pw is None or len(pw) < 4:

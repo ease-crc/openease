@@ -48,7 +48,7 @@ services:
   # postgres is used to store e.g. user accounts, roles,
   # data displayed in the webpage
   postgres:
-    image: "openease/postgres"
+    image: "postgres:9.3"
     container_name: postgres
     networks:
       - openease

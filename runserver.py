@@ -16,10 +16,17 @@ from flask.ext.babel import Babel
 
 from app_and_db import app, db
 from utility import random_string
-from postgres.users import Role, User, add_user
+from postgres.users import Role, User, add_user, create_role
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
+
+USER_ROLES = [
+    'admin',
+    'reviewer',
+    'user',
+    'editor'
+]
 
 
 def _config_is_debug():
@@ -73,6 +80,9 @@ def init_app(extra_config_settings={}):
     # Automatically create all registered DB tables
     db.create_all()
     db.session.commit()
+
+    for role in USER_ROLES:
+        create_role(role)
 
     # Load all views.py files to register @app.routes() with Flask
     from pages import main
