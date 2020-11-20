@@ -42,7 +42,7 @@ def editor(filename=""):
     # (needed for accessing container)
     host_url = urlparse(request.host_url).hostname
     container_name = session['user_container_name']
-    return render_template('editor.html', **locals())
+    return render_template('pages/editor.html', **locals())
 
 
 @app.route('/pkg/new', methods=['POST'])
@@ -53,7 +53,7 @@ def pkg_new():
         raise PackageError("A package with the name '" + packageName + "' already exists.")
 
     # Make sure templates are available
-    templatePath = '/opt/webapp/webrob/templates/package'
+    templatePath = '/opt/webapp/webrob/templates/knowrob_package'
     if not os.path.exists(templatePath):
         raise PackageError("Package template could not be found.")
 
