@@ -102,6 +102,11 @@ def render_QA_page():
     return render_template('pages/QA.html', **locals())
 
 
+@app.route('/examples')
+def render_examples_page():
+    return render_template('pages/QA-examples.html', **locals())
+
+
 # get call handling method for changing password
 @app.route('/change_password_get')
 @login_required

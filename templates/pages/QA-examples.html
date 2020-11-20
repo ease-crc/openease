@@ -1,11 +1,112 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <!-- -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/examples.css') }}"/>
 {% endblock %}
 
 {% block body %}
-    <!-- -->
+    <section id="examples-header">
+        <div id="header-content-wrapper">
+            <div id="examples-header-text">
+                <div id="examples-title">Examples by Topic</div>
+                <div id="examples-desc">What can you ask openEASE about?</div>
+            </div>
+            <div id="search-bar"></div>
+        </div>
+    </section>
+
+    <section id="examples-body">
+
+        <div class="example-section">
+            <div class="section-title-wrapper">
+                <div class="section-title">Activity knowledge</div>
+            </div>
+            <div class="section-examples">
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-car-crash"></i> Occurrences </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-people-carry"></i> Participation </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-sitemap"></i> Structure </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-random"></i> Transformation </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-expand"></i> Conceptualization </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-external-link-alt"></i> Contextualization </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <div class="section-title-wrapper">
+                <div class="section-title">Environment knowledge</div>
+            </div>
+            <div class="section-examples">
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-shapes"></i> Appearance </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-sitemap"></i> Structure </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-running"></i> Kinematics </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-fill-drip"></i> Dynamics </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-utensils"></i> Naive physics </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <div class="section-title-wrapper">
+                <div class="section-title">Agent knowledge</div>
+            </div>
+            <div class="section-examples">
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-sitemap"></i> Structure </a>
+                    </div>
+                </div>
+                <div class="example-page">
+                    <div class="example-link-wrapper">
+                        <a href="#" class="example-link"><i class="fas fa-running"></i> Kinematics </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
 {% endblock %}
 
     <!--

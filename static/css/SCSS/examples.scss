@@ -1,0 +1,89 @@
+
+#examples-header {
+    background-color: #144F78;
+    border-bottom: 8px solid #549FC8;
+    width: 100%;
+}
+
+#header-content-wrapper {
+  margin: 0 auto;
+  height: 174px;
+  width: 80%;
+}
+
+#examples-header-text {
+    float: left;
+}
+
+#examples-title {
+    font-size: 45px;
+    font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+    line-height: 52px;
+    font-weight: 400;
+    color: white;
+    padding-top: 50px;
+    padding-bottom: 5px;
+}
+
+#examples-desc {
+    font-size: 21px;
+    font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    line-height: 30px;
+    color: white;
+    padding-bottom: 37px;
+    font-style: italic;
+}
+
+.example-section {
+  padding-top: 40px;
+  padding-bottom: 33px;
+  border-bottom: 1px solid #D1D1D1;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.section-title-wrapper {
+    width: 1010px;
+}
+
+.section-title {
+    display: inline-block;
+    font-size: 28px;
+    color: #777;
+    outline: none;
+    text-decoration: none;
+    font-family: 'Lexia', 'Roboto Slab', Georgia, 'Times New Roman', Times, serif;
+    padding-bottom: 5px;
+}
+
+.section-chevron {
+    display: inline-block;
+    font-size: 28px;
+    color: #B0B0B0;
+    outline: none;
+    text-decoration: none;
+    font-family: 'Lexia', 'Roboto Slab', Georgia, 'Times New Roman', Times, serif;
+}
+
+.section-examples {
+    display: inline-block;
+}
+
+.example-page {
+    display: flex;
+    align-items: center;
+    float: left;
+    padding-right: 30px;
+    height: 42px;
+    cursor: pointer;
+}
+
+.example-link {
+    text-decoration: none;
+    line-height: 1;
+    font-size: 18px;
+    font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    color: #777;
+}
