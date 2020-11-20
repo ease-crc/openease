@@ -136,5 +136,5 @@ def render_change_password_post():
 @app.route('/admin/cookie')
 @admin_required
 def admin_cookie():
-    return render_template('admin/../templates/settings/cookie.html', **locals())
+    return render_template('settings/cookies.html', **locals())
 

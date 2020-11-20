@@ -69,7 +69,6 @@ def init_app(extra_config_settings={}):
 
     # Load all models.py files to register db.Models with SQLAlchemy
     from postgres import users
-    from postgres import teaching
     from postgres import settings
     # Automatically create all registered DB tables
     db.create_all()

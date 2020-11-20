@@ -46,7 +46,7 @@ def render_neems():
                             css_framework='bootstrap4',
                             search=search)
 
-    return render_template('neems/search.html', **locals())
+    return render_template('pages/neems.html', **locals())
 
 
 @app.route('/neems/<neem_group>/<neem_name>/info')
@@ -59,7 +59,7 @@ def route_neem_meta(neem_group, neem_name):
 @admin_required
 def render_neem_hub_settings():
     # PasswordForm used for validating given password field
-    return render_template('admin/../templates/settings/neemhub_settings.html',
+    return render_template('settings/neemhub_settings.html',
                            form=PasswordForm(),
                            neem_hub=neem_hub)
 
