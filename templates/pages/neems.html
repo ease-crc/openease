@@ -1,33 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-<style>
-    .card-div {
-        padding: 5px;
-    }
-
-    .card-words-break {
-    word-wrap: break-word;
-    word-break: break-all;
-    }
-
-    .card-img-top {
-        width: 100%;
-        height: 12vw;
-        object-fit: cover;
-    }
-
-    .card-title {
-        height:50px;
-        padding-bottom: 15px;
-        overflow: scroll;
-    }
-
-    .body-container-row-padding {
-        padding-bottom: 5px;
-    }
-
-</style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/neems.css') }}"/>
 {% endblock %}
 
 {% block nav_right %}
@@ -45,7 +19,7 @@
         {% for neem in neems %}
         <div class="col-md-3 col-lg-3 card-div">
             <div class="card">
-                <div class="card-header bg-openease-light">
+                <div class="card-header bg-ease-light">
                     <a class="text-white" href="{{ neem.downloadUrl }}" target="_blank">{{ neem.neem_repo_path }}</a>
                 </div>
                 <div class="card-body col-md-12 col-sm-12">

@@ -3,9 +3,6 @@
 {% block bodyargs %}{% if overlay %} {% endif %}{% endblock %}
 
 {% block head %}
-  <script type="text/javascript" src="{{ url_for('static', filename='openease.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/ros/JSONProlog.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='lib/iframes/teaching.js') }}"></script>
   <script type="text/javascript">
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     
@@ -592,7 +589,8 @@
 {% endblock %}
 
 {% block body %}
-  <script type="text/javascript">
+    // TODO: add editor menu items
+/*
     LEFT_MENU_LIST.push({ "text": "Package", "submenu": [
         { text: "New", onclick: new_pkg },
 {% if current_user.is_authenticated and current_user.has_role('admin') %}
@@ -609,7 +607,7 @@
         { text: "Save", onclick: save_file },
         { text: "Delete", onclick: delete_file }
     ]});
-  </script>
+*/
   
   <div class="container">
     <!-- A hidden form used for the download of packages. -->

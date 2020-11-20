@@ -1,2 +1,33 @@
 
 // TODO: define EASE theme here
+
+#ease-navbar{
+  background: linear-gradient(to bottom,
+          #549FC8 0%,
+          #246F98 50%,
+          #246F98 51%,
+          #144F78 100%);
+}
+
+a.ease-brand {
+  font-family: 'Oswald', sans-serif;
+  color: #FFFFFF;
+}
+
+.ease-brand img{
+  height: 20px;
+}
+
+#ease-logo-enlarged {
+    width: 300px;
+}
+
+.bg-ease-light {
+  background: #549FC8;
+  color: white;
+}
+
+.bg-ease-dark {
+  background: #246F98;
+  color: white;
+}

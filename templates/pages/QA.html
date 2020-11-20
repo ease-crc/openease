@@ -1,17 +1,13 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/QA.css') }}"/>
+
     <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/Playback.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/pages/QA.js') }}"></script>
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/page.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/console.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/canvas.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/blackboard.css') }}"/>
-  
     <!--FIXME: openEASE must run offline, replace this!
         But there are some difficulties getting the google charts
         into the current build procedure using browserify.
@@ -21,8 +17,6 @@
         google.load("visualization", "1", {packages:["timeline"]});
         //google.load("visualization", "1", {packages:["corechart","timeline"]});
     </script>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
 {% block body %}
@@ -46,7 +40,7 @@
                 <div class="text-center p-2">
                     <!-- TODO: design a banner image? -->
                     <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"
-                         class="img-fluid" id="openease-logo-enlarged">
+                         class="img-fluid" id="ease-logo-enlarged">
                 </div>
                 <div>
                     <div id="user_query">is_event(Evt).</div>

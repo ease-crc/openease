@@ -21,43 +21,6 @@
     var flask_user = new FlaskUser();
   </script>
 
-  <style>
-#openease-navbar{
-  background: linear-gradient(to bottom,
-          #549FC8 0%,
-          #246F98 50%,
-          #246F98 51%,
-          #144F78 100%);
-}
-a.openease-brand {
-  font-family: 'Oswald', sans-serif;
-  color: #FFFFFF;
-}
-.openease-brand img{
-  height: 20px;
-}
-.bg-openease-light {
-  background: #549FC8;
-  color: white;
-}
-.bg-openease-dark {
-  background: #246F98;
-  color: white;
-}
-#flash_alert_span {
-    text-align: center;
-  }
-#openease-logo {
-    width: 100px;
-    height: auto;
-}
-#openease-logo-enlarged {
-    width: 300px;
-}
-.body-bg-color {
-    background-color: #ffffff;
-}
-  </style>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/layout.css') }}"/>
   
   {% block head %}{% endblock %}
@@ -65,8 +28,8 @@ a.openease-brand {
 
 <body{% block bodyargs %}{% endblock %}>
 
-<nav class="navbar navbar-expand-lg navbar-dark" id="openease-navbar">
-  <a class="navbar-brand openease-brand" href="http://www.open-ease.org">
+<nav class="navbar navbar-expand-lg navbar-dark" id="ease-navbar">
+  <a class="navbar-brand ease-brand" href="http://www.open-ease.org">
     <img src="{{ url_for('static', filename='img/oe-logo-small.svg') }}">
     openEASE
   </a>
@@ -139,7 +102,7 @@ a.openease-brand {
   </div>
 </nav>
 
-<!-- let all flash messages rander here -->
+<!-- let all flash messages render here -->
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
@@ -167,9 +130,6 @@ a.openease-brand {
 {% endblock %}
 
 </body>
-
-
-  
 
 <!-- remove flash alert after 5 seconds -->
 <script>

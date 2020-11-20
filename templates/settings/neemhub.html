@@ -4,9 +4,9 @@
 {% endblock %}
 
 {% block body %}
-<div class="container p-4 body-bg-color">
+<div class="container p-4">
     <div class="card" id="user-data">
-        <div class="card-header bg-openease-light">{% trans %}NEEM Hub configuration settings{% endtrans %}</div>
+        <div class="card-header bg-ease-light">{% trans %}NEEM Hub configuration settings{% endtrans %}</div>
         <div class="card-body">
             <form action="{{ url_for('post_neem_hub_settings') }}" method="post">
 
@@ -67,13 +67,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block footer %}
-    <footer class="bg-dark text-white-50 fixed-bottom">
-      <div class="footer-copyright text-center py-3">
-        © <span id="myYear"> </span> Copyright: University of Bremen
-      </div>
-    </footer>
-<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
 {% endblock %}
