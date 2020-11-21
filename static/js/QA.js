@@ -87,8 +87,6 @@ function KnowrobUI(flask_user,options) {
     this.initBlackboard = function () {
         if(that.blackboard) {
             that.blackboard.delete();
-            delete that.canvas;
-            that.canvas = undefined;
         }
         that.blackboard = new Blackboard($("#blackboard"),
             that.last_qid, that.last_query);
@@ -264,7 +262,9 @@ function KnowrobUI(flask_user,options) {
             compression : 'png'
         });
         that.markerVis.subscribe(function(marker_msg) {
-            that.getCanvas().addMarkerArray(marker_msg);
+            if(that.blackboard) {
+                that.getCanvas().addMarkerArray(marker_msg);
+            }
         });
     };
     
