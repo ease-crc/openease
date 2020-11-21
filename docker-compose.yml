@@ -67,7 +67,7 @@ services:
   
   # the openEASE flask webapp
   openease:
-    image: "openease/flask"
+    image: "openease/app"
     container_name: openease
     # NOTE: wait until postgres is available before calling runserver.py
     command: /opt/webapp/webrob/scripts/wait.sh postgres python /opt/webapp/webrob/runserver.py
