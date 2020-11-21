@@ -1,0 +1,31 @@
+
+#markers {
+  width: min-content;
+  height: 100%;
+  border: 1px solid #b6d6ff;
+  overflow: hidden;
+  margin: auto;
+}
+
+.marker-links {
+    position: absolute;
+    padding-top: 2px;
+    padding-left: 4px;
+}
+
+.marker-link {
+  opacity: 0;
+  color: #cacaca !important;
+  cursor: pointer;
+  visibility: hidden;
+  -webkit-transition: opacity 600ms, visibility 600ms, color 400ms;
+  transition: opacity 600ms, visibility 600ms, color 400ms;
+}
+.marker-link:hover {
+  color: #3371ee !important;
+}
+
+#markers:hover .marker-link {
+  opacity: 1;
+  visibility: visible;
+}

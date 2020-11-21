@@ -1,0 +1,32 @@
+// SCSS for query answering page
+
+@import "commandline";
+@import "canvas";
+@import "blackboard";
+
+// disable transitions
+.no-transition {
+    transition: none;
+}
+
+// top of the page
+#qa-header {
+    margin-top: 10px;
+}
+
+// the query field
+.query_links {
+    width:auto;
+}
+.query-container {
+    margin-bottom: 0px !important;
+}
+.query-button{
+    top: 2px;
+}
+.query-button {
+    color: #49aee3;
+}
+.query-button:hover {
+    color: #246F98;
+}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+  
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="container p-4">
+    <div class="card" id="user-data">
+        <div class="card-header bg-ease-light">{% trans %}Signed in as{% endtrans %}</div>
+        <div class="card-body">
+            <form class="form-striped">
+                <div class="form-group row">
+                    <label for="staticUsername" class="col-sm-2 col-form-label">Username</label>
+                    <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticUsername" value="{{ current_user.username }}">
+                </div>
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+                    <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticEmail" value="{{ current_user.email }}">
+                </div>
+                <div class="form-group row">
+                    <label for="staticToken" class="col-sm-2 col-form-label">API token</label>
+                    <input type="text" readonly class="col-sm-10 form-control-plaintext" id="staticToken" value="{{ session.api_token }}">
+                </div>
+                <a href="{{ url_for('render_change_password_get') }}" class="col-sm-2 btn btn-sm btn-success">Change Password</a>
+                <a href="{{ url_for('create_api_token') }}" class="col-sm-2 btn btn-sm btn-success">Create API Token</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

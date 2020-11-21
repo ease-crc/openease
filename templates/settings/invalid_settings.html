@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="container p-4">
+    <div class="card" id="user-data">
+        <div class="card-header bg-ease-light">{% trans %}{{ settings_category }} settings{% endtrans %}</div>
+        <div class="card-body">
+            <p>It seems you have either not configured {{ settings_category }} settings properly or at all.
+                Please press button to go to configuration page.</p>
+            <button class="col-sm-2 btn btn-sm btn-primary" type="button"
+                    onclick="window.location.href='{{ settings_url }}';"
+                    name="Go to settings" value="Go to settings">Go to settings</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

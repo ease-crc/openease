@@ -1,0 +1,630 @@
+{% extends "base.html" %}
+
+{% block bodyargs %}{% if overlay %} {% endif %}{% endblock %}
+
+{% block head %}
+  <script type="text/javascript">
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    
+    var activeFile;
+    var ignoreChanges = false;
+    var hasChanges = false;
+    
+    function resize() {
+      $('#page-content').layout({
+        center__maskContents:  true,
+        west__maskContents:  true,
+        south: { minSize: 75 },
+        west: { size: 250 }
+      });
+    };
+    
+    $(document).ready(function () {
+//       $("#dialog").ui.dialog({
+//         autoOpen: false,
+//         modal: true
+//       });
+      // 'change' event is triggered whenever the editor content changes
+      ace.edit("editor").getSession().on('change', on_editor_changed);
+      // Initialization of widgets on reload
+      update_editor();
+      update_pkg_list(true);
+      resize();
+      ace.edit("editor").resize(true);
+    });
+  </script>
+
+  <script type="text/javascript">
+    
+    ////////////////////////////////
+    /////////// Editor view
+    ////////////////////////////////
+    
+    /**
+     * Initially set up editor view.
+     **/
+    function update_editor() {
+        var edit = ace.edit("editor");
+        edit.resize(true);
+        edit.setTheme("ace/theme/solarized_light");
+        edit.getSession().setMode("ace/mode/prolog");
+        edit.getSession().setUseWrapMode(true);
+        edit.setOptions({
+            showGutter: true,
+            printMarginColumn: true,
+            highlightActiveLine: true,
+            highlightGutterLine: true
+        });
+        
+        // Add editor commands
+        edit.commands.addCommand({
+            name: 'save',
+            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+            exec: function(editor) { save_file(); }
+        });
+    };
+
+    /**
+     * Updates language dependant editor stuff.
+     **/
+    function update_editor_mode(fileName) {
+        var ext = fileName.split('.').pop();
+        var edit = ace.edit("editor");
+        if(ext === "pl") {
+            edit.getSession().setMode("ace/mode/prolog");
+        }
+        else if(ext === "xml" || ext === "owl") {
+            edit.getSession().setMode("ace/mode/xml");
+        }
+        else {
+            edit.getSession().setMode("ace/mode/plain_text");
+        }
+    };
+    
+    function get_editor_text() {
+        return ace.edit("editor").getValue();
+    };
+    
+    function set_editor_text(txt) {
+        ignoreChanges = true;
+        ace.edit("editor").setValue(txt, -1);
+        ignoreChanges = false;
+        hasChanges = false;
+    };
+    
+    function clear_editor() {
+        set_editor_text("");
+        activeFile = undefined;
+    };
+    
+    function on_editor_changed() {
+        if(!ignoreChanges) {
+            hasChanges = true;
+            if(activeFile) {
+                set_file_unsaved_icon(activeFile);
+            }
+        }
+    };
+    
+    ////////////////////////////////
+    /////////// Packages
+    ////////////////////////////////
+    
+    /**
+     * Create a new package based on templates.
+     **/
+    function new_pkg() {
+        save_editor_file_if_changed();
+        var pkgName = prompt("Please enter a name for the package", "my_experiment");
+        if(!pkgName) return;
+        $.ajax({
+            url: "/pkg/new",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                packageName: pkgName
+            }),  
+            dataType: "json",
+            success: function (response) {
+                update_pkg_list(false);
+                activate_pkg(pkgName);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+
+    /**
+     * Deletes the currently selected package.
+     **/
+    function delete_pkg() {
+        var activePkg = get_active_pkg();
+        if(!activePkg) {
+            alert("No package selected.");
+            return;
+        }
+        
+        var r = confirm("Do You really want to remove the package '" + activePkg + "'?");
+        if (r === true) {
+            $.ajax({
+                url: "/pkg/del",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({}),  
+                dataType: "json",
+                success: function (response) {
+                    update_pkg_list(true);
+                    hasChanges = false;
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    };
+    
+    function consult_pkg() {
+        var pkg = get_active_pkg();
+        if(!pkg) {
+            alert("No package selected.");
+            return;
+        }
+        save_editor_file_if_changed();
+        
+        // FIXME(daniel): JPL crashes when `make` is called and files changed
+        //var consultCmd = "((ros_package_initialized('"+pkg+"'), make) ; register_ros_package('"+pkg+"')).";
+        var consultCmd = "register_ros_package('"+pkg+"')";
+        var pl = parent.client.newProlog();
+        // Assert package in prolog
+        pl.jsonQuery(consultCmd, function(x) {
+            if(x.status && x.status=='OK') {
+                alert("User package consulted.");
+            }
+            else {
+                console.log("Failed to consult this package.");
+                if(x.error)
+                    alert(x.error);
+                else
+                    alert("Failed to consult this package.");
+            }
+            pl.finishClient();
+        });
+    };
+    
+    /**
+     * Returns the current package selection if there is any.
+     */
+    function get_active_pkg() {
+        return document.getElementById("pkg-value").innerHTML;
+    };
+    
+    /**
+     * Updates the list of user packages.
+     **/
+    function update_pkg_list(activate) {
+        var selection = get_active_pkg();
+        $('#pkg-selection').empty();
+        // Request available packages
+        $.ajax({
+            url: "/pkg/list",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({}),  
+            dataType: "json",
+            success: function (response) {
+                var select = document.getElementById("pkg-selection");
+                // Add packages as options
+                $.each(response.result, function(j, pkg) {
+                  select.appendChild(create_pkg_link(pkg, function() {
+                      activate_pkg(pkg);
+                      document.getElementById("pkg-value").innerHTML = pkg;
+                  }));
+                
+                  //select.options.add(new Option(pkg,pkg));
+                  if(! selection) {
+                    document.getElementById("pkg-value").innerHTML = pkg;
+                    selection = pkg;
+                  }
+                });
+                select.appendChild(create_pkg_link("Create a Package", new_pkg));
+                if(! selection) {
+                    document.getElementById("pkg-value").innerHTML = "Create a Package";
+                }
+                // Select option
+                if(activate) {
+                    if(selection) {
+                        activate_pkg(selection);
+                    }
+                    else {
+                        // Empty file list
+                        document.getElementById("file-list").innerHTML = "";
+                    }
+                    clear_editor();
+                }
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+    
+    function create_pkg_link(text, onclick) {
+        var li = document.createElement("li");
+        li.style.width = "100%";
+        var item = document.createElement("a");
+        item.href = "#";
+        item.onclick = onclick;
+        item.style.width = "100%";
+        item.style.textAlign = "center";
+        item.appendChild(document.createTextNode(text));
+        li.appendChild(item);
+        return li;
+    };
+
+    /**
+     * Activates a package with given name.
+     **/
+    function activate_pkg(pkgName) {
+        save_editor_file_if_changed();
+        // Clear the file tree
+        document.getElementById("file-list").innerHTML = "";
+        
+        $.ajax({
+            url: "/pkg/set",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({packageName: pkgName}),  
+            dataType: "json",
+            success: function (response) {
+                refresh_pkg_files(response.result);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+    
+    function refresh_pkg_files(result) {
+        var list = document.getElementById("file-list");
+        list.innerHTML = "";
+        $.each(result, function(j, elem) {
+            list.appendChild(create_pkg_tree(elem));
+        });
+        clear_editor();
+    };
+    
+    /**
+     * Factory for list element of package tree.
+     **/
+    function create_pkg_tree(elem) {
+        var li = document.createElement("li");
+        li.style.listStyleType = 'none';
+        
+        if(elem.isdir === true) {
+            li.innerHTML = '<div class="directoryButton" id="' + elem.name +
+                '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + elem.name + '</div>';
+            
+            var ul = document.createElement("ul");
+            $.each(elem.children, function(i, child) {
+                ul.appendChild(create_pkg_tree(child));
+            });
+            li.appendChild(ul);
+        }
+        else {
+            var x = document.createElement("button");
+            x.className = "fileButton";
+            x.id = elem.name;
+            x.onclick = function() {
+                update_editor_file(elem.name);
+            }
+            // Spaces used to push text right of icon
+            x.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + elem.name;
+            li.appendChild(x);
+            
+            set_file_icon_for_elem(elem.name, x);
+        }
+        
+        return li;
+    };
+
+    /**
+     * Download the currently active package.
+     **/
+    function download_pkg() {
+        if(!get_active_pkg()) return;
+        $form = $('#download');
+        $form.submit();
+    };
+
+{% if current_user.is_authenticated and current_user.has_role('admin') %}
+    /**
+     * Select this package for an exercise.
+     **/
+    function save_exercise() {
+        var activePkg = get_active_pkg();
+        if(!activePkg) {
+            alert("No package selected.");
+            return;
+        }
+        
+        ExerciseSelectorDialog(function(course, exercise) {
+            $.ajax({
+                url: "/pkg/save_exercise",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    course_id: course.id,
+                    exercise_id: exercise.id,
+                    package_name: activePkg
+                    
+                }),  
+                dataType: "json",
+                success: function (response) {
+                    alert("Exercise saved successfully.");
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    };
+{% endif %}
+
+    /**
+     * Upload package from client harddrive.
+     **/
+    function upload_pkg() {
+        alert('Not yet implemented.');
+        // TODO: Implement knowrob package upload.
+        /**
+        var fileSelector = $('<input type="file"/>');
+        fileSelector.on("change", function(evt){
+            var files = evt.target.files;
+        });
+        fileSelector.click();
+        */
+    };
+    
+    /**
+     * Load a file into the editor view.
+     **/
+    function update_editor_file(fileName) {
+        if(!get_active_pkg()) return;
+        save_editor_file_if_changed();
+        
+        update_editor_mode(fileName);
+        $.ajax({
+            url: "/pkg/read",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({'file': fileName}),  
+            dataType: "json",
+            success: function (response) {
+                set_editor_text(response.result.join(''));
+                set_active_file(fileName);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+    
+    function set_active_file(fileName) {
+        var elem;
+        if(activeFile) {
+            elem = document.getElementById(activeFile);
+            if(elem) elem.style.fontWeight="normal";
+        }
+        activeFile = fileName;
+        elem = document.getElementById(activeFile);
+        if(elem) elem.style.fontWeight="bold";
+    };
+
+    /**
+     * Saves the currently edited file.
+     **/
+    function file_write(file,content) {
+        if(!get_active_pkg()) return;
+        // FIXME: Name clashes between newly created files and existing files.
+        // e.g. when the user creates a file 'package.xml' the existing one is overwritten.
+        $.ajax({
+            url: "/pkg/file_write",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({'file': file, 'content': content}),  
+            dataType: "json",
+            success: function (response) {},
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+    
+    /**
+     * Saves the currently edited file.
+     **/
+    function save_file() {
+        if(!get_active_pkg()) return;
+        var isNewFile = undefined;
+        if(!activeFile) {
+            set_active_file( prompt("Please enter a name for the file", "test.pl") );
+            isNewFile = true;
+        }
+        if(activeFile) {
+            hasChanges = false;
+            file_write(activeFile, get_editor_text());
+            if(isNewFile) {
+                // Refresh file tree
+                activate_pkg('');
+                // Select new file
+                update_editor_file(activeFile);
+            }
+            set_file_icon(activeFile);
+        }
+    };
+    
+    /**
+     * Set file tree icon based on file extension.
+     **/
+    function set_file_icon(fileName) {
+        set_file_icon_for_elem(fileName, document.getElementById(fileName));
+    };
+    
+    /**
+     * Set file tree icon based on file extension.
+     **/
+    function set_file_icon_for_elem(fileName, elem) {
+        var ext = fileName.split('.').pop();
+        if(!elem) {}
+        else if(ext === "pl") {
+            elem.style.backgroundImage = "url(static/img/code.png)";
+        }
+        else if(ext === "owl") {
+            elem.style.backgroundImage = "url(static/img/owl.png)";
+        }
+        else if(ext === "xml") {
+            elem.style.backgroundImage = "url(static/img/xls.png)";
+        }
+        else if(ext === "java") {
+            elem.style.backgroundImage = "url(static/img/java.png)";
+        }
+        else if(ext === "html") {
+            elem.style.backgroundImage = "url(static/img/html.png)";
+        }
+        else {
+            elem.style.backgroundImage = "url(static/img/txt.png)";
+        }
+    };
+    
+    /**
+     * Set file tree icon that indicates unsaved changes.
+     **/
+    function set_file_unsaved_icon(fileName) {
+        document.getElementById(activeFile).style.backgroundImage="url(static/img/save.png)";
+    };
+    
+    /**
+     * Saves the currently edited file.
+     **/
+    function save_editor_file_if_changed() {
+        if(hasChanges === true) {
+            var r = confirm("Save changes to the current file? Changes will be lost otherwise.");
+            if(r) {
+                save_file();
+            }
+            else if(activeFile) {
+                set_file_icon(activeFile);
+            }
+            hasChanges = false;
+        }
+    };
+
+    /**
+     * Creates an empty file on the server in the current package.
+     **/
+    function new_file() {
+        if(!get_active_pkg()) return;
+        
+        var fileName = prompt("Please enter a name for the file", "test.pl")
+        if(fileName) {
+            file_write(fileName, '')
+            activate_pkg('')
+            update_editor_file(fileName)
+        }
+    };
+    
+    /**
+     * Deletes the currently selected file.
+     **/
+    function delete_file() {
+        if(!get_active_pkg()) return;
+        if(!activeFile) {
+            alert("No file selected.");
+            return;
+        }
+        var r = confirm("Do You really want to delete the file '" + activeFile + "'?");
+        if (r == true) {
+            $.ajax({
+                url: "/pkg/file_del",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({file: activeFile}),  
+                dataType: "json",
+                success: function (response) {
+                    refresh_pkg_files(response.result);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    };
+
+    /**
+     * Uploads a single file
+     **/
+    function upload_file() {
+        if(!get_active_pkg()) return;
+        // Read text files with JS and send text via AJAX.
+        // Probably not the nicest solution for uploads via http but it works
+        // and it uses same interface (file_write) as saving editor files
+        var fileSelector = $('<input type="file"/>');
+        fileSelector.on("change", function(evt){
+            var r = new FileReader();
+            for(i=0; i<evt.target.files.length; ++i) {
+                var f = evt.target.files[i];
+                r.onload = function(e) { 
+                    file_write(f.name, e.target.result)
+                    activate_pkg('')
+                    update_editor_file(f.name)
+                }
+                r.readAsText(f);
+            }
+        });
+        fileSelector.click();
+    };
+    
+</script>
+{% endblock %}
+
+{% block body %}
+    // TODO: add editor menu items
+/*
+    LEFT_MENU_LIST.push({ "text": "Package", "submenu": [
+        { text: "New", onclick: new_pkg },
+{% if current_user.is_authenticated and current_user.has_role('admin') %}
+        { text: "Save as Exercise", onclick: save_exercise },
+{% endif %}
+        //{ text: "Upload", onclick: upload_pkg },
+        { text: "Download", onclick: download_pkg },
+        { text: "Delete", onclick: delete_pkg },
+        { text: "Consult", onclick: consult_pkg }
+    ]});
+    LEFT_MENU_LIST.push({ "text": "File", "submenu": [
+        { text: "New", onclick: new_file },
+        { text: "Upload", onclick: upload_file },
+        { text: "Save", onclick: save_file },
+        { text: "Delete", onclick: delete_file }
+    ]});
+*/
+  
+  <div class="container">
+    <!-- A hidden form used for the download of packages. -->
+    <form id="download" action="/pkg/down" method="POST">
+        <input type="hidden" />
+    </form>
+    
+    <div class="ui-layout-center">
+        <div id="editor" class="black_border"></div>
+    </div>
+
+    <div class="ui-layout-west">
+        <div><ul class="menu pkg-menu"><li>
+            <a href="#" id='pkg-value'></a>
+            <ul id='pkg-selection'></ul>
+        </li></ul></div>
+        <div><ul id="file-list"></ul></div>
+    </div>
+  </div>
+{% endblock %}

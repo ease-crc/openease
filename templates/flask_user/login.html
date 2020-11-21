@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/login.css') }}"/>
+{% endblock %}
+
+{% block body %}
+{% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
+
+<div class="container">
+    <div>
+        <div class="login-content">
+            <div id="login-div">
+                <div id="ease-logo">
+                    <a href="http://www.open-ease.org"><img id="ease-logo-enlarged"
+                            src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"></a>
+                </div>
+                <div class="card" id="setup-login">
+                    <div class="card-header text-login">{% trans %}Login to your account{% endtrans %}</div>
+                    <div class="card-body">
+                        <form action="" method="POST" novalidate class="form" role="form">
+                            {{ form.hidden_tag() }}
+                            {# Username or Email field #}
+                            {% set field = form.username if user_manager.enable_username else form.email %}
+                            <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                                <input placeholder="Username"
+                                       class="form-control form-control-danger form-control-feedback"
+                                       id="inputHorizontalDanger" id="username" name="username"
+                                       type="text"
+                                       value="" required autofocus>
+
+                            </div>
+                            {% for error in form.username.errors %}
+                                <p class="alert alert-danger alert-dismissible">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    {{ error }}</p>
+                            {% endfor %}
+                            {# Password field #}
+                            {% set field = form.password %}
+                            <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                                <input placeholder="Password" class="form-control" id="password" name="password"
+                                       type="password"
+                                       value="" required/>
+                            </div>
+                            {% for error in form.password.errors %}
+                                <p class="alert alert-danger alert-dismissible">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    {{ error }}</p>
+                            {% endfor %}
+                            <div id="remember-me" class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                       value="remember_me">
+                                <label id="remember-me" class="custom-control-label" for="customCheck1">Remember
+                                    me</label>
+                            </div>
+                            <button class="btn  btn-block btn-primary ripple-effect" type="submit">Login</button>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row" id="new-user-row">
+                            <p id="new-user" class="col-sm-6"> New user?
+                                <a href="{{ url_for('user.register') }}">Sign Up</a>
+                            </p>
+                            <p class="col-sm-6">
+                                {% if user_manager.enable_forgot_password %}
+                                    <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
+                                        {% trans %}Forgot Password?{% endtrans %}</a>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

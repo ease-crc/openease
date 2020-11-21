@@ -1,0 +1,10 @@
+#!/bin/bash
+# Author: Daniel Beßler
+
+SOURCE="$1"
+if [ -z "$SOURCE" ]; then
+	SOURCE="backup.sql"
+fi
+
+echo "Restoring SQL backup from: $SOURCE"
+cat $SOURCE | docker exec -i postgres_db psql -a -e -Upostgres docker

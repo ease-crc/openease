@@ -1,7 +1,0 @@
-coverage:
-  range: 40..75
-  round: down
-  precision: 2
-  ignore:
-    - "webrob/test"
-

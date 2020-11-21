@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/QA.css') }}"/>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/Playback.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/QA.js') }}"></script>
+
+    <!--FIXME: openEASE must run offline, replace this!
+        But there are some difficulties getting the google charts
+        into the current build procedure using browserify.
+    -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+        google.load("visualization", "1", {packages:["timeline"]});
+        //google.load("visualization", "1", {packages:["corechart","timeline"]});
+    </script>
+{% endblock %}
+
+{% block body %}
+    <script type="text/javascript">
+        const page = new KnowrobUI(flask_user, {
+            authentication: '{{ authentication }}',
+            neem_id: '{{ neem.neem_id }}',
+            has_query: '{{ has_query }}',
+            ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
+                     '://{{ host_url }}/ws/{{ container_name }}/'
+        });
+        // call page.init() when the document is ready
+        $(document).ready(page.init);
+    </script>
+
+    <div id="QA-container" class="w-100 h-100 container-fluid">
+        <div class="row h-100" style="overflow: auto">
+            <!-- left column -->
+            <div class="col-sm-2"></div>
+            <!-- central column -->
+            <div class="col-sm-8">
+                <div id="qa-header" class="text-center p-2">
+                    <!-- TODO: design a banner image? -->
+                    <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"
+                         class="img-fluid" id="ease-logo-enlarged">
+                </div>
+                <div class="p-3">
+                    <div class="query-container">
+                        <div id="user_query" class="query-input">{{ query_text }}</div>
+                        <a class="query-button" href="#" onclick="page.console.query()">
+                            <i class="query-icon fas fa-spinner fa-spin"></i>
+                        </a>
+                    </div>
+                    <div class="query_links text-right">
+                        <a href="/examples"><i class="fas fa-th"></i> Examples</a>
+                    </div>
+                </div>
+
+                <div id="input" class="container-fluid p-3 collapse">
+                    <div class="card border-light ease-border">
+                        <div class="card-header ease-dark">Input</div>
+                        <div class="card-body">
+                            <div id="input-text" class="card-text bg-transparent w-100 query-font"></div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="#"><i class="fas fa-redo"></i> Re-compute</a>
+                            <a id="btn_query_next" href="#" class="collapse"
+                                onclick="page.nextSolution()"><i class="fas fa-arrow-right"></i> Next solution</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="blackboard-container" class="container-fluid p-3 collapse">
+                    <div class="card border-light ease-border">
+                        <div id="blackboard"></div>
+                        <div class="card-footer">
+                            <a href="#"><i class="fas fa-download"></i> Download Page</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- right column -->
+            <div class="col-sm-2">
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/QA.js') }}"></script>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/split.css') }}" />
+
+<!--FIXME: openEASE must run offline, replace this!
+             But there are some difficulties getting the google charts
+             into the current build procedure using browserify.
+  -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+    google.load("visualization", "1", { packages: ["timeline"] });
+//     google.load("visualization", "1", {packages:["corechart","timeline"]});
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    /* font used to display Prolog code */
+    .query-font {
+        font-size: 20px;
+    }
+
+    #page-content {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 100%;
+        height: -o-calc(100% - 108px);
+        /* opera */
+        height: -webkit-calc(100% - 108px);
+        /* google, safari */
+        height: -moz-calc(100% - 108px);
+        /* firefox */
+        height: calc(100% - 108px);
+        /* firefox 53 and newer*/
+    }
+
+    #history {
+        background: url("{{ url_for('static', filename='img/ease-light.png') }}");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 30%;
+    }
+
+    .query-input {
+        width: 100%;
+        height: 100%;
+        border-bottom: 1px solid #CCC;
+        font-size: 20px;
+    }
+
+    #chart {
+        width: 100%;
+        height: 100%;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<script type="text/javascript">
+    var ui = new KnowrobUI(flask_user, {
+            authentication: '{{ authentication }}',
+            ros_url: 'ws' + (location.protocol === 'https:' ? 's' : '') +
+                '://{{ host_url }}/ws/{{ container_name }}/'
+        });
+    // call page.init() when the document is ready
+    $(document).ready(ui.init);
+    
+    $(document).ready(function () {    
+            loadTutorial("overview", 1);
+        });
+
+
+     function loadTutorial(category, page) {
+            $.ajax({
+                url: "/tutorials/get",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ page: page }),
+                dataType: "json"
+            }).done(function (data) {
+                var lib = document.getElementById('library');
+                lib.innerHTML = ''; // clear
+                // <h2>tut.cat_title</h2>
+                //var h2 = document.createElement("h2");
+                //h2.innerHTML = data.this.cat_id;
+                //lib.appendChild(h2);
+                // <h4>tut.page.  tut.title</h4>
+                //var h4 = document.createElement("h4");
+                //h4.innerHTML = data.this.page + '. ' + data.this.title;
+                //lib.appendChild(h4);
+                // {{ content }}
+                var text = document.createElement("div");
+                text.innerHTML = data.this.text;
+                lib.appendChild(text);
+                // <div id="tut_nav">
+                var nav = document.createElement("div");
+                nav.id = 'tut_nav';
+                if (data.prev) {
+                    // <div style="float:left;">
+                    //    <a onclick="loadTutorial(prev.cat_id, prev.page)">Previous: prev.title</a>
+                    // </div>
+                    var link = document.createElement("div");
+                    var link_a = document.createElement("a");
+                    link.style.float = 'left';
+                    link_a.innerHTML = 'Previous: ' + data.prev.title
+                    link_a.onclick = function () { loadTutorial(data.prev.cat_id, data.prev.page); };
+                    link.appendChild(link_a);
+                    nav.appendChild(link);
+                }
+                // <div style="float:right;">
+                //    <a onclick="loadTutorial(nxt.cat_id, nxt.page)">Next: nxt.title</a>
+                // </div>
+                var link = document.createElement("div");
+                var link_a = document.createElement("a");
+                link.style.float = 'right';
+                if (data.next) {
+                    link_a.innerHTML = 'Next: ' + data.next.title
+                    link_a.onclick = function () { loadTutorial(data.next.cat_id, data.next.page); };
+                } else {
+                    link_a.innerHTML = 'Tutorial Overview'
+                    link_a.onclick = function () { loadTutorial('overview', 1); };
+                }
+                link.appendChild(link_a);
+                nav.appendChild(link);
+
+                lib.appendChild(nav);
+                // hook for links of class "show_code" that pastes the content of the
+                // previous code block into the query field
+                $("a.show_code").click(function (event) {
+					var query_text = $(this).closest("pre + *").prev().find('code').html();
+					var editor = ace.edit("user_query");
+					editor.getSession().setValue(query_text);
+					ui.console.query(query_text);
+                    event.preventDefault();
+                });
+            });
+        }
+
+</script>
+
+    <div id="QA-container" class="w-100 split split-horizontal">
+    	<div id="vis-container" class="split w-100">
+			<div id="library" style="background-color:white" class="split-horizontal split-content split h-100 container-fluid p-3">
+			</div>
+        	<div id="history" class="split split-horizontal split-content h-100">
+        	</div>
+        	<div id="markers" style="display: None;" class="h-0 w-0">
+        	</div>
+    	</div>
+           
+    	<div id="console" class="container-fluid p-0 split split-content">
+            <div class="h-100 d-flex flex-column">
+                <div id="user_query" class="query-input flex-grow-1">member(A, [a,b,c]).</div>
+                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button id="query-examples" type="button" class="btn btn-light dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Examples</button>
+                            <div class="dropdown-menu" aria-labelledby="query-examples">
+                                <!-- TODO: store example queries in some text file. -->
+                                <!-- TODO: include NEEM example queries here? -->
+                                <!-- TODO: include contextual queries here? (e.g. about selected object etc.) -->
+                                <h5 class="dropdown-header">Charts</h5>
+                                <a class="dropdown-item" href="#"
+                                    onclick="ui.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Pie
+                                    Chart</a>
+                                <a class="dropdown-item" href="#"
+                                    onclick="ui.console.query('data_vis(barchart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Bar
+                                    Chart</a>
+                                <a class="dropdown-item" href="#"
+                                    onclick="ui.console.query('data_vis(timeline(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[\'0_10\',\'5_15\',\'0_20\']]]).')">Timeline</a>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button id="query-view" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">View</button>
+                            <div class="dropdown-menu" aria-labelledby="query-view">
+                                <a class="dropdown-item" href="#" onclick="ui.console.zoomIn()"><i class="fas fa-plus"></i>
+                                    Larger Text</a>
+                                <a class="dropdown-item" href="#" onclick="ui.console.zoomOut()"><i class="fas fa-minus"></i>
+                                    Smaller Text</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Third group">
+                        <button id="btn_query" type="button" class="btn btn-primary" onclick="ui.console.query()"><i
+                                class="fas fa-question"></i></button>
+                        <button id="btn_query_next" type="button" class="btn btn-primary"
+                            onclick="ui.console.nextSolution()"><i class="fas fa-redo"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+
+<!-- setup split.js -->
+<script type="text/javascript">
+    Split(['#vis-container', '#console'], {
+        gutterSize: 8,
+        cursor: 'row-resize',
+        direction: 'vertical',
+        sizes: [60, 40],
+        onDragEnd: ui.resizeCanvas
+    });
+    var splitInstance = Split(['#library', '#history'], {
+        gutterSize: 8,
+        cursor: 'col-resize',
+        sizes: [65, 35],
+        onDragEnd: ui.resizeCanvas
+    });
+
+    // min window width for smaller screens
+    var minimumWindowWidth = 992;
+    $(window).resize(function () {
+        //console.log('window was resized : ' + $(window).width());
+
+        if ($(window).width() < minimumWindowWidth) {
+            // do not show the gutter
+            splitInstance.setSizes([5, 95]);
+        } else {
+            // show the gutter
+            splitInstance.setSizes([40, 60]);
+        } // end of else
+    }); // eof window resize
+</script>
+
+{% endblock %}

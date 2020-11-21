@@ -1,0 +1,71 @@
+@import "login";
+@import "passwd_validation";
+
+.register-content{
+  margin-bottom: 0px;
+}
+
+.card-register{
+  background-color: #eceff1;
+  color: #0277bd;
+  width: 430px;
+  max-width: 100%;
+  margin: 0 auto 20px;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+.register-text {
+  text-align: center;
+  line-height: 1.5;
+  font-size: 1.5em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #757575;;
+}
+
+#register-div {
+  width: 430px;
+  max-width: 100%;
+  height: auto;
+  margin: 0px auto 20px;
+}
+
+span#register-policy{
+  color: #757575;
+}
+
+.field-hint{
+  text-align: center !important;
+}
+
+.already-registered {
+  color: #fff;
+}
+
+.field-hint a {
+  color: #0c0c0c;
+}
+
+.custom-control {
+  padding-bottom: 8px;
+  font-size: 15px;
+ }
+
+.custom-control-label::before {
+  background-color: #cdcdcd;
+}
+
+p#copyright {
+  float: none;
+  text-align: center;
+  padding-top: 50px;
+  //font-size: 15px;
+}
+
+@media (max-width: 576px) {
+  .register-text {
+    font-size: 1.2em !important;
+  }
+}
+

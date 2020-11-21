@@ -22,7 +22,9 @@ setup.cfg
 build
 
 # node and javascript stuff
-node_modules/
+/node_modules/*
+!/node_modules/README.md
+
 npm-debug.log
 
 # ignore sass-cache
