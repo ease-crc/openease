@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block body %}
+
+    <script type="text/javascript">
+    const ask_query = function(query_text) {
+        console.info(query_text);
+    };
+    </script>
+
     <section id="examples-header">
         <div id="header-content-wrapper">
             <div id="examples-header-text">
@@ -54,9 +61,11 @@
                             {{ query_group.description }}:
                             {%for query in query_group.queries%}
                             <div class="query-container">
+                                <div class="query-event-catcher"
+                                     onclick='ask_query("{{ query.text }}")'></div>
                                 <div id="query-{{ query.id }}"
                                      class="query-input">{{ query.text }}</div>
-                                <a class="query-button" href="#" onclick="peng()">
+                                <a class="query-button" href="#">
                                     <i class="query-icon fas fa-question"></i>
                                 </a>
                             </div>
