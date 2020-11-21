@@ -24,6 +24,7 @@
         const page = new KnowrobUI(flask_user, {
             authentication: '{{ authentication }}',
             neem_id: '{{ neem.neem_id }}',
+            has_query: '{{ has_query }}',
             ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
                      '://{{ host_url }}/ws/{{ container_name }}/'
         });
@@ -43,7 +44,7 @@
                          class="img-fluid" id="ease-logo-enlarged">
                 </div>
                 <div>
-                    <div id="user_query" class="query-input">is_event(Evt).</div>
+                    <div id="user_query" class="query-input">{{ query_text }}</div>
                     <div class="query_buttons">
                         <a class="btn_query" href="#" onclick="page.console.query()">
                             <i class="query-icon fas fa-spinner fa-spin"></i>

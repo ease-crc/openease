@@ -102,6 +102,7 @@ class NEEMHub:
         if neem_id is None:
             return None
         else:
+            session['neem_id'] = neem_id
             return self.get_neem(neem_id)
 
     def get_neem(self, neem_id):

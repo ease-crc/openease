@@ -146,7 +146,13 @@ function KnowrobUI(flask_user,options) {
             pl.jsonQuery("neem_init('" + that.neem_id + "').", function(result) {
                 console.info("NEEM has been initialized");
                 pl.finishClient();
-                $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+
+                if(options.has_query=='True') {
+                    that.console.query();
+                }
+                else {
+                    $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+                }
             });
         });
     };

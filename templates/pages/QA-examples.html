@@ -62,7 +62,7 @@
                             {%for query in query_group.queries%}
                             <div class="query-container">
                                 <div class="query-event-catcher"
-                                     onclick='ask_query("{{ query.text }}")'></div>
+                                     onclick="window.location='{{ url_for('render_QA_page') }}?q={{ url_quote(query.text) }}';"></div>
                                 <div id="query-{{ query.id }}"
                                      class="query-input">{{ query.text }}</div>
                                 <a class="query-button" href="#">

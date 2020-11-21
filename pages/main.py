@@ -5,6 +5,7 @@ from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
 
 from urlparse import urlparse
+import urllib
 import traceback
 import os
 
@@ -27,7 +28,7 @@ NODE_MODULES_PATH = "/tmp/npm/node_modules/"
 # PasswordForm used for validating given password field
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
-    
+
 @user_logged_in.connect_via(app)
 def track_login(sender, user, **extra):
     app.logger.info("Logged in " + str(user.username))
@@ -86,6 +87,7 @@ def render_main():
         return redirect(url_for('user.logout'))
     return redirect(url_for('render_QA_page'))
 
+
 @app.route('/QA')
 def render_QA_page():
     neem = neemhub.get_requested_neem(request)
@@ -100,6 +102,9 @@ def render_QA_page():
         authentication = False
     else:
         container_name = current_user.username + "_knowrob"
+    # read query from URL parameter "q" if any
+    query_text = request.args.get('q', default='')
+    has_query = (query_text is not '')
     return render_template('pages/QA.html', **locals())
 
 
@@ -136,6 +141,7 @@ QUERY_EXAMPLES = read_query_examples()
 
 @app.route('/examples')
 def render_examples_page():
+    url_quote = lambda x: urllib.pathname2url(x)
     example_query_data = QUERY_EXAMPLES
     return render_template('pages/QA-examples.html', **locals())
 
@@ -148,7 +154,7 @@ def render_change_password_get():
     form = PasswordForm()
     return render_template('flask_user/change_password.html', title='Change Password', form=form)
 
-# post call handling method for changing password    
+# post call handling method for changing password
 @app.route('/change_password_post', methods=["POST"])
 @login_required
 def render_change_password_post():
@@ -164,7 +170,7 @@ def render_change_password_post():
     elif "Cancel" in request.form:
         app.logger.info('  Cancelling the request!')
         return redirect(url_for('render_user_data'))
- 
+
 #def _get_user_roles():
 #    role_names = []
 #    if hasattr(current_user, 'roles'):
