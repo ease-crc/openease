@@ -30,6 +30,12 @@
         });
         // call page.init() when the document is ready
         $(document).ready(page.init);
+
+        const reComputeQuery = function() {
+            var editor = ace.edit("input-text");
+            let query_text = encodeURIComponent(editor.getValue());
+            window.location.href = '/QA?q='+query_text;
+        };
     </script>
 
     <div id="QA-container" class="w-100 h-100 container-fluid">
@@ -59,10 +65,11 @@
                     <div class="card border-light ease-border">
                         <div class="card-header ease-dark">Input</div>
                         <div class="card-body">
-                            <div id="input-text" class="card-text bg-transparent w-100 query-font"></div>
+                            <div id="input-text" class="card-text bg-transparent w-100 query-input query-input-card"></div>
                         </div>
                         <div class="card-footer">
-                            <a href="#"><i class="fas fa-redo"></i> Re-compute</a>
+                            <a href="#"
+                                onclick="reComputeQuery()"><i class="fas fa-redo"></i> Re-compute</a>
                             <a id="btn_query_next" href="#" class="collapse"
                                 onclick="page.nextSolution()"><i class="fas fa-arrow-right"></i> Next solution</a>
                         </div>

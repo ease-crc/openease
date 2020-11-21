@@ -95,9 +95,7 @@ function KnowrobUI(flask_user,options) {
     // create a ROSCanvas in the "markers" div.
     this.getCanvas = function() {
         if(!that.canvas) {
-            //that.blackboard.push('Scene', that.blackboard.createItem(canvas_item));
             that.canvas = new ROSCanvas({
-                //parent: document.getElementById('markers'),
                 parent: that.canvas_div,
                 // meshPath is the prefix for GET requests
                 meshPath: '/meshes/'
@@ -169,12 +167,6 @@ function KnowrobUI(flask_user,options) {
             }
         });
     };
-
-    /*
-    this.setCameraPose = function (pose) {
-        that.rosViewer.setCameraPose(pose);
-    };
-     */
 
     // listen to republish_tick topic
     this.registerTickClient = function(ros) {
@@ -296,7 +288,7 @@ function KnowrobUI(flask_user,options) {
         // Use ace editor for stylized display
         // of query string.
         var ace_edit = ace.edit("input-text");
-        ace_edit.setTheme("ace/theme/solarized_light");
+        //ace_edit.setTheme("ace/theme/solarized_light");
         ace_edit.getSession().setMode("ace/mode/prolog");
         ace_edit.setOptions({
             // editor options
@@ -320,5 +312,6 @@ function KnowrobUI(flask_user,options) {
         });
         ace_edit.setShowPrintMargin(false);
         ace_edit.setOption("showPrintMargin", false);
+        ace_edit.renderer.setScrollMargin(6, 6, 6, 6);
     };
 }
