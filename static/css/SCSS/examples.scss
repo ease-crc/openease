@@ -1,3 +1,6 @@
+// SCSS for query examples page
+
+@import "commandline";
 
 #examples-header {
     //background-color: #144F78;
@@ -102,33 +105,6 @@
     color: #888;
     font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
     font-weight: 400;
-}
-
-.query-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    padding-bottom: 4px;
-    padding-top: 2px;
-    margin-bottom: 8px;
-}
-
-.query-button {
-    position: absolute;
-    top: 4px;
-    right: 8px;
-    color: #adc2ea;
-}
-
-.query-input {
-    border: 1px solid #aed1f7;
-    border-radius: 4px;
-    box-shadow: 2px 2px 2px rgba(154, 183, 227, 0.51);
-    background-color: #ecf7fd;
-    font-size: 10px;
-}
-.query-input .ace_hidden-cursors {
-    opacity: 0;
 }
 
 .query-event-catcher {

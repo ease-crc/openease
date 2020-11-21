@@ -38,21 +38,21 @@
             <div class="col-sm-2"></div>
             <!-- central column -->
             <div class="col-sm-8">
-                <div class="text-center p-2">
+                <div id="qa-header" class="text-center p-2">
                     <!-- TODO: design a banner image? -->
                     <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"
                          class="img-fluid" id="ease-logo-enlarged">
                 </div>
-                <div>
-                    <div id="user_query" class="query-input">{{ query_text }}</div>
-                    <div class="query_buttons">
-                        <a class="btn_query" href="#" onclick="page.console.query()">
+                <div class="p-3">
+                    <div class="query-container">
+                        <div id="user_query" class="query-input">{{ query_text }}</div>
+                        <a class="query-button" href="#" onclick="page.console.query()">
                             <i class="query-icon fas fa-spinner fa-spin"></i>
                         </a>
                     </div>
-                </div>
-                <div class="query_links text-right">
-                    <a href="/examples"><i class="fas fa-th"></i> Examples</a>
+                    <div class="query_links text-right">
+                        <a href="/examples"><i class="fas fa-th"></i> Examples</a>
+                    </div>
                 </div>
 
                 <div id="input" class="container-fluid p-3 collapse">
