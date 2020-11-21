@@ -1,3 +1,4 @@
+import yaml
 from flask import session, request, redirect, url_for, render_template, send_from_directory
 from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
@@ -15,8 +16,6 @@ from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
 from config.settings import USE_HOST_KNOWROB, MESH_URDF_SERVER
-
-from knowrob.queries import EXAMPLES as QUERY_EXAMPLES
 
 from neems.neemhub import instance as neemhub
 
@@ -104,9 +103,40 @@ def render_QA_page():
     return render_template('pages/QA.html', **locals())
 
 
+def read_query_examples():
+    path = os.path.join(os.path.join(app.root_path, "static"), "example-queries.yaml")
+    query_counter = 0
+
+    with open(path) as f:
+        yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+        topic_map = {}
+
+        # first load sections & topics
+        query_data = yaml_data['sections']
+        for section in query_data:
+            for topic in section['topics']:
+                topic_map[topic['id']] = topic
+                topic['sub_topics'] = []
+
+        for sub_topic in yaml_data['sub_topics']:
+            for query_group in sub_topic['query_groups']:
+                queries = []
+                for query in query_group['queries']:
+                    queries.append({'id': query_counter, 'text': query})
+                    query_counter += 1
+                query_group['queries'] = queries
+            topic = topic_map[sub_topic['topic']]
+            topic['sub_topics'].append(sub_topic)
+
+        return query_data
+
+
+QUERY_EXAMPLES = read_query_examples()
+
+
 @app.route('/examples')
 def render_examples_page():
-    query_sections = QUERY_EXAMPLES
+    example_query_data = QUERY_EXAMPLES
     return render_template('pages/QA-examples.html', **locals())
 
 

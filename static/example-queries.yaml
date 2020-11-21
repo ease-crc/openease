@@ -1,0 +1,227 @@
+
+sections:
+- name: Activity knowledge
+  topics:
+
+  - id: occurrences
+    name: Occurrences
+    icon: fa-car-crash
+  
+  - id: participation
+    name: Participation
+    icon: fa-people-carry
+  
+  - id: action_strucutre
+    name: Structure
+    icon: fa-sitemap
+  
+  - id: action_trans
+    name: Transformation
+    icon: fa-random
+  
+  - id: concept
+    name: Conceptualization
+    icon: fa-expand
+  
+  - id: context
+    name: Contextualization
+    icon: fa-expand
+
+- name: Environment knowledge
+  topics:
+  
+  - id: appearance
+    name: Appearance
+    icon: fa-shapes
+  
+  - id: env_structure
+    name: Structure
+    icon: fa-sitemap
+  
+  - id: env_kin
+    name: Kinematics
+    icon: fa-running
+  
+  - id: env_dyn
+    name: Dynamics
+    icon: fa-fill-drip
+  
+  - id: env_phy
+    name: Naive physics
+    icon: fa-utensils
+
+- name: Agent knowledge
+  topics:
+  
+  - id: agent_structure
+    name: Structure
+    icon: fa-sitemap
+  
+  - id: agent_kin
+    name: Kinematics
+    icon: fa-running
+
+sub_topics:
+- topic: occurrences
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+    - is_action(Act)
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+
+- topic: occurrences
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: participation
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+
+- topic: participation
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: participation
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: participation
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: action_strucutre
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+
+- topic: action_trans
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: concept
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+
+- topic: context
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: appearance
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: env_structure
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: env_kin
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+
+- topic: env_dyn
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: env_phy
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: agent_structure
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+
+- topic: agent_kin
+  name: Subtopic
+  description: Subtopic description
+  query_groups:
+  - description: Subtopic group description
+    queries:
+    - is_action(Act)
+    - is_action(Act)
+

@@ -3,7 +3,7 @@
   overflow: revert;
 }
 
-#user_query {
+.query-input {
   width:auto;
   height:28px;
   font-size: 20px;
@@ -14,7 +14,7 @@
   z-index: 2;
 }
 
-#query_buttons {
+.query_buttons {
   z-index: 2;
   position: relative;
   top: -26px;
@@ -24,15 +24,15 @@
   right: 22px;
 }
 
-#query_links {
+.query_links {
   width:auto;
   margin: 4px 20px 14px 14px;
 }
 
-#query_buttons a, #query_links a {
+.query_buttons a, .query_links a {
   color: #144F78;
 }
-#query_buttons a:hover, #query_links a:hover {
+.query_buttons a:hover, .query_links a:hover {
   color: #246F98;
 }
 

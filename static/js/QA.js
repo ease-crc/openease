@@ -38,7 +38,7 @@ function KnowrobUI(flask_user,options) {
             that.initBlackboard();
             $('#blackboard-container').collapse('show');
             $('#btn_query_next').collapse('hide');
-            $('#query-icon').removeClass('fa-question').addClass('fa-spinner fa-spin');
+            $('.query-icon').removeClass('fa-question').addClass('fa-spinner fa-spin');
         },
         on_query_answer: function(qid,answer) {
             that.blackboard.addQueryResponse(that.console, answer);
@@ -51,7 +51,7 @@ function KnowrobUI(flask_user,options) {
             const query_string = "openease_query(("+that.last_query+"),"+JSON.stringify(bindings)+")";
             pl.jsonQuery(query_string, function(result) {
                 pl.finishClient();
-                $('#query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+                $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
                 $('#btn_query_next').collapse('show');
             });
         },
@@ -146,7 +146,7 @@ function KnowrobUI(flask_user,options) {
             pl.jsonQuery("neem_init('" + that.neem_id + "').", function(result) {
                 console.info("NEEM has been initialized");
                 pl.finishClient();
-                $('#query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+                $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
             });
         });
     };

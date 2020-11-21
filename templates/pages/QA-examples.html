@@ -16,35 +16,92 @@
     </section>
 
     <section id="examples-body" class="accordion">
-    {%for section in query_sections%}
+    {%for section in example_query_data%}
         <div class="example-section">
             <div class="section-title-wrapper">
                 <div class="section-title">{{ section.name }}</div>
             </div>
 
             <div class="section-examples w-100 text-truncate">
-            {%for subsection in section.sub_sections%}
+            {%for topic in section.topics%}
                 <div class="example-page">
                     <div class="example-link-wrapper">
                         <a href="#" class="example-link"
-                           data-toggle="collapse" data-target="#queries-{{ subsection.id }}"
-                           aria-expanded="false" aria-controls="queries-{{ subsection.id }}">
-                            <i class="fas {{ subsection.icon }}"></i> {{ subsection.name }}
+                           data-toggle="collapse" data-target="#queries-{{ topic.id }}"
+                           aria-expanded="false" aria-controls="queries-{{ topic.id }}">
+                            <i class="fas {{ topic.icon }}"></i> {{ topic.name }}
                         </a>
                     </div>
                 </div>
             {%endfor%}
             </div>
 
-            {%for subsection in section.sub_sections%}
-                <div id="queries-{{ subsection.id }}" class="collapse" data-parent="#examples-body"
-                  aria-labelledby="{{ subsection.name }}">
-                    <div class="card-body">
-                        {{ subsection.name }}
+            {%for topic in section.topics%}
+                <div id="queries-{{ topic.id }}"
+                     class="collapse card-deck queries-deck w-100"
+                     data-parent="#examples-body"
+                     aria-labelledby="{{ topic.name }}">
+
+                    <hr class="w-100 example-separator"/>
+
+                    {%for sub_topic in topic.sub_topics%}
+                    <div class="example-card">
+                        <h4 class="card-title example-card-title">{{ sub_topic.name }}</h4>
+                        <p class="card-text example-card-text">{{ sub_topic.description }}</p>
+
+                        {%for query_group in sub_topic.query_groups%}
+                        <div class="card-text example-card-text">
+                            {{ query_group.description }}:
+                            {%for query in query_group.queries%}
+                            <div class="query-container">
+                                <div id="query-{{ query.id }}"
+                                     class="query-input">{{ query.text }}</div>
+                                <a class="query-button" href="#" onclick="peng()">
+                                    <i class="query-icon fas fa-question"></i>
+                                </a>
+                            </div>
+                            {%endfor%}
+                        </div>
+                        {%endfor%}
+
                     </div>
+                    {%endfor%}
+
                 </div>
             {%endfor%}
         </div>
     {%endfor%}
     </section>
+
+    <script type="text/javascript">
+    $(".query-input").each(function() {
+        var queryInput = ace.edit($(this).attr('id'));
+        //queryInput.setTheme("ace/theme/solarized_light");
+        queryInput.getSession().setMode("ace/mode/prolog");
+        queryInput.getSession().setUseWrapMode(true);
+        queryInput.setOptions({
+            // editor options
+            selectionStyle: "text",
+            highlightActiveLine: false,
+            highlightSelectedWord: false,
+            readOnly: true,
+            cursorStyle: "slim",
+            behavioursEnabled: false,
+            wrapBehavioursEnabled: false,
+            autoScrollEditorIntoView: false,
+            enableMultiselect: false,
+            // renderer options
+            highlightGutterLine: false,
+            maxLines: 15,
+            showGutter: false,
+            showLineNumbers: false,
+            showFoldWidgets: false,
+            printMarginColumn: false,
+            showPrintMargin: false
+        });
+        queryInput.setShowPrintMargin(false);
+        queryInput.renderer.setScrollMargin(6, 6, 6, 6);
+        queryInput.resize(true);
+    });
+    </script>
 {% endblock %}
