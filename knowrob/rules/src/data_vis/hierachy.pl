@@ -1,6 +1,8 @@
-:- module(tree_handler,
+:- module(hierachy_handler,
 	[ data_vis_tree/3,
-	  data_vis_rdf_tree(r,r,t)
+	  data_vis_rdf_tree(r,r,t),
+	  data_vis_graph/3,
+	  data_vis_rdf_graph(r,r,t)
 	]).
 
 :- use_module(library(query_handler)).
@@ -79,3 +81,27 @@ tree_data_1_(Index_0-Index_n,[X|Xs],ArrayData) :-
 	tree_data_(Index_0-Index_1,X,Y),
 	tree_data_1_(Index_1-Index_n,Xs,Ys),
 	append(Y,Ys,ArrayData).
+
+
+%%
+%query_handler:openease_gen_answer(event,[Evt]) :-
+%	data_vis_rdf_graph(Evt,
+%		dul:hasConstituent,
+%		[title: 'Phases (graph)']).
+
+%%
+data_vis_rdf_graph(Root,Property,Options) :-
+	rdf_tree_data_(Root,Property,[Node,Children]),
+	Children \= [],
+	% generate ID for thwe chart
+	Node = [RootName|_],
+	rdf_db:rdf_split_url(_,PropertyName,Property),
+	atomic_list_concat(
+		['graph',RootName,PropertyName],'_',ID),
+	% publish the message
+	tree_data_(0-_,[Node,Children],ArrayData),
+	data_vis_graph(ID, ArrayData, Options).
+
+%%
+data_vis_graph(ID,NodeData,Options) :-
+    data_vis(graph(ID), [array_data: NodeData | Options]).
