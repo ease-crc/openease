@@ -1,0 +1,22 @@
+<package>
+  <name>openease_rules</name>
+  
+  <version>1.0.0</version>
+  
+  <description>openease_rules</description>
+  
+  <maintainer>openEASE</maintainer>
+  
+  <license>GPL</license>
+  
+  <url type="website">http://www.knowrob.org/</url>
+  
+  <author>openEASE</author>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>knowrob</build_depend>
+  
+  <run_depend>knowrob</run_depend>
+  
+</package>

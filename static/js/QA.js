@@ -139,7 +139,7 @@ function KnowrobUI(flask_user,options) {
         that.waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             const pl = new ROSPrologClient(ros, {});
-            pl.jsonQuery("neem_init('" + that.neem_id + "').", function(result) {
+            pl.jsonQuery("register_ros_package(openease_rules), neem_init('" + that.neem_id + "').", function(result) {
                 console.info("NEEM has been initialized");
                 pl.finishClient();
 
@@ -254,9 +254,7 @@ function KnowrobUI(flask_user,options) {
             compression : 'png'
         });
         that.markerVis.subscribe(function(marker_msg) {
-            if(that.blackboard) {
-                that.getCanvas().addMarkerArray(marker_msg);
-            }
+            that.getCanvas().addMarkerArray(marker_msg);
         });
     };
     

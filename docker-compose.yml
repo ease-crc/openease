@@ -134,3 +134,11 @@ volumes:
   postgres:
   # nginx configuration
   nginx:
+  # used by KnowRob containers for additional
+  # Prolog rules specific to openEASE.
+  rules:
+    driver: local
+    driver_opts:
+      o: 'bind'
+      type: 'none'
+      device: './knowrob/rules'
