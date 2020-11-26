@@ -9,15 +9,6 @@ body {
   background-color: #0277bd;
 }
 
-
-
-.container {
-  position: relative;
-  padding-top: 60px;
-  padding-bottom: 100px; /* Height of the footer */
-  overflow: hidden;
-}
-
 // forms
 
 .form-control:focus {
@@ -142,24 +133,6 @@ div#login {
 #forgot-password-link {
   display: inline;
   float: right;
-}
-
-#footer-style {
-  position: absolute;
-  height: 100px; /* Height of the footer */
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 430px;
-  max-width: 100%;
-  margin-top: 0px;
-  margin-right: auto;
-  margin-left: auto;
-  background-color: #0277bd;
-  //text-align: left;
-  padding-left: 15px;
-  padding-right: 15px;
-  font-size: 15px;
 }
 
 .legal {
