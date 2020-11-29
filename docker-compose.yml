@@ -141,4 +141,4 @@ volumes:
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: './knowrob/rules'
+      device: '$PWD/knowrob/rules'
