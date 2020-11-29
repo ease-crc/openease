@@ -19,10 +19,11 @@
     top: 2px;
 }
 .query-button {
-    color: #49aee3;
+    color: #49aee3 !important;
+    cursor: pointer;
 }
 .query-button:hover {
-    color: #246F98;
+    color: #246F98 !important;
 }
 .query-input-card {
     border: none;

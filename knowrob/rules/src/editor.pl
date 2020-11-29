@@ -4,10 +4,13 @@
 	  ease_unload_directory/1,
 	  ease_load_directory/1,
 	  ease_unload_file/1,
-	  ease_consult/1
+	  ease_consult/1,
+	  ease_consult_rule(+,t),
+	  ease_retract_rule(+)
 	]).
 
 :- dynamic ease_user_term/2.
+:- dynamic ease_user_rule/2.
 
 is_prolog_source_file(_File) :- true.
 
@@ -82,6 +85,24 @@ ease_consult(File) :-
 	close(Fd).
 
 %%
+%
+ease_consult_rule(ID, GoalStr) :-
+    term_string(Goal,GoalStr),
+    ignore(ease_retract_rule(ID)),
+	expand_term(Goal,Expanded),
+	% TODO: raise exception on invalid format
+	Goal=(_ :- _),
+	assertz(:(user,Expanded)),
+	assertz(ease_user_rule(ID,Expanded)).
+
+%%
+%
+ease_retract_rule(ID) :-
+    ease_user_rule(ID,Expanded),
+    ease_retract_term(Expanded),
+    retractall(ease_user_rule(ID,_)).
+
+%%
 % call assertz for terms in a file
 %
 read_data(_, end_of_file, _) :- !.
@@ -91,4 +112,3 @@ read_data(File, Term, Fd) :-
 	assertz(ease_user_term(File,Expanded)),
 	read(Fd, Next),
 	read_data(File, Next, Fd).
-

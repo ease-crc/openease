@@ -54,6 +54,7 @@
     <script type="text/javascript">
         let tut_pages=[];
         let tut_index=0;
+        let curr_tut_id='';
 
         function ask_query(solution_div, query_text) {
             // call prolog query
@@ -70,6 +71,18 @@
                 div.removeClass("card-body");
                 solution_div.append(div);
                 solution_div.collapse("show");
+            });
+        };
+
+        function consult_code(code_string, editor_index) {
+            let rule_id = curr_tut_id + '_' + tut_index + '_' + editor_index;
+            let query_text = "ease_consult_rule('" +
+                rule_id + "', \"" +  code_string + "\").";
+            const pl = new ROSPrologClient(ros, {});
+            pl.jsonQuery(query_text, function(response) {
+                // TODO: show status to the user. error message is very useful.
+                //        best show a collapsable with status.
+                console.info("Code Consulted");
             });
         };
 
@@ -152,7 +165,9 @@
 
             // ssetup editor sections
             $(".tut-editor").each(function() {
+                const this_count = query_counter;
                 const editor_id = "editor-"+query_counter;
+                const this_editor = $(this);
                 query_counter += 1;
                 // need to have ID for ace editor to work
                 $(this).attr("id",editor_id);
@@ -161,6 +176,16 @@
                 // setup ace ditor
                 ace_init(editor_id, {
                     readOnly: false
+                });
+                // add icon
+                const icon_a = $("<a>");
+                const icon_i = $("<i>");
+                icon_a.addClass("query-button");
+                icon_i.addClass("query-icon fas fa-cogs");
+                icon_a.append(icon_i);
+                $(this).append(icon_a);
+                icon_a.click(function() {
+                    consult_code(ace.edit(editor_id).getValue(), this_count);
                 });
             });
 
@@ -206,7 +231,10 @@
                 contentType: "application/json",
                 data: JSON.stringify({ tutorial: tutorial_id }),
                 dataType: "json"
-            }).done(load_tutorial_data);
+            }).done(function(data) {
+                load_tutorial_data(data);
+                curr_tut_id = tutorial_id;
+            });
         };
 
         function update_description(tut_id) {
