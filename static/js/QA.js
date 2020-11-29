@@ -141,7 +141,7 @@ function KnowrobUI(flask_user,options) {
         that.registerImageClient(ros);
         that.registerMarkerClient(ros);
         that.registerTickClient(ros);
-        that.waitForProlog(ros, function() {
+        waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             that.initNEEM(ros, function() {
                 console.info("NEEM has been initialized");
@@ -162,21 +162,6 @@ function KnowrobUI(flask_user,options) {
         pl.jsonQuery("register_ros_package(openease_rules), neem_init('" + that.neem_id + "').", function(result) {
             pl.finishClient();
             if(then) {
-                then();
-            }
-        });
-    };
-    
-    this.waitForProlog = function (ros, then) {
-        if(!ros) return;
-        const pl = new ROSPrologClient(ros, {});
-        if(!pl) return;
-        pl.jsonQuery("true", function(result) {
-            pl.finishClient();
-            if(result.error) {
-                setTimeout(function() { that.waitForProlog(ros, then) }, 500);
-            }
-            else {
                 then();
             }
         });

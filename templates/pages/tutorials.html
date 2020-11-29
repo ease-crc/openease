@@ -6,6 +6,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/EntityFormatter.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/ResponseWidget.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/BindingTable.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/Helper.js') }}"></script>
 
     <!--FIXME: openEASE must run offline, replace this!
         But there are some difficulties getting the google charts
@@ -32,27 +33,12 @@
         let ros = undefined;
         let formatter = new EntityFormatter();
 
-        // FIXME redundant, move to ROSPRologClient
-        const wait_for_prolog = function (then) {
-            const pl = new ROSPrologClient(ros, {});
-            if(!pl) return;
-            pl.jsonQuery("true", function(result) {
-                pl.finishClient();
-                if(result.error) {
-                    setTimeout(function() { wait_for_prolog(ros, then) }, 500);
-                }
-                else {
-                    then();
-                }
-            });
-        };
-
         // call init() when the document is ready
         const init = function () {
             client.connect(function(new_ros) {
                 console.info('Connected to ROS.');
                 ros = new_ros;
-                wait_for_prolog(function() {
+                waitForProlog(function() {
                     console.info('Connected to KnowRob.');
                     formatter.connect(ros, function() {});
                 });
