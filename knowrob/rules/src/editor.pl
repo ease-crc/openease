@@ -90,8 +90,6 @@ ease_consult_rule(ID, GoalStr) :-
     term_string(Goal,GoalStr),
     ignore(ease_retract_rule(ID)),
 	expand_term(Goal,Expanded),
-	% TODO: raise exception on invalid format
-	Goal=(_ :- _),
 	assertz(:(user,Expanded)),
 	assertz(ease_user_rule(ID,Expanded)).
 

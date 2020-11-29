@@ -76,6 +76,8 @@
 
         function consult_code(code_string, editor_index) {
             let rule_id = curr_tut_id + '_' + tut_index + '_' + editor_index;
+            // FIXME double quotes in code_string must be escaped because we wrap
+            //         the whole text in double quotes
             let query_text = "ease_consult_rule('" +
                 rule_id + "', \"" +  code_string + "\").";
             const pl = new ROSPrologClient(ros, {});
