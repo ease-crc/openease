@@ -1,233 +1,287 @@
 {% extends "base.html" %}
 
 {% block head %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/form-js/image_resizer.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/QA.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/tutorials.css') }}"/>
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/split.css') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/EntityFormatter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/ResponseWidget.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/BindingTable.js') }}"></script>
 
-<!--FIXME: openEASE must run offline, replace this!
-             But there are some difficulties getting the google charts
-             into the current build procedure using browserify.
-  -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script>
-    google.load("visualization", "1", { packages: ["timeline"] });
-//     google.load("visualization", "1", {packages:["corechart","timeline"]});
-</script>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-    /* font used to display Prolog code */
-    .query-font {
-        font-size: 20px;
-    }
-
-    #page-content {
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        width: 100%;
-        height: -o-calc(100% - 108px);
-        /* opera */
-        height: -webkit-calc(100% - 108px);
-        /* google, safari */
-        height: -moz-calc(100% - 108px);
-        /* firefox */
-        height: calc(100% - 108px);
-        /* firefox 53 and newer*/
-    }
-
-    #history {
-        background: url("{{ url_for('static', filename='img/ease-light.png') }}");
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 30%;
-    }
-
-    .query-input {
-        width: 100%;
-        height: 100%;
-        border-bottom: 1px solid #CCC;
-        font-size: 20px;
-    }
-
-    #chart {
-        width: 100%;
-        height: 100%;
-    }
-
-</style>
+    <!--FIXME: openEASE must run offline, replace this!
+        But there are some difficulties getting the google charts
+        into the current build procedure using browserify.
+    -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+        google.load("visualization", "1", {packages:["timeline"]});
+        //google.load("visualization", "1", {packages:["corechart","timeline"]});
+    </script>
 {% endblock %}
 
 {% block body %}
-<script type="text/javascript">
-    var ui = new KnowrobUI(flask_user, {
+    <script type="text/javascript">
+        // connect to ROS on host via websocket
+        const ros_url = 'ws' + (location.protocol === 'https:'?'s':'') +
+                '://{{ host_url }}/ws/{{ container_name }}/';
+        const client = new ROSClient({
+            flask_user: flask_user,
+            ros_url: ros_url,
             authentication: '{{ authentication }}',
-            ros_url: 'ws' + (location.protocol === 'https:' ? 's' : '') +
-                '://{{ host_url }}/ws/{{ container_name }}/'
+            auth_url: '/api/v1.0/auth_by_session'
         });
-    // call page.init() when the document is ready
-    $(document).ready(ui.init);
-    
-    $(document).ready(function () {    
-            loadTutorial("overview", 1);
-        });
+        let ros = undefined;
+        let formatter = new EntityFormatter();
 
+        // FIXME redundant, move to ROSPRologClient
+        const wait_for_prolog = function (then) {
+            const pl = new ROSPrologClient(ros, {});
+            if(!pl) return;
+            pl.jsonQuery("true", function(result) {
+                pl.finishClient();
+                if(result.error) {
+                    setTimeout(function() { wait_for_prolog(ros, then) }, 500);
+                }
+                else {
+                    then();
+                }
+            });
+        };
 
-     function loadTutorial(category, page) {
+        // call init() when the document is ready
+        const init = function () {
+            client.connect(function(new_ros) {
+                console.info('Connected to ROS.');
+                ros = new_ros;
+                wait_for_prolog(function() {
+                    console.info('Connected to KnowRob.');
+                    formatter.connect(ros, function() {});
+                });
+            });
+            //
+            const first_tut = 'semweb';
+            update_description(first_tut);
+            request_tutorial(first_tut);
+        };
+        $(document).ready(init);
+    </script>
+
+    <script type="text/javascript">
+        let tut_pages=[];
+        let tut_index=0;
+
+        function ask_query(solution_div, query_text) {
+            // call prolog query
+            const pl = new ROSPrologClient(ros, {});
+            pl.jsonQuery(query_text, function(response) {
+                pl.finishClient();
+                //
+                solution_div.html('');
+                //
+                let widget = new ResponseWidget({
+                    formatter: formatter
+                });
+                let div = widget.create(response);
+                div.removeClass("card-body");
+                solution_div.append(div);
+                solution_div.collapse("show");
+            });
+        };
+
+        function ace_init(query_id, options) {
+            options = options || {};
+            // FIXME redundant
+            let queryInput = ace.edit(query_id);
+            //queryInput.setTheme("ace/theme/solarized_light");
+            queryInput.getSession().setMode("ace/mode/prolog");
+            queryInput.getSession().setUseWrapMode(true);
+            queryInput.setOptions({
+                // editor options
+                selectionStyle: "text",
+                highlightActiveLine: false,
+                highlightSelectedWord: false,
+                readOnly: options.readOnly,
+                cursorStyle: "slim",
+                behavioursEnabled: false,
+                wrapBehavioursEnabled: false,
+                autoScrollEditorIntoView: false,
+                enableMultiselect: false,
+                // renderer options
+                highlightGutterLine: false,
+                maxLines: 15,
+                showGutter: false,
+                showLineNumbers: false,
+                showFoldWidgets: false,
+                printMarginColumn: false,
+                showPrintMargin: false
+            });
+            queryInput.setShowPrintMargin(false);
+            queryInput.renderer.setScrollMargin(6, 6, 6, 6);
+            queryInput.resize(true);
+        }
+
+        function load_page(index) {
+            // remember active index
+            tut_index = index;
+            // get tutorial HTML data
+            const tut_data = tut_pages[index];
+
+            // load tutorial HTML text
+            $('#tutorial-header').text(tut_data[0]);
+            $('#tutorial-content').html(tut_data[1]);
+
+            // setup code sections
+            let query_counter=0;
+            $("pre code").each(function() {
+                const parent = $(this).parent();
+                const query_id = "query-"+query_counter;
+                query_counter += 1;
+                // wrap code elements into new parent
+                const new_parent = $("<div>");
+                new_parent.addClass("query-container");
+                parent.remove($(this));
+                parent.append(new_parent);
+                new_parent.append($(this));
+                // remove trailing newline character
+                $(this).text($(this).text().trim());
+                // and to the code block
+                $(this).attr("id",query_id);
+                $(this).addClass("query-input");
+                const code_div = $(this);
+                // solution div
+                const solution_div = $("<div>");
+                solution_div.addClass("query-solution collapse");
+                parent.append(solution_div);
+                // create a div to catch events
+                const evt_catcher = $("<div>");
+                evt_catcher.addClass("query-event-catcher");
+                evt_catcher.click(function () {
+                    ask_query(solution_div, ace.edit(query_id).getValue());
+                });
+                new_parent.prepend(evt_catcher);
+                // setup as ace editor
+                ace_init(query_id, {
+                    readOnly: true
+                });
+            });
+
+            // ssetup editor sections
+            $(".tut-editor").each(function() {
+                const editor_id = "editor-"+query_counter;
+                query_counter += 1;
+                // need to have ID for ace editor to work
+                $(this).attr("id",editor_id);
+                // remove trailing newline character
+                $(this).text($(this).text().trim());
+                // setup ace ditor
+                ace_init(editor_id, {
+                    readOnly: false
+                });
+            });
+
+            // collapsing
+            $('#tutorial-container').collapse("show");
+            if (index > 0) {
+                $('#prev-button').collapse("show");
+            }
+            else {
+                $('#prev-button').collapse("hide");
+            }
+            if (index+1 < tut_pages.length) {
+                $('#next-button').collapse("show");
+            }
+            else {
+                $('#next-button').collapse("hide");
+            }
+        }
+
+        function next_page() {
+            const next_index = tut_index+1;
+            if(next_index<tut_pages.length) {
+                load_page(next_index);
+            }
+        }
+
+        function prev_page() {
+            const prev_index = tut_index-1;
+            if(prev_index>=0) {
+                load_page(prev_index);
+            }
+        }
+
+        function load_tutorial_data(data) {
+            tut_pages = data.pages;
+            load_page(0);
+        };
+
+        function request_tutorial(tutorial_id) {
             $.ajax({
                 url: "/tutorials/get",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({ page: page }),
+                data: JSON.stringify({ tutorial: tutorial_id }),
                 dataType: "json"
-            }).done(function (data) {
-                var lib = document.getElementById('library');
-                lib.innerHTML = ''; // clear
-                // <h2>tut.cat_title</h2>
-                //var h2 = document.createElement("h2");
-                //h2.innerHTML = data.this.cat_id;
-                //lib.appendChild(h2);
-                // <h4>tut.page.  tut.title</h4>
-                //var h4 = document.createElement("h4");
-                //h4.innerHTML = data.this.page + '. ' + data.this.title;
-                //lib.appendChild(h4);
-                // {{ content }}
-                var text = document.createElement("div");
-                text.innerHTML = data.this.text;
-                lib.appendChild(text);
-                // <div id="tut_nav">
-                var nav = document.createElement("div");
-                nav.id = 'tut_nav';
-                if (data.prev) {
-                    // <div style="float:left;">
-                    //    <a onclick="loadTutorial(prev.cat_id, prev.page)">Previous: prev.title</a>
-                    // </div>
-                    var link = document.createElement("div");
-                    var link_a = document.createElement("a");
-                    link.style.float = 'left';
-                    link_a.innerHTML = 'Previous: ' + data.prev.title
-                    link_a.onclick = function () { loadTutorial(data.prev.cat_id, data.prev.page); };
-                    link.appendChild(link_a);
-                    nav.appendChild(link);
-                }
-                // <div style="float:right;">
-                //    <a onclick="loadTutorial(nxt.cat_id, nxt.page)">Next: nxt.title</a>
-                // </div>
-                var link = document.createElement("div");
-                var link_a = document.createElement("a");
-                link.style.float = 'right';
-                if (data.next) {
-                    link_a.innerHTML = 'Next: ' + data.next.title
-                    link_a.onclick = function () { loadTutorial(data.next.cat_id, data.next.page); };
-                } else {
-                    link_a.innerHTML = 'Tutorial Overview'
-                    link_a.onclick = function () { loadTutorial('overview', 1); };
-                }
-                link.appendChild(link_a);
-                nav.appendChild(link);
+            }).done(load_tutorial_data);
+        };
 
-                lib.appendChild(nav);
-                // hook for links of class "show_code" that pastes the content of the
-                // previous code block into the query field
-                $("a.show_code").click(function (event) {
-					var query_text = $(this).closest("pre + *").prev().find('code').html();
-					var editor = ace.edit("user_query");
-					editor.getSession().setValue(query_text);
-					ui.console.query(query_text);
-                    event.preventDefault();
-                });
+        function update_description(tut_id) {
+            $('#tut-description').text(
+                $('#tut-opt-'+tut_id).attr('description'));
+        };
+
+        $(document).ready(function() {
+            $('#tut-select').change(function(){
+                let tut_id = $(this).val();
+                update_description(tut_id);
+                request_tutorial(tut_id);
             });
-        }
-
+        });
 </script>
 
-    <div id="QA-container" class="w-100 split split-horizontal">
-    	<div id="vis-container" class="split w-100">
-			<div id="library" style="background-color:white" class="split-horizontal split-content split h-100 container-fluid p-3">
-			</div>
-        	<div id="history" class="split split-horizontal split-content h-100">
-        	</div>
-        	<div id="markers" style="display: None;" class="h-0 w-0">
-        	</div>
-    	</div>
-           
-    	<div id="console" class="container-fluid p-0 split split-content">
-            <div class="h-100 d-flex flex-column">
-                <div id="user_query" class="query-input flex-grow-1">member(A, [a,b,c]).</div>
-                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group">
-                        <div class="btn-group">
-                            <button id="query-examples" type="button" class="btn btn-light dropdown-toggle"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Examples</button>
-                            <div class="dropdown-menu" aria-labelledby="query-examples">
-                                <!-- TODO: store example queries in some text file. -->
-                                <!-- TODO: include NEEM example queries here? -->
-                                <!-- TODO: include contextual queries here? (e.g. about selected object etc.) -->
-                                <h5 class="dropdown-header">Charts</h5>
-                                <a class="dropdown-item" href="#"
-                                    onclick="ui.console.query('data_vis(piechart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Pie
-                                    Chart</a>
-                                <a class="dropdown-item" href="#"
-                                    onclick="ui.console.query('data_vis(barchart(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[10,30,22]]]).')">Bar
-                                    Chart</a>
-                                <a class="dropdown-item" href="#"
-                                    onclick="ui.console.query('data_vis(timeline(chart_id), [\n    title: some_distribution,\n    data: [[a,b,c],[\'0_10\',\'5_15\',\'0_20\']]]).')">Timeline</a>
-                            </div>
-                        </div>
-                        <div class="btn-group">
-                            <button id="query-view" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">View</button>
-                            <div class="dropdown-menu" aria-labelledby="query-view">
-                                <a class="dropdown-item" href="#" onclick="ui.console.zoomIn()"><i class="fas fa-plus"></i>
-                                    Larger Text</a>
-                                <a class="dropdown-item" href="#" onclick="ui.console.zoomOut()"><i class="fas fa-minus"></i>
-                                    Smaller Text</a>
+    <div id="QA-container" class="w-100 h-100 container-fluid">
+        <div class="row h-100" style="overflow: auto">
+            <!-- left column -->
+            <div class="col-sm-2"></div>
+            <!-- central column -->
+            <div class="col-sm-8">
+                <div id="qa-header" class="text-center p-2">
+                    <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"
+                         class="img-fluid" id="ease-logo-enlarged">
+                </div>
+
+                <div id="tutorial-navigator" class="container-fluid p-3">
+                    <div class="card border-light ease-border">
+                        <div class="card-header ease-dark">Select a Tutorial</div>
+                        <div class="card-body">
+                            <select id="tut-select" class="browser-default custom-select">
+                                {%for tut in tutorial_names%}
+                                <option id="tut-opt-{{ tut.id }}"
+                                        selected="{{ tut.selected }}"
+                                        value="{{ tut.id }}"
+                                        description="{{ tut.description }}">{{ tut.title }}</option>
+                                {%endfor%}
+                            </select>
+                            <div id="tut-description" class="card-body">
                             </div>
                         </div>
                     </div>
-                    <div class="btn-group" role="group" aria-label="Third group">
-                        <button id="btn_query" type="button" class="btn btn-primary" onclick="ui.console.query()"><i
-                                class="fas fa-question"></i></button>
-                        <button id="btn_query_next" type="button" class="btn btn-primary"
-                            onclick="ui.console.nextSolution()"><i class="fas fa-redo"></i></button>
+                </div>
+
+                <div id="tutorial-container" class="container-fluid p-3 collapse">
+                    <div class="card border-light ease-border">
+                        <div id="tutorial-header" class="card-header ease-dark"></div>
+                        <div id="tutorial-content" class="p-3"></div>
+                        <div class="card-footer">
+                            <a id="prev-button" href="#" onclick="prev_page()">
+                                <i class="fas fa-arrow-left"></i> Previous</a>
+                            <a id="next-button" href="#" onclick="next_page()">
+                                Next <i class="fas fa-arrow-right"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- right column -->
+            <div class="col-sm-2">
+            </div>
         </div>
-	</div>
-
-<!-- setup split.js -->
-<script type="text/javascript">
-    Split(['#vis-container', '#console'], {
-        gutterSize: 8,
-        cursor: 'row-resize',
-        direction: 'vertical',
-        sizes: [60, 40],
-        onDragEnd: ui.resizeCanvas
-    });
-    var splitInstance = Split(['#library', '#history'], {
-        gutterSize: 8,
-        cursor: 'col-resize',
-        sizes: [65, 35],
-        onDragEnd: ui.resizeCanvas
-    });
-
-    // min window width for smaller screens
-    var minimumWindowWidth = 992;
-    $(window).resize(function () {
-        //console.log('window was resized : ' + $(window).width());
-
-        if ($(window).width() < minimumWindowWidth) {
-            // do not show the gutter
-            splitInstance.setSizes([5, 95]);
-        } else {
-            // show the gutter
-            splitInstance.setSizes([40, 60]);
-        } // end of else
-    }); // eof window resize
-</script>
-
+    </div>
 {% endblock %}

@@ -23,6 +23,7 @@ function KnowrobUI(flask_user,options) {
     // query id of most recent query
     this.last_qid = undefined;
     this.last_query = undefined;
+    this.formatter = new EntityFormatter();
     // a console used to send queries to KnowRob
     this.console = new PrologConsole(that.client, {
         query_div: 'user_query',
@@ -88,8 +89,12 @@ function KnowrobUI(flask_user,options) {
         if(that.blackboard) {
             that.blackboard.delete();
         }
-        that.blackboard = new Blackboard($("#blackboard"),
-            that.last_qid, that.last_query);
+        that.blackboard = new Blackboard({
+            where: $("#blackboard"),
+            qid: that.last_qid,
+            query_string: that.last_query,
+            formatter: that.formatter
+        });
     };
     
     // create a ROSCanvas in the "markers" div.
@@ -138,18 +143,27 @@ function KnowrobUI(flask_user,options) {
         that.registerTickClient(ros);
         that.waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
-            const pl = new ROSPrologClient(ros, {});
-            pl.jsonQuery("register_ros_package(openease_rules), neem_init('" + that.neem_id + "').", function(result) {
+            that.initNEEM(ros, function() {
                 console.info("NEEM has been initialized");
-                pl.finishClient();
-
-                if(options.has_query=='True') {
-                    that.console.query();
-                }
-                else {
-                    $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
-                }
+                that.formatter.connect(ros, function() {
+                    if(options.has_query=='True') {
+                        that.console.query();
+                    }
+                    else {
+                        $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+                    }
+                });
             });
+        });
+    };
+
+    this.initNEEM = function (ros,then) {
+        const pl = new ROSPrologClient(ros, {});
+        pl.jsonQuery("register_ros_package(openease_rules), neem_init('" + that.neem_id + "').", function(result) {
+            pl.finishClient();
+            if(then) {
+                then();
+            }
         });
     };
     
