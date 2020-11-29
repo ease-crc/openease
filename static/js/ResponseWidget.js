@@ -47,7 +47,8 @@ function ResponseWidget(options){
 
     this.create_exception_widget = function(error) {
         const widget = $("<p>");
-        widget.addClass("card-text alert alert-warning text-left");
+        widget.addClass("card-text alert alert-danger text-left");
+        widget.css('white-space','pre-wrap');
         // get error message
         const msg = error.solution || error.message || error.toString();
         // TODO: pretty print prolog terms
@@ -55,7 +56,7 @@ function ResponseWidget(options){
         //
         const item_container = $("<div>");
         item_container.addClass("container-fluid");
-        item_container.append(that.create_item(widget));
+        item_container.append(widget);
         return item_container;
     };
 
@@ -67,7 +68,7 @@ function ResponseWidget(options){
         //
         const item_container = $("<div>");
         item_container.addClass("container-fluid");
-        item_container.append(that.create_item(item));
+        item_container.append(item);
         //
         return item_container;
     };
