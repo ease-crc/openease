@@ -138,12 +138,12 @@
 
         <!--    general info -->
         <div class="row col-md-12 col-sm-12">
-            <div class="container container-footer-bottom-padding col-md-3 col-sm-3 offset-md-1 offset-sm-1">
+            <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
                 <h4>IAI University Bremen</h4>
                 <span>The Institute for Artificial Intelligence (IAI) directed by Prof. Michael Beetz is part of the Faculty of Computer Science and member of the Center for Computing and Communication Technologies (TZI) at the University of Bremen.</span>
             </div>
 
-            <div class="container container-footer-bottom-padding col-md-3 col-sm-3 offset-md-1 offset-sm-1">
+            <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
                 <div class="support-cus">
                     <h4>Reach Out</h4>
                     <p class="footer-text-color">Am Fallturm 1, 28359 Bremen, Germany</p>
@@ -160,7 +160,7 @@
             </div>
 
             <!-- logos -->
-            <div class="container container-footer-bottom-padding col-md-3 col-sm-3">
+            <div class="container container-footer-bottom-padding col-md-4 col-sm-4">
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
@@ -306,20 +306,20 @@
 <script>
 ;(function () {
   $(document).ready(function () {
-    var $button, $extended_footer
-    $button = $('#toggle_button')
-    $extended_footer = $('#extended_footer')
+    var $button, $extended_footer;
+    $button = $('#toggle_button');
+    $extended_footer = $('#extended_footer');
     return $button.click(() => {
       if ($extended_footer.attr('hidden') === 'hidden') {
-        $extended_footer.removeAttr('hidden')
-        return $button.attr('aria-expanded', true)
+        $extended_footer.removeAttr('hidden');
+        return $button.attr('aria-expanded', true);
       } else {
-        $extended_footer.attr('hidden', true)
-        return $button.attr('aria-expanded', false)
+        $extended_footer.attr('hidden', true);
+        return $button.attr('aria-expanded', false);
       }
     })
   })
-}.call(this))
+}.call(this));
 </script>
 {% endblock %}
 
