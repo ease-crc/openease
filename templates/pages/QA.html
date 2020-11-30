@@ -3,9 +3,13 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/QA.css') }}"/>
 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/EntityFormatter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/ResponseWidget.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/BindingTable.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/ROSCanvas.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/Playback.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/Helper.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/QA.js') }}"></script>
 
     <!--FIXME: openEASE must run offline, replace this!

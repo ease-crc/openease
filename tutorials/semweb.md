@@ -1,6 +1,5 @@
 
------------------------------------------------------------------
-Semantic Web -- Introduction	
+Semantic Web
 -----------------------------------------------------------------
 
 This course is concerned with symbolic knowledge representation
@@ -43,8 +42,8 @@ This is to clarify foundational questions such as:
   * What is a `Situation`, `Event`, `Process`, `Motion`,`Action`?
   * Is `Reaching` an `Action` or a `Motion`?
 
------------------------------------------------------------------
-Semantic Web -- Resource Description Framework (RDF)
+
+Resource Description Framework (RDF)
 -----------------------------------------------------------------
 
 The RDF data model is similar to classical conceptual modeling approaches such as entity-relationship or class diagrams,
@@ -109,6 +108,11 @@ and `subproperty_of/2`.
 `Task 1:` Write a recursive rule `subclass_path(Parent,Child,Path)` that yields
 all paths from `Parent` to `Child` following the sub-class relation.
 
+<div class="tut-editor">
+subclass_path(Parent,Child,Path) :-
+    fail.
+</div><br>
+
 Test your declaration with following queries
 (Prolog should answer *true* for all of them):
 
@@ -132,6 +136,11 @@ Test your declaration with following queries
 `Task 2:` Write a predicate `shortest_path/3` that only yields the shortest path between
 class resources.
 
+<div class="tut-editor">
+shortest_path(From,To,Shortest) :-
+    fail.
+</div><br>
+
 Test your declaration with following queries
 (Prolog should answer *true* for all of them):
 
@@ -143,8 +152,7 @@ Test your declaration with following queries
        'http://www.ease-crc.org/ont/SOMA.owl#Dishwasher']).
 
 
------------------------------------------------------------------
-Semantic Web -- Web Ontology Language (OWL)	
+Web Ontology Language (OWL)	
 -----------------------------------------------------------------
 
 The OWL Web Ontology Language is designed for use
@@ -236,8 +244,12 @@ until the base link from the end link.
 All links are indiviudal of `urdf:'Link'`, and
 all joints are indiviudal `urdf:'Joint'`.
 
-`Task 1:` Write a predicate `component_links(Component,Links)` that yields all links that belong to a component,
-and a predicate `highlight_component(Component)` that highlights all links belonging to a component in the canvas.
+`Task 1:` Write a predicate `component_links(Component,Links)` that yields all links that belong to a component.
+
+<div class="tut-editor">
+component_links(Component,Links) :-
+    fail.
+</div><br>
 
 Test your declaration with following queries
 (Prolog should answer *true* for all of them):
@@ -246,16 +258,12 @@ Test your declaration with following queries
 
     component_links(pr2:pr2_left_arm, Links).
 
-`b)`
-
-    highlight_component(pr2:pr2_left_arm).
-
-`c)`
-
-    highlight_component(X).
-
 `Task 2:` Write a predicate `bbox(Components,size(Width,Height,Depth),position(X,Y,Z))` that relates a list of components to the minimal bounding box that contains all links in them.
-Write a second predicate `show_bbox(Components)` that visualizes a cube in the canvas matching the position and size inferred by the `bbox` predicate.
+
+<div class="tut-editor">
+bbox(Components,size(Width,Height,Depth),position(X,Y,Z)) :-
+    fail.
+</div><br>
 
 Test your declaration with following queries
 (Prolog should answer *true* for all of them):
@@ -265,12 +273,3 @@ Test your declaration with following queries
     bbox(Components,
         size(Width,Height,Depth),
         position(X,Y,Z))).
-
-`b)`
-
-    show_bbox([pr2:pr2_left_arm]).
-
-`c)`
-
-    show_bbox([pr2:pr2_left_arm,pr2_right_arm]).
-

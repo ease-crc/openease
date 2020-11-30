@@ -68,16 +68,19 @@ def send_from_static_directory(filename):
 def download_mesh(mesh):
     return redirect(MESH_URDF_SERVER + mesh)
 
-# method to send woff font files from node_modules
-@app.route('/user/node_modules/<path:file_path>')
-@app.route('/node_modules/<path:file_path>')
-def send_from_node_modules(file_path):
+# method to send font files from node_modules dir
+@app.route('/<path:url_path>/node_modules/<path:file_path>')
+def send_from_node_modules(url_path, file_path):
     # remove possibility for miss use of file_path by removing any sort
     # of directory path manipulation
     file_path.replace("..", "").replace("./", "")
     with open(os.path.join(NODE_MODULES_PATH, file_path), 'r') as f:
         file_content = f.read()
     return file_content
+
+@app.route('/node_modules/<path:file_path>')
+def send_from_node_modules_root(file_path):
+    return send_from_node_modules('/', file_path)
 
 @app.route('/')
 def render_main():
@@ -138,13 +141,11 @@ def read_query_examples():
 
 QUERY_EXAMPLES = read_query_examples()
 
-
 @app.route('/examples')
 def render_examples_page():
     url_quote = lambda x: urllib.pathname2url(x)
     example_query_data = QUERY_EXAMPLES
     return render_template('pages/QA-examples.html', **locals())
-
 
 # get call handling method for changing password
 @app.route('/change_password_get')
@@ -181,4 +182,3 @@ def render_change_password_post():
 @admin_required
 def admin_cookie():
     return render_template('settings/cookies.html', **locals())
-
