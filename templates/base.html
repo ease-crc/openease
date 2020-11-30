@@ -306,16 +306,16 @@
 <script>
 ;(function () {
   $(document).ready(function () {
-    var button-arrow-down, extended_footer;
-    button-arrow-down = $('#toggle_button');
+    var button_arrow_down, extended_footer;
+    button_arrow_down = $('#toggle_button');
     extended_footer = $('#extended_footer');
-    return button-arrow-down.click(() => {
+    return button_arrow_down.click(() => {
       if (extended_footer.attr('hidden') === 'hidden') {
         extended_footer.removeAttr('hidden');
-        return button-arrow-down.attr('aria-expanded', true);
+        return button_arrow_down.attr('aria-expanded', true);
       } else {
         extended_footer.attr('hidden', true);
-        return button-arrow-down.attr('aria-expanded', false);
+        return button_arrow_down.attr('aria-expanded', false);
       }
     })
   })
