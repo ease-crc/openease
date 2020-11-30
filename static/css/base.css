@@ -1,0 +1,14 @@
+/* only on non-mobile */
+.carousel-item-img-small {
+    width: auto !important;
+    height: 100px;
+    max-height: 100px;
+}
+.carousel-item-img-big {
+    width: 300px !important;
+    height: 100px;
+    max-height: 100px;
+}
+.container-footer-bottom-padding {
+    padding-bottom: 15px;
+}
