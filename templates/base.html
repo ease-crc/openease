@@ -269,7 +269,6 @@
             <!-- logos -->
 
         </div>
-
         <!--    general info -->
 
         <!-- Social buttons -->
@@ -296,32 +295,51 @@
                     </a>
                 </li>
             </ul>
-    </div>
         <!-- Social buttons -->
-    </div>
 
+    </div>
 
 </footer>
 <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
+{% endblock %}
 <script>
 ;(function () {
-  $(document).ready(function () {
-    var button-arrow-down, extended_footer;
-    button-arrow-down = $('#toggle_button');
-    extended_footer = $('#extended_footer');
-    return button-arrow-down.click(() => {
-      if (extended_footer.attr('hidden') === 'hidden') {
-        extended_footer.removeAttr('hidden');
-        return button-arrow-down.attr('aria-expanded', true);
-      } else {
-        extended_footer.attr('hidden', true);
-        return button-arrow-down.attr('aria-expanded', false);
-      }
+    $(document).ready(function () {
+        var button_arrow_down, extended_footer;
+        button_arrow_down = $('.arrow-btn');
+        extended_footer = $('#extended_footer');
+        // when arrow-btn button is clicked
+        button_arrow_down.click(()=>{
+            // set a short timeout before taking action
+            // so as to allow hash to be set
+            setTimeout(()=>{
+                // call removeHash function after set timeout
+                removeHash();
+            }, 50); // 50 millisecond timeout in this case
+        });
+
+        // return button_arrow_down with appropriate settings
+        return button_arrow_down.click(() => {
+          if (extended_footer.attr('hidden') === 'hidden') {
+            extended_footer.removeAttr('hidden');
+            return button_arrow_down.attr('aria-expanded', true);
+          } else {
+            extended_footer.attr('hidden', true);
+            return button_arrow_down.attr('aria-expanded', false);
+          }
+        })
+
+        // removeHash function
+        // uses HTML5 history API to manipulate the location bar
+        function removeHash(){
+            history.replaceState('', document.title, window.location.origin + window.location.pathname + window.location.search);
+        }
     })
-  })
 }.call(this));
+
+
+
 </script>
-{% endblock %}
 
 </body>
 
