@@ -5,7 +5,7 @@ function waitForProlog(ros,then) {
     pl.jsonQuery("true", function(result) {
         pl.finishClient();
         if(result.error) {
-            setTimeout(function() { wait_for_prolog(ros, then) }, 500);
+            setTimeout(function() { waitForProlog(ros, then) }, 500);
         }
         else {
             then();
