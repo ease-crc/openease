@@ -1,5 +1,5 @@
 
-function waitForProlog(then) {
+function waitForProlog(ros,then) {
     const pl = new ROSPrologClient(ros, {});
     if(!pl) return;
     pl.jsonQuery("true", function(result) {
