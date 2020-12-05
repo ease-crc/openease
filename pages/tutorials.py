@@ -19,12 +19,12 @@ def render_tutorials():
         container_name = current_user.username + "_knowrob"
     #
     tutorial_names = [
-        {'id': 'openease', 'title': 'openEASE introduction', 'selected': False,
+        {'id': 'prolog', 'title': 'Logic Programming', 'selected': True,
          'description': """
-         In this tutorial you can learn about the openEASE knowledge service.
-         This is what data sets are stored on openEASE, how they are acquired and used."""
+         In this tutorial you can learn about the openEASE querying language which is based
+         on Prolog."""
          },
-        {'id': 'semweb', 'title': 'Semantic Web introduction', 'selected': True,
+        {'id': 'semweb', 'title': 'Semantic Web introduction', 'selected': False,
          'description': """
          In this tutorial you can learn about the semantic web.
          Lorem Ipsum foo bar baz."""
