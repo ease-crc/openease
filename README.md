@@ -40,3 +40,20 @@ To bring up the openEASE docker containers, run this:
 ```Bash
 docker-compose up
 ```
+
+
+### Troubleshooting
+Openease creates Knowrob container when neem is loadded to QA page. Incase of connection can not be established to admin_knowrob container, one needs to take a look at knowrob container logs.
+
+```Bash
+docker logs admin_knowrob
+```
+
+#### Other docker problems
+In some situations it may help to start again with a clean docker installation. This requires removing all containers and images. You can do that using following commands:
+
+
+```Bash
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -q)
+```
