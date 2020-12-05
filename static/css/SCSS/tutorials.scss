@@ -1,0 +1,51 @@
+
+@import "examples";
+
+// disable transitions
+.no-transition {
+    transition: none;
+}
+
+// top of the page
+#qa-header {
+    margin-top: 10px;
+}
+
+// the query field
+.query_links {
+    width:auto;
+}
+.query-button{
+    top: 2px;
+}
+.query-button {
+    color: #49aee3 !important;
+    cursor: pointer;
+}
+.query-button:hover {
+    color: #246F98 !important;
+}
+.query-input-card {
+    border: none;
+    box-shadow: none;
+}
+.query-input {
+    display: block;
+    margin-bottom: 10px;
+}
+.query-container {
+    padding-bottom: 2px;
+}
+
+#next-button {
+    float: right;
+}
+
+.tut-editor {
+    border: 1px solid #ffb998;
+    box-shadow: 0px 2px 2px rgba(215, 135, 87, 0.51);
+    background-color: #fdefe6;
+}
+.tut-editor:hover {
+    border: 1px solid #f18552;
+}

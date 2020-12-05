@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/register.css') }}"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/register.css') }}"/>
 {% endblock %}
 
 {% block body %}
@@ -13,7 +13,7 @@
             <div id="register-div">
                 <div id="ease-logo">
                     <a href="http://www.open-ease.org"><img id="ease-logo-enlarged"
-                            src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"></a>
+                                                            src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"></a>
                 </div>
                 <div class="card card-register">
                     <div class="card-header register-text">{% trans %}Create an account{% endtrans %}</div>
@@ -33,13 +33,13 @@
                                 </div>
                             </div>
                             {% if user_manager.enable_email and user_manager.enable_username %}
-                                {% set field = form.email %}
-                                <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                    <input placeholder="Email" class="form-control" id="email" name="email" type="email"
-                                           value=""
-                                           required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title=""/>
-                                    <div class="invalid-feedback">Email is Invalid.</div>
-                                </div>
+                            {% set field = form.email %}
+                            <div id="user-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                                <input placeholder="Email" class="form-control" id="email" name="email" type="email"
+                                       value=""
+                                       required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title=""/>
+                                <div class="invalid-feedback">Email is Invalid.</div>
+                            </div>
                             {% endif %}
                             {# Password field #}
                             {% set field = form.password %}
@@ -52,14 +52,14 @@
                                 </div>
                             </div>
                             {% if user_manager.enable_retype_password %}
-                                <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
-                                    <input placeholder="Retype Password" class="form-control" id="retype_password"
-                                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
-                                           name="retype_password" type="password" value="" required/>
-                                    <div class="invalid-feedback">
-                                        Reset Password is Invalid
-                                    </div>
+                            <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                                <input placeholder="Retype Password" class="form-control" id="retype_password"
+                                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                                       name="retype_password" type="password" value="" required/>
+                                <div class="invalid-feedback">
+                                    Reset Password is Invalid
                                 </div>
+                            </div>
                             {% endif %}
                             <div class="form-group">
                                 <div class="form-check custom-control custom-checkbox "><input type="checkbox"
@@ -81,14 +81,14 @@
                         </form>
                     </div>
                     <div class="card-footer">
-                    <div class="field-hint" id="already-registered-link">
-                        {% if user_manager.enable_forgot_password %}
+                        <div class="field-hint" id="already-registered-link">
+                            {% if user_manager.enable_forgot_password %}
                             <span class="already-registered">Already registered?</span>
                             <a href="{{ url_for('user.login') }}" tabindex='195'>
                                 {% trans %}Sign in{% endtrans %}</a>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
                 </div>
 
             </div>

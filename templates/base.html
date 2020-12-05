@@ -32,92 +32,92 @@
 {% block bodyargs %}{% endblock %}>
 
 <nav class="navbar navbar-expand-lg navbar-dark" id="ease-navbar">
-    <a class="navbar-brand ease-brand" href="http://www.open-ease.org">
-        <img src="{{ url_for('static', filename='img/oe-logo-small.svg') }}">
-        openEASE
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarNav" aria-controls="navbarNav"
-            aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">
-                    <i class="fas fa-home"></i>
-                    Home
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/neems">
-                    <i class="fas fa-search"></i>
-                    NEEMs
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/tutorials/">
-                    Tutorials
-                </a>
-            </li>
-        </ul>
+  <a class="navbar-brand ease-brand" href="http://www.open-ease.org">
+    <img src="{{ url_for('static', filename='img/oe-logo-small.svg') }}">
+    openEASE
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+          data-target="#navbarNav" aria-controls="navbarNav"
+          aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/neems">
+          <i class="fas fa-search"></i>
+          NEEMs
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/tutorials/">
+          <i class="fas fa-book-open"></i>
+          Tutorials
+        </a>
+      </li>
+    </ul>
 
-        {% block nav_right %}{% endblock %}
-        <ul class="navbar-nav text-right">
-            {% if current_user.is_authenticated %}
-            {% if current_user.has_role('admin') %}
-            <!-- Admin Dropdown -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    <i class="fas fa-user-secret"></i>
-                    Admin
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ url_for('admin_cookie') }}">Cookies</a>
-                    <a class="dropdown-item" href="{{ url_for('render_neem_hub_settings') }}">NEEM Hub Settings</a>
-                </div>
-            </li>
-            {% endif %}
-            <!-- User Dropdown -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    <i class="fas fa-user"></i>
-                    User
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ url_for('render_user_data') }}">User Info</a>
-                    <a class="dropdown-item" href="{{ url_for('user.logout') }}"><span
-                            class="fas fa-sign-out-alt"></span> Logout</a>
-                </div>
-            </li>
-            {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('user.register') }}">
-                    <span class="fas fa-user-plus"></span> Sign Up
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('user.login') }}">
-                    <span class="fas fa-sign-in-alt"></span> Login
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
+{% block nav_right %}{% endblock %}
+    <ul class="navbar-nav text-right">
+{% if current_user.is_authenticated %}
+{% if current_user.has_role('admin') %}
+      <!-- Admin Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          <i class="fas fa-user-secret"></i>
+          Admin
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('admin_cookie') }}">Cookies</a>
+          <a class="dropdown-item" href="{{ url_for('render_neem_hub_settings') }}">NEEM Hub Settings</a>
+        </div>
+      </li>
+{% endif %}
+      <!-- User Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          <i class="fas fa-user"></i>
+          User
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ url_for('render_user_data') }}">User Info</a>
+          <a class="dropdown-item" href="{{ url_for('user.logout') }}"><span class="fas fa-sign-out-alt"></span> Logout</a>
+        </div>
+      </li>
+{% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('user.register') }}">
+          <span class="fas fa-user-plus"></span> Sign Up
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('user.login') }}">
+          <span class="fas fa-sign-in-alt"></span> Login
+        </a>
+      </li>
+{% endif %}
+    </ul>
+  </div>
 </nav>
 
 <!-- let all flash messages render here -->
 {% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-    <span id="flash_alert_span">{{ message }}</span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-{% endfor %}
-{% endif %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <span id="flash_alert_span">{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endwith %}
 
 <div class="content">
@@ -138,12 +138,12 @@
 
         <!--    general info -->
         <div class="row col-md-12 col-sm-12">
-            <div class="container container-footer-bottom-padding col-md-3 col-sm-3 offset-md-1 offset-sm-1">
+            <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
                 <h4>IAI University Bremen</h4>
                 <span>The Institute for Artificial Intelligence (IAI) directed by Prof. Michael Beetz is part of the Faculty of Computer Science and member of the Center for Computing and Communication Technologies (TZI) at the University of Bremen.</span>
             </div>
 
-            <div class="container container-footer-bottom-padding col-md-3 col-sm-3 offset-md-1 offset-sm-1">
+            <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
                 <div class="support-cus">
                     <h4>Reach Out</h4>
                     <p class="footer-text-color">Am Fallturm 1, 28359 Bremen, Germany</p>
@@ -160,7 +160,7 @@
             </div>
 
             <!-- logos -->
-            <div class="container container-footer-bottom-padding col-md-3 col-sm-3">
+            <div class="container container-footer-bottom-padding col-md-4 col-sm-4">
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
@@ -269,7 +269,6 @@
             <!-- logos -->
 
         </div>
-
         <!--    general info -->
 
         <!-- Social buttons -->
@@ -296,37 +295,51 @@
                     </a>
                 </li>
             </ul>
-    </div>
         <!-- Social buttons -->
-    </div>
 
+    </div>
 
 </footer>
 <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
+{% endblock %}
 <script>
 ;(function () {
-  $(document).ready(function () {
-    var $button, $extended_footer
-    $button = $('#toggle_button')
-    $extended_footer = $('#extended_footer')
-    return $button.click(() => {
-      if ($extended_footer.attr('hidden') === 'hidden') {
-        $extended_footer.removeAttr('hidden')
-        return $button.attr('aria-expanded', true)
-      } else {
-        $extended_footer.attr('hidden', true)
-        return $button.attr('aria-expanded', false)
-      }
+    $(document).ready(function () {
+        var button_arrow_down, extended_footer;
+        button_arrow_down = $('.arrow-btn');
+        extended_footer = $('#extended_footer');
+        // when arrow-btn button is clicked
+        button_arrow_down.click(()=>{
+            // set a short timeout before taking action
+            // so as to allow hash to be set
+            setTimeout(()=>{
+                // call removeHash function after set timeout
+                removeHash();
+            }, 50); // 50 millisecond timeout in this case
+        });
+
+        // return button_arrow_down with appropriate settings
+        return button_arrow_down.click(() => {
+          if (extended_footer.attr('hidden') === 'hidden') {
+            extended_footer.removeAttr('hidden');
+            return button_arrow_down.attr('aria-expanded', true);
+          } else {
+            extended_footer.attr('hidden', true);
+            return button_arrow_down.attr('aria-expanded', false);
+          }
+        })
+
+        // removeHash function
+        // uses HTML5 history API to manipulate the location bar
+        function removeHash(){
+            history.replaceState('', document.title, window.location.origin + window.location.pathname + window.location.search);
+        }
     })
-  })
-}.call(this))
-
-
+}.call(this));
 
 
 
 </script>
-{% endblock %}
 
 </body>
 
