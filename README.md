@@ -43,11 +43,18 @@ docker-compose up
 
 
 ### Troubleshooting
-Openease creates Knowrob container when neem is loadded to QA page. Incase of connection can not be established to admin_knowrob container, one needs to take a look at knowrob container logs.
+**KnowRob** container is created when user is loggedIn. Incase of connection can not be established to the KnowRob container, one needs to take a look at knowrob container logs.
 
 ```Bash
-docker logs admin_knowrob
+docker logs `username`_knowrob
 ```
+
+If above command fails then it is most likely that the KnowRob container is not created or failed. In this case one needs to take a look at dockerbridge.
+
+```Bash
+docker logs dockerbridge
+```
+
 
 #### Other docker problems
 In some situations it may help to start again with a clean docker installation. This requires removing all containers and images. You can do that using following commands:
