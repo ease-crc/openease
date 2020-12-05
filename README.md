@@ -40,3 +40,27 @@ To bring up the openEASE docker containers, run this:
 ```Bash
 docker-compose up
 ```
+
+
+### Troubleshooting
+**KnowRob** container is created when user is loggedIn. Incase of connection can not be established to the KnowRob container, one needs to take a look at knowrob container logs.
+
+```Bash
+docker logs `username`_knowrob
+```
+
+If above command fails then it is most likely that the KnowRob container is not created or failed. In this case one needs to take a look at dockerbridge.
+
+```Bash
+docker logs dockerbridge
+```
+
+
+#### Other docker problems
+In some situations it may help to start again with a clean docker installation. This requires removing all containers and images. You can do that using following commands:
+
+
+```Bash
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -q)
+```
