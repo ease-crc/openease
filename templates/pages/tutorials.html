@@ -38,7 +38,7 @@
             client.connect(function(new_ros) {
                 console.info('Connected to ROS.');
                 ros = new_ros;
-                waitForProlog(function() {
+                waitForProlog(ros, function() {
                     console.info('Connected to KnowRob.');
                     formatter.connect(ros, function() {});
                 });
