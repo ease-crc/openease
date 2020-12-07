@@ -22,17 +22,37 @@ class NEEM:
         self.description = neem_info['description']
         self.created_by = neem_info['created_by']
         self.created_at = parser.parse(neem_info['created_at']).strftime('%m/%d/%y %H:%M')
-        self.model_version = neem_info['model_version']
         self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem_info['url']
         self.neem_repo_path = neem_info['url']
         self.maintainer = neem_info['created_by']
         self.authors = neem_info['created_by']
         self.acknowledgements = ''
-        self.environment = neem_info['environment']
-        self.activity = neem_info['activity']
-        self.agent = neem_info['agent']
         self.keywords = neem_info['keywords']
-        self.image = neem_info['image']
+
+        if 'image' in neem_info:
+            self.image = neem_info['image']
+        else:
+            self.image = 'None'
+
+        if 'model_version' in neem_info:
+            self.model_version = neem_info['model_version']
+        else:
+            self.model_version = '1.0'
+
+        if 'environment' in neem_info:
+            self.environment = neem_info['environment']
+        else:
+            self.environment = 'Unknown'
+
+        if 'activity' in neem_info:
+            self.activity = neem_info['activity']
+        else:
+            self.activity = 'Unknown'
+
+        if 'agent' in neem_info:
+            self.agent = neem_info['agent']
+        else:
+            self.agent = 'Unknown'
 
     def get_info(self):
         return {
