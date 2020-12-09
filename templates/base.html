@@ -129,13 +129,12 @@
     <!-- copy right text -->
     <div class="footer-copyright text-center py-3">
         © <span id="myYear"> </span> Copyright: University of Bremen
-        <a id="toggle_button" href="#extended_footer" class="arrow-btn"><i
-                class="fa fa-angle-double-down"></i></a>
+        <a id="toggle_button" href="#extended_footer" class="arrow-btn" data-toggle="collapse" aria-expanded="false"
+           aria-controls="extended_footer"><i class="fa fa-angle-double-down"></i></a>
     </div>
     <!-- copy right text -->
 
-    <div hidden="" id="extended_footer">
-
+    <div hidden="" id="extended_footer" class="footer navbar-fixed-bottom">
         <!--    general info -->
         <div class="row col-md-12 col-sm-12">
             <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
@@ -297,52 +296,11 @@
 
         </div>
         <!--    general info -->
-
-
-
     </div>
 
 </footer>
 <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
 {% endblock %}
-<script>
-;(function () {
-    $(document).ready(function () {
-        var button_arrow_down, extended_footer;
-        button_arrow_down = $('.arrow-btn');
-        extended_footer = $('#extended_footer');
-        // when arrow-btn button is clicked
-        button_arrow_down.click(()=>{
-            // set a short timeout before taking action
-            // so as to allow hash to be set
-            setTimeout(()=>{
-                // call removeHash function after set timeout
-                removeHash();
-            }, 50); // 50 millisecond timeout in this case
-        });
-
-        // return button_arrow_down with appropriate settings
-        return button_arrow_down.click(() => {
-          if (extended_footer.attr('hidden') === 'hidden') {
-            extended_footer.removeAttr('hidden');
-            return button_arrow_down.attr('aria-expanded', true);
-          } else {
-            extended_footer.attr('hidden', true);
-            return button_arrow_down.attr('aria-expanded', false);
-          }
-        })
-
-        // removeHash function
-        // uses HTML5 history API to manipulate the location bar
-        function removeHash(){
-            history.replaceState('', document.title, window.location.origin + window.location.pathname + window.location.search);
-        }
-    })
-}.call(this));
-
-
-
-</script>
 
 </body>
 
