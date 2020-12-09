@@ -15,3 +15,7 @@
 #corousel-logos {
     height: 100px !important;
 }
+#footer-social-buttons {
+    list-style-type: none;
+    padding-top:15px;
+}
