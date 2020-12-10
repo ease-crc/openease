@@ -129,18 +129,42 @@
     <!-- copy right text -->
     <div class="footer-copyright text-center py-3">
         © <span id="myYear"> </span> Copyright: University of Bremen
-        <a id="toggle_button" href="#extended_footer" class="arrow-btn"><i
-                class="fa fa-angle-double-down"></i></a>
+        <a id="toggle_button" href="#extended_footer" class="arrow-btn" data-toggle="collapse" aria-expanded="false"
+           aria-controls="extended_footer"><i class="fa fa-angle-double-down"></i></a>
     </div>
     <!-- copy right text -->
 
-    <div hidden="" id="extended_footer">
-
+    <div hidden="" id="extended_footer" class="footer navbar-fixed-bottom">
         <!--    general info -->
         <div class="row col-md-12 col-sm-12">
             <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
                 <h4>IAI University Bremen</h4>
                 <span>The Institute for Artificial Intelligence (IAI) directed by Prof. Michael Beetz is part of the Faculty of Computer Science and member of the Center for Computing and Communication Technologies (TZI) at the University of Bremen.</span>
+                <!-- Social buttons -->
+                <li class="col-md-12 col-sm-12" id="footer-social-buttons">
+                    <ul class="list-unstyled list-inline text-center">
+                        <li class="list-inline-item">
+                            <a href="https://twitter.com/iai_bremen" target="_blank">
+                                <i class="fab fa-2x fa-twitter"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://www.youtube.com/user/agkiunibremen" target="_blank">
+                                <i class="fab fa-2x fa-youtube"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="http://www.open-ease.org/" target="_blank">
+                                <i class="fa fa-2x fa-globe"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://github.com/ease-crc" target="_blank">
+                                <i class="fab fa-2x fa-github"></i>
+                            </a>
+                        </li>
+                    </ul>
+                <!-- Social buttons -->
             </div>
 
             <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
@@ -162,7 +186,8 @@
             <!-- logos -->
             <div class="container container-footer-bottom-padding col-md-4 col-sm-4">
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
+                    <div id="corousel-logos">
+                        <div class="carousel-inner">
                         <div class="carousel-item active">
 
                             <a href="https://ease-crc.org/" target="_blank">
@@ -249,6 +274,7 @@
                             </a>
                         </div>
                     </div>
+                    </div>
                     <br/><br/>
 
                     <ol class="carousel-indicators">
@@ -270,76 +296,11 @@
 
         </div>
         <!--    general info -->
-
-        <!-- Social buttons -->
-        <li class="col-md-12 col-sm-12" id="footer-social-buttons">
-            <ul class="list-unstyled list-inline text-center">
-                <li class="list-inline-item">
-                    <a href="https://twitter.com/iai_bremen" target="_blank">
-                        <i class="fab fa-2x fa-twitter"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://www.youtube.com/user/agkiunibremen" target="_blank">
-                        <i class="fab fa-2x fa-youtube"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="http://www.open-ease.org/" target="_blank">
-                        <i class="fa fa-2x fa-globe"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://github.com/ease-crc" target="_blank">
-                        <i class="fab fa-2x fa-github"></i>
-                    </a>
-                </li>
-            </ul>
-        <!-- Social buttons -->
-
     </div>
 
 </footer>
 <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
 {% endblock %}
-<script>
-;(function () {
-    $(document).ready(function () {
-        var button_arrow_down, extended_footer;
-        button_arrow_down = $('.arrow-btn');
-        extended_footer = $('#extended_footer');
-        // when arrow-btn button is clicked
-        button_arrow_down.click(()=>{
-            // set a short timeout before taking action
-            // so as to allow hash to be set
-            setTimeout(()=>{
-                // call removeHash function after set timeout
-                removeHash();
-            }, 50); // 50 millisecond timeout in this case
-        });
-
-        // return button_arrow_down with appropriate settings
-        return button_arrow_down.click(() => {
-          if (extended_footer.attr('hidden') === 'hidden') {
-            extended_footer.removeAttr('hidden');
-            return button_arrow_down.attr('aria-expanded', true);
-          } else {
-            extended_footer.attr('hidden', true);
-            return button_arrow_down.attr('aria-expanded', false);
-          }
-        })
-
-        // removeHash function
-        // uses HTML5 history API to manipulate the location bar
-        function removeHash(){
-            history.replaceState('', document.title, window.location.origin + window.location.pathname + window.location.search);
-        }
-    })
-}.call(this));
-
-
-
-</script>
 
 </body>
 
