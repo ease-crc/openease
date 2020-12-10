@@ -1,14 +1,21 @@
 /* only on non-mobile */
 .carousel-item-img-small {
     width: auto !important;
-    height: 100px;
     max-height: 100px;
+    background-color: rgb(300, 300, 300);
 }
 .carousel-item-img-big {
     width: 300px !important;
-    height: 100px;
     max-height: 100px;
+    background-color: rgb(300, 300, 300);
 }
 .container-footer-bottom-padding {
     padding-bottom: 15px;
+}
+#corousel-logos {
+    height: 100px !important;
+}
+#footer-social-buttons {
+    list-style-type: none;
+    padding-top:15px;
 }
