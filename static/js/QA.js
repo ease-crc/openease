@@ -206,6 +206,9 @@ function KnowrobUI(flask_user,options) {
                             border: false
                         }));
                     that.getCanvas().resize();
+                } 
+                else if(data_vis_msg.type == 100) {
+                    that.blackboard.addResultDescription(that.console, data_vis_msg.id, data_vis_msg.values)
                 }
                 else {
                     that.blackboard.addChart(data_vis_msg);

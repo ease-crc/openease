@@ -79,6 +79,23 @@ function Blackboard(options) {
     };
 
     /*********************************************/
+    /********** Result Description ***************/
+    /*********************************************/
+
+    /**
+     * Add next Prolog solution to the widget.
+     */
+    this.addResultDescription = function(console,id,response) {
+        let widget = new DescriptionWidget({
+            formatter: formatter
+        });
+        let div = widget.create(response);
+        if(!widget.has_failure) {
+            that.push(widget.title, div);
+        }
+    };
+
+    /*********************************************/
     /****************** CHARTS *******************/
     /*********************************************/
 
