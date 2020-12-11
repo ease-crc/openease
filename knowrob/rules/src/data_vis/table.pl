@@ -18,15 +18,11 @@ data_vis_rdf_table(Values,Options) :-
 		),
 		CommentData0),
 	sort(CommentData0, CommentData),
-	writeln(CommentData),
 	% generate ID for the chart
 	CommentData = [[FirstType,_]|_],
-	writeln(FirstType),
 	rdf_db:rdf_split_url(_,FirstTypeName,FirstType),
-	writeln(FirstTypeName),
 	atomic_list_concat(
 		['table',FirstTypeName],'_',ID),
-	writeln(ID),
 	% publish the message
 	data_vis_table(ID, CommentData, Options).
 
@@ -36,7 +32,6 @@ data_vis_rdf_table(Values,Options) :-
 data_vis_table(ID, TableData, Options) :-
 	% need to map to DataVis message format here
 	table_data_(0,TableData,ArrayData),
-	writeln(ArrayData),
     data_vis(table(ID),
     	[array_data: ArrayData | Options]
     ).
