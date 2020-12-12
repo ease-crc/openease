@@ -69,9 +69,18 @@ a.ease-brand {
 }
 
 #new-user {
-  display: inline;
+  display: block;
   float: left;
   color: #757575;
+  margin-left: 12px;
+  padding-top: 8px;
+  margin-bottom: 6px;
+}
+
+#forgot-pw {
+  position: absolute;
+  right: 20px;
+  margin-top: 8px;
 }
 
 .text-login {

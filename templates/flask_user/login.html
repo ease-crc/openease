@@ -58,10 +58,10 @@
                     </div>
                     <div class="card-footer">
                         <div class="row" id="new-user-row">
-                            <p id="new-user" class="col-sm-6"> New user?
+                            <p id="new-user"> New user?
                                 <a href="{{ url_for('user.register') }}">Sign Up</a>
                             </p>
-                            <p class="col-sm-6">
+                            <p id="forgot-pw">
                                 {% if user_manager.enable_forgot_password %}
                                     <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
                                         {% trans %}Forgot Password?{% endtrans %}</a>
