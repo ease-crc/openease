@@ -92,6 +92,11 @@ a.ease-brand {
   color: #757575;
 }
 
+.text-sign-with {
+  color: #757575;
+  font-size: small;
+}
+
 div#login {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -168,6 +173,20 @@ p#copyright {
 #copyright{
   color: #eceff1;
   padding-right: 15px;
+}
+
+.icon-bar {
+  width: max-content;
+  margin: auto;
+}
+.icon {
+  padding-left: 10px;
+}
+
+#login-or {
+  position: absolute;
+  top: 0;
+  width: 50%;
 }
 
 
