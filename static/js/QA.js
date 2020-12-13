@@ -159,7 +159,7 @@ function KnowrobUI(flask_user,options) {
 
     this.initNEEM = function (ros,then) {
         const pl = new ROSPrologClient(ros, {});
-        pl.jsonQuery("register_ros_package(openease_rules), neem_init('" + that.neem_id + "').", function(result) {
+        pl.jsonQuery("register_ros_package(openease_rules), knowrob_load_neem('" + that.neem_id + "').", function(result) {
             pl.finishClient();
             if(then) {
                 then();

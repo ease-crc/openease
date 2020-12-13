@@ -108,6 +108,7 @@
 <!-- let all flash messages render here -->
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
+        <div class="alert-box">
         {% for category, message in messages %}
             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                 <span id="flash_alert_span">{{ message }}</span>
@@ -116,6 +117,7 @@
                 </button>
             </div>
         {% endfor %}
+        </div>
     {% endif %}
 {% endwith %}
 
