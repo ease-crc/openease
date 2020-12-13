@@ -11,7 +11,7 @@ sections:
     name: Participation
     icon: fa-people-carry
   
-  - id: action_strucutre
+  - id: action_structure
     name: Structure
     icon: fa-sitemap
   
@@ -71,9 +71,6 @@ sub_topics:
     - is_action(Act)
     - is_action(Act)
     - is_action(Act)
-  - description: Subtopic group description
-    queries:
-    - is_action(Act)
 
 - topic: occurrences
   name: Subtopic
@@ -85,62 +82,56 @@ sub_topics:
     - is_action(Act)
 
 - topic: participation
-  name: Subtopic
-  description: Subtopic description
+  name: Agents
+  description: Agents that participate in an action
   query_groups:
-  - description: Subtopic group description
+  - description: All agents of an action
     queries:
-    - is_action(Act)
-    - is_action(Act)
-  - description: Subtopic group description
+    - has_participant(Act,Part),has_role(Part,soma:'AgentRole').
+  - description: All actions with a PR2 robot as an agent
     queries:
-    - is_action(Act)
+    - has_participant(Act,Part),has_role(Part,soma:'AgentRole'),has_type(Part,knowrob:'PR2').
 
 - topic: participation
-  name: Subtopic
-  description: Subtopic description
+  name: Objects
+  description: Objects that participate in an action
   query_groups:
-  - description: Subtopic group description
+  - description: All objects of an action
     queries:
-    - is_action(Act)
-    - is_action(Act)
+    - has_participant(Act,Part),has_role(Part,soma:'Item').
+  - description: All actions with a bowl as an item
+    queries:
+    - has_participant(Act,Part),has_role(Part,soma:'Item'),has_type(Part,soma:'Bowl').
 
 - topic: participation
-  name: Subtopic
-  description: Subtopic description
+  name: Component
+  description: Components that participate in an action
   query_groups:
-  - description: Subtopic group description
+  - description: All arms participating in an action
     queries:
-    - is_action(Act)
-    - is_action(Act)
+    - has_participant(Act,Part),has_role(Part,soma:'Instrument').
+  - description: All arms executing a task in an action
+    queries:
+    - has_participant(Act,Part),has_role(Part,soma:'Instrument'),has_type(Part,soma:'Arm').
 
-- topic: participation
-  name: Subtopic
-  description: Subtopic description
+- topic: action_structure
+  name: Top- or bottom-level actions
+  description: Actions without parent- or sub-actions
   query_groups:
-  - description: Subtopic group description
+  - description: Top-level actions
     queries:
-    - is_action(Act)
-    - is_action(Act)
-    - is_action(Act)
-
-- topic: action_strucutre
-  name: Subtopic
-  description: Subtopic description
-  query_groups:
-  - description: Subtopic group description
+    - is_action(Action),\+has_subevent(Parent,Action).
+  - description: Bottom-level actions
     queries:
-    - is_action(Act)
+    - is_action(Action),\+has_subevent(Action,Subevent).
 
 - topic: action_trans
-  name: Subtopic
-  description: Subtopic description
+  name: Agent transform
+  description: Transformation of agents or their parts during actions
   query_groups:
-  - description: Subtopic group description
+  - description: Transform of gripper during a graping motion
     queries:
-    - is_action(Act)
-    - is_action(Act)
-    - is_action(Act)
+    - is_classified_by(Act,Mot), has_type(Mot,soma:'GraspingMotion'), is_at(pr2:'PR2Gripper_0_L',['map',Pose,Rot]) during Act.
 
 - topic: concept
   name: Subtopic
@@ -151,41 +142,60 @@ sub_topics:
     - is_action(Act)
 
 - topic: context
-  name: Subtopic
-  description: Subtopic description
+  name: Actions
+  description: Actions are contextualized by their tasks
   query_groups:
-  - description: Subtopic group description
+  - description: Actions that execute a Navigation task
     queries:
-    - is_action(Act)
-    - is_action(Act)
-    - is_action(Act)
+    - is_action(Act), executes_task(Act,Tsk), has_type(Tsk,soma:'Navigating').
+  - description: Actions that execute a Grasping task
+    queries:
+    - is_action(Act), executes_task(Act,Tsk), has_type(Tsk,soma:'Grasping').
 
 - topic: appearance
-  name: Subtopic
-  description: Subtopic description
+  name: Shapes
+  description: Shapes of obects in the environment
   query_groups:
-  - description: Subtopic group description
+  - description: Shape of a phsical object
     queries:
-    - is_action(Act)
-    - is_action(Act)
+    - is_object(Obj),object_shape_type(Obj,Shape).
+  - description: Shape of an object that participates in an action
+    queries:
+    - has_participant(Act, Obj), is_object(Obj), object_shape(Obj, ShapeTerm, ShapeOrigin, MaterialTerm).
 
 - topic: env_structure
-  name: Subtopic
-  description: Subtopic description
+  name: Furniture
+  description: Structure of the furniture
   query_groups:
-  - description: Subtopic group description
+  - description: Direct sub-parts of the kitchen
     queries:
-    - is_action(Act)
-    - is_action(Act)
-    - is_action(Act)
+    - has_type(Kitchen,knowrob:'IAIKitchen'),has_part(Kitchen,Part).
+  - description: Parts of the fridge
+    queries:
+    - has_type(Fridge,soma:'Refrigerator'),has_part(Fridge,Part).
 
 - topic: env_kin
-  name: Subtopic
-  description: Subtopic description
+  name: Joints
+  description: Structure of joints
   query_groups:
-  - description: Subtopic group description
+  - description: All joints
     queries:
-    - is_action(Act)
+    - is_urdf_joint(Link).
+  - description: Child- and parentlink of joint
+    queries:
+    - is_urdf_joint(Joint),urdf_joint_child_link(Joint,Child),urdf_joint_parent_link(Joint,Parent).
+
+
+- topic: env_kin
+  name: Top- or bottom-level links
+  description: Links without parent- or childlinks
+  query_groups:
+  - description: Top-level links
+    queries:
+    - is_urdf_link(Link),\+has_parent_link(Link,Child).
+  - description: Bottom-level links
+    queries:
+    - is_urdf_link(Link),\+has_child_link(Link,Child).
 
 - topic: env_dyn
   name: Subtopic
