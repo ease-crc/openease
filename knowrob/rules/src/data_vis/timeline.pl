@@ -12,7 +12,7 @@ query_handler:openease_gen_answer(event,[Ev0,Ev1|Evs]) :-
 
 query_handler:openease_gen_answer(event,[Evt]) :-
 	setof([SubEvt,Task,Start,End],
-		(	get_subevent(Evt,SubEvt),
+		(	(SubEvt=Evt ; transitive(triple(Evt,dul:hasConstituent,SubEvt))),
 			timeline_data(SubEvt,Task,Start,End)
 		),
 		EventData),
@@ -22,14 +22,10 @@ query_handler:openease_gen_answer(event,[Evt]) :-
 		]).
 
 %%
-get_subevent(Evt,Evt).
-get_subevent(Evt,SubEvent) :-
-	triple(Evt,dul:hasConstituent,X),
-	get_subevent(X,SubEvent).
-
-%%
 timeline_data(E,Task,Start,End) :-
 	ask(aggregate([
+	            % TODO: do the transitive call in aggregate to avoid doing the aggregate call n times
+				%transitive(triple(E,dul:hasConstituent,X)),
 				triple(E,rdf:type,dul:'Event'),
 				triple(E,rdf:type,regex('^.*(?!Action).*')),
 				triple(E,dul:isClassifiedBy,TaskInstance),

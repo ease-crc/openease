@@ -16,7 +16,22 @@
                             src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"></a>
                 </div>
                 <div class="card" id="setup-login">
-                    <div class="card-header text-login">{% trans %}Login to your account{% endtrans %}</div>
+                    <div class="card-header text-login">
+                        {% trans %}Login to your account{% endtrans %}
+                        <div class="row icon-bar">
+                            <div class="text-sign-with">Sign in with
+                                <a class="icon" href="/google/login" target="_blank">
+                                    <i class="fab fa-1x fa-google"></i>
+                                </a>
+                                <a class="icon" href="/github/login" target="_blank">
+                                    <i class="fab fa-1x fa-github"></i>
+                                </a>
+                                <a class="icon" href="/twitter/login" target="_blank">
+                                    <i class="fab fa-1x fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <form action="" method="POST" novalidate class="form" role="form">
                             {{ form.hidden_tag() }}
@@ -58,10 +73,10 @@
                     </div>
                     <div class="card-footer">
                         <div class="row" id="new-user-row">
-                            <p id="new-user" class="col-sm-6"> New user?
+                            <p id="new-user"> New user?
                                 <a href="{{ url_for('user.register') }}">Sign Up</a>
                             </p>
-                            <p class="col-sm-6">
+                            <p id="forgot-pw">
                                 {% if user_manager.enable_forgot_password %}
                                     <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
                                         {% trans %}Forgot Password?{% endtrans %}</a>

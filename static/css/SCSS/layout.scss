@@ -21,6 +21,32 @@ body {
   flex-shrink: 0;
 }
 
+#corousel-logos {
+  background-color: white;
+  border-radius: 12px;
+  border: 2px solid #546e91;
+}
+.carousel-item-img-big {
+  width: auto;
+  height: 70px;
+  max-height: 70px;
+  padding-top: 20px;
+}
+#footer-social-buttons {
+    list-style-type: none;
+    padding-top:20px;
+}
+.footer-copyright {
+    padding-top:18px !important;
+}
+
 #flash_alert_span {
   text-align: center;
+}
+
+.alert-box {
+  position: absolute;
+  bottom: 40px;
+  right: 0px;
+  width: 100%;
 }

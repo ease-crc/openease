@@ -3,9 +3,6 @@
 :- use_module('./query_handler.pl').
 :- use_module('./query_history.pl').
 
-% handling of NEEMs
-:- use_module('./neems.pl').
-
 % IDE interface
 :- use_module('editor').
 
