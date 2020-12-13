@@ -12,7 +12,7 @@ query_handler:openease_gen_answer(event,[Ev0,Ev1|Evs]) :-
 
 query_handler:openease_gen_answer(event,[Evt]) :-
 	setof([SubEvt,Task,Start,End],
-		(	transitive(triple(Evt,dul:hasConstituent,SubEvt)),
+		(	(SubEvt=Evt ; transitive(triple(Evt,dul:hasConstituent,SubEvt))),
 			timeline_data(SubEvt,Task,Start,End)
 		),
 		EventData),

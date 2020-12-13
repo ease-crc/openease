@@ -206,6 +206,12 @@ function KnowrobUI(flask_user,options) {
                             border: false
                         }));
                     that.getCanvas().resize();
+                    // FIXME: not sure why but doing this in the constructor of ROSCanvas causes
+                    //         that click function is not called after hitting next
+                    that.getCanvas().link_screenshot.click(
+                        function() {that.getCanvas().snapshot()});
+                    that.getCanvas().link_maximize.click(
+                        function() {that.getCanvas().maximize()});
                 } 
                 else if(data_vis_msg.type == 100) {
                     that.blackboard.addResultDescription(that.console, data_vis_msg.id, data_vis_msg.values)
