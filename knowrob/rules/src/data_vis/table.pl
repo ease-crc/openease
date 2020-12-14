@@ -13,7 +13,7 @@ data_vis_rdf_table(Values,Options) :-
 		[Type, Comment],
 		(
 			member(Val,Values),
-			instance_of(Val, Type),
+			triple(Val, rdf:type, Type),
 			has_comment(Type,Comment)
 		),
 		CommentData0),
