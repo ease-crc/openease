@@ -6,7 +6,7 @@
 :- use_module(library(query_handler)).
 
 query_handler:openease_gen_answer(all,Values) :-
-	data_vis_rdf_table(Values, [title: 'Result Description']).
+	data_vis_rdf_table(Values, [title: 'Response description']).
 %%
 data_vis_rdf_table(Values,Options) :-
 	findall(

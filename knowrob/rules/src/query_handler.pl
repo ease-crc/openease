@@ -24,6 +24,14 @@
 openease_query(_Query,Bindings) :-
 	% TODO: handle non-atomic bindings
 	%%
+	% collect all values in Bindings
+	findall(ValAtom,
+		(	member([_,Val],Bindings),
+			atom_string(ValAtom,Val)
+		),
+		Values),
+	openease_query_(all,Values),
+	%%
 	% collect all events in Bindings
 	findall(EvtAtom,
 		(	member([_,Evt],Bindings),
@@ -40,15 +48,7 @@ openease_query(_Query,Bindings) :-
 			is_object(ObjAtom)
 		),
 		Objects),
-	openease_query_(object,Objects),
-	%%
-	% collect all values in Bindings
-	findall(ValAtom,
-		(	member([_,Val],Bindings),
-			atom_string(ValAtom,Val)
-		),
-		Values),
-	openease_query_(all,Values).
+	openease_query_(object,Objects).
 
 %%
 openease_query_(_,[]) :- !.
