@@ -67,6 +67,15 @@ function PlaybackWidget(canvas,options){
     progress_bar0.append(progress_text);
     progress_bar.append(progress_bar0);
 
+    progress_bar0.click(function(e) {
+        var click_x = e.pageX - $(this).offset().left;
+        var new_time = click_x / progress_text.width();
+        var query = "tf_plugin:tf_republish_set_progress("+new_time+")."
+        prolog.jsonQuery(query, function(result) {
+            prolog.finishClient();
+        });
+    });
+
     var button_group2 = $("<div>");
     button_group2.addClass("btn-group m-1");
     button_group2.append(progress_bar);
