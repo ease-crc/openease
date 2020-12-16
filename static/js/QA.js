@@ -159,7 +159,7 @@ function KnowrobUI(flask_user,options) {
 
     this.initNEEM = function (ros,then) {
         const pl = new ROSPrologClient(ros, {});
-        pl.jsonQuery("register_ros_package(openease_rules), neem_init('" + that.neem_id + "').", function(result) {
+        pl.jsonQuery("register_ros_package(openease_rules), knowrob_load_neem('" + that.neem_id + "').", function(result) {
             pl.finishClient();
             if(then) {
                 then();
@@ -206,6 +206,15 @@ function KnowrobUI(flask_user,options) {
                             border: false
                         }));
                     that.getCanvas().resize();
+                    // FIXME: not sure why but doing this in the constructor of ROSCanvas causes
+                    //         that click function is not called after hitting next
+                    that.getCanvas().link_screenshot.click(
+                        function() {that.getCanvas().snapshot()});
+                    that.getCanvas().link_maximize.click(
+                        function() {that.getCanvas().maximize()});
+                } 
+                else if(data_vis_msg.type == 100) {
+                    that.blackboard.addResultDescription(that.console, data_vis_msg.id, data_vis_msg.values)
                 }
                 else {
                     that.blackboard.addChart(data_vis_msg);

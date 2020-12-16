@@ -31,17 +31,15 @@ function ROSCanvas(options){
         icon.addClass("fa " + linkOpts.icon);
         icon.prop('title', linkOpts.title);
         link.append(icon);
-        link.click(linkOpts.click);
         that.canvas_links.append(link);
+        return link;
     }
-    addLink({
+    this.link_screenshot = addLink({
         title: 'Screenshot',
-        icon: 'fa-camera',
-        click: function() {that.snapshot()}});
-    addLink({
+        icon: 'fa-camera'});
+    this.link_maximize = addLink({
         title: 'Maximize',
-        icon: 'fa-window-maximize',
-        click: function() {that.maximize()}});
+        icon: 'fa-window-maximize'});
 
     var aspect_ratio = 16.0/9.0;
     var canvas_width = 400;

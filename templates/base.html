@@ -23,7 +23,6 @@
     </script>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/layout.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}"/>
 
     {% block head %}{% endblock %}
 </head>
@@ -109,6 +108,7 @@
 <!-- let all flash messages render here -->
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
+        <div class="alert-box">
         {% for category, message in messages %}
             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                 <span id="flash_alert_span">{{ message }}</span>
@@ -117,6 +117,7 @@
                 </button>
             </div>
         {% endfor %}
+        </div>
     {% endif %}
 {% endwith %}
 
@@ -127,126 +128,98 @@
 {% block footer %}
 <footer id="footer" class="bg-dark text-white-50">
     <!-- copy right text -->
+    <!--
     <div class="footer-copyright text-center py-3">
         © <span id="myYear"> </span> Copyright: University of Bremen
-        <a id="toggle_button" href="#extended_footer" class="arrow-btn"><i
-                class="fa fa-angle-double-down"></i></a>
+        <a id="toggle_button" href="#extended_footer" class="arrow-btn" data-toggle="collapse" aria-expanded="false"
+           aria-controls="extended_footer"><i class="fa fa-angle-double-down"></i></a>
     </div>
-    <!-- copy right text -->
+    -->
 
-    <div hidden="" id="extended_footer">
-
+    <div id="extended_footer" class="footer navbar-fixed-bottom">
         <!--    general info -->
         <div class="row col-md-12 col-sm-12">
             <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
+                <!--
                 <h4>IAI University Bremen</h4>
-                <span>The Institute for Artificial Intelligence (IAI) directed by Prof. Michael Beetz is part of the Faculty of Computer Science and member of the Center for Computing and Communication Technologies (TZI) at the University of Bremen.</span>
-            </div>
+                <span>The Institute for Artificial Intelligence (IAI) directed by
+                    Prof. Michael Beetz is part of the Faculty of Computer Science
+                    and member of the Center for Computing and Communication
+                    Technologies (TZI) at the University of Bremen.</span>
+                    -->
 
-            <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
-                <div class="support-cus">
-                    <h4>Reach Out</h4>
-                    <p class="footer-text-color">Am Fallturm 1, 28359 Bremen, Germany</p>
-                </div>
-                <div class="support-cus">
-                    <h4>Contact Info</h4>
-                    <p><a class="footer-a" href="https://ai.uni-bremen.de/"
-                          target="_blank">https://ai.uni-bremen.de/</a>
-                    </p>
-                    <p><a class="footer-a" href="mailto:ai-office@cs.uni-bremen.de" target="_blank">ai-office@cs.uni-bremen.de</a>
-                    </p>
-                    <p class="footer-a">Phone: 0421 21864000</p>
-                </div>
-            </div>
-
-            <!-- logos -->
-            <div class="container container-footer-bottom-padding col-md-4 col-sm-4">
+                <!--
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
+                    <div id="corousel-logos">
+                        <div class="carousel-inner">
 
-                            <a href="https://ease-crc.org/" target="_blank">
-                                <img class="d-block mx-auto carousel-item-img-small"
-                                     src="https://avatars1.githubusercontent.com/u/45171239?s=200&amp;v=4"
-                                     alt="ease logo">
-                            </a>
-                        </div>
-                        <div class="carousel-item">
-                            <a href="http://www.saphari.eu" target="_blank" title="http://www.saphari.eu"
-                               rel="nofollow">
-                                <img class="d-block mx-auto carousel-item-img-small"
-                                     src="{{ url_for('static', filename='img/saphari-logo.png') }}"
-                                     alt="saphari">
-                            </a>
-                        </div>
-                        <div class="carousel-item">
-                            <a href="https://ec.europa.eu/programmes/horizon2020/" target="_blank"
-                               title="https://ec.europa.eu/programmes/horizon2020/" rel="nofollow">
-                                <img class="d-block mx-auto carousel-item-img-small"
-                                     src="{{ url_for('static', filename='img/h2020.png') }}"
-                                     alt="horizon2020">
-                            </a>
-                        </div>
-                        <div class="carousel-item">
-                            <a href="http://www.acat-project.eu/" target="_blank"
-                               title="http://www.acat-project.eu/"
-                               rel="nofollow">
-                                <img class="d-block mx-auto carousel-item-img-small"
-                                     src="{{ url_for('static', filename='img/acat-logo.png') }}"
-                                     alt="acat">
-                            </a>
-                        </div>
+                            <div class="carousel-item active">
+                                <a href="https://www.uni-bremen.de/" target="_blank">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="https://www.socialpolicydynamics.de/images/logos/logo_trans.png"
+                                         alt="university bremen">
+                                </a>
+                            </div>
 
-                        <div class="carousel-item">
-                            <a href="https://www.dfg.de/en/" target="_blank">
-                                <img class="d-block mx-auto carousel-item-img-big"
-                                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/DFG-logo-blau.svg/800px-DFG-logo-blau.svg.png"
-                                     alt="dfg logo">
-                            </a>
-                        </div>
-                        <div class="carousel-item">
-                            <a href="https://www.uni-bremen.de/" target="_blank">
-                                <img class="d-block mx-auto carousel-item-img-big"
-                                     src="https://www.socialpolicydynamics.de/images/logos/logo_trans.png"
-                                     alt="university bremen">
-                            </a>
-                        </div>
+                            <div class="carousel-item">
+                                <a href="https://www.dfg.de/en/" target="_blank">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/DFG-logo-blau.svg/800px-DFG-logo-blau.svg.png"
+                                         alt="dfg logo">
+                                </a>
+                            </div>
 
+                            <div class="carousel-item">
+                                <a href="http://www.saphari.eu" target="_blank" title="http://www.saphari.eu"
+                                   rel="nofollow">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="{{ url_for('static', filename='img/saphari-logo.png') }}"
+                                         alt="saphari">
+                                </a>
+                            </div>
 
-                        <div class="carousel-item">
+                            <div class="carousel-item">
+                                <a href="https://ec.europa.eu/programmes/horizon2020/" target="_blank"
+                                   title="https://ec.europa.eu/programmes/horizon2020/" rel="nofollow">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="{{ url_for('static', filename='img/h2020.png') }}"
+                                         alt="horizon2020">
+                                </a>
+                            </div>
 
-                            <a href="http://www.robohow.eu" target="_blank" title="http://www.robohow.eu">
-                                <img class="d-block mx-auto carousel-item-img-big"
-                                     src="{{ url_for('static', filename='img/robohow-logo.png') }}"
-                                     alt="robo how">
-                            </a>
-                        </div>
+                            <div class="carousel-item">
+                                <a href="http://www.robohow.eu" target="_blank" title="http://www.robohow.eu">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="{{ url_for('static', filename='img/robohow-logo.png') }}"
+                                         alt="robo how">
+                                </a>
+                            </div>
 
-                        <div class="carousel-item">
-                            <a href="http://www.roboearth.org" target="_blank" title="http://www.roboearth.org">
-                                <img class="d-block mx-auto carousel-item-img-big"
-                                     src="{{ url_for('static', filename='img/roboearth-logo.png') }}"
-                                     alt="roboearth">
-                            </a>
-                        </div>
+                            <div class="carousel-item">
+                                <a href="http://www.roboearth.org" target="_blank" title="http://www.roboearth.org">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="{{ url_for('static', filename='img/roboearth-logo.png') }}"
+                                         alt="roboearth">
+                                </a>
+                            </div>
 
-                        <div class="carousel-item">
-                            <a href="http://www.sherpa-project.eu" target="_blank"
-                               title="http://www.sherpa-project.eu">
-                                <img class="d-block mx-auto carousel-item-img-big"
-                                     src="{{ url_for('static', filename='img/sherpa-logo.png') }}"
-                                     alt="sherpa">
-                            </a>
-                        </div>
+                            <div class="carousel-item">
+                                <a href="http://www.sherpa-project.eu" target="_blank"
+                                   title="http://www.sherpa-project.eu">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="{{ url_for('static', filename='img/sherpa-logo.png') }}"
+                                         alt="sherpa">
+                                </a>
+                            </div>
 
-                        <div class="carousel-item">
-
-                            <a href="http://www.refills-project.eu/" target="_blank"
-                               title="http://www.refills-project.eu/">
-                                <img class="d-block mx-auto carousel-item-img-small"
-                                     src="{{ url_for('static', filename='img/refills.png') }}"
-                                     alt="refills">
-                            </a>
+                            <div class="carousel-item">
+                                <a href="http://www.refills-project.eu/" target="_blank"
+                                   title="http://www.refills-project.eu/">
+                                    <img class="d-block mx-auto carousel-item-img-big"
+                                         src="{{ url_for('static', filename='img/refills.png') }}"
+                                         alt="refills">
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <br/><br/>
@@ -264,82 +237,71 @@
                         <li data-target="#carouselExampleIndicators" data-slide-to="9"></li>
                     </ol>
                 </div>
+                    -->
+            </div>
+
+            <div class="container text-center container-footer-bottom-padding col-md-4 col-sm-4">
+                <!--
+                <div class="support-cus">
+                    <h4>Reach Out</h4>
+                    <p class="footer-text-color">Am Fallturm 1, 28359 Bremen, Germany</p>
+                </div>
+                <div class="support-cus">
+                    <h4>Contact Info</h4>
+                    <p><a class="footer-a" href="https://ai.uni-bremen.de/"
+                          target="_blank">https://ai.uni-bremen.de/</a>
+                    </p>
+                    <p><a class="footer-a" href="mailto:ai-office@cs.uni-bremen.de"
+                          target="_blank">ai-office@cs.uni-bremen.de</a>
+                    </p>
+                    <p class="footer-a">Phone: 0421 21864000</p>
+                </div>
+                -->
+                <div class="footer-copyright text-center py-3">
+                    © <span id="myYear"> </span> Copyright:
+                    <a href="https://www.uni-bremen.de/" target="_blank">University of Bremen</a>
+                </div>
+            </div>
+
+            <!-- logos -->
+            <div class="container container-footer-bottom-padding col-md-4 col-sm-4">
+
+                                <!-- Social buttons -->
+                <li class="col-md-12 col-sm-12" id="footer-social-buttons">
+                    <ul class="list-unstyled list-inline text-center">
+                        <li class="list-inline-item">
+                            <a href="https://twitter.com/iai_bremen" target="_blank">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://www.youtube.com/user/agkiunibremen" target="_blank">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="http://www.open-ease.org/" target="_blank">
+                                <i class="fa fas fa-globe"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://github.com/ease-crc" target="_blank">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </li>
+                    </ul>
+                <!-- Social buttons -->
 
             </div>
             <!-- logos -->
 
         </div>
         <!--    general info -->
-
-        <!-- Social buttons -->
-        <li class="col-md-12 col-sm-12" id="footer-social-buttons">
-            <ul class="list-unstyled list-inline text-center">
-                <li class="list-inline-item">
-                    <a href="https://twitter.com/iai_bremen" target="_blank">
-                        <i class="fab fa-2x fa-twitter"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://www.youtube.com/user/agkiunibremen" target="_blank">
-                        <i class="fab fa-2x fa-youtube"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="http://www.open-ease.org/" target="_blank">
-                        <i class="fa fa-2x fa-globe"></i>
-                    </a>
-                </li>
-                <li class="list-inline-item">
-                    <a href="https://github.com/ease-crc" target="_blank">
-                        <i class="fab fa-2x fa-github"></i>
-                    </a>
-                </li>
-            </ul>
-        <!-- Social buttons -->
-
     </div>
 
 </footer>
 <script type="text/javascript" src="{{ url_for('static', filename='js/form-js/copyright_year.js') }}"></script>
 {% endblock %}
-<script>
-;(function () {
-    $(document).ready(function () {
-        var button_arrow_down, extended_footer;
-        button_arrow_down = $('.arrow-btn');
-        extended_footer = $('#extended_footer');
-        // when arrow-btn button is clicked
-        button_arrow_down.click(()=>{
-            // set a short timeout before taking action
-            // so as to allow hash to be set
-            setTimeout(()=>{
-                // call removeHash function after set timeout
-                removeHash();
-            }, 50); // 50 millisecond timeout in this case
-        });
-
-        // return button_arrow_down with appropriate settings
-        return button_arrow_down.click(() => {
-          if (extended_footer.attr('hidden') === 'hidden') {
-            extended_footer.removeAttr('hidden');
-            return button_arrow_down.attr('aria-expanded', true);
-          } else {
-            extended_footer.attr('hidden', true);
-            return button_arrow_down.attr('aria-expanded', false);
-          }
-        })
-
-        // removeHash function
-        // uses HTML5 history API to manipulate the location bar
-        function removeHash(){
-            history.replaceState('', document.title, window.location.origin + window.location.pathname + window.location.search);
-        }
-    })
-}.call(this));
-
-
-
-</script>
 
 </body>
 
