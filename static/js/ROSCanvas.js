@@ -116,7 +116,7 @@ function ROSCanvas(options){
       that.tfClient = new ROSLIB.TFClient({
         ros : ros,
         angularThres : 0.01,
-        transThres : 0.01,
+        transThres : 0.0001,
         rate : 10.0,
         fixedFrame : 'map' // FIXME
       });
