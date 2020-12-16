@@ -31,6 +31,13 @@ function EntityFormatter() {
             }
             return functor + "(" + args.join(", ") + ")";
         }
+        else if(Array.isArray(val)) {
+            let x = [];
+            for (let i = 0; i < val.length; i++) {
+                x.push(that.format(val[i]));
+            }
+            return '['+x.join(',')+']';
+        }
         else {
             return JSON.stringify(val);
         }

@@ -31,9 +31,7 @@ for it is one of the most fundamental ideas in Prolog.
 
 Recall that there are three types of term:
 
-  * *Constants*.
-
-These can either be atoms (such as pr2) or numbers (such as 42).
+  * *Constants*. These can either be atoms (such as pr2) or numbers (such as 42).
   * *Variables*. (Such as X, and Z3)
   * *Complex terms*. These have the form: functor(term_1,...,term_n).
 
@@ -41,7 +39,9 @@ We are going to work with a basic intuition, which is a little light on detail:
 
 *Two terms unify if they are the same term or if they contain variables
 that can be uniformly instantiated with terms in such a way that
-the resulting terms are equal.*\n\nThis means, for example,
+the resulting terms are equal.*
+
+This means, for example,
 that the terms `pr2` and `pr2` unify, because they are the same atom.
 Similarly, the terms `42` and `42` unify, because they are the same number,
 the terms `X` and `X` unify, because they are the same variable,
@@ -111,7 +111,30 @@ They are to be arranged, crossword puzzle fashion, in the following grid: </h>
 <div align="center">
 <img src="http://www.learnprolognow.org/html/crosswd2.eps.png" alt="Smiley face" width="320">
 </div>
+<br>
+
 Write a predicate `crossword/6` that tells us how to fill in the grid.
+
+<div class="tut-editor">
+% declare words as facts in the
+% Prolog knowledge base.
+word([a,s,t,a,n,t,e]).
+word([a,s,t,o,r,i,a]).
+word([b,a,r,a,t,t,o]).
+word([c,o,b,a,l,t,o]).
+word([p,i,s,t,o,l,a]).
+word([s,t,a,t,a,l,e]).
+
+crossword(V1,V2,V3,H1,H2,H3) :-
+	%%
+	% Write your code here...
+	%%
+	%%
+	% Make sure that every word has been used.
+	%%
+	forall(word(X), member(X,[V1,V2,V3,H1,H2,H3])).
+</div>
+
 The first three arguments should be the vertical words from left to right,
 and the last three arguments the horizontal words from top to bottom:
 
@@ -392,20 +415,28 @@ in this case, is the empty list `[]`.
 Prolog has a special built-in operator `|` which can be used to
 decompose a list into its head and tail. It is important to get to know
 how to use `|`, for it is a key tool for writing Prolog list
-manipulation programs.\n\nThe most obvious use of `|` is to extract
+manipulation programs.
+
+The most obvious use of `|` is to extract
 information from lists. We do this by using `|` together with unification.
-For example, to get hold of the head and tail of [pr2,boxy,pepper] we
-can pose the following query:\n\n    [Head|Tail] = [pr2, boxy, pepper].
+For example, to get hold of the head and tail of `[pr2,boxy,pepper]` we
+can pose the following query:
+
+    [Head|Tail] = [pr2, boxy, pepper].
 
 That is, the head of the list has become bound to `Head` and the tail of
-the list has become bound to `Tail`.\n\nLet's look at some other examples.
+the list has become bound to `Tail`.
+
+Let's look at some other examples.
 We can extract the head and tail of the following list just as we saw above:
 
     [X|Y] = [[], can_talk(z), [2, [b, c]], [], Z].
 
 That is: the head of the list is bound to `X`,
 the tail is bound to `Y`. (We also learn that Prolog has bound `Z`
-to the internal variable starting with `_`)\n\nBut we can do a lot more with
+to the internal variable starting with `_`)
+
+But we can do a lot more with
 `|`, it really is a flexible tool. For example, suppose we wanted
 to know what the first two elements of the list were, and also the remainder
 of the list after the second element. Then we'd pose the following query:
@@ -430,7 +461,7 @@ It's time to look at our first example of a recursive Prolog program
 for manipulating lists. One of the most basic things we would like
 to know is whether something is an element of a list or not. So let's
 write a program that, when given as inputs an arbitrary object `X` and a list `L`,
-tells us whether or not `X` belongs to `L`.
+tells us whether `X` belongs to `L`.
 The program that does this is usually called `member`,
 and it is the simplest example of a Prolog program that exploits the
 recursive structure of lists. Here it is:

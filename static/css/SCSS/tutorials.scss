@@ -15,12 +15,10 @@
 .query_links {
     width:auto;
 }
-.query-button{
-    top: 2px;
-}
 .query-button {
     color: #49aee3 !important;
     cursor: pointer;
+    top: 2px;
 }
 .query-button:hover {
     color: #246F98 !important;
@@ -45,6 +43,8 @@
     border: 1px solid #ffb998;
     box-shadow: 0px 2px 2px rgba(215, 135, 87, 0.51);
     background-color: #fdefe6;
+    /* margin to compile result */
+    margin-bottom: 20px;
 }
 .tut-editor:hover {
     border: 1px solid #f18552;
