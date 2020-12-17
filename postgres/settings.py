@@ -48,7 +48,7 @@ class NEEMHubSettings(db.Model):
     MONGO_DB = db.Column(db.String(255), nullable=False, default='neems')
     MONGO_USER = db.Column(db.String(255), nullable=False, default='')
     MONGO_PASS = db.Column(db.String(255), nullable=False, default='')
-    KNOWROB_URDF_SERVER = db.Column(db.String(255), nullable=False, default='bremen.de/data/kinematics/')
+    KNOWROB_URDF_SERVER = db.Column(db.String(255), nullable=False, default='http://neem-1.informatik.uni-bremen.de/data/kinematics/')
     NEEM_VISIBILITY_FLAG = db.Column(db.Boolean(), nullable=False, default=False)
 
 
