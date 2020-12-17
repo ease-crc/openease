@@ -48,6 +48,7 @@ class NEEMHubSettings(db.Model):
     MONGO_DB = db.Column(db.String(255), nullable=False, default='neems')
     MONGO_USER = db.Column(db.String(255), nullable=False, default='')
     MONGO_PASS = db.Column(db.String(255), nullable=False, default='')
+    NEEM_VISIBILITY_FLAG = db.Column(db.Boolean(), nullable=False, default=False)
 
 
 def get_neemhub_settings():
