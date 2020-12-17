@@ -2,6 +2,7 @@
 
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/neems.css') }}"/>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
 {% endblock %}
 
 {% block nav_right %}
@@ -26,9 +27,10 @@
                         <img src={{ neem.image }} alt="" class="card-img-top img-fluid"/>
                     {%endif %}
                     <div class="card-block">
-                        <h4>{{ neem.name }}</h4>
-                        <h5>{{ neem.created_by }}</h5>
-                        <p>{{ neem.description }}</p>
+                        <h5>{{ neem.name }}</h5>
+                        <h6>{{ neem.created_by }}, {{ neem.created_at }}</h6>
+
+                        <p class="block-content" id="style-overflow">{{ neem.description }}, {{ neem.description }}, {{ neem.description }}, {{ neem.description }}, {{ neem.description }}</p>
                     </div>
 
                     <div class="keywords">
@@ -78,81 +80,14 @@
                                 <a href="{{ neem.downloadUrl }}" target="_blank"><i class="fab fa-2x fa-github"
                                                                                     title="{{neem.neem_repo_path}}"></i></a>
                             </div>
+                            <!-- explorer QA page  -->
+                            <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">
+                                <!-- QA explore icon-->
+                                <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
+                                    <i class="fab fa-2x fa-wpexplorer" title="Explore NEEM"></i></a>
+                            </div>
                         </center>
                     </div>
-
-
-                    <!--                    <h4 class="card-title">{{ neem.name }}</h4>-->
-
-                    <!--                    <p> {{ neem.description }}</p>-->
-                    <!--                    <center>-->
-                    <!--                        <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">-->
-                    <!--                            &lt;!&ndash; Agent icons&ndash;&gt;-->
-                    <!--                            {% if neem.agent == "Robot" %}-->
-                    <!--                            <a href="http://wiki.ros.org/Robots/PR2" target="_blank"><i-->
-                    <!--                                    class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i></a>-->
-                    <!--                            {% elif neem.agent == "Human" %}-->
-                    <!--                            <a href=""><i class="fas fa-2x fa-user" title="Agent: {{neem.agent}}"></i></a>-->
-                    <!--                            {% elif neem.agent == "VR" %}-->
-                    <!--                            <a href=""><i class="fas fa-2x fa-vr-cardboard"-->
-                    <!--                                          title="Agent: {{neem.agent}}"></i></a>-->
-                    <!--                            {% else %}-->
-                    <!--                            <a href=""><i class="fas fa-2x fa-bookmark" title="Agent: {{neem.agent}}"></i></a>-->
-                    <!--                            {% endif %}-->
-                    <!--                        </div>-->
-                    <!--                        <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">-->
-                    <!--                            &lt;!&ndash; Activity icon&ndash;&gt;-->
-                    <!--                            <a href="{{neem.activity.url}}" target="_blank"><i-->
-                    <!--                                    class="fas fa-2x fa-tasks" title="Activity: {{neem.activity.name}}"></i></a>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">-->
-                    <!--                            &lt;!&ndash; Env icon&ndash;&gt;-->
-                    <!--                            {% if neem.environment == "Kitchen" %}-->
-                    <!--                            <a href="" target="_blank"><i-->
-                    <!--                                    class="fas fa-utensils" title="Env: {{neem.environment}}"></i></a>-->
-                    <!--                            {% elif neem.environment == "Home" %}-->
-                    <!--                            <a href=""><i class="fas fa-2x fa-home" title="Env: {{neem.environment}}"></i></a>-->
-                    <!--                            {% elif neem.environment == "VR" %}-->
-                    <!--                            <a href=""><i class="fas fa-2x fa-vr-cardboard" title="Env: {{neem.environment}}"></i></a>-->
-                    <!--                            {% elif neem.environment == "Lab" %}-->
-                    <!--                            <a href=""><i class="fas fa-2x fa-vial" title="Env: {{neem.environment}}"></i></a>-->
-                    <!--                            {% else %}-->
-                    <!--                            <a href=""><i class="fas fa-2x fa-industry" title="Env: {{neem.environment}}"></i></a>-->
-                    <!--                            {% endif %}-->
-                    <!--                        </div>-->
-                    <!--                        &lt;!&ndash; gitlab repo url  &ndash;&gt;-->
-                    <!--                        <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">-->
-                    <!--                            &lt;!&ndash; Env icon&ndash;&gt;-->
-                    <!--                            <a href="{{ neem.downloadUrl }}" target="_blank"><i class="fab fa-2x fa-github" title="{{neem.neem_repo_path}}"></i></a>-->
-                    <!--                        </div>-->
-                    <!--                    </center>-->
-
-
-                    <!--                    <br>-->
-                    <!--                    <table class="card-table card-words-break table">-->
-                    <!--                        <tbody>-->
-                    <!--                        <tr style="word-wrap: break-word;">-->
-                    <!--                            <td>CreatedBy</td>-->
-                    <!--                            <td>{{ neem.created_by }}</td>-->
-                    <!--                        </tr>-->
-                    <!--                        <tr>-->
-                    <!--                            <td>Keywords</td>-->
-                    <!--                            <td class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">-->
-                    <!--                                {% for keyword in neem.keywords %}-->
-                    <!--                                <span>{{ keyword }}</span>-->
-                    <!--                                {% if not loop.last %}-->
-                    <!--                                ,-->
-                    <!--                                {% endif %}-->
-                    <!--                                {% endfor %}-->
-                    <!--                            </td>-->
-                    <!--                        </tr>-->
-                    <!--                        <tr>-->
-                    <!--                            <td>Created At</td>-->
-                    <!--                            <td>{{ neem.created_at }}</td>-->
-                    <!--                        </tr>-->
-
-                    <!--                        </tbody>-->
-                    <!--                    </table>-->
                 </div>
 
         </div>
@@ -167,8 +102,6 @@
 $(function () {
   $('[data-toggle="popover"]').popover()
 });
-
-
 
 </script>
 {% endblock %}

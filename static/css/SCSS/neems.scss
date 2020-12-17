@@ -23,8 +23,39 @@
     box-shadow: 1px 3px 20px #aaa;
     border-radius: 5px;
     padding: 15px 15px 0.5em;
-    height: 300px;
+    height: 250px;
 }
+
+.card-block h6 {
+    color: #aaa;
+}
+
+.card-block p {
+    font-family: 'Poppins', sans-serif;
+}
+
+.block-content {
+    max-height: 130px;
+    overflow-y: auto;
+}
+
+#style-overflow::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#style-overflow::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+#style-overflow::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+}
+
 .keywords {
     width: 100%;
     box-shadow: 1px 3px 20px #aaa;
