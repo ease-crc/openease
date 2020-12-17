@@ -10,7 +10,6 @@
 	]).
 
 :- dynamic ease_user_term/2.
-:- dynamic ease_user_rule/2.
 
 is_prolog_source_file(_File) :- true.
 
@@ -98,10 +97,10 @@ ease_consult_string(ID, GoalStr) :-
 %
 ease_retract(ID) :-
 	forall(
-		ease_user_rule(ID,Expanded),
+		ease_user_term(ID,Expanded),
 		ease_retract_term(Expanded)
 	),
-	retractall(ease_user_rule(ID,_)).
+	retractall(ease_user_term(ID,_)).
 
 %%
 % call assertz for terms in a file

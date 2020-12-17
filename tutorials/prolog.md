@@ -148,12 +148,12 @@ Facts are used to state things that are unconditionally true of some situation
 of interest. For example, we can state that `pr2`, `boxy`, and `pepper` are robots,
 and that pepper can talk, using the following facts:
 
-<pre>
+<div class="tut-editor">
 robot(pr2). 
 robot(boxy). 
 robot(pepper). 
 can_talk(pepper). 
-</pre>
+</div>
 
 This collection of facts is *KB1*. It is our first example of a Prolog program.
 Note that the names `pr2`, `boxy`, and `pepper`, and the properties `robot` and
@@ -237,138 +237,26 @@ State that ...
   * ... arms and grippers are components
   * ... `pr2_left_arm`, `pr2_right_arm`, `boxy_arm` are components with type `arm`
   * ... `pr2_left_gripper`, `pr2_right_gripper`, `boxy_gripper` are components
-     with type `gripper`\n  * ... `pr2` has the components `pr2_left_arm`,
+     with type `gripper`
+  * ... `pr2` has the components `pr2_left_arm`,
      `pr2_right_arm`, `pr2_left_gripper`, and `pr2_right_gripper`
   * ... `boxy` has the component `boxy_arm` and `boxy_gripper`
 
+<div class="tut-editor">
+%%
+% Write your code here...
+%%
+</div>
+
 Test your KB with following queries:
 
-  * What are the components of `pr2`?
-  * What are the robots that have a `gripper`?
-
-Rules
------------------------------------------------------------------
-
-Here is *KB2*, our second knowledge base:
-
-<pre>
-/* Name,X,Y,Z */
-position(a,0,0,0.2).
-position(b,1.0,0,0.2).
-position(c,0,0,1.2).
-position(d,0,0,1.4).
-
-/* Name,Width,Height,Depth */
-size(a,0.2,0.3,0.2).
-size(b,0.6,0.2,0.22).
-size(c,0.2,0.6,0.6).
-size(d,0.3,0.2,0.2).
-
-above(Obj1,Obj2):-
-  position(Obj1,_,_,Z1),
-  position(Obj2,_,_,Z2),
-  size(Obj1,_,H1,_),
-  size(Obj2,_,H2,_),
-  /* arithmetic assignment uses 'is', not '=' ! */
-  Obj1_bottom is Z1 - 0.5*H1,
-  Obj2_top is Z2 + 0.5*H2,
-  Obj1_bottom > Obj2_top.
-
-below(Obj1,Obj2):-
-  above(Obj2,Obj1).
-
-above_or_below(Obj1,Obj2):-
-  above(Ev0,Ev1) ;
-  below(Ev0,Ev1).
-</pre>
-
-There are eight facts, that
-denote the position and size of some objects.
-We can show them in the canvas through this query,
-and highlight them later on using the predicate `highlight/1`:
-
-    forall((
-        position(Obj,X,Y,Z),
-        size(Obj,W,H,D)),
-        show(cube(Obj),[
-           scale:[W,H,D],
-           pose:[map,_,[X,Y,Z],[1,0,0,0]]
-        ])).
-
-The query uses the built-in predicate `forall/2` which iterates over
-the different bindings of the first argument to check whether
-the goal in the second arguments holds.
-
-The knowledge base also contains three rules.
-Rules state information that is conditionally true of the situation of interest.
-For example, the first rule says that some object is `above` some other
-object if its bounding box is above the bounding box of the other object.
-More generally, the `:-` should be read as *if*, or *is implied by*.
-The part on the left hand side of the `:-` is called the *head* of the rule,
-the part on the right hand side is called the *body*. So in general rules say:
-if the body of the rule is true, then the head of the rule is true too.
-If a knowledge base contains a rule `head :- body`, and Prolog knows that
-body follows from the information in the knowledge base,
-then Prolog can infer head.
-This fundamental deduction step is called *modus ponens*.
-
-Let's consider an example. Suppose we ask whether `c` is `above` `a`:
-
-    above(c,a),
-    highlight([cube(a),cube(c)]).
-
-Prolog will respond *yes*. Why? Well, although it can't find `above(c,a)` as
-a fact explicitly recorded in *KB2*, it can deduce the new fact through
-arithmetic comparison of event endpoints.
-
-Next, note that the rule `above` rule
-has multiple items in its body, or (to use the standard terminology) multiple *goals*.
-So, what exactly does this rule mean? The most important thing to note
-is the comma `,` that separates the goals in the rule's body.
-This is the way logical conjunction is expressed in Prolog
-(that is, the comma means *and*). Logical disjunction is expressed using a
-semicolon `;`, which is visible in the third rule.
-
-It should now be clear that Prolog has something to do with logic:
-after all, the `:-` means implication, the `,` means conjunction, and the `;`
-means disjunction. Moreover, we have seen that a standard logical proof
-rule (modus ponens) plays an important role in Prolog programming.
-So we are already beginning to understand why *Prolog* is short
-for *Programming with logic*.
-
-<h>`Task 1`: Define the relation `overlaps`.</h>
-
-Test your declaration with following queries (which should yield *true*):
-
 `a)`
 
-    overlaps(c,d),
-        highlight([cube(c),cube(d)]).
+    has_component(pr2,Component)
 
 `b)`
 
-    overlaps(d,c),
-    highlight([cube(c),cube(d)]).
-
-<h>`Task 2`: Define the relation `distance/3`.</h>
-
-Test your declaration with following query:
-
-`a)`
-
-    distance(a,c,1),
-    highlight([cube(a),cube(c)]).
-
-`b)`
-
-    distance(b,c,D),
-    D is sqrt(2),
-    highlight([cube(b),cube(c)]).
-
-`c)`
-
-    distance(X,Y,D),
-    highlight([cube(X),cube(Y)]).
+    has_component(Robot,C), has_type(C,gripper)
 
 Recursion
 -----------------------------------------------------------------
@@ -391,7 +279,8 @@ Here are some examples of lists in Prolog:
 
 Here are some observations:
 
-  * We can specify lists in Prolog by enclosing the elements of the list in square brackets\n  * All sorts of Prolog objects can be elements of a list.
+  * We can specify lists in Prolog by enclosing the elements of the list in square brackets
+  * All sorts of Prolog objects can be elements of a list.
   * The empty list (as its name suggests) is the list that contains no elements.
   * Lists can contain other lists as elements.
 
@@ -545,6 +434,14 @@ This yields a list holding the names of robots in our KB.
 <h>`Task 2`: Write a predicate `second(X,List)` which checks
 whether `X` is the second element of `List`.</h>
 
+<div class="tut-editor">
+second(X,List) :-
+	%%
+	% Write your code here...
+	%%
+	fail.
+</div>
+
 Test your declaration with following query:
 
     second([a,4|_],X).
@@ -552,6 +449,14 @@ Test your declaration with following query:
 <h>`Task 3`: Write a predicate `swap12(List1,List2)` which checks whether
 `List1` is identical to `List2`, except that the first two elements are
 exchanged.</h>
+
+<div class="tut-editor">
+swap12(List1,List2) :-
+	%%
+	% Write your code here...
+	%%
+	fail.
+</div>
 
 Test your declaration with following queries:
 
@@ -566,7 +471,15 @@ Test your declaration with following queries:
 
 <h>`Task 4`: Write a predicate `twice(In,Out)` whose left argument is a list, and whose right argument is a list consisting of every element in the left list written twice.</h>
 
+<div class="tut-editor">
+twice(In,Out) :-
+	%%
+	% Write your code here...
+	%%
+	fail.
+</div>
+
 Test your declaration with following query:
 
     twice([a,4,[pr2,pepper]],X),
-    X = [a,a,4,4,[pr2,pepper],[pr2,pepper]]).
+    X = [a,a,4,4,[pr2,pepper],[pr2,pepper]].

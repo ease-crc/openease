@@ -22,7 +22,7 @@ function EntityFormatter() {
     };
 
     this.format_term = function(val) {
-        if("term" in val) {
+        if(typeof val === "object" && "term" in val) {
             let terms = val["term"];
             let functor = terms[0];
             let args=[];
