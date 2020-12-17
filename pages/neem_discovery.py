@@ -74,7 +74,10 @@ def post_neem_hub_settings():
         neem_hub.set_mongo_user(req.get("MONGO_USER"))
         neem_hub.set_mongo_db(req.get("MONGO_DB"))
         neem_hub.set_mongo_pass(req.get("MONGO_PASS"))
-        neem_hub.set_neem_visibility_flag(req.get("NEEM_VISIBILITY_FLAG"))
+        if req.get("NEEM_VISIBILITY_FLAG") is None:
+            neem_hub.set_neem_visibility_flag(False)
+        else:
+            neem_hub.set_neem_visibility_flag(True)
         neem_hub.set_knowrob_urdf_server(req.get("KNOWROB_URDF_SERVER"))
         neem_hub.store_settings()
     else:
