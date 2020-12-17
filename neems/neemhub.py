@@ -2,7 +2,7 @@ from flask import session
 import bson
 from pymongo import MongoClient
 from neems.neem import NEEM
-from app_and_db import db
+from app_and_db import db, app
 from postgres.settings import get_neemhub_settings
 
 
@@ -30,6 +30,7 @@ class NEEMHub:
         self.mongo_db_name = sql.MONGO_DB
         self.mongo_user = sql.MONGO_USER
         self.mongo_pass = sql.MONGO_PASS
+        self.neem_visibility_flag = sql.NEEM_VISIBILITY_FLAG
         self.mongo_client = None
         self.mongo_db = None
 
@@ -40,6 +41,7 @@ class NEEMHub:
         sql.MONGO_DB = self.mongo_db_name
         sql.MONGO_USER = self.mongo_user
         sql.MONGO_PASS = self.mongo_pass
+        sql.NEEM_VISIBILITY_FLAG = self.neem_visibility_flag
         self.mongo_db = None
         db.session.commit()
 
@@ -73,6 +75,12 @@ class NEEMHub:
     def set_mongo_pass(self, password):
         self.mongo_pass = password
 
+    def get_neem_visibility_flag(self):
+        return self.neem_visibility_flag
+
+    def set_neem_visibility_flag(self, neem_visibility_flag):
+        self.neem_visibility_flag = neem_visibility_flag
+
     def connect_mongo(self):
         try:
             if self.mongo_db is None:
@@ -84,13 +92,19 @@ class NEEMHub:
             self.mongo_db = None
             raise NEEMHubConnectionError(exc)
 
-    def get_neem_ids(self, query_string):
+    def get_neem_ids(self, query_string, visibility_flag):
         # FIXME: keywords are ignored at the moment
         #   - can an array be added to text index?
         #   - regex search possible, but only without index!!
         #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
         mongo = self.connect_mongo()
-        if query_string is '':
+        if visibility_flag and query_string is '':
+            return map(lambda doc: doc["_id"], mongo.find(
+                {"visibility": True}, {"_id": 1}))
+        elif visibility_flag:
+            return map(lambda doc: doc["_id"], mongo.find(
+                {"$text": {"$search": query_string}, "visibility": True}, {"_id": 1}))
+        elif query_string is '':
             return mongo.find().distinct('_id')
         else:
             return map(lambda doc: doc["_id"], mongo.find(

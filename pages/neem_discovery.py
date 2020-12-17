@@ -30,7 +30,7 @@ def render_neems():
     current_offset = (current_page - 1) * per_page
     next_offset = current_offset + per_page
     # get neems
-    matching_neems = neem_hub.get_neem_ids(query)
+    matching_neems = neem_hub.get_neem_ids(query,neem_hub.get_neem_visibility_flag())
     neems = list(map(lambda (x): neem_hub.get_neem(x),
                      matching_neems[current_offset:next_offset]))
 
@@ -74,6 +74,7 @@ def post_neem_hub_settings():
         neem_hub.set_mongo_user(req.get("MONGO_USER"))
         neem_hub.set_mongo_db(req.get("MONGO_DB"))
         neem_hub.set_mongo_pass(req.get("MONGO_PASS"))
+        neem_hub.set_neem_visibility_flag(req.get("NEEM_VISIBILITY_FLAG"))
         neem_hub.store_settings()
     else:
         flash('Null request is submitted while form submission!', "warning")

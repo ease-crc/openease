@@ -28,6 +28,10 @@ class NEEM:
         self.authors = neem_info['created_by']
         self.acknowledgements = ''
         self.keywords = neem_info['keywords']
+        if 'visibility' in neem_info:
+            self.visibility = neem_info['visibility']
+        else:
+            self.visibility = False
 
         if 'image' in neem_info:
             self.image = neem_info['image']
