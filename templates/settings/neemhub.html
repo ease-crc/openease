@@ -6,7 +6,7 @@
 {% block body %}
 <div class="container p-4">
     <div class="card" id="user-data">
-        <div class="card-header bg-ease-light">{% trans %}NEEM Hub configuration settings{% endtrans %}</div>
+        <div class="card-header bg-ease-light">{% trans %}NEEM Hub settings{% endtrans %}</div>
         <div class="card-body">
             <form action="{{ url_for('post_neem_hub_settings') }}" method="post">
 
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <button class="col-sm-2 btn btn-sm btn-success" type="submit" name="Update"
-                        value="Configure">Configure</button>
+                        value="Configure">Save</button>
                 <button class="col-sm-2 btn btn-sm btn-primary" type="button"
                         onclick="window.location.href='{{ url_for('render_neems') }}';" name="Cancel"
                         value="Cancel">Cancel</button>
