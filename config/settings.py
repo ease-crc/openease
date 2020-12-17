@@ -20,11 +20,6 @@ MAIL_DEFAULT_SENDER = '"Sender" <openease.iai@gmail.com>'
 
 USE_HOST_KNOWROB = bool(os.environ.get('OPENEASE_USE_HOST_KNOWROB', 'False'))
 
-FACEBOOK_APP_TOKENS = (os.environ.get('FACEBOOK_APP_ID'), os.environ.get('FACEBOOK_APP_SECRET'))
-TWITTER_APP_TOKENS  = (os.environ.get('TWITTER_APP_ID'), os.environ.get('TWITTER_APP_SECRET'))
-GITHUB_APP_TOKENS   = (os.environ.get('GITHUB_APP_ID'), os.environ.get('GITHUB_APP_SECRET'))
-GOOGLE_APP_TOKENS   = (os.environ.get('GOOGLE_APP_ID'), os.environ.get('GOOGLE_APP_SECRET'))
-
 USER_ENABLE_USERNAME = True
 USER_ENABLE_EMAIL = True
 USER_ENABLE_CONFIRM_EMAIL = False

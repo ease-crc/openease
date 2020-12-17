@@ -291,8 +291,9 @@
                             <select id="tut-select" class="browser-default custom-select">
                                 {%for tut in tutorial_names%}
                                 <option id="tut-opt-{{ tut.id }}"
-                                        selected="{{ tut.selected }}"
-                                        value="{{ tut.id }}"
+                                        {% if tut.selected %}
+                                        selected="selected"
+                                        {% endif %}
                                         description="{{ tut.description }}">{{ tut.title }}</option>
                                 {%endfor%}
                             </select>

@@ -3,6 +3,41 @@ from app_and_db import db
 FIRST_DOCUMENT_ID = 1
 
 
+class OAuthModel(db.Model):
+    """
+    DB model class for storing OAuth configuration into postgresql.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    # Twitter
+    twitter_app_id = db.Column(db.String(255), nullable=False, default='')
+    twitter_app_secret = db.Column(db.String(255), nullable=False, default='')
+    # GitHub
+    github_app_id = db.Column(db.String(255), nullable=False, default='')
+    github_app_secret = db.Column(db.String(255), nullable=False, default='')
+    # Google
+    google_app_id = db.Column(db.String(255), nullable=False, default='')
+    google_app_secret = db.Column(db.String(255), nullable=False, default='')
+
+    @staticmethod
+    def first():
+        try:
+            return OAuthModel.query.filter_by(id=FIRST_DOCUMENT_ID).one()
+        except:
+            x = OAuthModel()
+            db.session.add(x)
+            db.session.commit()
+            return OAuthModel.first()
+
+    @staticmethod
+    def get_settings():
+        that = OAuthModel.first()
+        return {
+            'twitter': (that.twitter_app_id, that.twitter_app_secret),
+            'github': (that.github_app_id, that.github_app_secret),
+            'google': (that.google_app_id, that.google_app_secret)
+        }
+
+
 class NEEMHubSettings(db.Model):
     """
     DB model class for storing neem-hub configuration into postgresql.

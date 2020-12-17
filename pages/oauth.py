@@ -2,7 +2,7 @@
 Sign in using external app such as github, twitter, ...
 """
 
-from flask import session, request, redirect, url_for
+from flask import session, request, redirect, url_for, render_template, flash
 from flask_oauth import OAuth
 from flask_login import login_user
 
@@ -12,12 +12,29 @@ import requests
 from json import loads
 
 from app_and_db import app, db
-from config.settings import FACEBOOK_APP_TOKENS, TWITTER_APP_TOKENS, GITHUB_APP_TOKENS, GOOGLE_APP_TOKENS
+from postgres.settings import OAuthModel
 from postgres.users import add_user
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
+from utility import admin_required
+
 GOOGLE_OAUTH_USERINFO = 'https://www.googleapis.com/oauth2/v1/userinfo'
+
+# TODO: reload apps if settings change
+OAUTH_SETTINGS = OAuthModel.get_settings()
+
+TWITTER_APP_TOKENS = OAUTH_SETTINGS['twitter']
+if TWITTER_APP_TOKENS[0] is None or TWITTER_APP_TOKENS[1] is None:
+    TWITTER_APP_TOKENS = ('', '')
+
+GITHUB_APP_TOKENS = OAUTH_SETTINGS['github']
+if GITHUB_APP_TOKENS[0] is None or GITHUB_APP_TOKENS[1] is None:
+    GITHUB_APP_TOKENS = ('', '')
+
+GOOGLE_APP_TOKENS = OAUTH_SETTINGS['google']
+if GOOGLE_APP_TOKENS[0] is None or GOOGLE_APP_TOKENS[1] is None:
+    GOOGLE_APP_TOKENS = ('', '')
 
 oauth = OAuth()
 
@@ -37,16 +54,6 @@ github = oauth.remote_app('github',
                           consumer_key=GITHUB_APP_TOKENS[0],
                           consumer_secret=GITHUB_APP_TOKENS[1]
                           )
-
-facebook = oauth.remote_app('facebook',
-                            base_url='https://graph.facebook.com/',
-                            request_token_url=None,
-                            access_token_url='/oauth/access_token',
-                            authorize_url='https://www.facebook.com/dialog/oauth',
-                            consumer_key=FACEBOOK_APP_TOKENS[0],
-                            consumer_secret=FACEBOOK_APP_TOKENS[1],
-                            request_token_params={'scope': 'email'}
-                            )
 
 twitter = oauth.remote_app('twitter',
                            base_url='https://api.twitter.com/1/',
@@ -74,7 +81,6 @@ google = oauth.remote_app('google',
 def remote_app_registered(name):
     remote_apps = {
         'github': tokens_are_defined(GITHUB_APP_TOKENS),
-        'facebook': tokens_are_defined(FACEBOOK_APP_TOKENS),
         'twitter': tokens_are_defined(TWITTER_APP_TOKENS),
         'google': tokens_are_defined(GOOGLE_APP_TOKENS)
     }
@@ -119,14 +125,10 @@ def remote_app_authorized(response, oauth_token_key, get_user_information):
     session['username'] = name
 
     try:
-        flask_user = add_user(db=db,
-                              user_manager=app.user_manager,
+        flask_user = add_user(user_manager=app.user_manager,
                               name=user_id,
-                              display_name=name,
                               mail=mail,
-                              pw=pw,
-                              app=app.name
-                              )
+                              pw=pw)
         if not app.user_manager.verify_password(pw, flask_user):
             # Username is taken, unable to sign in (or password value from remote service changed?)
             # TODO: do something here: tell the user at least
@@ -144,16 +146,10 @@ def remote_app_authorized(response, oauth_token_key, get_user_information):
 
 
 @github.tokengetter
-@facebook.tokengetter
 @twitter.tokengetter
 @google.tokengetter
 def get_oauth_token():
     return session.get('oauth_token')
-
-
-@app.route("/facebook/login")
-def facebook_login():
-    return remote_app_login(facebook, 'facebook_authorized')
 
 
 @app.route('/twitter/login')
@@ -201,27 +197,6 @@ def _get_user_mail(login, domain):
         return login
 
 
-@app.route("/facebook_authorized")
-@facebook.authorized_handler
-def facebook_authorized(response):
-    def user_information(facebook_response):
-        facebook_user = facebook.get_neem('/me').data
-        user_name = facebook_user['name']
-        # NOTE: The access_token changes with each call and thus can not be used as password
-        # FIXME: using id as password is not save
-        return (str(facebook_user['id']),
-                _get_user_name(user_name),
-                _get_user_mail(user_name, 'facebook.com'),
-                str(facebook_user['id']))
-
-    try:
-        return remote_app_authorized(response, 'access_token', user_information)
-    except KeyError, e:
-        app.logger.warn('facebook user information incomplete. ')
-        app.logger.warn(str(e))
-    return redirect('/')
-
-
 @app.route("/twitter_authorized")
 @twitter.authorized_handler
 def twitter_authorized(response):
@@ -264,3 +239,31 @@ def google_authorized(response):
         app.logger.warn('Google user information request failed. ')
         app.logger.warn(str(e))
     return redirect('/')
+
+
+@app.route('/settings/oauth/edit')
+@admin_required
+def render_oauth_settings():
+    # PasswordForm used for validating given password field
+    return render_template('settings/oauth.html',
+                           oauth=OAuthModel.first())
+
+
+@app.route('/settings/oauth/save', methods=["POST"])
+@admin_required
+def post_oauth_settings():
+    req = request.form
+    if req is not None:
+        sql = OAuthModel.first()
+        sql.twitter_app_id = req.get("twitter_app_id")
+        sql.twitter_app_secret = req.get("twitter_app_secret")
+        sql.github_app_id = req.get("github_app_id")
+        sql.github_app_secret = req.get("github_app_secret")
+        sql.google_app_id = req.get("google_app_id")
+        sql.google_app_secret = req.get("google_app_secret")
+        db.session.commit()
+    else:
+        flash('Null request is submitted while form submission!', "warning")
+        return redirect(url_for('render_neem_hub_settings'))
+    flash('OAuth configuration setting is stored!', "success")
+    return redirect(url_for('render_neems'))
