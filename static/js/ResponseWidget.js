@@ -32,16 +32,10 @@ function ResponseWidget(options){
             return new BindingTable(options).create(solution);
         }
         else {
-            const body = $("<div>");
-            body.addClass("card-body border-top");
-            const item_container = $("<div>");
-            item_container.addClass("container-fluid");
             const succeeded_item = $("<p>");
-            succeeded_item.addClass("card-text");
+            succeeded_item.addClass("card-text p-1 alert alert-info");
             succeeded_item.text("true");
-            item_container.append(that.create_item(succeeded_item));
-            body.append(item_container);
-            return body;
+            return succeeded_item;
         }
     };
 
@@ -54,23 +48,14 @@ function ResponseWidget(options){
         // TODO: pretty print prolog terms
         widget.text(msg.toString());
         //
-        const item_container = $("<div>");
-        item_container.addClass("container-fluid");
-        item_container.append(widget);
-        return item_container;
+        return widget;
     };
 
     this.create_failed_widget = function() {
-        //
         const item = $("<p>");
-        item.addClass("card-text");
+        item.addClass("card-text p-1 alert alert-warning");
         item.text("false");
-        //
-        const item_container = $("<div>");
-        item_container.addClass("container-fluid");
-        item_container.append(item);
-        //
-        return item_container;
+        return item;
     };
 
     this.create_item = function(content_div) {

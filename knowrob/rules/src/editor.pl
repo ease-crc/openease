@@ -5,12 +5,11 @@
 	  ease_load_directory/1,
 	  ease_unload_file/1,
 	  ease_consult/1,
-	  ease_consult_rule(+,t),
-	  ease_retract_rule(+)
+	  ease_consult_string(+,t),
+	  ease_retract(+)
 	]).
 
 :- dynamic ease_user_term/2.
-:- dynamic ease_user_rule/2.
 
 is_prolog_source_file(_File) :- true.
 
@@ -78,6 +77,7 @@ ease_retract_term(X) :-
 % Load a PL file into KnowRob.
 %
 ease_consult(File) :-
+    ease_retract(File),
 	write('Consult file '), writeln(File),
 	open(File, read, Fd),
 	read(Fd, First),
@@ -86,27 +86,29 @@ ease_consult(File) :-
 
 %%
 %
-ease_consult_rule(ID, GoalStr) :-
-    term_string(Goal,GoalStr),
-    ignore(ease_retract_rule(ID)),
-	expand_term(Goal,Expanded),
-	assertz(:(user,Expanded)),
-	assertz(ease_user_rule(ID,Expanded)).
+ease_consult_string(ID, GoalStr) :-
+    ease_retract(ID),
+    open_string(GoalStr,Fd),
+	read(Fd, First),
+	read_data(ID, First, Fd),
+	close(Fd).
 
 %%
 %
-ease_retract_rule(ID) :-
-    ease_user_rule(ID,Expanded),
-    ease_retract_term(Expanded),
-    retractall(ease_user_rule(ID,_)).
+ease_retract(ID) :-
+	forall(
+		ease_user_term(ID,Expanded),
+		ease_retract_term(Expanded)
+	),
+	retractall(ease_user_term(ID,_)).
 
 %%
 % call assertz for terms in a file
 %
 read_data(_, end_of_file, _) :- !.
-read_data(File, Term, Fd) :-
+read_data(ID, Term, Fd) :-
 	expand_term(Term,Expanded),
 	assertz(:(user,Expanded)),
-	assertz(ease_user_term(File,Expanded)),
+	assertz(ease_user_term(ID,Expanded)),
 	read(Fd, Next),
 	read_data(File, Next, Fd).

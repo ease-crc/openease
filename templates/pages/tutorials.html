@@ -62,29 +62,35 @@
             pl.jsonQuery(query_text, function(response) {
                 pl.finishClient();
                 //
+                let widget = new ResponseWidget({
+                    formatter: formatter
+                });
+                let div = widget.create(response);
+                div.removeClass("card-body");
                 solution_div.html('');
+                solution_div.append(div);
+                solution_div.collapse("show");
+            });
+        };
+
+        function consult_code(solution_div, code_string, editor_index) {
+            let rule_id = curr_tut_id + '_' + tut_index + '_' + editor_index;
+            // FIXME double quotes in code_string must be escaped because we wrap
+            //         the whole text in double quotes
+            let query_text = "ease_consult_string('" +
+                rule_id + "', \"" +  code_string + "\").";
+            const pl = new ROSPrologClient(ros, {});
+            pl.jsonQuery(query_text, function(response) {
+                pl.finishClient();
                 //
                 let widget = new ResponseWidget({
                     formatter: formatter
                 });
                 let div = widget.create(response);
                 div.removeClass("card-body");
+                solution_div.html('');
                 solution_div.append(div);
                 solution_div.collapse("show");
-            });
-        };
-
-        function consult_code(code_string, editor_index) {
-            let rule_id = curr_tut_id + '_' + tut_index + '_' + editor_index;
-            // FIXME double quotes in code_string must be escaped because we wrap
-            //         the whole text in double quotes
-            let query_text = "ease_consult_rule('" +
-                rule_id + "', \"" +  code_string + "\").";
-            const pl = new ROSPrologClient(ros, {});
-            pl.jsonQuery(query_text, function(response) {
-                // TODO: show status to the user. error message is very useful.
-                //        best show a collapsable with status.
-                console.info("Code Consulted");
             });
         };
 
@@ -108,7 +114,7 @@
                 enableMultiselect: false,
                 // renderer options
                 highlightGutterLine: false,
-                maxLines: 15,
+                maxLines: 999,
                 showGutter: false,
                 showLineNumbers: false,
                 showFoldWidgets: false,
@@ -170,24 +176,38 @@
                 const this_count = query_counter;
                 const editor_id = "editor-"+query_counter;
                 const this_editor = $(this);
-                query_counter += 1;
-                // need to have ID for ace editor to work
-                $(this).attr("id",editor_id);
                 // remove trailing newline character
-                $(this).text($(this).text().trim());
-                // setup ace ditor
-                ace_init(editor_id, {
-                    readOnly: false
-                });
+                const code_string = $(this).text().trim();
+                query_counter += 1;
+
+                // create editor div
+                const editor_div = $("<div>");
+                editor_div.attr("id",editor_id);
+                editor_div.addClass("tut-editor");
+                editor_div.text(code_string);
+
+                // solution div
+                const solution_div = $("<div>");
+                solution_div.addClass("query-solution collapse");
+
+                $(this).removeClass("tut-editor");
+                $(this).addClass("query-container");
+                $(this).text('');
+                $(this).append(editor_div);
+                $(this).append(solution_div);
+
+                ace_init(editor_id, { readOnly: false });
                 // add icon
                 const icon_a = $("<a>");
                 const icon_i = $("<i>");
                 icon_a.addClass("query-button");
                 icon_i.addClass("query-icon fas fa-cogs");
                 icon_a.append(icon_i);
-                $(this).append(icon_a);
+                editor_div.append(icon_a);
                 icon_a.click(function() {
-                    consult_code(ace.edit(editor_id).getValue(), this_count);
+                    consult_code(solution_div,
+                        ace.edit(editor_id).getValue(),
+                        this_count);
                 });
             });
 

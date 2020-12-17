@@ -21,14 +21,46 @@ function EntityFormatter() {
         );
     };
 
+    this.format_term = function(val) {
+        if(typeof val === "object" && "term" in val) {
+            let terms = val["term"];
+            let functor = terms[0];
+            let args=[];
+            for(let i=1; i<terms.length; ++i) {
+                args.push(that.format(terms[i]));
+            }
+            return functor + "(" + args.join(", ") + ")";
+        }
+        else if(Array.isArray(val)) {
+            let x = [];
+            for (let i = 0; i < val.length; i++) {
+                x.push(that.format(val[i]));
+            }
+            return '['+x.join(',')+']';
+        }
+        else {
+            return JSON.stringify(val);
+        }
+
+    }
+
     this.format = function(val) {
-        let value_formatted = val;
-        for(let iri in that.rdf_namespaces) {
-            if(value_formatted.indexOf(iri) !== -1) {
-                value_formatted = value_formatted.replace(
-                    new RegExp(iri, 'g'), that.rdf_namespaces[iri]+":'")+"'";
+        let value_formatted = undefined;
+
+        if (typeof val === 'string' || val instanceof String) {
+            value_formatted = val;
+            for(let iri in that.rdf_namespaces) {
+                if(value_formatted.indexOf(iri) !== -1) {
+                    value_formatted = value_formatted.replace(
+                        new RegExp(iri, 'g'), that.rdf_namespaces[iri]+":'")+"'";
+                }
             }
         }
+
+        else {
+            value_formatted = this.format_term(val);
+        }
+
         return value_formatted;
     };
 };
