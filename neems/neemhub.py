@@ -31,6 +31,7 @@ class NEEMHub:
         self.mongo_user = sql.MONGO_USER
         self.mongo_pass = sql.MONGO_PASS
         self.neem_visibility_flag = sql.NEEM_VISIBILITY_FLAG
+        self.knowrob_urdf_server = sql.KNOWROB_URDF_SERVER
         self.mongo_client = None
         self.mongo_db = None
 
@@ -42,6 +43,7 @@ class NEEMHub:
         sql.MONGO_USER = self.mongo_user
         sql.MONGO_PASS = self.mongo_pass
         sql.NEEM_VISIBILITY_FLAG = self.neem_visibility_flag
+        sql.KNOWROB_URDF_SERVER = self.knowrob_urdf_server
         self.mongo_db = None
         db.session.commit()
 
@@ -80,6 +82,12 @@ class NEEMHub:
 
     def set_neem_visibility_flag(self, neem_visibility_flag):
         self.neem_visibility_flag = neem_visibility_flag
+
+    def get_knowrob_urdf_server(self):
+        return self.knowrob_urdf_server
+
+    def set_knowrob_urdf_server(self, urdf_server):
+        self.knowrob_urdf_server = urdf_server
 
     def connect_mongo(self):
         try:
