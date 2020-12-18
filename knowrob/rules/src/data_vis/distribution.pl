@@ -14,13 +14,14 @@ oe:result_set_show(ResultSet) :-
 		['barchart','phases'],'_',ID),
 	%% send message
 	data_vis(barchart(ID),
-			[ title: 'Distribution of executed task types',
+			[ title: 'Distribution of executed tasks',
 			  data: [Tsks0,Counts]
 			]
 	).
 
 %%
 % TODO: idea: pie chart about how many actions failed vs. succeeded
+%             pie chart of which tasks have failed most often
 %%
 oe:result_set_show(ResultSet) :-
 	result_set_events(ResultSet,[Evt]),
