@@ -8,7 +8,7 @@ function DescriptionWidget(options){
     const that = this;
     options = options || {};
 
-    this.title = "Solution Description";
+    this.title = "Response description";
     this.has_failure = false;
     this.widget = undefined;
     this.answer_count = 0;

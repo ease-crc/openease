@@ -1,21 +1,37 @@
-:- module(timeline_handler,[]).
+:- module(oe_timeline_vis,[]).
 
-:- use_module(library(query_handler)).
+:- use_module(library(openease)).
 
-query_handler:openease_gen_answer(event,[Ev0,Ev1|Evs]) :-
-    findall([E,Task,Start,End],
-    	(	member(E,[Ev0,Ev1|Evs]),
-	    	timeline_data(E,Task,Start,End)
-	    ),
-    	EventData),
-    data_vis:timeline_data(EventData).
+%%
+% Generate timeline data visualization messages.
+%%
+oe:result_set_show(ResultSet) :-
+	result_set_has_event(ResultSet),
+	result_set_events(ResultSet,Evts),
+	openease_timeline(Evts).
+	
+%% openease_timeline(+Evts) is semidet.
+%
+openease_timeline([Ev0,Ev1|Evs]) :-
+	%% Multiple events are part of answer set.
+	findall([E,Task,Start,End],
+		(	member(E,[Ev0,Ev1|Evs]),
+			timeline_data(E,Task,Start,End)
+		),
+		EventData
+	),
+	data_vis:timeline_data(EventData).
 
-query_handler:openease_gen_answer(event,[Evt]) :-
+openease_timeline([Evt]) :-
+	%% A single event is part of answer set.
 	setof([SubEvt,Task,Start,End],
-		(	(SubEvt=Evt ; transitive(triple(Evt,dul:hasConstituent,SubEvt))),
+		(	(	SubEvt=Evt
+			;	transitive(triple(Evt,dul:hasConstituent,SubEvt))
+			),
 			timeline_data(SubEvt,Task,Start,End)
 		),
-		EventData),
+		EventData
+	),
 	EventData=[_,_|_],
 	data_vis:timeline_data(EventData,
 		[ title: 'Activity phases'
@@ -24,13 +40,17 @@ query_handler:openease_gen_answer(event,[Evt]) :-
 %%
 timeline_data(E,Task,Start,End) :-
 	ask(aggregate([
-	            % TODO: do the transitive call in aggregate to avoid doing the aggregate call n times
-				%transitive(triple(E,dul:hasConstituent,X)),
-				triple(E,rdf:type,dul:'Event'),
-				triple(E,rdf:type,regex('^.*(?!Action).*')),
-				triple(E,dul:isClassifiedBy,TaskInstance),
-				triple(E,dul:hasTimeInterval,Interval),
-				triple(Interval,soma:hasIntervalBegin,Start),
-				triple(Interval,soma:hasIntervalEnd,End)
-			])),
+		%%
+		% TODO: include transitive in this aggregate query
+		% TODO: include member in this aggregate query
+		%%
+		%transitive(triple(E,dul:hasConstituent,X)),
+		triple(E,rdf:type,dul:'Event'),
+		triple(E,rdf:type,regex('^.*(?!Action).*')),
+		triple(E,dul:isClassifiedBy,TaskInstance),
+		triple(E,dul:hasTimeInterval,Interval),
+		triple(Interval,soma:hasIntervalBegin,Start),
+		triple(Interval,soma:hasIntervalEnd,End)
+	])),
 	atomic_list_concat([Task,_],'_',TaskInstance).
+

@@ -1,6 +1,6 @@
 
-% query answering
-:- use_module('./query_handler.pl').
+% interface for JS clients
+:- use_module('./openease.pl').
 :- use_module('./query_history.pl').
 
 % IDE interface
