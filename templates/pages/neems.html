@@ -43,6 +43,13 @@
                     <div class="card-icons">
                         <center>
                             <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">
+                                <!-- NEEM Id icon-->
+                                <span id="item-desc-{{loop.index}}" style="display: none;">{{neem.neem_id}}</span>
+                                <a href="javascript:copyToClipboard('#item-desc-{{loop.index}}')"><i
+                                    class="fas fa-2x fa-id-card" title="copy to clipboard NEEM Id: {{neem.neem_id}}"></i>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">
                                 <!-- Agent icons-->
                                 {% if neem.agent == "Robot" %}
                                 <i class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i>
@@ -104,5 +111,16 @@ $(function () {
   $('[data-toggle="popover"]').popover()
 });
 
+</script>
+
+<script>
+<!-- copy neem id to clipboard for testing purpose -->
+function copyToClipboard(element) {
+    var inputVariable = $("<input>");
+    $("body").append(inputVariable);
+    inputVariable.val($(element).text()).select();
+    document.execCommand("copy");
+    inputVariable.remove();
+}
 </script>
 {% endblock %}
