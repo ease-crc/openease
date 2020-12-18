@@ -17,3 +17,85 @@
 .body-container-row-padding {
   padding-bottom: 5px;
 }
+
+.card-block {
+    width: 100%;
+    box-shadow: 1px 3px 20px #aaa;
+    border-radius: 5px;
+    padding: 15px 15px 0.5em;
+    height: 250px;
+    overflow-y: auto;
+}
+
+.card-block h6 {
+    color: #aaa;
+}
+
+.card-block p {
+    font-family: 'Poppins', sans-serif;
+}
+
+.neem-name {
+    font-size: 1.25rem;
+}
+
+.neem-description {
+    max-height: 130px;
+}
+
+.style-overflow::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+.style-overflow::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.style-overflow::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+}
+
+.keywords {
+    width: 100%;
+    box-shadow: 1px 3px 20px #aaa;
+    border-radius: 5px;
+    padding: 15px 15px 0.5em;
+    margin: 15px 0;
+    font-size: 0.9em;
+}
+.keywords-item {
+    padding: 0.2em 0.8em;
+    font-size: 0.8em;
+    margin-bottom: 0.5em;
+    margin-right: 0.5em;
+    color: #fff;
+    border-radius: 2em;
+    display: inline-block;
+    line-height: 1.6em;
+    background-color: #1B998B;
+}
+
+.card-icons {
+    width: 100%;
+    box-shadow: 1px 3px 20px #aaa;
+    border-radius: 5px;
+    padding: 15px 10px 15px 10px;
+    margin: 15px 0;
+    font-size: 0.9em;
+}
+
+.icons {
+    display: inline;
+}
+.recipe-card {
+	background: #fff;
+	margin: 4em auto;
+	width: 90%;
+	max-width: 496px;
+	border-radius: 5px;
+}
