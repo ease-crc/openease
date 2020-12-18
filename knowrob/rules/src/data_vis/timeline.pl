@@ -20,7 +20,9 @@ openease_timeline([Ev0,Ev1|Evs]) :-
 		),
 		EventData
 	),
-	data_vis:timeline_data(EventData).
+	data_vis:timeline_data(EventData,
+		[ title: 'Timeline of events'
+		]).
 
 openease_timeline([Evt]) :-
 	%% A single event is part of answer set.
@@ -34,7 +36,7 @@ openease_timeline([Evt]) :-
 	),
 	EventData=[_,_|_],
 	data_vis:timeline_data(EventData,
-		[ title: 'Activity phases'
+		[ title: 'Timeline of activity phases'
 		]).
 
 %%

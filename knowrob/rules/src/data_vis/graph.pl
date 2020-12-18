@@ -18,7 +18,7 @@ oe:result_set_show(ResultSet) :-
 		['graph','participation',EvtName],'_',ID),
 	% publish the message,
 	data_vis_graph(ID, GraphData,
-	    [title: 'Participation']).
+	    [title: 'Graph of event participation']).
 
 %%
 data_vis_rdf_graph(InitialNode,EdgeData,GraphData) :-
