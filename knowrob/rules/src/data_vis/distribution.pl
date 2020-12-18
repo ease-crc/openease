@@ -11,28 +11,30 @@ oe:result_set_show(ResultSet) :-
 	task_distribution(Evt,Tsks0,Counts),
 	%% generate id
 	atomic_list_concat(
-		['piechart','phases'],'_',ID),
+		['barchart','phases'],'_',ID),
 	%% send message
-	data_vis(piechart(ID),
-			[ title: 'Distribution of tasks executed in event phases',
+	data_vis(barchart(ID),
+			[ title: 'Distribution of executed task types',
 			  data: [Tsks0,Counts]
 			]
 	).
 
+%%
+% TODO: idea: pie chart about how many actions failed vs. succeeded
+%%
 oe:result_set_show(ResultSet) :-
 	result_set_events(ResultSet,[Evt]),
 	% collect all tsks performed in phases
 	task_distribution(Evt,Tsks0,Counts),
 	%% generate id
 	atomic_list_concat(
-		['barchart','phases'],'_',ID),
+		['piechart','phases'],'_',ID),
 	%% send message
-	data_vis(barchart(ID),
-			[ title: 'Distribution of tasks executed in event phases',
+	data_vis(piechart(ID),
+			[ title: 'Distribution of executed task types',
 			  data: [Tsks0,Counts]
 			]
 	).
-
 
 %%
 task_distribution(Evt,Tsks0,Counts) :-
