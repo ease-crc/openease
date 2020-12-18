@@ -66,13 +66,7 @@ function Blackboard(options) {
         let widget = new ResponseWidget({
             formatter: formatter
         });
-        let div = widget.create(response);
-        if(widget.has_failure) {
-            that.push("Failure", div);
-        }
-        else {
-            that.push(widget.title, div);
-        }
+        that.push(widget.title, widget.create(response));
         // TODO: answer count
         // TODO: need to call that.finish();?
         // that.finish();

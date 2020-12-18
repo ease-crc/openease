@@ -82,13 +82,13 @@ services:
       # these are for docker-gen to recognize this container
       - VIRTUAL_HOST=openease
       - VIRTUAL_PORT=5000
-      - EASE_DEBUG=true
       # Workaround for container using legacy Docker links
       - POSTGRES_PORT_5432_TCP_ADDR=postgres
       - POSTGRES_PORT_5432_TCP_PORT=5432
       - DOCKERBRIDGE_PORT_5001_TCP_ADDR=dockerbridge
       - DOCKERBRIDGE_PORT_5001_TCP_PORT=5001
       #
+      - EASE_DEBUG=true
       - OPENEASE_USE_HOST_KNOWROB=${OPENEASE_USE_HOST_KNOWROB}
       - OPENEASE_MAIL_USERNAME=${OPENEASE_MAIL_USERNAME}
       #- OPENEASE_MAIL_PASSWORD=${OPENEASE_MAIL_PASSWORD}
