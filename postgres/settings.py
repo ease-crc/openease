@@ -51,6 +51,8 @@ class NEEMHubSettings(db.Model):
     mongo_pass = db.Column(db.String(255), nullable=False, default='')
     urdf_server = db.Column(db.String(255), nullable=False,
                             default='http://neem-1.informatik.uni-bremen.de/data/kinematics/')
+    mesh_server = db.Column(db.String(255), nullable=False,
+                            default='http://neem-1.informatik.uni-bremen.de/data/')
     visibility_flag = db.Column(db.Boolean(), nullable=False, default=False)
 
 

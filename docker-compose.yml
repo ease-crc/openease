@@ -92,8 +92,6 @@ services:
       - OPENEASE_USE_HOST_KNOWROB=${OPENEASE_USE_HOST_KNOWROB}
       - OPENEASE_MAIL_USERNAME=${OPENEASE_MAIL_USERNAME}
       #- OPENEASE_MAIL_PASSWORD=${OPENEASE_MAIL_PASSWORD}
-      # Mesh and URDF Server
-      - MESH_URDF_SERVER=${MESH_URDF_SERVER}
 
   #docker_compose_ui:
     #restart: always

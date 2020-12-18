@@ -79,6 +79,7 @@ def post_neem_hub_settings():
         else:
             neem_hub.set_neem_visibility_flag(True)
         neem_hub.set_urdf_server(req.get("urdf_server"))
+        neem_hub.set_mesh_server(req.get("mesh_server"))
         neem_hub.store_settings()
     else:
         flash('Null request is submitted while form submission!', "warning")

@@ -25,7 +25,3 @@ USER_ENABLE_EMAIL = True
 USER_ENABLE_CONFIRM_EMAIL = False
 
 MAX_HISTORY_LINES = 100
-
-MESH_URDF_SERVER = os.environ.get('MESH_URDF_SERVER')
-if bool(MESH_URDF_SERVER)==False:
-    MESH_URDF_SERVER='https://neem-1.informatik.uni-bremen.de/data/'

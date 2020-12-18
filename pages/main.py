@@ -4,7 +4,7 @@ from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
 
-from urlparse import urlparse
+from urlparse import urlparse, urljoin
 import urllib
 import traceback
 import os
@@ -16,7 +16,7 @@ import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
-from config.settings import USE_HOST_KNOWROB, MESH_URDF_SERVER
+from config.settings import USE_HOST_KNOWROB
 
 from neems.neemhub import instance as neemhub
 
@@ -66,7 +66,7 @@ def send_from_static_directory(filename):
 
 @app.route('/meshes/<path:mesh>')
 def download_mesh(mesh):
-    return redirect(MESH_URDF_SERVER + mesh)
+    return redirect(urljoin(neemhub.get_mesh_server(), mesh))
 
 # method to send font files from node_modules dir
 @app.route('/<path:url_path>/node_modules/<path:file_path>')

@@ -32,6 +32,7 @@ class NEEMHub:
         self.mongo_pass = sql.mongo_pass
         self.visibility_flag = sql.visibility_flag
         self.urdf_server = sql.urdf_server
+        self.mesh_server = sql.mesh_server
         self.mongo_client = None
         self.mongo_db = None
 
@@ -44,6 +45,7 @@ class NEEMHub:
         sql.mongo_pass = self.mongo_pass
         sql.visibility_flag = self.visibility_flag
         sql.urdf_server = self.urdf_server
+        sql.mesh_server = self.mesh_server
         self.mongo_db = None
         db.session.commit()
 
@@ -88,6 +90,12 @@ class NEEMHub:
 
     def set_urdf_server(self, urdf_server):
         self.urdf_server = urdf_server
+
+    def get_mesh_server(self):
+        return self.mesh_server
+
+    def set_mesh_server(self, mesh_server):
+        self.mesh_server = mesh_server
 
     def connect_mongo(self):
         try:
