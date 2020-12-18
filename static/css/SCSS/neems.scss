@@ -84,11 +84,14 @@
     width: 100%;
     box-shadow: 1px 3px 20px #aaa;
     border-radius: 5px;
-    padding: 15px 15px 15px 15px;
+    padding: 15px 10px 15px 10px;
     margin: 15px 0;
     font-size: 0.9em;
 }
 
+.icons {
+    display: inline;
+}
 .recipe-card {
 	background: #fff;
 	margin: 4em auto;
