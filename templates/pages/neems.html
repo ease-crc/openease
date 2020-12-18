@@ -52,14 +52,18 @@
                             <div class="col-lg-2 col-md-2 col-sm-2 icons">
                                 <!-- Agent icons-->
                                 {% if neem.agent == "Robot" %}
-                                <i class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i>
+                                <a href="javascript:void()">
+                                    <i class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i></a>
                                 {% elif neem.agent == "Human" %}
-                                <i class="fas fa-2x fa-user" title="Agent: {{neem.agent}}"></i>
+                                <a href="javascript:void()">
+                                    <i class="fas fa-2x fa-user" title="Agent: {{neem.agent}}"></i></a>
                                 {% elif neem.agent == "VR" %}
-                                <i class="fas fa-2x fa-vr-cardboard"
-                                              title="Agent: {{neem.agent}}"></i>
+                                <a href="javascript:void()">
+                                    <i class="fas fa-2x fa-vr-cardboard"
+                                       title="Agent: {{neem.agent}}"></i></a>
                                 {% else %}
-                                <i class="fas fa-2x fa-bookmark" title="Agent: {{neem.agent}}"></i>
+                                <a href="javascript:void()">
+                                    <i class="fas fa-2x fa-bookmark" title="Agent: {{neem.agent}}"></i></a>
                                 {% endif %}
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-2 icons">
@@ -70,16 +74,21 @@
                             <div class="col-lg-2 col-md-2 col-sm-2 icons">
                                 <!-- Env icon-->
                                 {% if neem.environment == "Kitchen" %}
-                                <i class="fas fa-2x fa-utensils" title="Env: {{neem.environment}}"></i>
+                                <a href="{{neem.environment.url}}" target="_blank">
+                                    <i class="fas fa-2x fa-utensils" title="Env: {{neem.environment.name}}"></i></a>
                                 {% elif neem.environment == "Home" %}
-                                <i class="fas fa-2x fa-home" title="Env: {{neem.environment}}"></i>
+                                <a href="{{neem.environment.url}}" target="_blank">
+                                    <i class="fas fa-2x fa-home" title="Env: {{neem.environment.name}}"></i></a>
                                 {% elif neem.environment == "VR" %}
-                                <i class="fas fa-2x fa-vr-cardboard"
-                                              title="Env: {{neem.environment}}"></i>
+                                <a href="{{neem.environment.url}}" target="_blank">
+                                    <i class="fas fa-2x fa-vr-cardboard"
+                                       title="Env: {{neem.environment.name}}"></i></a>
                                 {% elif neem.environment == "Lab" %}
-                                <i class="fas fa-2x fa-vial" title="Env: {{neem.environment}}"></i>
+                                <a href="{{neem.environment.url}}" target="_blank">
+                                    <i class="fas fa-2x fa-vial" title="Env: {{neem.environment.name}}"></i></a>
                                 {% else %}
-                                <i class="fas fa-2x fa-industry" title="Env: {{neem.environment}}"></i>
+                                <a href="{{neem.environment.url}}" target="_blank">
+                                    <i class="fas fa-2x fa-industry" title="Env: {{neem.environment.name}}"></i></a>
                                 {% endif %}
                             </div>
                             <!-- gitlab repo url  -->
