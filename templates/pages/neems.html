@@ -26,11 +26,11 @@
                     {% else %}
                         <img src={{ neem.image }} alt="" class="card-img-top img-fluid"/>
                     {%endif %}
-                    <div class="card-block">
-                        <h5>{{ neem.name }}</h5>
+                    <div class="card-block style-overflow">
+                        <b><p class="neem-name">{{ neem.name }}</p></b>
                         <h6>{{ neem.created_by }}, {{ neem.created_at }}</h6>
 
-                        <p class="block-content" id="style-overflow">{{ neem.description }}, {{ neem.description }}, {{ neem.description }}, {{ neem.description }}, {{ neem.description }}</p>
+                        <p class="neem-description">{{ neem.description }}</p>
                     </div>
 
                     <div class="keywords">
@@ -57,7 +57,8 @@
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">
                                 <!-- Activity icon-->
-                                <i class="fas fa-2x fa-tasks" title="Activity: {{neem.activity.name}}"></i>
+                                <a href="{{neem.activity.url}}" target="_blank"><i
+                                    class="fas fa-2x fa-tasks" title="Activity: {{neem.activity.name}}"></i></a>
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">
                                 <!-- Env icon-->

@@ -24,6 +24,7 @@
     border-radius: 5px;
     padding: 15px 15px 0.5em;
     height: 250px;
+    overflow-y: auto;
 }
 
 .card-block h6 {
@@ -34,24 +35,27 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.block-content {
-    max-height: 130px;
-    overflow-y: auto;
+.neem-name {
+    font-size: 1.25rem;
 }
 
-#style-overflow::-webkit-scrollbar-track
+.neem-description {
+    max-height: 130px;
+}
+
+.style-overflow::-webkit-scrollbar-track
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 	background-color: #F5F5F5;
 }
 
-#style-overflow::-webkit-scrollbar
+.style-overflow::-webkit-scrollbar
 {
 	width: 6px;
 	background-color: #F5F5F5;
 }
 
-#style-overflow::-webkit-scrollbar-thumb
+.style-overflow::-webkit-scrollbar-thumb
 {
 	background-color: #000000;
 }
