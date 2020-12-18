@@ -77,7 +77,7 @@ ease_retract_term(X) :-
 % Load a PL file into KnowRob.
 %
 ease_consult(File) :-
-    ease_retract(File),
+	ease_retract(File),
 	write('Consult file '), writeln(File),
 	open(File, read, Fd),
 	read(Fd, First),
@@ -87,8 +87,8 @@ ease_consult(File) :-
 %%
 %
 ease_consult_string(ID, GoalStr) :-
-    ease_retract(ID),
-    open_string(GoalStr,Fd),
+	ease_retract(ID),
+	open_string(GoalStr,Fd),
 	read(Fd, First),
 	read_data(ID, First, Fd),
 	close(Fd).
@@ -111,4 +111,5 @@ read_data(ID, Term, Fd) :-
 	assertz(:(user,Expanded)),
 	assertz(ease_user_term(ID,Expanded)),
 	read(Fd, Next),
-	read_data(File, Next, Fd).
+	read_data(ID, Next, Fd).
+
