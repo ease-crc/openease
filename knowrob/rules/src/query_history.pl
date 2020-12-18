@@ -2,6 +2,11 @@
 		[ history_add/1,
 		  history_get/2
 		]).
+
+%%
+% TODO: do not read file in every call. rather store
+%       history in Prolog for faster query qithout IO
+%%
 		
 %%
 history_file('/home/ros/user_data/history.txt').
