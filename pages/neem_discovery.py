@@ -69,16 +69,16 @@ def render_neem_hub_settings():
 def post_neem_hub_settings():
     req = request.form
     if req is not None:
-        neem_hub.set_mongo_host(req.get("MONGO_HOST"))
-        neem_hub.set_mongo_port(req.get("MONGO_PORT"))
-        neem_hub.set_mongo_user(req.get("MONGO_USER"))
-        neem_hub.set_mongo_db(req.get("MONGO_DB"))
-        neem_hub.set_mongo_pass(req.get("MONGO_PASS"))
-        if req.get("NEEM_VISIBILITY_FLAG") is None:
+        neem_hub.set_mongo_host(req.get("mongo_host"))
+        neem_hub.set_mongo_port(req.get("mongo_port"))
+        neem_hub.set_mongo_user(req.get("mongo_user"))
+        neem_hub.set_mongo_db(req.get("mongo_db"))
+        neem_hub.set_mongo_pass(req.get("mongo_pass"))
+        if req.get("visibility_flag") is None:
             neem_hub.set_neem_visibility_flag(False)
         else:
             neem_hub.set_neem_visibility_flag(True)
-        neem_hub.set_knowrob_urdf_server(req.get("KNOWROB_URDF_SERVER"))
+        neem_hub.set_urdf_server(req.get("urdf_server"))
         neem_hub.store_settings()
     else:
         flash('Null request is submitted while form submission!', "warning")

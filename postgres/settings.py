@@ -43,13 +43,15 @@ class NEEMHubSettings(db.Model):
     DB model class for storing neem-hub configuration into postgresql.
     """
     id = db.Column(db.Integer, primary_key=True)
-    MONGO_HOST = db.Column(db.String(255), nullable=False, default='data.open-ease.org')
-    MONGO_PORT = db.Column(db.Integer(), default=28015)
-    MONGO_DB = db.Column(db.String(255), nullable=False, default='neems')
-    MONGO_USER = db.Column(db.String(255), nullable=False, default='')
-    MONGO_PASS = db.Column(db.String(255), nullable=False, default='')
-    KNOWROB_URDF_SERVER = db.Column(db.String(255), nullable=False, default='http://neem-1.informatik.uni-bremen.de/data/kinematics/')
-    NEEM_VISIBILITY_FLAG = db.Column(db.Boolean(), nullable=False, default=False)
+    mongo_host = db.Column(db.String(255), nullable=False,
+                           default='data.open-ease.org')
+    mongo_port = db.Column(db.Integer(), default=28015)
+    mongo_db = db.Column(db.String(255), nullable=False, default='neems')
+    mongo_user = db.Column(db.String(255), nullable=False, default='')
+    mongo_pass = db.Column(db.String(255), nullable=False, default='')
+    urdf_server = db.Column(db.String(255), nullable=False,
+                            default='http://neem-1.informatik.uni-bremen.de/data/kinematics/')
+    visibility_flag = db.Column(db.Boolean(), nullable=False, default=False)
 
 
 def get_neemhub_settings():

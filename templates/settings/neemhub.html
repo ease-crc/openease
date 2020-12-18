@@ -12,44 +12,44 @@
 
                 <!-- MONGO_HOST -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">MONGO HOST</label>
+                    <label class="col-sm-2 col-form-label">Mongo DB host</label>
                     <div class="col-sm-10">
                         <input type="text" placeholder="Provide host name for NEEM Hub configuration"
-                               class="form-control" name="MONGO_HOST" value="{{ neem_hub.mongo_host }}">
+                               class="form-control" name="mongo_host" value="{{ neem_hub.mongo_host }}">
                     </div>
                 </div>
                 <!-- MONGO_PORT -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">MONGO PORT</label>
+                    <label class="col-sm-2 col-form-label">Mongo DB port</label>
                     <div class="col-sm-10">
                         <input type="text" placeholder="Provide port for NEEM Hub configuration"
-                               class="form-control" name="MONGO_PORT" value="{{ neem_hub.mongo_port }}">
+                               class="form-control" name="mongo_port" value="{{ neem_hub.mongo_port }}">
                     </div>
                 </div>
                 <!-- MONGO_DB -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">MONGO DB</label>
+                    <label class="col-sm-2 col-form-label">Mongo DB name</label>
                     <div class="col-sm-10">
                         <input type="text" placeholder="Provide db name for NEEM Hub configuration"
-                               class="form-control" name="MONGO_DB" value="{{ neem_hub.mongo_db_name }}">
+                               class="form-control" name="mongo_db" value="{{ neem_hub.mongo_db_name }}">
                     </div>
                 </div>
                 <!-- MONGO_USER -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">MONGO USER</label>
+                    <label class="col-sm-2 col-form-label">Mongo DB user</label>
                     <div class="col-sm-10">
                         <input type="text" placeholder="Provide user name for NEEM Hub configuration"
-                               class="form-control" name="MONGO_USER" value="{{ neem_hub.mongo_user }}">
+                               class="form-control" name="mongo_user" value="{{ neem_hub.mongo_user }}">
                     </div>
                 </div>
                 <!-- MONGO_PASS -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">MONGO PASS</label>
+                    <label class="col-sm-2 col-form-label">Mongo DB password</label>
                     {# Password field #}
                     {% set field = neem_hub.mongo_pass %}
                     <div id="pw-field" class="col-sm-10 {% if field.errors %}has-error{% endif %}">
                         <input placeholder="Change the password" class="col-sm-6 form-control" id="psw"
-                               name="MONGO_PASS"
+                               name="mongo_pass"
                                type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
                                value="{{ neem_hub.mongo_pass }}" required/>
                         <div class="invalid-feedback">
@@ -59,19 +59,19 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">KNOWROB URDF SERVER</label>
+                    <label class="col-sm-2 col-form-label">URDF server</label>
                     <div class="col-sm-10">
                         <input type="text" placeholder="Provide host name for URDF Server"
-                               class="form-control" name="KNOWROB_URDF_SERVER" value="{{ neem_hub.knowrob_urdf_server }}">
+                               class="form-control" name="urdf_server" value="{{ neem_hub.urdf_server }}">
                     </div>
                 </div>
                 <!-- NEEM_VISIBILITY_FLAG -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">ONLY SHOW PUBLISHED NEEMS</label>
+                    <label class="col-sm-2 col-form-label">Only show published NEEMs</label>
                     <div class="col-sm-10">
                         <input type="checkbox" placeholder="Only show published neems"
-                               class="form-control" name="NEEM_VISIBILITY_FLAG" value="{{ neem_hub.neem_visibility_flag }}" 
-                               {{'checked="checked"' if neem_hub.neem_visibility_flag else ""}}>
+                               class="form-control" name="visibility_flag" value="{{ neem_hub.visibility_flag }}"
+                               {{'checked="checked"' if neem_hub.visibility_flag else ""}}>
                     </div>
                 </div>
                 <button class="col-sm-2 btn btn-sm btn-success" type="submit" name="Update"
