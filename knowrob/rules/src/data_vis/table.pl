@@ -1,18 +1,28 @@
-:- module(table_handler,
-	[ data_vis_table/3,
-	  data_vis_rdf_table(r,t)
+:- module(oe_table_vis,
+	[ data_vis_table/3
 	]).
 
-:- use_module(library(query_handler)).
+:- use_module(library(openease)).
 
-query_handler:openease_gen_answer(all,Values) :-
-	data_vis_rdf_table(Values, [title: 'Response description']).
 %%
-data_vis_rdf_table(Values,Options) :-
+oe:result_set_show(ResultSet) :-
+	%%
+	result_set_has_entity(ResultSet),
+	result_set_entities(ResultSet,Entities),
+	%%
+	show_comment_table(Entities).
+
+%%
+show_comment_table(Entities) :-
+	%%
+	% TODO: use aggregate query instead, problem is comments are not stored
+	%        in triples collection
+	%%
+	%%
 	findall(
 		[Type, Comment],
 		(
-			member(Val,Values),
+			member(Val,Entities),
 			triple(Val, rdf:type, Type),
 			has_comment(Type,Comment)
 		),
@@ -24,7 +34,8 @@ data_vis_rdf_table(Values,Options) :-
 	atomic_list_concat(
 		['table',FirstTypeName],'_',ID),
 	% publish the message
-	data_vis_table(ID, CommentData, Options).
+	data_vis_table(ID, CommentData,
+		[title: 'Response description']).
 
 %%
 % Publishes a data vis message with tree data.
@@ -43,3 +54,4 @@ table_data_(Index,
 ) :-
 	NewIndex is Index + 1,
 	table_data_(NewIndex,RestIn,[RestIndices,RestContent]).
+

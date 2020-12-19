@@ -25,25 +25,27 @@ class NEEMHub:
     def __init__(self):
         # get the SQL settings object
         sql = get_neemhub_settings()
-        self.mongo_host = sql.MONGO_HOST
-        self.mongo_port = int(sql.MONGO_PORT)
-        self.mongo_db_name = sql.MONGO_DB
-        self.mongo_user = sql.MONGO_USER
-        self.mongo_pass = sql.MONGO_PASS
-        self.neem_visibility_flag = sql.NEEM_VISIBILITY_FLAG
-        self.knowrob_urdf_server = sql.KNOWROB_URDF_SERVER
+        self.mongo_host = sql.mongo_host
+        self.mongo_port = int(sql.mongo_port)
+        self.mongo_db_name = sql.mongo_db
+        self.mongo_user = sql.mongo_user
+        self.mongo_pass = sql.mongo_pass
+        self.visibility_flag = sql.visibility_flag
+        self.urdf_server = sql.urdf_server
+        self.mesh_server = sql.mesh_server
         self.mongo_client = None
         self.mongo_db = None
 
     def store_settings(self):
         sql = get_neemhub_settings()
-        sql.MONGO_HOST = self.mongo_host
-        sql.MONGO_PORT = self.mongo_port
-        sql.MONGO_DB = self.mongo_db_name
-        sql.MONGO_USER = self.mongo_user
-        sql.MONGO_PASS = self.mongo_pass
-        sql.NEEM_VISIBILITY_FLAG = self.neem_visibility_flag
-        sql.KNOWROB_URDF_SERVER = self.knowrob_urdf_server
+        sql.mongo_host = self.mongo_host
+        sql.mongo_port = self.mongo_port
+        sql.mongo_db = self.mongo_db_name
+        sql.mongo_user = self.mongo_user
+        sql.mongo_pass = self.mongo_pass
+        sql.visibility_flag = self.visibility_flag
+        sql.urdf_server = self.urdf_server
+        sql.mesh_server = self.mesh_server
         self.mongo_db = None
         db.session.commit()
 
@@ -78,16 +80,22 @@ class NEEMHub:
         self.mongo_pass = password
 
     def get_neem_visibility_flag(self):
-        return self.neem_visibility_flag
+        return self.visibility_flag
 
-    def set_neem_visibility_flag(self, neem_visibility_flag):
-        self.neem_visibility_flag = neem_visibility_flag
+    def set_neem_visibility_flag(self, visibility_flag):
+        self.visibility_flag = visibility_flag
 
-    def get_knowrob_urdf_server(self):
-        return self.knowrob_urdf_server
+    def get_urdf_server(self):
+        return self.urdf_server
 
-    def set_knowrob_urdf_server(self, urdf_server):
-        self.knowrob_urdf_server = urdf_server
+    def set_urdf_server(self, urdf_server):
+        self.urdf_server = urdf_server
+
+    def get_mesh_server(self):
+        return self.mesh_server
+
+    def set_mesh_server(self, mesh_server):
+        self.mesh_server = mesh_server
 
     def connect_mongo(self):
         try:
