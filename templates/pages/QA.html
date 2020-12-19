@@ -37,11 +37,42 @@
         // call page.init() when the document is ready
         $(document).ready(page.init);
 
+        $(document).ready(function() {
+            // update the placeholder text when text is updated in the editor
+            // NOTE: newer ace editor version support it, so at some point
+            //       the custom placeholder might not be needed anymore.
+            var commandline = ace.edit("user_query");
+            var toggle = undefined;
+            commandline.getSession().on('change', function() {
+                if(commandline.getValue().length === 0) {
+                    if(toggle === undefined || toggle === false) {
+                        $('#user-query-placeholder')
+                            .removeClass('invisible')
+                            .addClass('visible');
+                        toggle = true;
+                    }
+                }
+                else {
+                    if(toggle === undefined || toggle === true) {
+                        $('#user-query-placeholder')
+                            .removeClass('visible')
+                            .addClass('invisible');
+                        toggle = false;
+                    }
+                }
+            });
+        });
+
         const reComputeQuery = function() {
             var editor = ace.edit("input-text");
             let query_text = encodeURIComponent(editor.getValue());
             window.location.href = '/QA?q='+query_text;
         };
+
+        const randomQuery = function() {
+            // TODO: pick a random query from query library.
+            console.info("TODO: implement");
+		}
     </script>
 
     <div id="QA-container" class="w-100 h-100 container-fluid">
@@ -61,9 +92,17 @@
                         <a class="query-button" href="#" onclick="page.console.query()">
                             <i class="query-icon fas fa-spinner fa-spin"></i>
                         </a>
+                        <div id="user-query-placeholder" class="query-placeholder"
+                             {% if not session.logged_in %}
+                                class="invisible"
+                             {% else %}
+                                class="visible"
+                             {% endif %}
+                            >Enter what you want to know about the NEEM</div>
                     </div>
                     <div class="query_links text-right">
                         <a href="/examples"><i class="fas fa-th"></i> Examples</a>
+                        <a href="#" onclick="randomQuery()"><i class="fas fa-random"></i> Random</a>
                     </div>
                 </div>
 

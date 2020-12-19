@@ -17,6 +17,11 @@
 // the query field
 .query_links {
     width:auto;
+    padding-top: 4px;
+}
+.query_links a {
+    padding-left: 8px;
+    padding-right: 8px;
 }
 .query-container {
     margin-bottom: 0px !important;
