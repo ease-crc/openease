@@ -41,14 +41,14 @@ oe:result_set_show(ResultSet) :-
 task_distribution(Evt,Tsks0,Counts) :-
 	% collect all tsks performed in phases
 	findall(TskName,
-		(	(	SubEvt=Evt
-			;	transitive(triple(Evt,dul:hasConstituent,SubEvt))
-			),
-			once((
-				triple(SubEvt,dul:executesTask,Tsk),
-				rdf_db:rdf_split_url(_,TskName0,Tsk),
-				atomic_list_concat([TskName,_],'_',TskName0)
-			))
+		(	ask(aggregate([
+		        transitive( reflexive(
+		            triple(Evt,dul:hasConstituent,SubEvt)
+		        )),
+		        once(triple(SubEvt,dul:executesTask,Tsk))
+		    ])),
+		    rdf_db:rdf_split_url(_,TskName0,Tsk),
+			atomic_list_concat([TskName,_],'_',TskName0)
 		),
 		Tsks
 	),

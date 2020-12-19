@@ -9,6 +9,7 @@
 oe:result_set_show(ResultSet) :-
 	result_set_has_event(ResultSet),
 	result_set_events(ResultSet,Evts),
+	%% TODO move member to aggregate query
 	member(Evt,Evts),
 	data_vis_participant_graph(Evt,GraphData),
 	GraphData \= [],

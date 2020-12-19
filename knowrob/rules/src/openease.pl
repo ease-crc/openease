@@ -27,9 +27,7 @@
 %
 openease_query(_Query,Bindings) :-
 	% build result set
-writeln(rs0(Bindings)),
 	result_set(Bindings,ResultSet),
-writeln(rs(ResultSet)),
 	% generate data visualizations
 	forall(
 		result_set_show(ResultSet),
@@ -46,6 +44,7 @@ result_set(Bindings,
 		  descriptions(Descrs),
 		  situations(Sits)
 		]) :-
+	% FIXME: rather use aggregate query to find entity+types
 	result_set_entities_(Bindings,is_event,Evts),
 	result_set_entities_(Bindings,is_physical_object,Objs),
 	result_set_entities_(Bindings,is_quality,Quals),
