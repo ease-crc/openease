@@ -30,6 +30,27 @@ __author__ = 'danielb@uni-bremen.de'
 # path for node modules stored in openEASE container
 NODE_MODULES_PATH = "/tmp/npm/node_modules/"
 
+FUNDING_DATA=[
+    {'index': 0, 'class': 'active', 'name': 'DFG',
+     'href': 'https://www.dfg.de/en/',
+     'img': 'img/dfg.png'},
+    {'index': 1, 'class': '', 'name': 'RoboHow',
+     'href': 'http://www.robohow.eu',
+     'img': 'img/robohow-logo.png'},
+    {'index': 2, 'class': '', 'name': 'RoboEarth',
+     'href': 'http://www.roboearth.org',
+     'img': 'img/roboearth-logo.png'},
+    {'index': 3, 'class': '', 'name': 'Refills',
+     'href': 'http://www.refills-project.eu/',
+     'img': 'img/refills.png'},
+    {'index': 4, 'class': '', 'name': 'Sherpa',
+     'href': 'http://www.sherpa-project.eu',
+     'img': 'img/sherpa-logo.png'},
+    {'index': 5, 'class': '', 'name': 'Saphari',
+     'href': 'http://www.saphari.eu',
+     'img': 'img/saphari-logo.png'}
+]
+
 
 class QueryExamples(object):
     _instance = None
@@ -168,6 +189,8 @@ def render_QA_page():
     # read query from URL parameter "q" if any
     query_text = request.args.get('q', default='')
     has_query = (query_text is not '')
+    # show info about funding agencies
+    funding = FUNDING_DATA
     return render_template('pages/QA.html', **locals())
 
 @app.route('/QA/random', methods=['POST'])
