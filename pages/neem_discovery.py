@@ -2,6 +2,7 @@ from flask import jsonify, request, \
     render_template, redirect, \
     url_for, flash
 from flask_paginate import Pagination
+from flask_user import current_user
 
 from app_and_db import app
 from utility import admin_required
@@ -11,6 +12,12 @@ from neems.neemhub import instance as neem_hub, NEEMHubConnectionError
 from wtforms.validators import DataRequired
 from flask_wtf import Form
 from wtforms import PasswordField
+
+from knowrob.container import start_user_container, container_started
+from config.settings import USE_HOST_KNOWROB
+from postgres.AlchemyEncoder import AlchemyEncoder
+from postgres.settings import get_neemhub_settings
+import json
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
@@ -45,6 +52,13 @@ def render_neems():
                             total=len(matching_neems),
                             css_framework='bootstrap4',
                             search=search)
+
+    if not USE_HOST_KNOWROB and not container_started(current_user.username):
+        sql = get_neemhub_settings()
+        docker_interface.start_user_container(current_user.username,
+                                 json.dumps(sql, cls=AlchemyEncoder),
+                                 "knowrob",
+                                 "latest")
 
     return render_template('pages/neems.html', **locals())
 
