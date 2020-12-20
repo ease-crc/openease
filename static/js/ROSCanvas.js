@@ -19,6 +19,9 @@ function ROSCanvas(options){
     this.selectedMarker = undefined;
     this.markers = {};
 
+    this.on_start_loading = options.on_start_loading || function(){};
+    this.on_finished_loading = options.on_finished_loading || function(){};
+
     // add button bar
     this.canvas_links = $("<p>");
     this.canvas_links.addClass("icon-links marker-links");
@@ -77,7 +80,9 @@ function ROSCanvas(options){
             shadow: {
                 debug: false
             }
-        }
+        },
+        on_start_loading: this.on_start_loading,
+        on_finished_loading: this.on_finished_loading
     });
     // add some default objects to the scene
     this.rosViewer.scene.add(new ROS3D.Grid());

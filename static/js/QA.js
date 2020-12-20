@@ -78,11 +78,20 @@ function KnowrobUI(flask_user,options) {
     this.init = function () {
         that.console.init();
         that.setupInputWidget();
+        that.setStatus('Connecting to websocket');
         that.client.connect(function(ros) {
             console.info('Connected to ROS.');
             that.registerROSClients(ros);
             //that.rosViewer.registerNodes(ros);
         });
+    };
+
+    this.setStatus = function(msg) {
+        $('#query_status').text(msg);
+    };
+
+    this.clearStatus = function() {
+        this.setStatus('');
     };
 
     this.initBlackboard = function () {
@@ -103,7 +112,17 @@ function KnowrobUI(flask_user,options) {
             that.canvas = new ROSCanvas({
                 parent: that.canvas_div,
                 // meshPath is the prefix for GET requests
-                meshPath: '/meshes/'
+                meshPath: '/meshes/',
+                on_start_loading: function() {
+                    // meshes downloading started
+                    that.setStatus('Loading meshes');
+                    $('.query-icon').removeClass('fa-question').addClass('fa-spinner fa-spin');
+                },
+                on_finished_loading: function() {
+                    // meshes downloading finished
+                    that.clearStatus();
+                    $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+                }
             });
             that.canvas.registerNodes(that.client.ros);
         }
@@ -141,11 +160,13 @@ function KnowrobUI(flask_user,options) {
         that.registerImageClient(ros);
         that.registerMarkerClient(ros);
         that.registerTickClient(ros);
+        that.setStatus('Connecting to knowledge base');
         waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             that.initNEEM(ros, function() {
                 console.info("NEEM has been initialized");
                 that.formatter.connect(ros, function() {
+                    that.clearStatus();
                     if(options.has_query=='True') {
                         that.console.query();
                     }
@@ -159,6 +180,7 @@ function KnowrobUI(flask_user,options) {
 
     this.initNEEM = function (ros,then) {
         const pl = new ROSPrologClient(ros, {});
+        that.setStatus('Loading NEEM');
         pl.jsonQuery("register_ros_package(openease_rules), knowrob_load_neem('" + that.neem_id + "').", function(result) {
             pl.finishClient();
             if(then) {
