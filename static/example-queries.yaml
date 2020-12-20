@@ -87,10 +87,15 @@ sub_topics:
   query_groups:
   - description: All agents of an action
     queries:
-    - has_participant(Act,Part),has_role(Part,soma:'AgentRole').
+    - |
+      has_participant(Act,Part),
+      has_role(Part,soma:'AgentRole').
   - description: All actions with a PR2 robot as an agent
     queries:
-    - has_participant(Act,Part),has_role(Part,soma:'AgentRole'),has_type(Part,knowrob:'PR2').
+    - |
+      has_participant(Act,Part),
+      has_role(Part,soma:'AgentRole'),
+      has_type(Part,knowrob:'PR2').
 
 - topic: participation
   name: Objects
@@ -98,10 +103,14 @@ sub_topics:
   query_groups:
   - description: All objects of an action
     queries:
-    - has_participant(Act,Part),has_role(Part,soma:'Item').
+    - |
+      has_participant(Act,Part),
+      has_role(Part,soma:'Item').
   - description: All actions with a bowl as an item
     queries:
-    - has_participant(Act,Part),has_role(Part,soma:'Item'),has_type(Part,soma:'Bowl').
+    - |
+      has_participant(Act,Part),
+      has_role(Part,soma:'Item'),has_type(Part,soma:'Bowl').
 
 - topic: participation
   name: Component
@@ -109,10 +118,15 @@ sub_topics:
   query_groups:
   - description: All arms participating in an action
     queries:
-    - has_participant(Act,Part),has_role(Part,soma:'Instrument').
+    - |
+      has_participant(Act,Part),
+      has_role(Part,soma:'Instrument').
   - description: All arms executing a task in an action
     queries:
-    - has_participant(Act,Part),has_role(Part,soma:'Instrument'),has_type(Part,soma:'Arm').
+    - |
+      has_participant(Act,Part),
+      has_role(Part,soma:'Instrument'),
+      has_type(Part,soma:'Arm').
 
 - topic: action_structure
   name: Top- or bottom-level actions
@@ -120,10 +134,14 @@ sub_topics:
   query_groups:
   - description: Top-level actions
     queries:
-    - is_action(Action),\+has_subevent(Parent,Action).
+    - |
+      is_action(Action),
+      \+has_subevent(Parent,Action).
   - description: Bottom-level actions
     queries:
-    - is_action(Action),\+has_subevent(Action,Subevent).
+    - |
+      is_action(Action),
+      \+has_subevent(Action,Subevent).
 
 - topic: action_trans
   name: Agent transform
@@ -131,7 +149,10 @@ sub_topics:
   query_groups:
   - description: Transform of gripper during a graping motion
     queries:
-    - is_classified_by(Act,Mot), has_type(Mot,soma:'GraspingMotion'), is_at(pr2:'PR2Gripper_0_L',['map',Pose,Rot]) during Act.
+    - |
+      is_classified_by(Act,Mot), 
+      has_type(Mot,soma:'GraspingMotion'), 
+      is_at(pr2:'PR2Gripper_0_L',['map',Pose,Rot]) during Act.
 
 - topic: concept
   name: Subtopic
@@ -147,10 +168,16 @@ sub_topics:
   query_groups:
   - description: Actions that execute a Navigation task
     queries:
-    - is_action(Act), executes_task(Act,Tsk), has_type(Tsk,soma:'Navigating').
+    - |
+      is_action(Act), 
+      executes_task(Act,Tsk), 
+      has_type(Tsk,soma:'Navigating').
   - description: Actions that execute a Grasping task
     queries:
-    - is_action(Act), executes_task(Act,Tsk), has_type(Tsk,soma:'Grasping').
+    - |
+      is_action(Act), 
+      executes_task(Act,Tsk), 
+      has_type(Tsk,soma:'Grasping').
 
 - topic: appearance
   name: Shapes
@@ -158,10 +185,15 @@ sub_topics:
   query_groups:
   - description: Shape of a phsical object
     queries:
-    - is_object(Obj),object_shape_type(Obj,Shape).
+    - |
+      is_object(Obj),
+      object_shape_type(Obj,Shape).
   - description: Shape of an object that participates in an action
     queries:
-    - has_participant(Act, Obj), is_object(Obj), object_shape(Obj, ShapeTerm, ShapeOrigin, MaterialTerm).
+    - |
+      has_participant(Act, Obj), 
+      is_object(Obj), 
+      object_shape(Obj, ShapeTerm, ShapeOrigin, MaterialTerm).
 
 - topic: env_structure
   name: Furniture
@@ -169,10 +201,14 @@ sub_topics:
   query_groups:
   - description: Direct sub-parts of the kitchen
     queries:
-    - has_type(Kitchen,knowrob:'IAIKitchen'),has_part(Kitchen,Part).
+    - |
+      has_type(Kitchen,knowrob:'IAIKitchen'),
+      has_part(Kitchen,Part).
   - description: Parts of the fridge
     queries:
-    - has_type(Fridge,soma:'Refrigerator'),has_part(Fridge,Part).
+    - |
+      has_type(Fridge,soma:'Refrigerator'),
+      has_part(Fridge,Part).
 
 - topic: env_kin
   name: Joints
@@ -183,7 +219,10 @@ sub_topics:
     - is_urdf_joint(Link).
   - description: Child- and parentlink of joint
     queries:
-    - is_urdf_joint(Joint),urdf_joint_child_link(Joint,Child),urdf_joint_parent_link(Joint,Parent).
+    - |
+      is_urdf_joint(Joint),
+      urdf_joint_child_link(Joint,Child),
+      urdf_joint_parent_link(Joint,Parent).
 
 
 - topic: env_kin
@@ -192,10 +231,14 @@ sub_topics:
   query_groups:
   - description: Top-level links
     queries:
-    - is_urdf_link(Link),\+has_parent_link(Link,Child).
+    - |
+      is_urdf_link(Link),
+      \+has_parent_link(Link,Child).
   - description: Bottom-level links
     queries:
-    - is_urdf_link(Link),\+has_child_link(Link,Child).
+    - |
+      is_urdf_link(Link),
+      \+has_child_link(Link,Child).
 
 - topic: env_dyn
   name: Subtopic
