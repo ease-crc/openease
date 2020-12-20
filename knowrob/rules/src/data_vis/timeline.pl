@@ -5,30 +5,32 @@
 %%
 % Generate timeline data visualization messages.
 %%
-oe:result_set_show(ResultSet) :-
+oe:result_set_show(QueryID,ResultSet) :-
 	result_set_has_event(ResultSet),
 	result_set_events(ResultSet,Evts),
-	openease_timeline(Evts).
+	openease_timeline(QueryID,Evts).
 	
 %% openease_timeline(+Evts) is semidet.
 %
-openease_timeline([Ev0,Ev1|Evs]) :-
+openease_timeline(QueryID,[Ev0,Ev1|Evs]) :-
 	%% Multiple events are part of answer set.
 	findall([E,Task,Start,End],
 		timeline_data_b([Ev0,Ev1|Evs],E,Task,Start,End),
 		EventData),
 	data_vis:timeline_data(EventData,
-		[ title: 'Timeline of events'
+		[ id: QueryID,
+		  title: 'Timeline of events'
 		]).
 
-openease_timeline([Evt]) :-
+openease_timeline(QueryID, [Evt]) :-
 	%% A single event is part of answer set.
 	setof([SubEvt,Task,Start,End],
 		timeline_data_a(Evt,SubEvt,Task,Start,End),
 		EventData),
 	EventData=[_,_|_],
 	data_vis:timeline_data(EventData,
-		[ title: 'Timeline of activity phases'
+		[ id: QueryID,
+		  title: 'Timeline of activity phases'
 		]).
 
 %%

@@ -49,7 +49,8 @@ function KnowrobUI(flask_user,options) {
                 bindings.push([key,answer.solution[key]]);
             }
             const pl = new ROSPrologClient(that.client.ros, {});
-            const query_string = "openease_query(("+that.last_query+"),"+JSON.stringify(bindings)+")";
+            const query_string = "openease_query('"+ that.last_qid + "'," +
+                "("+that.last_query+"),"+JSON.stringify(bindings)+")";
             pl.jsonQuery(query_string, function(result) {
                 pl.finishClient();
                 $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
@@ -215,7 +216,11 @@ function KnowrobUI(flask_user,options) {
             messageType : 'data_vis_msgs/DataVis'
         });
         that.dataVis.subscribe(function(data_vis_msg) {
-            if(that.last_qid) {
+            console.info(data_vis_msg);
+            console.info(data_vis_msg.id);
+            console.info(that.last_qid);
+
+            if(that.last_qid === data_vis_msg.id) {
                 if(data_vis_msg.type == 989) {
                     that.playback = new PlaybackWidget(that.canvas_div, {
                         event: data_vis_msg.values[0].value1[0],
@@ -242,8 +247,11 @@ function KnowrobUI(flask_user,options) {
                     that.blackboard.addChart(data_vis_msg);
                 }
             }
-            else {
+            else if(!that.last_qid) {
                 console.warn("Received DataVis msg, but no query is active.");
+            }
+            else {
+                console.warn("Received DataVis msg, but the associated query is not active (anymore).");
             }
         });
     };

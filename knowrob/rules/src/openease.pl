@@ -1,23 +1,23 @@
 :- module(oe,
-			[ openease_query(t,r),
-    	  result_set/2,
-				result_set_has_entity/1,
-				result_set_has_event/1,
-				result_set_has_object/1,
-				result_set_has_quality/1,
-				result_set_has_description/1,
-				result_set_has_situation/1,
-				result_set_entities/2,
-				result_set_events/2,
-				result_set_objects/2,
-				result_set_qualities/2,
-				result_set_descriptions/2,
-				result_set_situations/2
+			[ openease_query(+,t,r),
+			  result_set/2,
+			  result_set_has_entity/1,
+			  result_set_has_event/1,
+			  result_set_has_object/1,
+			  result_set_has_quality/1,
+			  result_set_has_description/1,
+			  result_set_has_situation/1,
+			  result_set_entities/2,
+			  result_set_events/2,
+			  result_set_objects/2,
+			  result_set_qualities/2,
+			  result_set_descriptions/2,
+			  result_set_situations/2
 			]).
 
-:- multifile result_set_show/1.
+:- multifile result_set_show/2.
 
-%% openease_query(+Query, +Mode) is nondet.
+%% openease_query(+QueryID, +Query, +Mode) is nondet.
 %
 % True for statements that hold during the whole
 % duration of some time interval.
@@ -25,12 +25,12 @@
 % @param Query The query to be executed
 % @param Mode A list of modes for the execution.
 %
-openease_query(_Query,Bindings) :-
+openease_query(QueryID,_Query,Bindings) :-
 	% build result set
 	result_set(Bindings,ResultSet),
 	% generate data visualizations
 	forall(
-		result_set_show(ResultSet),
+		result_set_show(QueryID,ResultSet),
 		true
 	).
 
