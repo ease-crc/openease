@@ -63,15 +63,33 @@
             });
         });
 
+        const setQueryText = function(query_text) {
+            const commandline = ace.edit("user_query");
+            commandline.setValue(query_text);
+		};
+
         const reComputeQuery = function() {
-            var editor = ace.edit("input-text");
-            let query_text = encodeURIComponent(editor.getValue());
-            window.location.href = '/QA?q='+query_text;
+        	const editor = ace.edit("input-text");
+            const query_text = encodeURIComponent(editor.getValue());
+            setQueryText(query_text);
+            page.console.query();
         };
 
         const randomQuery = function() {
-            // TODO: pick a random query from query library.
-            console.info("TODO: implement");
+            $.ajax({
+                url: "/QA/random",
+                type: "POST",
+                contentType: "application/json",
+                //data: JSON.stringify({}),
+                dataType: "json",
+                success: function (response) {
+                    setQueryText(response.q);
+                    page.console.query();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
 		}
     </script>
 

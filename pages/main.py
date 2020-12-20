@@ -1,5 +1,5 @@
 import yaml
-from flask import session, request, redirect, url_for, render_template, send_from_directory
+from flask import session, request, redirect, url_for, render_template, send_from_directory, jsonify
 from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
@@ -8,6 +8,7 @@ from urlparse import urlparse, urljoin
 import urllib
 import traceback
 import os
+import random
 
 from app_and_db import app
 from app_and_db import db
@@ -24,6 +25,56 @@ __author__ = 'danielb@uni-bremen.de'
 
 # path for node modules stored in openEASE container
 NODE_MODULES_PATH = "/tmp/npm/node_modules/"
+
+
+class QueryExamples(object):
+    _instance = None
+
+    @staticmethod
+    def get():
+        if QueryExamples._instance is None:
+            QueryExamples._instance = QueryExamples()
+        return QueryExamples._instance
+
+    def __init__(self):
+        self.query_counter = 0
+        self.topic_map = {}
+        self.query_data = []
+        self.query_list = []
+        self.read_yaml()
+
+    def random_query(self):
+        return random.choice(self.query_list)
+
+    def read_yaml(self):
+        path = os.path.join(os.path.join(app.root_path, "static"), "example-queries.yaml")
+        self.query_counter = 0
+        self.topic_map = {}
+        self.query_data = []
+        self.query_list = []
+
+        with open(path) as f:
+            yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+
+            # first load sections & topics
+            self.query_data = yaml_data['sections']
+            for section in self.query_data:
+                for topic in section['topics']:
+                    self.topic_map[topic['id']] = topic
+                    topic['sub_topics'] = []
+
+            # gather subtopics
+            for sub_topic in yaml_data['sub_topics']:
+                for query_group in sub_topic['query_groups']:
+                    queries = []
+                    for query in query_group['queries']:
+                        queries.append({'id': self.query_counter, 'text': query})
+                        self.query_list.append(query)
+                        self.query_counter += 1
+                    query_group['queries'] = queries
+                topic = self.topic_map[sub_topic['topic']]
+                topic['sub_topics'].append(sub_topic)
+
 
 # PasswordForm used for validating given password field
 class PasswordForm(Form):
@@ -90,7 +141,6 @@ def render_main():
         return redirect(url_for('user.logout'))
     return redirect(url_for('render_QA_page'))
 
-
 @app.route('/QA')
 def render_QA_page():
     neem = neemhub.get_requested_neem(request)
@@ -110,42 +160,16 @@ def render_QA_page():
     has_query = (query_text is not '')
     return render_template('pages/QA.html', **locals())
 
-
-def read_query_examples():
-    path = os.path.join(os.path.join(app.root_path, "static"), "example-queries.yaml")
-    query_counter = 0
-
-    with open(path) as f:
-        yaml_data = yaml.load(f, Loader=yaml.FullLoader)
-        topic_map = {}
-
-        # first load sections & topics
-        query_data = yaml_data['sections']
-        for section in query_data:
-            for topic in section['topics']:
-                topic_map[topic['id']] = topic
-                topic['sub_topics'] = []
-
-        for sub_topic in yaml_data['sub_topics']:
-            for query_group in sub_topic['query_groups']:
-                queries = []
-                for query in query_group['queries']:
-                    queries.append({'id': query_counter, 'text': query})
-                    query_counter += 1
-                query_group['queries'] = queries
-            topic = topic_map[sub_topic['topic']]
-            topic['sub_topics'].append(sub_topic)
-
-        return query_data
-
-
-QUERY_EXAMPLES = read_query_examples()
+@app.route('/QA/random', methods=['POST'])
+def get_random_example_query():
+    return jsonify(q=QueryExamples.get().random_query())
 
 @app.route('/examples')
 def render_examples_page():
     url_quote = lambda x: urllib.pathname2url(x)
-    example_query_data = QUERY_EXAMPLES
+    example_query_data = QueryExamples.get().query_data
     return render_template('pages/QA-examples.html', **locals())
+
 
 # get call handling method for changing password
 @app.route('/change_password_get')
