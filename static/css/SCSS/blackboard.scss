@@ -3,6 +3,16 @@
   background-color: #FFF;
 }
 
+.blackboard-chevron {
+  float: right;
+  padding-top: 4px;
+  height: 24px;
+  transition: .3s transform ease-in-out;
+}
+.collapsed .blackboard-chevron {
+  transform: rotate(90deg);
+}
+
 #playback-progress-container {
   width: max-content;
   border-style: solid;

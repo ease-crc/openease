@@ -10,6 +10,7 @@ function Blackboard(options) {
     const formatter = options.formatter;
 
     this.charts = [];
+    this.counter = 0;
 
     this.tick = function(time) {
         for(const i in that.charts) {
@@ -25,16 +26,26 @@ function Blackboard(options) {
     };
 
     this.push = function(section,widget) {
-        // TODO: allow pushing multiple widgets to same section?
-        parent.append(that.createHeader(section));
-        parent.append(widget);
-    };
+        let widget_id = "blackboard-div-"+that.counter;
+        widget.addClass("collapse show");
+        widget.attr("id", widget_id);
 
-    this.createHeader = function(text) {
         const header = $("<div>");
-        header.addClass("card-header ease-dark");
-        header.text(text);
-        return header;
+        header.addClass("card-header ease-dark d-block");
+        header.attr("data-toggle", "collapse");
+        header.attr("aria-expanded", "true");
+        header.attr("aria-controls", widget_id);
+        header.attr("href", "#"+widget_id);
+        header.append(section);
+        const chevron = $("<i>");
+        chevron.addClass("fa fa-chevron-down blackboard-chevron");
+        header.append(chevron);
+
+        // TODO: allow pushing multiple widgets to same section!
+        parent.append(header);
+        parent.append(widget);
+
+        that.counter += 1;
     };
 
     this.createItem = function(content_div,options) {
