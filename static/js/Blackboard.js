@@ -9,7 +9,9 @@ function Blackboard(options) {
     //const qid = options.qid;
     const formatter = options.formatter;
 
+    this.sections = {};
     this.charts = [];
+    this.counter = 0;
 
     this.tick = function(time) {
         for(const i in that.charts) {
@@ -24,17 +26,35 @@ function Blackboard(options) {
         parent.html('');
     };
 
-    this.push = function(section,widget) {
-        // TODO: allow pushing multiple widgets to same section?
-        parent.append(that.createHeader(section));
-        parent.append(widget);
-    };
+    this.getSection = function(section) {
+        if(!(section in this.sections)) {
+            const widget_id = "blackboard-div-"+that.counter;
+            that.counter += 1;
 
-    this.createHeader = function(text) {
-        const header = $("<div>");
-        header.addClass("card-header ease-dark");
-        header.text(text);
-        return header;
+            const header = $("<div>");
+            header.addClass("card-header ease-dark d-block");
+            header.attr("data-toggle", "collapse");
+            header.attr("aria-expanded", "true");
+            header.attr("aria-controls", widget_id);
+            header.attr("href", "#"+widget_id);
+            header.append(section);
+            const chevron = $("<i>");
+            chevron.addClass("fa fa-chevron-down blackboard-chevron");
+            header.append(chevron);
+            parent.append(header);
+
+            const widget = $("<div>");
+            widget.addClass("collapse show blackboard-section");
+            widget.attr("id", widget_id);
+            parent.append(widget);
+
+            this.sections[section] = widget;
+        }
+        return this.sections[section];
+    }
+
+    this.push = function(section,widget) {
+        this.getSection(section).append(widget);
     };
 
     this.createItem = function(content_div,options) {
