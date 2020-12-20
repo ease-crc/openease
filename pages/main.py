@@ -21,6 +21,10 @@ from config.settings import USE_HOST_KNOWROB
 
 from neems.neemhub import instance as neemhub
 
+from postgres.AlchemyEncoder import AlchemyEncoder
+from postgres.settings import get_neemhub_settings
+import json
+
 __author__ = 'danielb@uni-bremen.de'
 
 # path for node modules stored in openEASE container
@@ -87,6 +91,12 @@ def track_login(sender, user, **extra):
     session['user_container_name'] = user.username
     session['username'] = user.username
     session['api_token'] = user.api_token
+    if not USE_HOST_KNOWROB:
+        sql = get_neemhub_settings()
+        docker_interface.start_user_container(user.username,
+                                     json.dumps(sql, cls=AlchemyEncoder),
+                                     "knowrob",
+                                     "latest")
 
 @user_logged_out.connect_via(app)
 def track_logout(sender, user, **extra):

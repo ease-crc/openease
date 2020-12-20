@@ -33,7 +33,7 @@ def clear_secretcache():
         del session['secret_key']
 
 
-def start_user_container(user_name, neem_id, neemHubSettings, neem_version='latest', knowrob_image='knowrob', knowrob_version='latest'):
+def start_user_container(user_name, neemHubSettings, knowrob_image='knowrob', knowrob_version='latest'):
     """
     Starts a user container based on the given image. If the container already exists, it will stop and remove the
     container first. Also, a data container is created and mounted inside the given container, and a rosauth secret
@@ -50,8 +50,7 @@ def start_user_container(user_name, neem_id, neemHubSettings, neem_version='late
         client.notify("files_writesecret", user_name, random_string(16))
         clear_secretcache()
         client.notify("start_user_container", user_name,
-                      neem_id, neemHubSettings, neem_version,
-                      knowrob_image, knowrob_version)
+                      neemHubSettings, knowrob_image, knowrob_version)
     except JsonRpcError, e:
         flash("Error: Connection to your openEASE instance failed.")
         app.logger.error("ConnectionError during connect: " + str(e.message) + str(e.data) + "\n")
