@@ -9,6 +9,7 @@ function Blackboard(options) {
     //const qid = options.qid;
     const formatter = options.formatter;
 
+    this.sections = {};
     this.charts = [];
     this.counter = 0;
 
@@ -25,27 +26,35 @@ function Blackboard(options) {
         parent.html('');
     };
 
+    this.getSection = function(section) {
+        if(!(section in this.sections)) {
+            const widget_id = "blackboard-div-"+that.counter;
+            that.counter += 1;
+
+            const header = $("<div>");
+            header.addClass("card-header ease-dark d-block");
+            header.attr("data-toggle", "collapse");
+            header.attr("aria-expanded", "true");
+            header.attr("aria-controls", widget_id);
+            header.attr("href", "#"+widget_id);
+            header.append(section);
+            const chevron = $("<i>");
+            chevron.addClass("fa fa-chevron-down blackboard-chevron");
+            header.append(chevron);
+            parent.append(header);
+
+            const widget = $("<div>");
+            widget.addClass("collapse show blackboard-section");
+            widget.attr("id", widget_id);
+            parent.append(widget);
+
+            this.sections[section] = widget;
+        }
+        return this.sections[section];
+    }
+
     this.push = function(section,widget) {
-        let widget_id = "blackboard-div-"+that.counter;
-        widget.addClass("collapse show");
-        widget.attr("id", widget_id);
-
-        const header = $("<div>");
-        header.addClass("card-header ease-dark d-block");
-        header.attr("data-toggle", "collapse");
-        header.attr("aria-expanded", "true");
-        header.attr("aria-controls", widget_id);
-        header.attr("href", "#"+widget_id);
-        header.append(section);
-        const chevron = $("<i>");
-        chevron.addClass("fa fa-chevron-down blackboard-chevron");
-        header.append(chevron);
-
-        // TODO: allow pushing multiple widgets to same section!
-        parent.append(header);
-        parent.append(widget);
-
-        that.counter += 1;
+        this.getSection(section).append(widget);
     };
 
     this.createItem = function(content_div,options) {
