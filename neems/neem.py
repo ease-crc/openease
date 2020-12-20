@@ -80,8 +80,6 @@ class NEEM:
         if not USE_HOST_KNOWROB and not container_started(current_user.username):
             sql = get_neemhub_settings()
             start_user_container(current_user.username,
-                                 self.neem_id,
                                  json.dumps(sql, cls=AlchemyEncoder),
-                                 self.neem_tag,
                                  "knowrob",
                                  "latest")
