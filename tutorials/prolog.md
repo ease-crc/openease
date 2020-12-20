@@ -203,8 +203,8 @@ It didn't just say yes, it actually gave us the variable binding (or variable
 instantiation) that led to success. \n\nBut that's not the end of the story.
 The whole point of variables is that they can stand for, or unify with,
 different things. And there is information about other robots in the
-knowledge base. We can access this information by pressing the *Next Solution*
-button below the console.
+knowledge base. We can access this information by pressing the query
+button multiple times.
 
 So Prolog begins working through the knowledge
 base again (it remembers where it got up to last time and starts from there) and

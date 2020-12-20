@@ -55,22 +55,36 @@
         let tut_pages=[];
         let tut_index=0;
         let curr_tut_id='';
+        let last_pl = undefined;
+        let last_pl_div = undefined;
+
+        function add_query_result(solution_div, response) {
+            let widget = new ResponseWidget({
+                formatter: formatter
+            });
+            let div = widget.create(response);
+            div.removeClass("card-body");
+            solution_div.html('');
+            solution_div.append(div);
+            solution_div.collapse("show");
+		}
 
         function ask_query(solution_div, query_text) {
-            // call prolog query
-            const pl = new ROSPrologClient(ros, {});
-            pl.jsonQuery(query_text, function(response) {
-                pl.finishClient();
-                //
-                let widget = new ResponseWidget({
-                    formatter: formatter
+            if(last_pl_div === solution_div && last_pl != undefined && last_pl.finished === false) {
+                last_pl.nextQuery(function(result) {
+                    add_query_result(solution_div, result);
                 });
-                let div = widget.create(response);
-                div.removeClass("card-body");
-                solution_div.html('');
-                solution_div.append(div);
-                solution_div.collapse("show");
-            });
+            }
+            else {
+                if(last_pl_div != solution_div && last_pl != undefined && last_pl.finished === false) {
+                    last_pl.finishClient();
+                }
+                last_pl = new ROSPrologClient(ros, {});
+                last_pl.jsonQuery(query_text, function(result) {
+                    add_query_result(solution_div, result);
+                });
+            }
+            last_pl_div = solution_div;
         };
 
         function consult_code(solution_div, code_string, editor_index) {
