@@ -92,7 +92,8 @@ class QueryExamples(object):
             for sub_topic in yaml_data['sub_topics']:
                 for query_group in sub_topic['query_groups']:
                     queries = []
-                    for query in query_group['queries']:
+                    for query0 in query_group['queries']:
+                        query = query0.rstrip()
                         queries.append({'id': self.query_counter, 'text': query})
                         self.query_list.append(query)
                         self.query_counter += 1
