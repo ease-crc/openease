@@ -226,8 +226,8 @@ def google_authorized(response):
         google_user = loads(r.text)
         # FIXME: using id as password is not safe
         return (str(google_user['id']),
-                _get_user_name(google_user['name']),
-                _get_user_mail(google_user['name'], 'google.com'),
+                _get_user_name(google_user['email']),
+                _get_user_mail(google_user['email']),
                 str(google_user['id']))
 
     try:
