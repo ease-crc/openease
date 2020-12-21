@@ -90,13 +90,15 @@ class QueryExamples(object):
 
             # gather subtopics
             for sub_topic in yaml_data['sub_topics']:
-                for query_group in sub_topic['query_groups']:
-                    queries = []
-                    for query in query_group['queries']:
-                        queries.append({'id': self.query_counter, 'text': query})
-                        self.query_list.append(query)
-                        self.query_counter += 1
-                    query_group['queries'] = queries
+                if 'query_groups' in sub_topic:
+                    for query_group in sub_topic['query_groups']:
+                        queries = []
+                        for query0 in query_group['queries']:
+                            query = query0.rstrip()
+                            queries.append({'id': self.query_counter, 'text': query})
+                            self.query_list.append(query)
+                            self.query_counter += 1
+                        query_group['queries'] = queries
                 topic = self.topic_map[sub_topic['topic']]
                 topic['sub_topics'].append(sub_topic)
 
