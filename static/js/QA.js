@@ -49,7 +49,8 @@ function KnowrobUI(flask_user,options) {
                 bindings.push([key,answer.solution[key]]);
             }
             const pl = new ROSPrologClient(that.client.ros, {});
-            const query_string = "openease_query(("+that.last_query+"),"+JSON.stringify(bindings)+")";
+            const query_string = "openease_query('"+ that.last_qid + "'," +
+                "("+that.last_query+"),"+JSON.stringify(bindings)+")";
             pl.jsonQuery(query_string, function(result) {
                 pl.finishClient();
                 $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
@@ -78,11 +79,20 @@ function KnowrobUI(flask_user,options) {
     this.init = function () {
         that.console.init();
         that.setupInputWidget();
+        that.setStatus('Connecting to websocket');
         that.client.connect(function(ros) {
             console.info('Connected to ROS.');
             that.registerROSClients(ros);
             //that.rosViewer.registerNodes(ros);
         });
+    };
+
+    this.setStatus = function(msg) {
+        $('#query_status').text(msg);
+    };
+
+    this.clearStatus = function() {
+        this.setStatus('');
     };
 
     this.initBlackboard = function () {
@@ -103,7 +113,17 @@ function KnowrobUI(flask_user,options) {
             that.canvas = new ROSCanvas({
                 parent: that.canvas_div,
                 // meshPath is the prefix for GET requests
-                meshPath: '/meshes/'
+                meshPath: '/meshes/',
+                on_start_loading: function() {
+                    // meshes downloading started
+                    that.setStatus('Loading meshes');
+                    $('.query-icon').removeClass('fa-question').addClass('fa-spinner fa-spin');
+                },
+                on_finished_loading: function() {
+                    // meshes downloading finished
+                    that.clearStatus();
+                    $('.query-icon').removeClass('fa-spinner fa-spin').addClass('fa-question');
+                }
             });
             that.canvas.registerNodes(that.client.ros);
         }
@@ -141,11 +161,13 @@ function KnowrobUI(flask_user,options) {
         that.registerImageClient(ros);
         that.registerMarkerClient(ros);
         that.registerTickClient(ros);
+        that.setStatus('Connecting to knowledge base');
         waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             that.initNEEM(ros, function() {
                 console.info("NEEM has been initialized");
                 that.formatter.connect(ros, function() {
+                    that.clearStatus();
                     if(options.has_query=='True') {
                         that.console.query();
                     }
@@ -159,6 +181,7 @@ function KnowrobUI(flask_user,options) {
 
     this.initNEEM = function (ros,then) {
         const pl = new ROSPrologClient(ros, {});
+        that.setStatus('Loading NEEM');
         pl.jsonQuery("register_ros_package(openease_rules), knowrob_load_neem('" + that.neem_id + "').", function(result) {
             pl.finishClient();
             if(then) {
@@ -193,7 +216,11 @@ function KnowrobUI(flask_user,options) {
             messageType : 'data_vis_msgs/DataVis'
         });
         that.dataVis.subscribe(function(data_vis_msg) {
-            if(that.last_qid) {
+            console.info(data_vis_msg);
+            console.info(data_vis_msg.id);
+            console.info(that.last_qid);
+
+            if(that.last_qid === data_vis_msg.id) {
                 if(data_vis_msg.type == 989) {
                     that.playback = new PlaybackWidget(that.canvas_div, {
                         event: data_vis_msg.values[0].value1[0],
@@ -220,8 +247,11 @@ function KnowrobUI(flask_user,options) {
                     that.blackboard.addChart(data_vis_msg);
                 }
             }
-            else {
+            else if(!that.last_qid) {
                 console.warn("Received DataVis msg, but no query is active.");
+            }
+            else {
+                console.warn("Received DataVis msg, but the associated query is not active (anymore).");
             }
         });
     };

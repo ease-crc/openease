@@ -1,6 +1,6 @@
 :- module(oe_tree_vis,
 	[ data_vis_tree/3,
-	  data_vis_rdf_tree(r,r,t)
+	  data_vis_rdf_tree(+,r,r,t)
 	]).
 
 :- use_module(library(openease)).
@@ -8,29 +8,24 @@
 %%
 % Generate tree data visualization messages.
 %%
-oe:result_set_show(ResultSet) :-
+oe:result_set_show(QueryID, ResultSet) :-
 	result_set_has_object(ResultSet),
 	result_set_objects(ResultSet,Objs),
 	member(Obj,Objs),
-	data_vis_rdf_tree(Obj,
+	data_vis_rdf_tree(QueryID,Obj,
 		dul:hasComponent,
 		[title: 'Component hierarchy']).
 
 %%
-data_vis_rdf_tree(Root,Property,Options) :-
+data_vis_rdf_tree(QueryID, Root,Property,Options) :-
 	%%%
 	%% TODO: use transitive query here, problem is that at the moment
 	%%       there is no way to obtain proper parent.
 	%%%
 	rdf_tree_data_(Root,Property,[Node,Children]),
 	Children \= [],
-	% generate ID for the chart
-	Node = [RootName|_],
-	rdf_db:rdf_split_url(_,PropertyName,Property),
-	atomic_list_concat(
-		['tree',RootName,PropertyName],'_',ID),
 	% publish the message
-	data_vis_tree(ID, [Node,Children], Options).
+	data_vis_tree(QueryID, [Node,Children], Options).
 	
 rdf_tree_data_(IRI,Property,[[Name,IRI,Group],ChildrenData]) :-
 	% event name is displayed without IRI prefix

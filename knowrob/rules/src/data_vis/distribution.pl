@@ -5,15 +5,12 @@
 %%
 % TODO:
 %%
-oe:result_set_show(ResultSet) :-
+oe:result_set_show(QueryID,ResultSet) :-
 	result_set_events(ResultSet,[Evt]),
 	% collect all tsks performed in phases
 	task_distribution(Evt,Tsks0,Counts),
-	%% generate id
-	atomic_list_concat(
-		['barchart','phases'],'_',ID),
 	%% send message
-	data_vis(barchart(ID),
+	data_vis(barchart(QueryID),
 			[ title: 'Distribution of executed tasks',
 			  data: [Tsks0,Counts]
 			]
@@ -23,16 +20,13 @@ oe:result_set_show(ResultSet) :-
 % TODO: idea: pie chart about how many actions failed vs. succeeded
 %             pie chart of which tasks have failed most often
 %%
-oe:result_set_show(ResultSet) :-
+oe:result_set_show(QueryID,ResultSet) :-
 	result_set_events(ResultSet,[Evt]),
 	% collect all tsks performed in phases
 	task_distribution(Evt,Tsks0,Counts),
-	%% generate id
-	atomic_list_concat(
-		['piechart','phases'],'_',ID),
 	%% send message
-	data_vis(piechart(ID),
-			[ title: 'Distribution of executed task types',
+	data_vis(piechart(QueryID),
+			[ title: 'Distribution of executed tasks',
 			  data: [Tsks0,Counts]
 			]
 	).

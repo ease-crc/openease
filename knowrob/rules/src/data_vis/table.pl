@@ -5,15 +5,15 @@
 :- use_module(library(openease)).
 
 %%
-oe:result_set_show(ResultSet) :-
+oe:result_set_show(QueryID,ResultSet) :-
 	%%
 	result_set_has_entity(ResultSet),
 	result_set_entities(ResultSet,Entities),
 	%%
-	show_comment_table(Entities).
+	show_comment_table(QueryID,Entities).
 
 %%
-show_comment_table(Entities) :-
+show_comment_table(QueryID,Entities) :-
 	%%
 	% TODO: use aggregate query instead, problem is comments are not stored
 	%        in triples collection
@@ -28,13 +28,8 @@ show_comment_table(Entities) :-
 		),
 		CommentData0),
 	sort(CommentData0, CommentData),
-	% generate ID for the chart
-	CommentData = [[FirstType,_]|_],
-	rdf_db:rdf_split_url(_,FirstTypeName,FirstType),
-	atomic_list_concat(
-		['table',FirstTypeName],'_',ID),
 	% publish the message
-	data_vis_table(ID, CommentData,
+	data_vis_table(QueryID, CommentData,
 		[title: 'Response description']).
 
 %%

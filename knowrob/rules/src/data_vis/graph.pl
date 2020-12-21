@@ -6,19 +6,15 @@
 :- use_module(library(openease)).
 
 %%
-oe:result_set_show(ResultSet) :-
+oe:result_set_show(QueryID,ResultSet) :-
 	result_set_has_event(ResultSet),
 	result_set_events(ResultSet,Evts),
 	%% TODO move member to aggregate query
 	member(Evt,Evts),
 	data_vis_participant_graph(Evt,GraphData),
 	GraphData \= [],
-	% generate ID for twe chart
-	rdf_db:rdf_split_url(_,EvtName,Evt),
-	atomic_list_concat(
-		['graph','participation',EvtName],'_',ID),
 	% publish the message,
-	data_vis_graph(ID, GraphData,
+	data_vis_graph(QueryID, GraphData,
 	    [title: 'Graph of event participation']).
 
 %%

@@ -16,8 +16,8 @@
 
 // the query field
 .query_links {
-    width:auto;
-    padding-top: 4px;
+  padding-top: 4px;
+  float: right;
 }
 .query_links a {
     padding-left: 8px;
@@ -40,6 +40,23 @@
     box-shadow: none;
 }
 
+#query_status {
+  padding-top: 4px;
+  float: left;
+  font-size: 0.8em;
+  font-style: italic;
+  font-family: sans;
+  color: #246F98;
+  animation: status 1.5s linear infinite;
+}
+@keyframes status {
+  0% { opacity: 0.3; }
+  25% { opacity: 0.9; }
+  50% { opacity: 1.0; }
+  75% { opacity: 0.9; }
+  100% { opacity: 0.3; }
+}
+
 /** side panel **/
 
 .side-text {
@@ -47,8 +64,11 @@
   font-style: normal;
   font-family: sans;
   color: #1b5668;
-  margin-top: 4px;
   text-align: center;
+  background-color: #aed1f7;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
 }
 
 #funding-widget {
@@ -59,11 +79,13 @@
   margin-top: 14px;
 }
 #funding-carousel {
+  margin-top: 14px;
 }
 #funding-carousel-logos {
+  margin-bottom: 20px;
 }
 .carousel-indicators {
-    bottom: -10px;
+    bottom: -24px;
 }
 .carousel-indicators li {
     background-color: #49aee3;
