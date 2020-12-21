@@ -54,6 +54,7 @@
                     {%for sub_topic in topic.sub_topics%}
                     <div class="example-card">
                         <h4 class="card-title example-card-title">{{ sub_topic.name }}</h4>
+                        {% if sub_topic.description %}
                         <p class="card-text example-card-text">{{ sub_topic.description }}</p>
 
                         {%for query_group in sub_topic.query_groups%}
@@ -72,7 +73,7 @@
                             {%endfor%}
                         </div>
                         {%endfor%}
-
+                    {%endif%}
                     </div>
                     {%endfor%}
 

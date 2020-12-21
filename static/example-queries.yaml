@@ -63,34 +63,54 @@ sections:
 
 sub_topics:
 - topic: occurrences
-  name: Subtopic
-  description: Subtopic description
+  name: Duration
+  description: Duration of Events
   query_groups:
-  - description: Subtopic group description
+  - description: How long is the shortest event?
     queries:
-    - is_action(Act)
-    - is_action(Act)
-    - is_action(Act)
+    - |
+      findall(
+        Dur,
+        (
+          event_interval(Evt,Start,End),
+          number(End),
+          Dur is End - Start
+        ),
+        Durations),
+        min(Durations,T).  
+  - description: How long is the lonest event?
+    queries:
+    - |
+      findall(
+        Dur,
+        (
+          event_interval(Evt,Start,End),
+          number(End),
+          Dur is End - Start
+        ),
+        Durations),
+        max(Durations,T).
 
 - topic: occurrences
   name: Subtopic
   description: Subtopic description
   query_groups:
-  - description: Subtopic group description
+  - description: Which events do happen at the same time?
     queries:
-    - is_action(Act)
-    - is_action(Act)
+    - |
+      event_interval(Evt,Start,End), 
+      occurs(Evt) during [Start,End].
 
 - topic: participation
   name: Agents
   description: Agents that participate in an action
   query_groups:
-  - description: All agents of an action
+  - description: Which agents participate in an action?
     queries:
     - |
       has_participant(Act,Part),
       has_role(Part,soma:'AgentRole').
-  - description: All actions with a PR2 robot as an agent
+  - description: Which actions have the PR2 as an agent?
     queries:
     - |
       has_participant(Act,Part),
@@ -101,12 +121,12 @@ sub_topics:
   name: Objects
   description: Objects that participate in an action
   query_groups:
-  - description: All objects of an action
+  - description: Which objects participate in an action?
     queries:
     - |
       has_participant(Act,Part),
       has_role(Part,soma:'Item').
-  - description: All actions with a bowl as an item
+  - description: Which actions have a bowl as an participating item?
     queries:
     - |
       has_participant(Act,Part),
@@ -116,12 +136,12 @@ sub_topics:
   name: Component
   description: Components that participate in an action
   query_groups:
-  - description: All arms participating in an action
+  - description: Which objects are used as instruments in an action?
     queries:
     - |
       has_participant(Act,Part),
       has_role(Part,soma:'Instrument').
-  - description: All arms executing a task in an action
+  - description: Which arms execute a task in an action?
     queries:
     - |
       has_participant(Act,Part),
@@ -132,12 +152,12 @@ sub_topics:
   name: Top- or bottom-level actions
   description: Actions without parent- or sub-actions
   query_groups:
-  - description: Top-level actions
+  - description: Which actions don't have parent-actions?
     queries:
     - |
       is_action(Action),
       \+has_subevent(Parent,Action).
-  - description: Bottom-level actions
+  - description: What actions don't have sub-actions?
     queries:
     - |
       is_action(Action),
@@ -147,7 +167,7 @@ sub_topics:
   name: Agent transform
   description: Transformation of agents or their parts during actions
   query_groups:
-  - description: Transform of gripper during a graping motion
+  - description: What is the transform of the gripper during a grasping motion?
     queries:
     - |
       is_classified_by(Act,Mot), 
@@ -155,40 +175,57 @@ sub_topics:
       is_at(pr2:'PR2Gripper_0_L',['map',Pose,Rot]) during Act.
 
 - topic: concept
-  name: Subtopic
-  description: Subtopic description
-  query_groups:
-  - description: Subtopic group description
-    queries:
-    - is_action(Act)
-
-- topic: context
   name: Actions
-  description: Actions are contextualized by their tasks
+  description: Actions are conceptualized by their tasks
   query_groups:
-  - description: Actions that execute a Navigation task
+  - description: Which actions execute a navigation task?
     queries:
     - |
       is_action(Act), 
       executes_task(Act,Tsk), 
       has_type(Tsk,soma:'Navigating').
-  - description: Actions that execute a Grasping task
+  - description: Which actions execute a grasping task?
     queries:
     - |
       is_action(Act), 
       executes_task(Act,Tsk), 
       has_type(Tsk,soma:'Grasping').
 
+- topic: context
+  name: Episode
+  description: Actions are contextualized by their episode.
+  query_groups:
+  - description: Which episodes are contained in the NEEM?
+    queries:
+    - is_episode(Ep).
+  - description: Is this episode executed by a robot?
+    queries:
+    - |
+      is_episode(Ep),
+      triple(Ep,dul:includesAction,SupAct),
+      triple(SupAct,soma:isPerformedBy,Agent),
+      has_type(Agent,urdf:'Robot').
+  - description: How many actions were executed during the episode?
+    queries:
+    - |
+      is_episode(Ep),
+      triple(Ep,dul:includesAction,SupAct),
+      setof(Act,
+        transitive(triple(SupAct,dul:hasConstituent,Act)),
+        SetOfAct),
+      length(SetOfAct,NumAct).
+
+
 - topic: appearance
   name: Shapes
   description: Shapes of obects in the environment
   query_groups:
-  - description: Shape of a phsical object
+  - description: What are the shapes of the objects in the episode?
     queries:
     - |
       is_object(Obj),
       object_shape_type(Obj,Shape).
-  - description: Shape of an object that participates in an action
+  - description: What are the shapes of the objects that participate in an action?
     queries:
     - |
       has_participant(Act, Obj), 
@@ -199,82 +236,106 @@ sub_topics:
   name: Furniture
   description: Structure of the furniture
   query_groups:
-  - description: Direct sub-parts of the kitchen
+  - description: What are the parts of a kitchen?
     queries:
     - |
       has_type(Kitchen,knowrob:'IAIKitchen'),
       has_part(Kitchen,Part).
-  - description: Parts of the fridge
+  - description: What are the parts of the fridge?
     queries:
     - |
       has_type(Fridge,soma:'Refrigerator'),
       has_part(Fridge,Part).
 
 - topic: env_kin
+  name: Links
+  description: Links without parent- or childlinks
+  query_groups:
+  - description: What is the root link of the kitchen?
+    queries:
+    - |
+      is_urdf_link(Link),
+      urdf_root_link(Link, Root).
+  - description: What are the lowest level links of the kitchen?
+    queries:
+    - |
+      is_urdf_link(Link),
+      \+has_child_link(Link,_).
+
+- topic: env_kin
   name: Joints
   description: Structure of joints
   query_groups:
-  - description: All joints
-    queries:
-    - is_urdf_joint(Link).
-  - description: Child- and parentlink of joint
+  - description: What are the joints of the kitchen?
     queries:
     - |
-      is_urdf_joint(Joint),
-      urdf_joint_child_link(Joint,Child),
-      urdf_joint_parent_link(Joint,Parent).
-
-
-- topic: env_kin
-  name: Top- or bottom-level links
-  description: Links without parent- or childlinks
-  query_groups:
-  - description: Top-level links
+      has_type(Kitchen,knowrob:'IAIKitchen'),
+      urdf_joint_names(Kitchen,Joints).
+  - description: Which joints can be moved?
     queries:
     - |
-      is_urdf_link(Link),
-      \+has_parent_link(Link,Child).
-  - description: Bottom-level links
-    queries:
-    - |
-      is_urdf_link(Link),
-      \+has_child_link(Link,Child).
+      has_type(Kitchen,knowrob:'IAIKitchen'), 
+      urdf_joint_names(Kitchen,JointList), 
+      member(Joint,JointList), 
+      urdf_joint_hard_limits(Kitchen,Joint,_,_,_).
 
 - topic: env_dyn
-  name: Subtopic
-  description: Subtopic description
-  query_groups:
-  - description: Subtopic group description
-    queries:
-    - is_action(Act)
-    - is_action(Act)
-    - is_action(Act)
-    - is_action(Act)
+  name: Coming Soon
 
 - topic: env_phy
-  name: Subtopic
-  description: Subtopic description
-  query_groups:
-  - description: Subtopic group description
-    queries:
-    - is_action(Act)
-    - is_action(Act)
+  name: Coming soon
 
 - topic: agent_structure
-  name: Subtopic
-  description: Subtopic description
+  name: Robot
+  description: Structure of the robot
   query_groups:
-  - description: Subtopic group description
+  - description: What are the parts of the robot?
     queries:
-    - is_action(Act)
-    - is_action(Act)
+    - |
+      has_type(Robot,urdf:'Robot'),
+      has_part(Robot,Part).
+  - description: How many parts does the robot have?
+    queries:
+    - |
+      has_type(Robot,urdf:'Robot'),
+      setof(Part,
+        has_part(Robot,Part),
+        SetOfParts),
+      length(SetOfParts,NumOfParts).
 
 - topic: agent_kin
-  name: Subtopic
-  description: Subtopic description
+  name: Links
+  description: Links of the robot
   query_groups:
-  - description: Subtopic group description
+  - description: What is the root link of the robot?
     queries:
-    - is_action(Act)
-    - is_action(Act)
+    - |
+      has_type(Robot,urdf:'Robot'),
+      urdf_root_link(Robot, Root).
+  - description: What is the inertia and mass of the links of the robot?
+    queries:
+    - |
+      has_type(Robot,urdf:'Robot'),
+      urdf_link_names(Robot,LinkList),
+      member(Link,LinkList),
+      urdf_link_inertial(Robot, Link, Inertia, _, Mass).
+
+- topic: agent_kin
+  name: Joints
+  description: Links of the robot
+  query_groups:
+  - description: What are the limits of the robot's joints?
+    queries:
+    - |
+      has_type(Robot,urdf:'Robot'),
+      urdf_joint_names(Robot,JointList),
+      member(Joint,JointList),
+      urdf_joint_hard_limits(Robot,Joint,PosLimits,VelMax,EffMax).
+    - description: What is the friction of the robot's joints?
+    queries:
+    - |
+      has_type(Robot,urdf:'Robot'),
+      urdf_joint_names(Robot,JointList),
+      member(Joint,JointList),
+      urdf_joint_friction(Robot,Joint,Friction).
 
