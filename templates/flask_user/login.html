@@ -22,17 +22,17 @@
                         <div class="row icon-bar">
                             <div class="text-sign-with">or sign in with
                                 {% if user_manager.remote_app_registered('google') %}
-                                <a class="icon" href="/google/login" target="_blank">
+                                <a class="icon" href="/google/login" target="_blank" type="submit" form="login-form">
                                     <i class="fab fa-1x fa-google"></i>
                                 </a>
                                 {% endif %}
                                 {% if user_manager.remote_app_registered('github') %}
-                                <a class="icon" href="/github/login" target="_blank">
+                                <a class="icon" href="/github/login" target="_blank" type="submit" form="login-form">
                                     <i class="fab fa-1x fa-github"></i>
                                 </a>
                                 {% endif %}
                                 {% if user_manager.remote_app_registered('twitter') %}
-                                <a class="icon" href="/twitter/login" target="_blank">
+                                <a class="icon" href="/twitter/login" target="_blank" type="submit" form="login-form">
                                     <i class="fab fa-1x fa-twitter"></i>
                                 </a>
                                 {% endif %}
@@ -41,7 +41,7 @@
                         {% endif %}
                     </div>
                     <div class="card-body">
-                        <form action="" method="POST" novalidate class="form" role="form">
+                        <form id="login-form" action="" method="POST" novalidate class="form" role="form">
                             {{ form.hidden_tag() }}
                             {# Username or Email field #}
                             {% set field = form.username if user_manager.enable_username else form.email %}
