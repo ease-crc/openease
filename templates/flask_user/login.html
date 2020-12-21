@@ -18,19 +18,27 @@
                 <div class="card" id="setup-login">
                     <div class="card-header text-login">
                         {% trans %}Login to your account{% endtrans %}
+                        {% if user_manager.remote_app_registered('any') %}
                         <div class="row icon-bar">
                             <div class="text-sign-with">or sign in with
+                                {% if user_manager.remote_app_registered('google') %}
                                 <a class="icon" href="/google/login" target="_blank">
                                     <i class="fab fa-1x fa-google"></i>
                                 </a>
+                                {% endif %}
+                                {% if user_manager.remote_app_registered('github') %}
                                 <a class="icon" href="/github/login" target="_blank">
                                     <i class="fab fa-1x fa-github"></i>
                                 </a>
+                                {% endif %}
+                                {% if user_manager.remote_app_registered('twitter') %}
                                 <a class="icon" href="/twitter/login" target="_blank">
                                     <i class="fab fa-1x fa-twitter"></i>
                                 </a>
+                                {% endif %}
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                     <div class="card-body">
                         <form action="" method="POST" novalidate class="form" role="form">
