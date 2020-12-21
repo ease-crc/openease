@@ -18,6 +18,7 @@ from config.settings import USE_HOST_KNOWROB
 from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
 import json
+import knowrob.container as docker_interface
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
