@@ -171,7 +171,7 @@ def github_login():
 @github.authorized_handler
 def github_authorized(response):
     def user_information(github_response):
-        github_user = github.get_neem('/user').data
+        github_user = github.get('/user').data
         user_name = github_user['login']
         return (str(github_user['id']),
                 _get_user_name(user_name),
