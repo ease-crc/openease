@@ -205,10 +205,6 @@ function KnowrobUI(flask_user,ros_client,options) {
             messageType : 'data_vis_msgs/DataVis'
         });
         that.dataVis.subscribe(function(data_vis_msg) {
-            console.info(data_vis_msg);
-            console.info(data_vis_msg.id);
-            console.info(that.last_qid);
-
             if(that.last_qid === data_vis_msg.id) {
                 if(data_vis_msg.type == 989) {
                     that.playback = new PlaybackWidget(that.canvas_div, {
