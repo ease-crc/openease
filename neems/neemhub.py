@@ -109,10 +109,6 @@ class NEEMHub:
             raise NEEMHubConnectionError(exc)
 
     def get_neem_ids(self, query_string, visibility_flag):
-        # FIXME: keywords are ignored at the moment
-        #   - can an array be added to text index?
-        #   - regex search possible, but only without index!!
-        #       db.meta.find({"keywords": {"$regex": ".*robot.*","$options": 'i'}},{_id: 1}).pretty()
         mongo = self.connect_mongo()
         if visibility_flag and query_string is '':
             return map(lambda doc: doc["_id"], mongo.find(

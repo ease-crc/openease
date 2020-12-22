@@ -16,8 +16,6 @@ class NEEM:
 
         self.neem_hub = neem_hub
         self.neem_id = str(neem_info['_id'])
-        # TODO: Tag could be useful for versioning
-        self.neem_tag = ''
         self.name = neem_info['name']
         self.description = neem_info['description']
         self.created_by = neem_info['created_by']
@@ -26,8 +24,12 @@ class NEEM:
         self.neem_repo_path = neem_info['repo']
         self.maintainer = neem_info['created_by']
         self.authors = neem_info['created_by']
-        self.acknowledgements = ''
-        self.keywords = neem_info['keywords']
+
+        if 'projects' in neem_info:
+            self.projects = neem_info['projects']
+        else:
+            self.projects = []
+
         if 'visibility' in neem_info:
             self.visibility = neem_info['visibility']
         else:
@@ -38,26 +40,6 @@ class NEEM:
         else:
             self.image = 'None'
 
-        if 'model_version' in neem_info:
-            self.model_version = neem_info['model_version']
-        else:
-            self.model_version = '1.0'
-
-        if 'environment' in neem_info:
-            self.environment = neem_info['environment']
-        else:
-            self.environment = 'Unknown'
-
-        if 'activity' in neem_info:
-            self.activity = neem_info['activity']
-        else:
-            self.activity = 'Unknown'
-
-        if 'agent' in neem_info:
-            self.agent = neem_info['agent']
-        else:
-            self.agent = 'Unknown'
-
     def get_info(self):
         return {
             'neem_id': self.neem_id,
@@ -66,12 +48,7 @@ class NEEM:
             'description': self.description,
             'maintainer': self.maintainer,
             'authors': self.authors,
-            'acknowledgements': self.acknowledgements,
-            'environment': self.environment,
-            'activity': self.activity,
-            'agent': self.agent,
             'downloadUrl': self.downloadUrl,
-            'keywords': self.keywords,
             'neem_repo_path': self.neem_repo_path
         }
 

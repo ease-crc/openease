@@ -18,98 +18,27 @@
 <div class="container-fluid p-4">
     <div class="row">
         {% for neem in neems %}
-        <div class="col-md-3 col-lg-3 card-div">
-
-                <div class="card-body col-md-12 col-sm-12">
+        <div class="col-xs-12 col-sm-6 col-lg-3 card-div">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
                     {% if neem.image == 'None' %}
                         <img src="{{ url_for('static', filename='img/default.jpg') }}" alt="default image" class="card-img-top img-fluid"/>
                     {% else %}
                         <img src={{ neem.image }} alt="" class="card-img-top img-fluid"/>
                     {%endif %}
-                    <div class="card-block style-overflow">
-                        <p class="neem-name">{{ neem.neem_repo_path }}</p>
-                        <!--
-                        <p class="neem-name">{{ neem.name }}</p>
-                        -->
+                    </a>
+                        <h class="neem-name">{{ neem.neem_repo_path }}</h>
                         <h6>{{ neem.created_by }}, {{ neem.created_at }}</h6>
-
                         <p class="neem-description">{{ neem.description }}</p>
-                    </div>
-
-                    <div class="keywords">
-                        {% for keyword in neem.keywords %}
-                            <div class="keywords-item">{{ keyword }}</div>
-                        {% endfor %}
-                    </div>
-                    <div class="card-icons">
-                        <div class="col-lg-3 col-md-3 col-sm-3" style="display: inline">
-                            <!-- NEEM Id icon-->
-                            <span id="item-desc-{{loop.index}}" style="display: none;">{{neem.neem_id}}</span>
-                            <a href="javascript:copyToClipboard('#item-desc-{{loop.index}}')"><i
-                                    class="fas fa-2x fa-id-card" title="copy NEEM Id to clipboard: {{neem.neem_id}}"></i>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2 icons">
-                            <!-- Agent icons-->
-                            {% if neem.agent == "Robot" %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-robot" title="Agent: {{neem.agent}}"></i></a>
-                            {% elif neem.agent == "Human" %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-user" title="Agent: {{neem.agent}}"></i></a>
-                            {% elif neem.agent == "VR" %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-vr-cardboard"
-                                       title="Agent: {{neem.agent}}"></i></a>
-                            {% else %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-bookmark" title="Agent: {{neem.agent}}"></i></a>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-lg-2 col-md-2 col-sm-2 icons">
-                            <!-- Activity icon-->
-                            <a href="{{neem.activity.url}}" target="_blank"><i
-                                    class="fas fa-2x fa-tasks" title="Activity: {{neem.activity.name}}"></i></a>
-                        </div>
-
-                        <div class="col-lg-2 col-md-2 col-sm-2 icons">
-                            <!-- Env icon-->
-                            {% if neem.environment == "Kitchen" %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-utensils" title="Env: {{neem.environment}}"></i></a>
-                            {% elif neem.environment == "Home" %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-home" title="Env: {{neem.environment}}"></i></a>
-                            {% elif neem.environment == "VR" %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-vr-cardboard"
-                                       title="Env: {{neem.environment}}"></i></a>
-                            {% elif neem.environment == "Lab" %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-vial" title="Env: {{neem.environment}}"></i></a>
-                            {% else %}
-                                <a href="javascript:void()">
-                                    <i class="fas fa-2x fa-industry" title="Env: {{neem.environment}}"></i></a>
-                            {% endif %}
-                        </div>
-
-                        <!-- gitlab repo url  -->
-                        <div class="col-lg-2 col-md-2 col-sm-2 icons">
-                            <!-- Env icon-->
-                            <a href="{{ neem.downloadUrl }}" target="_blank"><i class="fab fa-2x fa-github"
-                                                                                title="{{neem.neem_repo_path}}"></i></a>
-                        </div>
-
-                        <!-- explorer QA page  -->
-                        <div class="col-lg-2 col-md-2 col-sm-2 icons">
-                            <!-- QA explore icon-->
-                            <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
-                                <i class="fab fa-2x fa-wpexplorer" title="Explore NEEM"></i></a>
-                        </div>
-                    </div>
                 </div>
-
+                <div class="card-footer neem-links">
+                    <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}"
+                       class="btn btn-primary neem-link pull-right">Activate</a>
+                    <a href="{{ neem.downloadUrl }}"
+                       class="btn btn-info neem-link pull-right">Homepage</a>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
@@ -117,15 +46,4 @@
         {{ pagination.links }}
     </div>
 </div>
-
-<script>
-// copy neem id to clipboard for testing purpose
-function copyToClipboard(element) {
-    var inputVariable = $("<input>");
-    $("body").append(inputVariable);
-    inputVariable.val($(element).text()).select();
-    document.execCommand("copy");
-    inputVariable.remove();
-}
-</script>
 {% endblock %}
