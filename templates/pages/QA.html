@@ -27,13 +27,11 @@
 
 {% block body %}
     <script type="text/javascript">
-        const page = new KnowrobUI(flask_user, {
-            authentication: '{{ authentication }}',
+        const page = new KnowrobUI(flask_user, ros_client, {
             neem_id: '{{ neem.neem_id }}',
-            has_query: '{{ has_query }}',
-            ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
-                     '://{{ host_url }}/ws/{{ container_name }}/'
+            has_query: '{{ has_query }}'
         });
+        setROSConnectionHandler(page.onconnect);
         // call page.init() when the document is ready
         $(document).ready(page.init);
 

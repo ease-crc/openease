@@ -11,13 +11,6 @@ from config.settings import USE_HOST_KNOWROB
 
 @app.route('/tutorials/')
 def render_tutorials():
-    host_url = urlparse(request.host_url).hostname
-    if USE_HOST_KNOWROB:
-        container_name = "host"
-        authentication = False
-    else:
-        container_name = current_user.username + "_knowrob"
-    #
     tutorial_names = [
         {'id': 'prolog', 'title': 'Logic Programming', 'selected': True,
          'description': """

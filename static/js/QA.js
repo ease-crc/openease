@@ -6,18 +6,13 @@
  * a webgl canvas and some widgets for
  * displaying graphics and statistics.
  **/
-function KnowrobUI(flask_user,options) {
+function KnowrobUI(flask_user,ros_client,options) {
     var that = this;
     
     // Blackboard object
     this.blackboard = undefined;
     // connect to ROS on host via websocket
-    this.client = new ROSClient({
-        flask_user:     flask_user,
-        ros_url:        options.ros_url,
-        authentication: options.authentication,
-        auth_url: '/api/v1.0/auth_by_session'
-    });
+    this.client = ros_client;
     // Neem id 
     this.neem_id = options.neem_id || '5f22b1f512db5aed7cd1961a';
     // query id of most recent query
@@ -79,12 +74,6 @@ function KnowrobUI(flask_user,options) {
     this.init = function () {
         that.console.init();
         that.setupInputWidget();
-        that.setStatus('Connecting to websocket');
-        that.client.connect(function(ros) {
-            console.info('Connected to ROS.');
-            that.registerROSClients(ros);
-            //that.rosViewer.registerNodes(ros);
-        });
     };
 
     this.setStatus = function(msg) {
@@ -156,7 +145,7 @@ function KnowrobUI(flask_user,options) {
     */
     
     // listen to some ROS topics
-    this.registerROSClients = function (ros) {
+    this.onconnect = function (ros) {
         that.registerChartClient(ros);
         that.registerImageClient(ros);
         that.registerMarkerClient(ros);

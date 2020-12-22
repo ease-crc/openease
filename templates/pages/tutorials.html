@@ -21,33 +21,26 @@
 
 {% block body %}
     <script type="text/javascript">
-        // connect to ROS on host via websocket
-        const ros_url = 'ws' + (location.protocol === 'https:'?'s':'') +
-                '://{{ host_url }}/ws/{{ container_name }}/';
-        const client = new ROSClient({
-            flask_user: flask_user,
-            ros_url: ros_url,
-            authentication: '{{ authentication }}',
-            auth_url: '/api/v1.0/auth_by_session'
-        });
         let ros = undefined;
         let formatter = new EntityFormatter();
 
         // call init() when the document is ready
         const init = function () {
-            client.connect(function(new_ros) {
-                console.info('Connected to ROS.');
-                ros = new_ros;
-                waitForProlog(ros, function() {
-                    console.info('Connected to KnowRob.');
-                    formatter.connect(ros, function() {});
-                });
-            });
-            //
             const first_tut = 'prolog';
             update_description(first_tut);
             request_tutorial(first_tut);
         };
+
+        // call init() when the document is ready
+        const onconnect = function (new_ros) {
+            ros = new_ros;
+            waitForProlog(ros, function() {
+                console.info('Connected to KnowRob.');
+                formatter.connect(ros, function() {});
+            });
+		}
+        setROSConnectionHandler(onconnect);
+
         $(document).ready(init);
     </script>
 

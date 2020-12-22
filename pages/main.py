@@ -107,6 +107,19 @@ class QueryExamples(object):
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
+@app.context_processor
+def inject_ros_params():
+    # Inject parameters needed to connect to ROS to
+    # every HTML template.
+    container_name = "host"
+    if current_user.is_authenticated and not USE_HOST_KNOWROB:
+        container_name = current_user.username + "_knowrob"
+    return dict(
+        ros_url=urlparse(request.host_url).hostname,
+        ros_auth=not USE_HOST_KNOWROB,
+        ros_container=container_name
+    )
+
 @user_logged_in.connect_via(app)
 def track_login(sender, user, **extra):
     app.logger.info("Logged in " + str(user.username))
@@ -180,14 +193,6 @@ def render_QA_page():
     if neem is None:
         return redirect(url_for('render_neems'))
     neem.activate()
-    # determine hostname/IP we are currently using
-    # (needed for accessing container)
-    host_url = urlparse(request.host_url).hostname
-    if USE_HOST_KNOWROB:
-        container_name = "host"
-        authentication = False
-    else:
-        container_name = current_user.username + "_knowrob"
     # read query from URL parameter "q" if any
     query_text = request.args.get('q', default='')
     has_query = (query_text is not '')

@@ -18,7 +18,23 @@
             return '{{ current_user.is_authenticated and current_user.has_role("admin") }}' == 'True';
         };
     };
-    var flask_user = new FlaskUser();
+    const flask_user = new FlaskUser();
+
+    {% if current_user.is_authenticated %}
+        const ros_client = new ROSClient({
+            flask_user: flask_user,
+            ros_url: 'ws' + (location.protocol === 'https:'?'s':'') +
+                     '://{{ ros_url }}/ws/{{ ros_container }}/',
+            authentication: '{{ ros_auth }}',
+            auth_url: '/api/v1.0/auth_by_session'
+        });
+    {% else %}
+        const ros_client = undefined;
+    {% endif %}
+    let on_ros_connect = undefined;
+    function setROSConnectionHandler(on_connect){
+        on_ros_connect = on_connect;
+    };
 
     </script>
 
@@ -207,6 +223,18 @@
 {% endblock %}
 
 </body>
+
+<!-- connect to ROS -->
+<script>
+    if(ros_client) {
+        ros_client.connect(function(ros) {
+            console.info('Connected to ROS.');
+            if(on_ros_connect) {
+                on_ros_connect(ros);
+            }
+        });
+    }
+</script>
 
 <!-- remove flash alert after 5 seconds -->
 <script>
