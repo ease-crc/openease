@@ -13,6 +13,7 @@ from tornado.wsgi import WSGIContainer
 from flask_mail import Mail
 from flask_user import UserManager, SQLAlchemyAdapter
 from flask.ext.babel import Babel
+from wtforms.validators import ValidationError
 
 from app_and_db import app, db
 from utility import random_string
@@ -50,6 +51,12 @@ def _run_server():
     IOLoop.instance().start()
 
 
+def oe_password_validator(form, field):
+    password = field.data
+    if len(password) < 3:
+        raise ValidationError(_('Password must have at least 3 characters'))
+
+
 def init_app(extra_config_settings={}):
     # Initialize app config settings
     app.config.from_object('config.settings')  # Read config from 'app/settings.py' file
@@ -72,7 +79,9 @@ def init_app(extra_config_settings={}):
     # Setup Flask-User to handle user account related forms
     from postgres.users import User
     db_adapter = SQLAlchemyAdapter(db, User)
-    app.user_manager = UserManager(db_adapter, app)  # Init Flask-User and bind to app
+    # Init Flask-User and bind to app
+    app.user_manager = UserManager(db_adapter, app,
+                                   password_validator=oe_password_validator)
 
     # Load all models.py files to register db.Models with SQLAlchemy
     from postgres import users
