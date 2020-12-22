@@ -20,10 +20,17 @@ class NEEM:
         self.description = neem_info['description']
         self.created_by = neem_info['created_by']
         self.created_at = parser.parse(neem_info['created_at']).strftime('%m/%d/%y %H:%M')
-        self.downloadUrl = neem_info['url']
-        self.neem_repo_path = neem_info['repo']
         self.maintainer = neem_info['created_by']
         self.authors = neem_info['created_by']
+
+        self.downloadUrl = neem_info['url']
+        if not self.downloadUrl.startswith('http'):
+            self.downloadUrl += NEEM_DOWNLOAD_URL_PREFIX
+
+        if 'repo' in neem_info:
+            self.neem_repo_path = neem_info['repo']
+        else:
+            self.neem_repo_path = self.downloadUrl.split("/")[-1]
 
         if 'projects' in neem_info:
             self.projects = neem_info['projects']
