@@ -1,0 +1,62 @@
+
+.neem-card {
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.neem-card-body {
+  padding-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.neem-card h6 {
+  color: #aaa;
+  font-size: 0.8em;
+}
+
+.neem-card p {
+  font-family: 'Poppins', sans-serif;
+}
+
+.neem-img {
+  width: 100%;
+  height: 12vw;
+  object-fit: cover;
+}
+
+.neem-name {
+  font-size: 1.0rem;
+  font-weight: bold;
+  display: block;
+  margin-top: 6px;
+}
+
+.neem-description {
+  overflow-y: auto;
+  margin: 0;
+}
+.neem-description::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+.neem-description::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+.neem-description::-webkit-scrollbar-thumb {
+  background-color: #000000;
+}
+
+.neem-links {
+  font-size: 0.9em;
+  display: block;
+}
+
+.neem-links a {
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 0.8em;
+  float: right;
+}

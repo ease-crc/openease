@@ -23,6 +23,7 @@
         google.load("visualization", "1", {packages:["timeline"]});
         //google.load("visualization", "1", {packages:["corechart","timeline"]});
     </script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
 {% endblock %}
 
 {% block body %}
@@ -94,35 +95,11 @@
     <div id="QA-container" class="w-100 h-100 container-fluid">
         <div class="row h-100" style="overflow: auto">
             <!-- left column -->
-            <div class="col-sm-2">
-                <div id="funding-widget">
-                    <div class="side-text">Funded by</div>
-                    <div id="funding-carousel" class="carousel slide" data-ride="carousel">
-                        <div id="funding-carousel-logos">
-                            <div class="carousel-inner">
-                                {%for agency in funding%}
-                                <div class="carousel-item {{ agency.class }}">
-                                    <a href="{{ agency.href }}" target="_blank">
-                                        <img class="d-block mx-auto carousel-item-img-big"
-                                             src="{{ url_for('static', filename=agency.img) }}"
-                                             alt="{{ agency.name }}">
-                                    </a>
-                                </div>
-                                {%endfor%}
-                            </div>
-                        </div>
-                        <ol class="carousel-indicators">
-                            {%for agency in funding%}
-                            <li data-target="#funding-carousel" data-slide-to="{{ agency.index }}"
-                                class="{{ agency.class }}"></li>
-                            {%endfor%}
-                        </ol>
-                    </div>
-                </div>
+            <div class="col-lg-2 col-md-2 hidden-sm hidden-xs side-panel">
             </div>
 
             <!-- central column -->
-            <div class="col-sm-8">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                 <div id="qa-header" class="text-center p-2">
                     <!-- TODO: design a banner image? -->
                     <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"
@@ -173,8 +150,48 @@
                     </div>
                 </div>
             </div>
+
             <!-- right column -->
-            <div class="col-sm-2">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side-panel">
+                <div class="card neem-card side-card">
+                    <div class="card-header">NEEM information</div>
+                    <div class="card-body neem-card-body">
+                        {% if active_neem.image != 'None' %}
+                            <img src={{ neem.image }} alt="" class="neem-img img-fluid"/>
+                        {%endif %}
+                        <h class="neem-name">{{ active_neem.neem_repo_path }}</h>
+                        <h6>{{ active_neem.created_by }}, {{ active_neem.created_at }}</h6>
+                    </div>
+                    <div class="card-footer neem-links">
+                        <a href="{{ active_neem.downloadUrl }}"
+                           class="neem-link pull-right">Homepage</a>
+                    </div>
+                </div>
+
+                <div id="funding-widget" class="card side-card">
+                    <div class="card-header">Associated projects</div>
+                    <div id="funding-carousel" class="card-img-top carousel slide" data-ride="carousel">
+                        <div id="funding-carousel-logos">
+                            <div class="carousel-inner">
+                                {%for agency in funding%}
+                                <div class="carousel-item {{ agency.class }}">
+                                    <a href="{{ agency.href }}" target="_blank">
+                                        <img class="d-block mx-auto carousel-item-img-big"
+                                             src="{{ url_for('static', filename=agency.img) }}"
+                                             alt="{{ agency.name }}">
+                                    </a>
+                                </div>
+                                {%endfor%}
+                            </div>
+                        </div>
+                        <ol class="carousel-indicators">
+                            {%for agency in funding%}
+                            <li data-target="#funding-carousel" data-slide-to="{{ agency.index }}"
+                                class="{{ agency.class }}"></li>
+                            {%endfor%}
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

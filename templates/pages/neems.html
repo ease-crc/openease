@@ -18,14 +18,15 @@
 <div class="container-fluid p-4">
     <div class="row">
         {% for neem in neems %}
-        <div class="col-xs-12 col-sm-6 col-lg-3 card-div">
-            <div class="card">
-                <div class="card-body">
+        <div class="col-xs-12 col-sm-6 col-lg-3 neem-card-container">
+            <div class="card neem-card">
+                <div class="card-body neem-card-body">
                     <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
                     {% if neem.image == 'None' %}
-                        <img src="{{ url_for('static', filename='img/default.jpg') }}" alt="default image" class="card-img-top img-fluid"/>
+                        <img src="{{ url_for('static', filename='img/default.jpg') }}"
+                             alt="default image" class="neem-img img-fluid"/>
                     {% else %}
-                        <img src={{ neem.image }} alt="" class="card-img-top img-fluid"/>
+                        <img src={{ neem.image }} alt="" class="neem-img img-fluid"/>
                     {%endif %}
                     </a>
                         <h class="neem-name">{{ neem.neem_repo_path }}</h>

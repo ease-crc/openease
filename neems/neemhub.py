@@ -132,6 +132,9 @@ class NEEMHub:
             return self.get_neem(neem_id)
 
     def get_neem(self, neem_id):
+        if neem_id is None:
+            return None
+
         mongo = self.connect_mongo()
         if isinstance(neem_id, unicode):
             neem_id = bson.objectid.ObjectId(neem_id)

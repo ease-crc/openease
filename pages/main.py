@@ -31,9 +31,9 @@ __author__ = 'danielb@uni-bremen.de'
 NODE_MODULES_PATH = "/tmp/npm/node_modules/"
 
 FUNDING_DATA=[
-    {'index': 0, 'class': 'active', 'name': 'DFG',
-     'href': 'https://www.dfg.de/en/',
-     'img': 'img/dfg.png'},
+    {'index': 0, 'class': 'active', 'name': 'EASE',
+     'href': 'https://www.ease-crc.org',
+     'img': 'img/ease.png'},
     {'index': 1, 'class': '', 'name': 'RoboHow',
      'href': 'http://www.robohow.eu',
      'img': 'img/robohow-logo.png'},
@@ -43,10 +43,10 @@ FUNDING_DATA=[
     {'index': 3, 'class': '', 'name': 'Refills',
      'href': 'http://www.refills-project.eu/',
      'img': 'img/refills.png'},
-    {'index': 4, 'class': '', 'name': 'Sherpa',
+    {'index': 4, 'class': '', 'name': 'SHERPA',
      'href': 'http://www.sherpa-project.eu',
      'img': 'img/sherpa-logo.png'},
-    {'index': 5, 'class': '', 'name': 'Saphari',
+    {'index': 5, 'class': '', 'name': 'SAPHARI',
      'href': 'http://www.saphari.eu',
      'img': 'img/saphari-logo.png'}
 ]
@@ -118,6 +118,12 @@ def inject_ros_params():
         ros_url=urlparse(request.host_url).hostname,
         ros_auth=not USE_HOST_KNOWROB,
         ros_container=container_name
+    )
+
+@app.context_processor
+def inject_neem_params():
+    return dict(
+        active_neem=neemhub.get_neem(session.get('neem_id', None))
     )
 
 @user_logged_in.connect_via(app)
