@@ -3,11 +3,6 @@
   padding: 5px;
 }
 
-.card-words-break {
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
 .card-img-top {
   width: 100%;
   height: 12vw;
@@ -19,12 +14,13 @@
 }
 
 .card-block {
-    width: 100%;
-    box-shadow: 1px 3px 20px #aaa;
-    border-radius: 5px;
-    padding: 15px 15px 0.5em;
-    height: 250px;
-    overflow-y: auto;
+  width: 100%;
+  box-shadow: 1px 3px 20px #aaa;
+  border-radius: 5px;
+  padding: 15px 15px 0.5em;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-block h6 {
@@ -36,27 +32,22 @@
 }
 
 .neem-name {
-    font-size: 1.25rem;
+  font-size: 1.0rem;
+  font-weight: bold;
 }
 
 .neem-description {
-    max-height: 130px;
+  overflow-y: auto;
 }
-
-.style-overflow::-webkit-scrollbar-track
-{
+.neem-description::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 	background-color: #F5F5F5;
 }
-
-.style-overflow::-webkit-scrollbar
-{
+.neem-description::-webkit-scrollbar {
 	width: 6px;
 	background-color: #F5F5F5;
 }
-
-.style-overflow::-webkit-scrollbar-thumb
-{
+.neem-description::-webkit-scrollbar-thumb {
 	background-color: #000000;
 }
 

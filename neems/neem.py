@@ -22,8 +22,8 @@ class NEEM:
         self.description = neem_info['description']
         self.created_by = neem_info['created_by']
         self.created_at = parser.parse(neem_info['created_at']).strftime('%m/%d/%y %H:%M')
-        self.downloadUrl = NEEM_DOWNLOAD_URL_PREFIX + neem_info['url']
-        self.neem_repo_path = neem_info['url']
+        self.downloadUrl = neem_info['url']
+        self.neem_repo_path = neem_info['repo']
         self.maintainer = neem_info['created_by']
         self.authors = neem_info['created_by']
         self.acknowledgements = ''
