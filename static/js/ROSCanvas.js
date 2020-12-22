@@ -201,80 +201,15 @@ function ROSCanvas(options){
         });
         //this.emit('change');
     };
-    
-    /**
-     * Create an image snapshot of this canvas, create a ROS image message
-     * and send that message via dedicated topic to the server.
-     **/
-    this.snapshot_publish = function (frameNumber, fps) {
-      console.log("Publishing canvas snapshot frame:" + frameNumber + " fps:" + fps);
-
-      // make sure the frame buffer has some content
-      this.rosViewer.render();
-
-      var gl = this.rosViewer.renderer.getContext("webgl", {preserveDrawingBuffer: true});
-      var width  = gl.drawingBufferWidth;
-      var height = gl.drawingBufferHeight;
-      
-      // Compute frame timestamp based on FPS and frame number
-      var t = frameNumber/fps;
-      var secs  = Math.floor(t);
-      var nsecs = Math.round(1000*(t - secs));
-      
-      // FIXME: Why does this fail?
-      //    Also it is not nice to copy the pixel data below. Would be
-      //    nicer if we could use the return of glReadPixels directly.
-      //var buf = new Uint8Array(width * height * 3);
-      //gl.readPixels(0, 0, width, height, gl.RGB, gl.UNSIGNED_BYTE, buf);
-      var buf = new Uint8Array(width * height * 4);
-      gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, buf);
-      // Copy to pixels array (Note: Workaround for serialization issue when using Uint8Array directly)
-      var pixels = [];
-      var pixelStride = 4; // 4 bytes per pixel (RGBA)
-      for(var y=height-1; y>=0; y--) {
-        for(var x=0; x<width; x++) {
-          var index = (x + y*width)*pixelStride;
-          // Read RGB, ignore alpha
-          pixels.push(buf[index+0]);
-          pixels.push(buf[index+1]);
-          pixels.push(buf[index+2]);
-        }
-      }
-      // Finally generate ROS message
-      var msg = new ROSLIB.Message({
-        header: {
-          // Two-integer timestamp
-          stamp: { secs:secs, nsecs:nsecs },
-          // Frame this data is associated with
-          frame_id: String(frameNumber),
-          // Consecutively increasing ID
-          seq: 0
-        },
-        // image height, that is, number of rows
-        height: height,
-        // image width, that is, number of cols
-        width: width,
-        // Encoding of pixels -- channel meaning, ordering, size
-        encoding: "rgb8",
-        // is this data bigendian?
-        is_bigendian: 0,
-        // Full row length in bytes
-        step: width*3,
-        // actual matrix data, size is (step * rows)
-        data: pixels
-      });
-      
-      that.snapshotTopic.publish(msg);
-    };
 
     this.snapshot = function () {
-        that.snapshot_publish(1,1);
-        let a = document.createElement('a')
-        a.href = 'userdata/snapshots/1.jpeg'
-        a.download = 'snapshot.jpeg'
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
+        var a = document.createElement('a');
+        // Without 'preserveDrawingBuffer' set to true, we must render now
+        this.rosViewer.render();
+        a.href = this.rosViewer.renderer.domElement.toDataURL().replace(
+            "image/png", "image/octet-stream");
+        a.download = 'canvas.png';
+        a.click();
     };
     
     ///////////////////////////////
