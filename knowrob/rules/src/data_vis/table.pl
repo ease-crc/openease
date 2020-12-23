@@ -20,7 +20,7 @@ show_comment_table(QueryID,Entities) :-
 	%%
 	%%
 	findall(
-		[Type, Comment],
+		[Val, Type, Comment],
 		(
 			member(Val,Entities),
 			triple(Val, rdf:type, Type),
@@ -44,8 +44,8 @@ data_vis_table(ID, TableData, Options) :-
 
 table_data_(_,[],[[],[]]) :- !.
 table_data_(Index,
-		[[Type,Comment]|RestIn],
-		[[Index,Index|RestIndices],[Type,Comment|RestContent]]
+		[[IRI,Type,Comment]|RestIn],
+		[[Index,Index|RestIndices],[IRI,Type,Comment|RestContent]]
 ) :-
 	NewIndex is Index + 1,
 	table_data_(NewIndex,RestIn,[RestIndices,RestContent]).

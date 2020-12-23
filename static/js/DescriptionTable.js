@@ -26,28 +26,21 @@ function DescriptionTable(options){
 
     // Create a table of the solution description
     this.create_table = function(descriptions) {
-        var tbody = $("<tbody>");
-        var row = 0;
-        var tr = $("<tr>");
-        for (i = 0; i < descriptions[0].value1.length; i++) {
-            var currentRow = parseInt(descriptions[0].value1[i]);
-            var fieldData = descriptions[1].value1[i];
+        const tbody = $("<tbody>");
 
-            if (currentRow == row) {
-                var td1 = $("<td>");
-                td1.text(formatter.format(fieldData));
-                tr.append(td1);
-            } else {
-                tbody.append(tr);
-                tr = $("<tr>");
-                var td1 = $("<td>");
-                td1.text(formatter.format(fieldData));
-                tr.append(td1);
-                row = currentRow;
+        for(let i = 0; i < descriptions[1].value1.length; i+=3) {
+            const tr = $("<tr>");
+
+            for(let j=0; j<3; j++) {
+                const value = descriptions[1].value1[i+j];
+                const td = $("<td>");
+                td.text(formatter.format(value));
+                tr.append(td);
             }
-            
+
+            tbody.append(tr);
         }
-        tbody.append(tr);
+
         //
         var table = $("<table>");
         table.addClass("card-table table table-sm table-hover table-striped table-bordered");
