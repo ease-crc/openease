@@ -75,6 +75,18 @@ function Blackboard(options) {
         // NOTE: this function is called when a query has no more answers
     };
 
+    this.select = function(section,entity,type) {
+        console.info(['select',section,entity,type]);
+    };
+
+    this.selectEvent = function(section,entity) {
+        that.select(section,entity,'event');
+    };
+
+    this.selectObject = function(section,entity) {
+        that.select(section,entity,'object');
+    };
+
     /*********************************************/
     /*************** BINDINGS ********************/
     /*********************************************/
@@ -124,7 +136,8 @@ function Blackboard(options) {
         that.push(data_vis_msg.title, chart_item);
         chart_item.data_vis = new DataVis(
             chart_item.data_vis_div,
-            chart_item.data_vis_msg);
+            chart_item.data_vis_msg,
+            that);
         that.charts.push(chart_item.data_vis);
     };
 

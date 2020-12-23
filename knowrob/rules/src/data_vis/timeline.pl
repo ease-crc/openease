@@ -1,5 +1,7 @@
 :- module(oe_timeline_vis,[]).
 
+:- use_module(library('semweb/rdfs')).
+:- use_module(library('semweb/rdf_db')).
 :- use_module(library(openease)).
 
 %%
@@ -17,7 +19,7 @@ openease_timeline(QueryID,[Ev0,Ev1|Evs]) :-
 	findall([E,Task,Start,End],
 		timeline_data_b([Ev0,Ev1|Evs],E,Task,Start,End),
 		EventData),
-	data_vis:timeline_data(EventData,
+	openease_timeline_data(EventData,
 		[ id: QueryID,
 		  title: 'Timeline of events'
 		]).
@@ -28,10 +30,23 @@ openease_timeline(QueryID, [Evt]) :-
 		timeline_data_a(Evt,SubEvt,Task,Start,End),
 		EventData),
 	EventData=[_,_|_],
-	data_vis:timeline_data(EventData,
+	openease_timeline_data(EventData,
 		[ id: QueryID,
 		  title: 'Timeline of activity phases'
 		]).
+
+openease_timeline_data(EventsData,Options) :-
+    findall(X, (
+        member([Evt,Tsk,_,_],EventsData),
+        once((rdf_split_url(_,TskName,Tsk))),
+        (X=Evt ; X=TskName)
+    ), EvtNames),
+    findall(Time, (
+        member([_,_,Start,End], EventsData),
+        atomic_list_concat([Start, End],'_',Time)
+    ), EventExtends),
+    data_vis(timeline(event_timeline),
+        [values:[EvtNames,EventExtends] | Options]).
 
 %%
 timeline_data_a(Evt,Sub,Task,Start,End) :-

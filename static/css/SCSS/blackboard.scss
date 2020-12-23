@@ -67,6 +67,13 @@
     stroke-opacity: .6;
 }
  */
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+.node .selected {
+  stroke: black;
+}
 
 svg {
   pointer-events: all;

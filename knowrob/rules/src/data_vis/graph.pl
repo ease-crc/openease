@@ -34,13 +34,14 @@ data_vis_rdf_graph(InitialNode,EdgeData,GraphData) :-
 
 %%
 data_vis_rdf_node(IRI,NodeIRIs,EdgeData,
-        [[Name,IRI,Group],Edges]) :-
+        [[Name,IRI,Group,Type],Edges]) :-
 	rdf_db:rdf_split_url(_,Name,IRI),
 	% find node group in edge data
 	once((
 	    member([IRI,_,Group,_,_],EdgeData);
 	    member([_,IRI,_,Group,_],EdgeData)
 	)),
+	node_type_(Group,Type),
 	% find edges
 	findall(Edge,
 	    (   member([IRI,Next_IRI,_,_,Relation],EdgeData),
@@ -48,6 +49,12 @@ data_vis_rdf_node(IRI,NodeIRIs,EdgeData,
 	        atomic_list_concat([Relation,NodeIndex],'_',Edge)
 	    ),
 	    Edges).
+
+%%
+node_type_(1,event) :- !.
+node_type_(2,object) :- !.
+node_type_(3,role) :- !.
+node_type_(4,event_type) :- !.
 
 %%
 data_vis_participant_graph(Evt,GraphData) :-
