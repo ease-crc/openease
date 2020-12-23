@@ -8,11 +8,11 @@
 oe:result_set_show(QueryID,ResultSet) :-
 	result_set_events(ResultSet,[Evt]),
 	% collect all tsks performed in phases
-	task_distribution(Evt,Tsks0,Counts),
+	task_distribution(Evt,Data),
 	%% send message
 	data_vis(barchart(QueryID),
 			[ title: 'Distribution of executed tasks',
-			  data: [Tsks0,Counts]
+			  array_data: Data
 			]
 	).
 
@@ -23,37 +23,38 @@ oe:result_set_show(QueryID,ResultSet) :-
 oe:result_set_show(QueryID,ResultSet) :-
 	result_set_events(ResultSet,[Evt]),
 	% collect all tsks performed in phases
-	task_distribution(Evt,Tsks0,Counts),
+	task_distribution(Evt,Data),
 	%% send message
 	data_vis(piechart(QueryID),
 			[ title: 'Distribution of executed tasks',
-			  data: [Tsks0,Counts]
+			  array_data: Data
 			]
 	).
 
 %%
-task_distribution(Evt,Tsks0,Counts) :-
+task_distribution(Evt, Data) :-
 	% collect all tsks performed in phases
-	findall(TskName,
+	findall([TskName,TskIRI,task],
 		(	ask(aggregate([
 		        transitive( reflexive(
 		            triple(Evt,dul:hasConstituent,SubEvt)
 		        )),
 		        once(triple(SubEvt,dul:executesTask,Tsk))
 		    ])),
-		    rdf_db:rdf_split_url(_,TskName0,Tsk),
-			atomic_list_concat([TskName,_],'_',TskName0)
+		    rdf_db:rdf_split_url(X,TskName0,Tsk),
+			atomic_list_concat([TskName,_],'_',TskName0),
+		    rdf_db:rdf_split_url(X,TskName,TskIRI)
 		),
 		Tsks
 	),
 	Tsks \= [],
 	list_to_set(Tsks,Tsks0),
 	% count tsks
-	findall(Count,
+	findall([Tsk_a,[Count_a]],
 		(	member(Tsk_a,Tsks0),
 			include(=(Tsk_a),Tsks,Tsks_a),
-			length(Tsks_a, Count)
+			length(Tsks_a, Count_a)
 		),
-		Counts
+		Data
 	).
 

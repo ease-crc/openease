@@ -75,6 +75,22 @@
   stroke: black;
 }
 
+.bar {
+  stroke: #fff;
+  stroke-width: 2.0px;
+}
+.bar.selected {
+  stroke: black;
+}
+
+.pie-part {
+  stroke: #fff;
+  stroke-width: 2.0px;
+}
+.pie-part.selected {
+  stroke: black;
+}
+
 svg {
   pointer-events: all;
 }
