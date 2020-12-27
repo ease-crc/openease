@@ -229,11 +229,6 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
   color: #ffffff;
 }
 
-#funding-widget {
-  background-color: white;
-  margin-left: 5px;
-  margin-right: 5px;
-}
 #funding-carousel {
   margin-top: 14px;
   margin-bottom: 20px;
@@ -276,11 +271,11 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 
 #neem-fav {
   font-size: large;
-  right: 6px;
-  top: 6px;
+  right: 5px;
+  top: 5px;
   cursor: pointer;
   transition: transform .2s;
-  color: rgba(255,240,0,0.5);
+  color: rgba(140, 140, 137, 0.5);
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #f6fd1a;
 }
@@ -288,7 +283,6 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
   color: #ffd700;
 }
 #neem-fav:hover {
-  color: #ffd700;
   -ms-transform: scale(1.2);
   -webkit-transform: scale(1.2);
   transform: scale(1.2);
