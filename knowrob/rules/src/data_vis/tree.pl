@@ -22,12 +22,18 @@ data_vis_rdf_tree(QueryID, Root,Property,Options) :-
 	%% TODO: use transitive query here, problem is that at the moment
 	%%       there is no way to obtain proper parent.
 	%%%
-	rdf_tree_data_(Root,Property,[Node,Children]),
+	rdf_tree_data_1(Root,Property,[Node,Children]),
 	Children \= [],
 	% publish the message
 	data_vis_tree(QueryID, [Node,Children], Options).
-	
-rdf_tree_data_(IRI,Property,[[Name,IRI,Group],ChildrenData]) :-
+
+rdf_tree_data_1(IRI,Property,TreeData) :-
+	setof([Parent,Child],
+		transitive(triple(IRI -> Parent,Property,Child)),
+		Edges),
+	rdf_tree_data_2(IRI,Edges,TreeData).
+
+rdf_tree_data_2(IRI,Edges,[[Name,IRI,Group],ChildrenData]) :-
 	% event name is displayed without IRI prefix
 	rdf_db:rdf_split_url(_,Name,IRI),
 	% nodes can be assigned to different groups
@@ -35,8 +41,8 @@ rdf_tree_data_(IRI,Property,[[Name,IRI,Group],ChildrenData]) :-
 	Group is 0,
 	% get event constituent data
 	findall(ChildData,
-		(	triple(IRI,Property,Child),
-			rdf_tree_data_(Child,Property,ChildData)
+		(	member([IRI,Child],Edges),
+			rdf_tree_data_2(Child,Edges,ChildData)
 		),
 		ChildrenData
 	).
