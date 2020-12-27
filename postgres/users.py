@@ -16,6 +16,13 @@ class Role(db.Model):
     name = db.Column(db.String(50), unique=True)
 
 
+class NEEMLike(db.Model):
+    __tablename__ = 'neem_like'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    neem_id = db.Column(db.String(50), nullable=False)
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column(db.Boolean(), nullable=False, default=False)
@@ -31,12 +38,30 @@ class User(db.Model, UserMixin):
     # Relationships
     roles = db.relationship('Role', secondary=user_roles,
                             backref=db.backref('users', lazy='dynamic'))
+    liked = db.relationship('NEEMLike', foreign_keys='NEEMLike.user_id',
+                            backref='user', lazy='dynamic')
 
     def first_role(self):
         if len(self.roles) == 0:
             return None
         else:
             return self.roles[0].name
+
+    def like_neem(self, neem_id):
+        if not self.has_liked_neem(neem_id):
+            like = NEEMLike(user_id=self.id, neem_id=neem_id)
+            db.session.add(like)
+
+    def unlike_neem(self, neem_id):
+        if self.has_liked_neem(neem_id):
+            NEEMLike.query.filter_by(
+                user_id=self.id,
+                neem_id=neem_id).delete()
+
+    def has_liked_neem(self, neem_id):
+        return NEEMLike.query.filter(
+            NEEMLike.user_id == self.id,
+            NEEMLike.neem_id == neem_id).count() > 0
 
 
 def create_role(role_name):

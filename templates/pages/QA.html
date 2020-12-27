@@ -24,6 +24,18 @@
         //google.load("visualization", "1", {packages:["corechart","timeline"]});
     </script>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+
+    <script>
+    function toggleSidebar(){
+    	$("body").toggleClass("sidebar-show");
+	};
+    </script>
+{% endblock %}
+
+{% block navicon %}
+    <button id="sidebar-toggle" class="navbar-toggler" type="button" onclick="toggleSidebar()">
+        <i class="fa fa-chevron-down"></i>
+    </button>
 {% endblock %}
 
 {% block body %}
@@ -35,6 +47,11 @@
         setROSConnectionHandler(page.onconnect);
         // call page.init() when the document is ready
         $(document).ready(page.init);
+
+        $(document).ready(function() {
+        	// hide sidebar when the background area is clicked
+        	$('#qa-sidebar-overlay').click(toggleSidebar);
+		});
 
         $(document).ready(function() {
             // update the placeholder text when text is updated in the editor
@@ -62,6 +79,14 @@
             });
         });
 
+        const toggleLike = function(neem_id) {
+        	$('#neem-fav').toggleClass("liked");
+            $.ajax({
+                url: "/like/" + neem_id + "/toggle",
+                type: "POST"
+            });
+        };
+
         const setQueryText = function(query_text) {
             const commandline = ace.edit("user_query");
             commandline.setValue(query_text);
@@ -69,10 +94,16 @@
 
         const reComputeQuery = function() {
         	const editor = ace.edit("input-text");
-            const query_text = encodeURIComponent(editor.getValue());
-            setQueryText(query_text);
+            setQueryText(editor.getValue());
             page.console.query();
         };
+
+        const selectedQuery = function() {
+        	const entity_iri = $('#selected-entity').text();
+        	const query_text = "rdf_db:rdf_equal(Entity, " + entity_iri + ")";
+            setQueryText(query_text);
+            page.console.query();
+		};
 
         const randomQuery = function() {
             $.ajax({
@@ -92,82 +123,118 @@
 		}
     </script>
 
-    <div id="QA-container" class="w-100 h-100 container-fluid">
-        <div class="row h-100" style="overflow: auto">
-            <!-- left column -->
-            <div class="col-lg-2 col-md-2 hidden-sm hidden-xs side-panel">
-            </div>
+    <div id="QA-container" class="w-100 h-100">
 
-            <!-- central column -->
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <div id="qa-header" class="text-center p-2">
-                    <!-- TODO: design a banner image? -->
-                    <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"
-                         class="img-fluid" id="ease-logo-enlarged">
-                </div>
-                <div class="p-3">
-                    <div class="query-container">
-                        <div id="user_query" class="query-input">{{ query_text }}</div>
-                        <a class="query-button" href="#" onclick="page.console.query()">
-                            <i class="query-icon fas fa-spinner fa-spin"></i>
+        <div id="qa-sidebar">
+            <!-- NEEM info -->
+            <div class="card ease-border side-card">
+                {% if active_neem.image != 'None' %}
+                    <img src={{ active_neem.image }} alt="" class="neem-img img-fluid">
+                        <a id="neem-fav-a" href="#" onclick="toggleLike('{{ active_neem.neem_id }}')">
+                            {% if current_user.has_liked_neem(active_neem.neem_id) %}
+                                <span id="neem-fav" class="pull-right fas fa-star liked"></span>
+                            {% else %}
+                                <span id="neem-fav" class="pull-right fas fa-star"></span>
+                            {% endif %}
                         </a>
-                        <div id="user-query-placeholder" class="query-placeholder"
-                             {% if not session.logged_in %}
-                                class="invisible"
-                             {% else %}
-                                class="visible"
-                             {% endif %}
+                    </img>
+                {%endif %}
+                <div class="card-header neem-name">Episodic Memory</div>
+                <ul>
+                    <li><a href="{{ neem.downloadUrl }}">Homepage
+                        <span class="pull-right fa fa-home"></span>
+                    </a></li>
+                    {% if active_neem.mail != 'None' %}
+                    <li><a href="mailto:{{ active_neem.mail }}">Contact
+                        <span class="pull-right fas fa-envelope"></span>
+                    </a></li>
+                    {%endif %}
+                    <!-- TODO: add NEEM citation link here -->
+                    <!--
+                    <li><a href="#">Cite
+                        <span class="pull-right fas fa-quote-right"></span>
+                    </a></li>
+                    -->
+                </ul>
+                <div id="follow-up-question" class="collapse">
+                    <div class="card-header neem-name">Follow-up Query</div>
+                    <div id="selected-entity"></div>
+                    <ul>
+                        <li><a href="#" onclick="selectedQuery()">What is this?
+                            <span class="pull-right fas fa-question"></span>
+                        </a></li>
+                        <li><a href="#">Examples
+                            <span class="pull-right fas fa-th"></span>
+                        </a></li>
+                        <li><a href="#">Random
+                            <span class="pull-right fas fa-random"></span>
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- used for event handling when sidebar is shown on smal screens -->
+        <div id="qa-sidebar-overlay">
+        </div>
+
+        <div id="qa-content" class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="qa-header" class="text-center p-2">
+                        <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}"
+                             class="img-fluid" id="ease-logo-enlarged">
+                    </div>
+                    <div class="p-3">
+                        <div class="query-container">
+                            <div id="user_query" class="query-input">{{ query_text }}</div>
+                            <a class="query-button" href="#" onclick="page.console.query()">
+                                <i class="query-icon fas fa-spinner fa-spin"></i>
+                            </a>
+                            <div id="user-query-placeholder" class="query-placeholder"
+                                    {% if not session.logged_in %}
+                                 class="invisible"
+                                    {% else %}
+                                 class="visible"
+                                    {% endif %}
                             >Enter what you want to know about the NEEM</div>
-                    </div>
-                    <div id="query_status" class="blink"></div>
-                    <div class="query_links text-right">
-                        <a href="/examples"><i class="fas fa-th"></i> Examples</a>
-                        <a href="#" onclick="randomQuery()"><i class="fas fa-random"></i> Random</a>
-                    </div>
-                </div>
-
-                <div id="input" class="container-fluid p-3 collapse">
-                    <div class="card border-light ease-border">
-                        <div class="card-header ease-dark">Input</div>
-                        <div class="card-body">
-                            <div id="input-text" class="card-text bg-transparent w-100 query-input query-input-card"></div>
                         </div>
-                        <div class="card-footer">
-                            <a href="#"
-                                onclick="reComputeQuery()"><i class="fas fa-redo"></i> Re-compute</a>
-                            <a id="btn_query_next" href="#" class="collapse"
-                                onclick="page.nextSolution()"><i class="fas fa-arrow-right"></i> Next solution</a>
+                        <div id="query_status" class="blink"></div>
+                        <div class="query_links text-right">
+                            <a href="/examples"><i class="fas fa-th"></i> Examples</a>
+                            <a href="#" onclick="randomQuery()"><i class="fas fa-random"></i> Random</a>
                         </div>
                     </div>
-                </div>
-
-                <div id="blackboard-container" class="container-fluid p-3 collapse">
-                    <div class="card border-light ease-border">
-                        <div id="blackboard"></div>
-                        <div class="card-footer">
-                            <a href="#"><i class="fas fa-download"></i> Download Page</a>
+                    <div id="input" class="container-fluid p-3 collapse">
+                        <div class="card border-light ease-border">
+                            <div class="card-header ease-dark">Input</div>
+                            <div class="card-body">
+                                <div id="input-text" class="card-text bg-transparent w-100 query-input query-input-card"></div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#"
+                                   onclick="reComputeQuery()"><i class="fas fa-redo"></i> Re-compute</a>
+                                <a id="btn_query_next" href="#" class="collapse"
+                                   onclick="page.nextSolution()"><i class="fas fa-arrow-right"></i> Next solution</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="blackboard-container" class="container-fluid p-3 collapse">
+                        <div class="card border-light ease-border">
+                            <div id="blackboard"></div>
+                            <!--
+                               <div class="card-footer">
+                                   <a href="#"><i class="fas fa-download"></i> Download Page</a>
+                                </div>
+                                -->
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- right column -->
+            <!--
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side-panel">
-                <div class="card neem-card side-card">
-                    <div class="card-header">NEEM information</div>
-                    <div class="card-body neem-card-body">
-                        {% if active_neem.image != 'None' %}
-                            <img src={{ neem.image }} alt="" class="neem-img img-fluid"/>
-                        {%endif %}
-                        <h class="neem-name">{{ active_neem.neem_repo_path }}</h>
-                        <h6>{{ active_neem.created_by }}, {{ active_neem.created_at }}</h6>
-                    </div>
-                    <div class="card-footer neem-links">
-                        <a href="{{ active_neem.downloadUrl }}"
-                           class="neem-link pull-right">Homepage</a>
-                    </div>
-                </div>
-
                 <div id="funding-widget" class="card side-card">
                     <div class="card-header">Associated projects</div>
                     <div id="funding-carousel" class="card-img-top carousel slide" data-ride="carousel">
@@ -194,6 +261,7 @@
                 </div>
             </div>
         </div>
+            -->
     </div>
 
 {% endblock %}

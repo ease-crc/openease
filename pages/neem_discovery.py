@@ -11,9 +11,11 @@ from neems.neemhub import instance as neem_hub, NEEMHubConnectionError
 
 from wtforms.validators import DataRequired
 from flask_wtf import Form
+from flask_user import current_user, login_required
 from wtforms import PasswordField
+from app_and_db import db
 
-from knowrob.container import start_user_container, container_started
+from knowrob.container import container_started
 from config.settings import USE_HOST_KNOWROB
 from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
@@ -62,6 +64,22 @@ def render_neems():
                                  "latest")
 
     return render_template('pages/neems.html', **locals())
+
+
+@app.route('/like/<neem_id>/<action>', methods=["POST"])
+@login_required
+def like_action(neem_id, action):
+    if action == 'toggle':
+        if current_user.has_liked_neem(neem_id):
+            current_user.unlike_neem(neem_id)
+        else:
+            current_user.like_neem(neem_id)
+    elif action == 'like':
+        current_user.like_neem(neem_id)
+    elif action == 'unlike':
+        current_user.unlike_neem(neem_id)
+    db.session.commit()
+    return jsonify(result=True)
 
 
 @app.route('/neems/<neem_group>/<neem_name>/info')

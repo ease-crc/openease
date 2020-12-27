@@ -1,6 +1,6 @@
 
-#QA-container {
-  background-color: #FFF;
+#blackboard-container {
+  overflow-x: hidden;
 }
 
 .blackboard-chevron {
@@ -57,24 +57,6 @@
   margin-top: 20px;
 }
 
-/*
-.node {
-    stroke: #fff;
-    stroke-width: 1.5px;
-}
-.link {
-    stroke: #999;
-    stroke-opacity: .6;
-}
- */
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
-.node .selected {
-  stroke: black;
-}
-
 .bar {
   stroke: #fff;
   stroke-width: 2.0px;
@@ -88,7 +70,7 @@
   stroke-width: 2.0px;
 }
 .pie-part.selected {
-  stroke: black;
+  scale: 1.2;
 }
 
 svg {
@@ -107,6 +89,9 @@ svg {
   fill: #fff;
   stroke: #508cbd;
   stroke-width: 2px;
+}
+.node circle.selected {
+  stroke: black;
 }
 .node text {
   font: 12px sans-serif;

@@ -34,6 +34,7 @@ function KnowrobUI(flask_user,ros_client,options) {
             that.initBlackboard();
             $('#blackboard-container').collapse('show');
             $('#btn_query_next').collapse('hide');
+            $('#follow-up-question').collapse('hide');
             $('.query-icon').removeClass('fa-question').addClass('fa-spinner fa-spin');
         },
         on_query_answer: function(qid,answer) {

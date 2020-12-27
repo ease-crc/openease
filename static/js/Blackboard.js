@@ -75,16 +75,11 @@ function Blackboard(options) {
         // NOTE: this function is called when a query has no more answers
     };
 
-    this.select = function(section,entity,type) {
-        console.info(['select',section,entity,type]);
-    };
-
-    this.selectEvent = function(section,entity) {
-        that.select(section,entity,'event');
-    };
-
-    this.selectObject = function(section,entity) {
-        that.select(section,entity,'object');
+    this.select = function(section, entity_iri, entity_type) {
+        var iri = formatter.format(entity_iri)
+            .replace(/\'([^\']+)\'/g, '<div class="query-quotes">\'$1\'</div>');
+        $("#selected-entity").html(iri);
+        $('#follow-up-question').collapse("show");
     };
 
     /*********************************************/
@@ -129,6 +124,7 @@ function Blackboard(options) {
     this.addChart = function(data_vis_msg) {
         const chart = $("<div>");
         const chart_item = that.createItem(chart);
+        chart_item.addClass("chart-card");
         chart_item.data_vis_msg = data_vis_msg;
         chart_item.data_vis_msg.width = parent.width();
         //chart_item.data_vis_msg.height = 100;

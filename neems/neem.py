@@ -23,6 +23,11 @@ class NEEM:
         self.maintainer = neem_info['created_by']
         self.authors = neem_info['created_by']
 
+        if 'mail' in neem_info:
+            self.mail = neem_info['mail']
+        else:
+            self.mail = None
+
         self.downloadUrl = neem_info['url']
         if not self.downloadUrl.startswith('http'):
             self.downloadUrl += NEEM_DOWNLOAD_URL_PREFIX

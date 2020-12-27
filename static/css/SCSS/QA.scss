@@ -7,7 +7,38 @@
 
 // disable transitions
 .no-transition {
-    transition: none;
+  transition: none;
+}
+
+#QA-container {
+  background-color: #FFF;
+  width: 100%;
+  height: 100%;
+  padding-left: 0;
+  overflow-x: hidden;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+/*************************/
+/****** Main content *****/
+/*************************/
+
+#qa-content {
+  transition: all 0.5s ease;
+}
+@media only screen and (max-width: 768px) {
+  #qa-content {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  #qa-content {
+    padding-left: 250px;
+  }
 }
 
 // top of the page
@@ -58,16 +89,60 @@
   100% { opacity: 0.3; }
 }
 
-/** side panel **/
+/*************************/
+/******** Sidebar ********/
+/*************************/
 
-.side-panel {
-  padding: 20px;
+#qa-sidebar {
+  width: 250px;
+  position: fixed;
+  top: 56px;
+  left: 0px;
+  transition: left 0.5s ease;
+  z-index: 999;
+}
+
+#qa-sidebar-overlay {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  #qa-sidebar {
+    left: -250px;
+  }
+  body.sidebar-show #qa-sidebar {
+    left: 0px;
+  }
+  body.sidebar-show #qa-content {
+    filter: blur(4px);
+  }
+  body.sidebar-show #qa-sidebar-overlay {
+    display: block;
+    pointer-events: all;
+    z-index: 99;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  #sidebar-toggle {
+    display: none;
+  }
+}
+#sidebar-toggle .fa-chevron-down {
+  transition: .3s transform ease-in-out;
+}
+body.sidebar-show #sidebar-toggle .fa-chevron-down {
+  transform: rotate(-90deg);
 }
 
 .side-card {
-  border-radius: 5px;
-  box-shadow: 1px 3px 5px rgba(154, 183, 227, 0.51);
   margin-top: 14px;
+  margin-left: 14px;
+  margin-right: 14px;
 }
 .side-card .card-header {
   font-size: 0.8em;
@@ -76,10 +151,82 @@
   text-align: center;
   background-color: #ecf7fd;
   padding: 4px;
+  margin-top: 0px;
+  margin-left: -4px;
+  margin-right: -4px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 3px;
+}
+.side-card .card-body {
+  padding: 6px;
+  margin: 8px;
+}
+.side-card a {
+  font-size: 0.8em;
+}
+.side-card p {
+  font-size: 0.9em;
+}
+.side-card h6 {
+  color: #aaa;
+  font-size: 0.8em;
 }
 .side-card .card-footer {
   background-color: #ecf7fd;
   padding: 4px;
+}
+.side-card .query-input {
+  margin-bottom: 5px;
+}
+.side-card .neem-img {
+  height: 120px;
+  margin: auto;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  width: 100%;
+}
+
+.side-card ul,
+.side-card li {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  line-height: 35px;
+  cursor: pointer;
+}
+.side-card li {
+  border-left: 0px solid #fff;
+  background-color: #fff;
+  padding-left: 0px;
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  transition: all .3s ease;
+}
+.side-card li a {
+  text-decoration: none;
+  align-items: center;
+  display: flex;
+  padding-left: 10px;
+  color: #49aee3;
+}
+.side-card li a i {
+  padding-left: 10px;
+  width: 20px;
+  padding-right: 20px;
+}
+.side-card .pull-right {
+  font-size: 16px;
+  right: 10px;
+  position: absolute;
+}
+.side-card li:hover {
+  border-left: 10px solid #b6d6ff;
+  background-color: #246F98;
+}
+.side-card li:hover a {
+  color: #ffffff;
 }
 
 #funding-widget {
@@ -108,14 +255,41 @@
   padding-bottom: 20px;
 }
 
-.neem-card-body {
-  padding: 6px;
-}
-.neem-card p {
-  font-size: 0.9em;
-}
 .neem-name {
   font-size: 0.8em;
 }
 
+#selected-entity {
+  padding: 6px;
+  font-weight: bold;
+  font-family: "Droid Serif", "DejaVu Serif", "STIX", serif;
+  color: #509dee;
+  font-size: 0.7em;
+  text-align: center;
+  background-color: #ebfaff;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.125);
+}
+.query-quotes {
+  display: inline;
+  color: #438235;
+}
 
+#neem-fav {
+  font-size: large;
+  right: 6px;
+  top: 6px;
+  cursor: pointer;
+  transition: transform .2s;
+  color: rgba(255,240,0,0.5);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #f6fd1a;
+}
+#neem-fav.liked {
+  color: #ffd700;
+}
+#neem-fav:hover {
+  color: #ffd700;
+  -ms-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}

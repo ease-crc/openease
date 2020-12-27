@@ -44,7 +44,7 @@ class NEEMHubSettings(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     mongo_host = db.Column(db.String(255), nullable=False,
-                           default='data.open-ease.org')
+                           default='134.102.137.85')
     mongo_port = db.Column(db.Integer(), default=28015)
     mongo_db = db.Column(db.String(255), nullable=False, default='neems')
     mongo_user = db.Column(db.String(255), nullable=False, default='')
