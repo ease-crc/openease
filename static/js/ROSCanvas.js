@@ -120,31 +120,32 @@ function ROSCanvas(options){
     };
     
     this.registerNodes = function(ros) {
-      // topic used for publishing canvas snapshots
-      that.snapshotTopic = new ROSLIB.Topic({
-        ros : ros,
-        name : '/openease/video/frame',
-        messageType : 'sensor_msgs/Image'
-      });
-      // Setup a client to listen to TFs.
-      that.tfClient = new ROSLIB.TFClient({
-        ros : ros,
-        angularThres : 0.01,
-        transThres : 0.0001,
-        rate : 10.0,
-        fixedFrame : 'map' // FIXME
-      });
-      // Setup the /camera/pose client.
-      that.cameraPoseClient = new ROSLIB.Topic({
-        ros : ros,
-        name : '/camera/pose',
-        messageType : 'geometry_msgs/Pose'
-      });
-      that.cameraPoseClient.subscribe(function(message) {
-          // TODO
-          //if(that.on_camera_pose_received)
-          //  that.on_camera_pose_received(message);
-      });
+        // topic used for publishing canvas snapshots
+        that.snapshotTopic = new ROSLIB.Topic({
+            ros : ros,
+            name : '/openease/video/frame',
+            messageType : 'sensor_msgs/Image'
+        });
+        // Setup a client to listen to TFs.
+        that.tfClient = new ROSLIB.TFClient({
+            ros : ros,
+            angularThres : 0.01,
+            transThres : 0.0001,
+            rate : 10.0,
+            // FIXME: get root frame from mongo (the one without parent)
+            fixedFrame : 'map'
+        });
+        // Setup the /camera/pose client.
+        that.cameraPoseClient = new ROSLIB.Topic({
+            ros : ros,
+            name : '/camera/pose',
+            messageType : 'geometry_msgs/Pose'
+        });
+        that.cameraPoseClient.subscribe(function(message) {
+            // TODO
+            //if(that.on_camera_pose_received)
+            //  that.on_camera_pose_received(message);
+        });
     };
 
     this.addMarkerArray = function(arrayMessage){
@@ -230,30 +231,22 @@ function ROSCanvas(options){
             that.unselectMarker();
         }
         that.selectedMarker = marker;
-        // inform the active iframe about selection (e.g., to show object query library)
-        if(that.on_select_marker)
-          that.on_select_marker(marker);
+        that.rosViewer.highlight(marker);
+        // TODO: update follow-up widget with queries about selected marker
     };
     
     this.unselectMarker = function() {
-      if(!that.selectedMarker)
-        return;
-      if(that.on_unselect_marker)
-        that.on_unselect_marker(that.selectedMarker);
-      that.selectedMarker = undefined;
+        if(!that.selectedMarker) {
+            return;
+        }
+        that.rosViewer.unhighlight(that.selectedMarker);
+        that.selectedMarker = undefined;
     };
     
     this.removeMarker = function(marker) {
         if(marker === that.selectedMarker) {
             that.unselectMarker();
         }
-        if(that.on_remove_marker)
-            that.on_remove_marker(marker);
-    };
-    
-    this.showMarkerMenu = function(marker) {
-        if(that.on_show_marker_menu)
-          that.on_show_marker_menu(marker);
     };
     
     ///////////////////////////////

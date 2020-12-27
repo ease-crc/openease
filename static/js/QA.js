@@ -121,22 +121,7 @@ function KnowrobUI(flask_user,ros_client,options) {
     };
     /*
     this.initCanvas = function() {
-        if(that.rosViewer) {
-          delete that.rosViewer;
-          document.getElementById('markers').innerHTML = "";
-        }
-        that.rosViewer = new ROSCanvas({
-            parent: document.getElementById('markers'),
-            // meshPath is the prefix for GET requests
-            meshPath: '/meshes/'
-        });
         that.rosViewer.on_camera_pose_received = that.setCameraPose;
-        that.rosViewer.on_unselect_marker = function(marker) {
-            that.rosViewer.rosViewer.unhighlight(marker);
-        };
-        that.rosViewer.on_select_marker = function(marker) {
-            that.rosViewer.rosViewer.highlight(marker);
-        };
         that.rosViewer.on_window_dblclick = function() {
             if(that.rosViewer.selectedMarker) {
                 that.rosViewer.unselectMarker();
