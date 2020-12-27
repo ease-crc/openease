@@ -28,6 +28,7 @@ show_comment_table(QueryID,Entities) :-
 		),
 		CommentData0),
 	sort(CommentData0, CommentData),
+	CommentData \= [],
 	% publish the message
 	data_vis_table(QueryID, CommentData,
 		[title: 'Response description']).
