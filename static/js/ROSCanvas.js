@@ -65,27 +65,36 @@ function ROSCanvas(options){
             far: 100.0
         },
         sun: {
-            intensity: 0.66,
-            color: '#eeeeee',
             pos: [-1, 0.5, 3.0],
             shadow: {
                 debug: false
             }
         },
-        spot: {
-            intensity: 0.9,
-            color: '#ffffbb',
-            pos: [0, 0, 6],
-            target: [-1, 1, 0],
-            shadow: {
-                debug: false
-            }
-        },
+        spots: [
+            {   pos: [0, 2.5, 4],
+                target: [0, 2.5, 0],
+                distance: 6.0 },
+            {   pos: [0, -2.5, 4],
+                target: [0, -2.5, 0],
+                distance: 6.0 },
+            {   pos: [2.5, 0, 4],
+                target: [2.5, 0, 0],
+                distance: 6.0 },
+            {   pos: [-2.5, 0, 4],
+                target: [-2.5, 0, 0],
+                distance: 6.0 }
+        ],
         on_start_loading: this.on_start_loading,
         on_finished_loading: this.on_finished_loading
     });
     // add some default objects to the scene
-    this.rosViewer.scene.add(new ROS3D.Grid());
+    this.rosViewer.scene.add(new ROS3D.Grid({
+        color: '#cccccc',
+        num_cells: 20,
+        lineWidth: 1,
+        cellSize: 1
+    }));
+    this.rosViewer.cameraControls.showAxes();
 
     this.resize = function () {
         // compute canvas size

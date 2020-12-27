@@ -49,11 +49,14 @@
         $(document).ready(page.init);
 
         $(document).ready(function() {
-        	// hide sidebar when the background area is clicked
-        	$('#qa-sidebar-overlay').click(toggleSidebar);
-		});
+            // hide sidebar when the background area is clicked
+            $('#qa-sidebar-overlay').click(toggleSidebar);
 
-        $(document).ready(function() {
+            // avoid going to begin of page when like-link is clicked
+            $('#neem-fav-a').click(function(e) {
+                e.preventDefault();
+            });
+
             // update the placeholder text when text is updated in the editor
             // NOTE: newer ace editor version support it, so at some point
             //       the custom placeholder might not be needed anymore.
