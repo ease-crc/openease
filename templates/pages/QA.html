@@ -127,31 +127,6 @@
 
         <div id="qa-sidebar">
             <div class="card ease-border side-card">
-                <!-- ASSOCIATED PROJECTS -->
-                <div class="card-header">Associated projects</div>
-                <div id="funding-carousel" class="card-img-top carousel slide" data-ride="carousel">
-                    <div id="funding-carousel-logos">
-                        <div class="carousel-inner">
-                            {%for agency in funding%}
-                                <div class="carousel-item {{ agency.class }}">
-                                    <a href="{{ agency.href }}" target="_blank">
-                                        <img class="d-block mx-auto carousel-item-img-big"
-                                             src="{{ url_for('static', filename=agency.img) }}"
-                                             alt="{{ agency.name }}">
-                                    </a>
-                                </div>
-                            {%endfor%}
-                        </div>
-                    </div>
-                    <ol class="carousel-indicators">
-                        {%for agency in funding%}
-                            <li data-target="#funding-carousel" data-slide-to="{{ agency.index }}"
-                                class="{{ agency.class }}"></li>
-                        {%endfor%}
-                    </ol>
-                </div>
-            </div>
-            <div class="card ease-border side-card">
                 <!-- NEEM INFO -->
                 <div class="card-header neem-name">Episodic Memory</div>
                 {% if active_neem.image != 'None' %}
@@ -196,6 +171,31 @@
                             <span class="pull-right fas fa-random"></span>
                         </a></li>
                     </ul>
+                </div>
+            </div>
+            <div class="card ease-border side-card">
+                <!-- ASSOCIATED PROJECTS -->
+                <div class="card-header">Associated Projects</div>
+                <div id="funding-carousel" class="card-img-top carousel slide" data-ride="carousel">
+                    <div id="funding-carousel-logos">
+                        <div class="carousel-inner">
+                            {%for agency in funding%}
+                                <div class="carousel-item {{ agency.class }}">
+                                    <a href="{{ agency.href }}" target="_blank">
+                                        <img class="d-block mx-auto carousel-item-img-big"
+                                             src="{{ url_for('static', filename=agency.img) }}"
+                                             alt="{{ agency.name }}">
+                                    </a>
+                                </div>
+                            {%endfor%}
+                        </div>
+                    </div>
+                    <ol class="carousel-indicators">
+                        {%for agency in funding%}
+                            <li data-target="#funding-carousel" data-slide-to="{{ agency.index }}"
+                                class="{{ agency.class }}"></li>
+                        {%endfor%}
+                    </ol>
                 </div>
             </div>
         </div>
