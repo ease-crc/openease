@@ -116,8 +116,9 @@
                 success: function (response) {
                     computeQuery(response.q);
                 },
-                error: function (response) {
-                    alert(response.responseText);
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
                 }
             });
         };
@@ -183,8 +184,9 @@
                 success: function (response) {
                     updateFollowUpQueries(response.queries);
                 },
-                error: function (response) {
-                    alert(response.responseText);
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
                 }
             });
 		};

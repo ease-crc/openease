@@ -33,12 +33,14 @@ rdf_tree_data_1(IRI,Property,TreeData) :-
 		Edges),
 	rdf_tree_data_2(IRI,Edges,TreeData).
 
-rdf_tree_data_2(IRI,Edges,[[Name,IRI,Group],ChildrenData]) :-
+rdf_tree_data_2(IRI,Edges,[[Name,IRI,Group,EntityType],ChildrenData]) :-
 	% event name is displayed without IRI prefix
 	rdf_db:rdf_split_url(_,Name,IRI),
 	% nodes can be assigned to different groups
 	% TODO: add actions/states/processes/motions to different groups
 	Group is 0,
+	% TODO: use proper entity type instead of hardcoded one
+	EntityType = object,
 	% get event constituent data
 	findall(ChildData,
 		(	member([IRI,Child],Edges),
