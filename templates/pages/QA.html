@@ -13,6 +13,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/Blackboard.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/Helper.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/QA.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/QueryButton.js') }}"></script>
 
     <!--FIXME: openEASE must run offline, replace this!
         But there are some difficulties getting the google charts
@@ -44,6 +45,7 @@
             neem_id: '{{ neem.neem_id }}',
             has_query: '{{ has_query }}'
         });
+        let followUpQueries = [];
         setROSConnectionHandler(page.onconnect);
         // call page.init() when the document is ready
         $(document).ready(page.init);
@@ -95,35 +97,97 @@
             commandline.setValue(query_text);
 		};
 
-        const reComputeQuery = function() {
-        	const editor = ace.edit("input-text");
-            setQueryText(editor.getValue());
-            page.console.query();
-        };
-
-        const selectedQuery = function() {
-        	const entity_iri = $('#selected-entity').text();
-        	const query_text = "rdf_db:rdf_equal(Entity, " + entity_iri + ")";
+        const computeQuery = function(query_text) {
             setQueryText(query_text);
             page.console.query();
-		};
+		}
+
+        const reComputeQuery = function() {
+        	const editor = ace.edit("input-text");
+            computeQuery(editor.getValue());
+        };
 
         const randomQuery = function() {
             $.ajax({
                 url: "/QA/random",
                 type: "POST",
                 contentType: "application/json",
-                //data: JSON.stringify({}),
                 dataType: "json",
                 success: function (response) {
-                    setQueryText(response.q);
-                    page.console.query();
+                    computeQuery(response.q);
                 },
                 error: function (response) {
                     alert(response.responseText);
                 }
             });
-		}
+        };
+
+        const selectedQuery = function() {
+        	const entity_iri = $('#selected-entity').text();
+            computeQuery("rdf_db:rdf_equal(Entity, " + entity_iri + ")");
+		};
+
+        const selectedRandomQuery = function() {
+            const query = followUpQueries[Math.floor(
+                Math.random() * followUpQueries.length)];
+            const entity_iri = $('#selected-entity').text();
+            const query_prefix = "rdf_db:rdf_equal(" +
+                query['var'] + ", " + entity_iri + "),\n";
+            const query_text = query_prefix + query['query'];
+            computeQuery(query_text);
+		};
+
+        const updateFollowUpQueries = function(queries) {
+            // remember queries
+            followUpQueries = queries;
+            // update the follow-up query examples widget
+            const entity_iri = $('#selected-entity').text();
+            const where = $('#follow-up-list');
+            // clear list
+            where.html('');
+            // add items
+            for(let i=0; i<queries.length; i++) {
+                const query_prefix = "rdf_db:rdf_equal(" +
+                    queries[i]['var'] + ", " + entity_iri + "),\n";
+                const query_text = query_prefix + queries[i]['query'];
+                //
+                const item = $('<li>');
+                const link = $('<a>');
+                link.text(queries[i]['description']);
+                link.attr('href', '#');
+                link.click(function() {
+                    computeQuery(query_text);
+                });
+                item.append(link);
+                where.append(item);
+            }
+        };
+
+        const selectEntity = function(entity_iri, entity_type) {
+            // update the IRI displayed in #selected-entity
+            var iri = page.formatter.format(entity_iri);
+            if(iri.startsWith('http')) {
+                iri = "'" + iri + "'";
+            }
+            iri = iri.replace(/\'([^\']+)\'/g, '<div class="query-quotes">\'$1\'</div>');
+            $("#selected-entity").html(iri);
+            // show the follow-up question view
+            $('#follow-up-question').collapse("show");
+            // update follow-up queries
+            $.ajax({
+                url: "/QA/entity_queries",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ entity_type: entity_type }),
+                dataType: "json",
+                success: function (response) {
+                    updateFollowUpQueries(response.queries);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+		};
     </script>
 
     <div id="QA-container" class="w-100 h-100">
@@ -167,10 +231,13 @@
                         <li><a href="#" onclick="selectedQuery()">What is this?
                             <span class="pull-right fas fa-question"></span>
                         </a></li>
-                        <li><a href="#">Examples
-                            <span class="pull-right fas fa-th"></span>
-                        </a></li>
-                        <li><a href="#">Random
+                        <li>
+                            <a href="#" data-toggle="collapse" data-target="#follow-up-list">
+                                Examples<span class="pull-right fas fa-th"></span></a>
+                            <ul id="follow-up-list" class="collapse">
+                            </ul>
+                        </li>
+                        <li><a href="#" onclick="selectedRandomQuery()">Random
                             <span class="pull-right fas fa-random"></span>
                         </a></li>
                     </ul>

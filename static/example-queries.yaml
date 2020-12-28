@@ -21,7 +21,7 @@ sections:
   
   - id: concept
     name: Conceptualization
-    icon: fa-expand
+    icon: fa-object-group
   
   - id: context
     name: Contextualization
@@ -63,43 +63,79 @@ sections:
 
 sub_topics:
 - topic: occurrences
-  name: Duration
-  description: Duration of Events
+  name: Events
+  description: About occurrences of events in an episode.
   query_groups:
-  - description: How long is the shortest event?
+  - description: Which events occurred?
+    queries:
+    - occurs(Evt)
+  - description: When did events occur?
+    queries:
+    - occurs(Evt) during [Begin,End]
+    binding:
+      var: Evt
+      type: event
+      description: When did this event occur?
+  - description: When did the first event start?
     queries:
     - |
-      findall(
-        Dur,
-        (
-          event_interval(Evt,Start,End),
-          number(End),
-          Dur is End - Start
-        ),
-        Durations),
-        min(Durations,T).  
-  - description: How long is the lonest event?
+      findall([Begin,Evt],
+        occurs(Evt) during [Begin,_],
+        StartTimes),
+      min_member([MinTime,FirstEvt],StartTimes).
+  - description: When did the last event end?
     queries:
     - |
-      findall(
-        Dur,
-        (
-          event_interval(Evt,Start,End),
-          number(End),
-          Dur is End - Start
-        ),
-        Durations),
-        max(Durations,T).
+      findall([Begin,Evt],
+        occurs(Evt) during [Begin,_],
+        EndTimes),
+      max_member([MaxTime,LastEvt],EndTimes).
 
 - topic: occurrences
-  name: Subtopic
-  description: Subtopic description
+  name: Duration
+  description: About the length of events that occured in an episode.
   query_groups:
-  - description: Which events do happen at the same time?
+  - description: What is the duration of events that occurred?
+    queries:
+    - has_duration(Evt,Duration)
+    binding:
+      var: Evt
+      type: event
+      description: What is the duration of this event?
+  - description: What is the longest event that occurred?
     queries:
     - |
-      event_interval(Evt,Start,End), 
-      occurs(Evt) during [Start,End].
+      findall([Duration,Evt],
+        has_duration(Evt,Duration),
+        Durations),
+      max_member([MaxDuration,LongestEvt],Durations).
+  - description: What is the shortest event that occurred?
+    queries:
+    - |
+      findall([Duration,Evt],
+        has_duration(Evt,Duration),
+        Durations),
+      min_member([MinDuration,ShortestEvt],Durations).
+
+- topic: occurrences
+  name: Interval Algebra
+  description: About temporal relationships that hold between events.
+  query_groups:
+  - description: Which events are started by others?
+    queries:
+    - interval_starts(Evt1,Evt2)
+  - description: Which events are stopped by others?
+    queries:
+    - interval_stops(Evt1,Evt2)
+  - description: Which events overlap each other?
+    queries:
+    - interval_overlaps(Evt1,Evt2)
+  - description: Which events occur before others?
+    queries:
+    - interval_before(Evt1,Evt2)
+  - description: Which events occur during others?
+    queries:
+    - interval_during(Evt1,Evt2)
 
 - topic: participation
   name: Agents
@@ -331,7 +367,7 @@ sub_topics:
       urdf_joint_names(Robot,JointList),
       member(Joint,JointList),
       urdf_joint_hard_limits(Robot,Joint,PosLimits,VelMax,EffMax).
-    - description: What is the friction of the robot's joints?
+  - description: What is the friction of the robot's joints?
     queries:
     - |
       has_type(Robot,urdf:'Robot'),

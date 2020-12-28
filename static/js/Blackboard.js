@@ -76,13 +76,7 @@ function Blackboard(options) {
     };
 
     this.select = function(section, entity_iri, entity_type) {
-        var iri = formatter.format(entity_iri);
-        if(iri.startsWith('http')) {
-            iri = "'" + iri + "'";
-        }
-        iri = iri.replace(/\'([^\']+)\'/g, '<div class="query-quotes">\'$1\'</div>');
-        $("#selected-entity").html(iri);
-        $('#follow-up-question').collapse("show");
+        selectEntity(entity_iri, entity_type);
     };
 
     /*********************************************/

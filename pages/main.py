@@ -64,12 +64,29 @@ class QueryExamples(object):
     def __init__(self):
         self.query_counter = 0
         self.topic_map = {}
+        self.binding_map = {}
         self.query_data = []
         self.query_list = []
         self.read_yaml()
 
     def random_query(self):
         return random.choice(self.query_list)
+
+    def entity_queries(self, entity_type):
+        if entity_type in self.binding_map:
+            return self.binding_map[entity_type]
+        else:
+            return []
+
+    def add_binding(self, binding, queries):
+        entity_type = binding['type']
+        if entity_type not in self.binding_map:
+            self.binding_map[entity_type] = []
+        self.binding_map[entity_type].append({
+            'description': binding['description'],
+            'var': binding['var'],
+            'query': queries[0]['text']
+        })
 
     def read_yaml(self):
         path = os.path.join(os.path.join(app.root_path, "static"), "example-queries.yaml")
@@ -98,6 +115,10 @@ class QueryExamples(object):
                             queries.append({'id': self.query_counter, 'text': query})
                             self.query_list.append(query)
                             self.query_counter += 1
+                        if 'binding' in query_group:
+                            self.add_binding(
+                                query_group['binding'],
+                                queries)
                         query_group['queries'] = queries
                 topic = self.topic_map[sub_topic['topic']]
                 topic['sub_topics'].append(sub_topic)
@@ -209,6 +230,12 @@ def render_QA_page():
 @app.route('/QA/random', methods=['POST'])
 def get_random_example_query():
     return jsonify(q=QueryExamples.get().random_query())
+
+@app.route('/QA/entity_queries', methods=['POST'])
+def get_example_entity_queries():
+    data = json.loads(request.data)
+    entity_type = data['entity_type']
+    return jsonify(queries=QueryExamples.get().entity_queries(entity_type))
 
 @app.route('/examples')
 def render_examples_page():

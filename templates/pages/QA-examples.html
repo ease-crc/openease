@@ -2,15 +2,10 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/examples.css') }}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/QueryButton.js') }}"></script>
 {% endblock %}
 
 {% block body %}
-
-    <script type="text/javascript">
-    const ask_query = function(query_text) {
-        console.info(query_text);
-    };
-    </script>
 
     <section id="examples-header">
         <div id="header-content-wrapper">
@@ -59,7 +54,7 @@
 
                         {%for query_group in sub_topic.query_groups%}
                         <div class="card-text example-card-text">
-                            {{ query_group.description }}:
+                            {{ query_group.description }}
                             {%for query in query_group.queries%}
                             <div class="query-container">
                                 <div class="query-event-catcher"
@@ -85,33 +80,7 @@
 
     <script type="text/javascript">
     $(".query-input").each(function() {
-        var queryInput = ace.edit($(this).attr('id'));
-        //queryInput.setTheme("ace/theme/solarized_light");
-        queryInput.getSession().setMode("ace/mode/prolog");
-        queryInput.getSession().setUseWrapMode(true);
-        queryInput.setOptions({
-            // editor options
-            selectionStyle: "text",
-            highlightActiveLine: false,
-            highlightSelectedWord: false,
-            readOnly: true,
-            cursorStyle: "slim",
-            behavioursEnabled: false,
-            wrapBehavioursEnabled: false,
-            autoScrollEditorIntoView: false,
-            enableMultiselect: false,
-            // renderer options
-            highlightGutterLine: false,
-            maxLines: 15,
-            showGutter: false,
-            showLineNumbers: false,
-            showFoldWidgets: false,
-            printMarginColumn: false,
-            showPrintMargin: false
-        });
-        queryInput.setShowPrintMargin(false);
-        queryInput.renderer.setScrollMargin(6, 6, 6, 6);
-        queryInput.resize(true);
+    	makeQueryButton($(this));
     });
     </script>
 {% endblock %}

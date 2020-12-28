@@ -10,6 +10,10 @@
   transition: none;
 }
 
+#footer {
+  z-index: 1000;
+}
+
 #QA-container {
   background-color: #FFF;
   width: 100%;
@@ -286,4 +290,20 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
   -ms-transform: scale(1.2);
   -webkit-transform: scale(1.2);
   transform: scale(1.2);
+}
+
+#follow-up-list {
+  border: 1px solid #b6d6ff;
+  max-height: 150px;
+  overflow-y: auto;
+}
+.side-card li:hover #follow-up-list a {
+  color: #49aee3;
+}
+#follow-up-list li:hover a {
+  color: #246F98 !important;
+}
+#follow-up-list li:hover {
+  border-left: none;
+  background-color: #b6d6ff;
 }
