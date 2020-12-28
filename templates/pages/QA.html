@@ -188,6 +188,21 @@
                 }
             });
 		};
+
+        const selectTFFrame = function(frame_name) {
+            // HACK: strip TF prefixes as they are not spelled out in IRI names.
+            // FIXME: this will break when there are multiple instances of the same object type
+            // TODO: could we sneak in the IRI as attribute of the marker?
+            //       then no additional query would be required here.
+            const buf = frame_name.split('/');
+            const frame_name0 = buf[buf.length - 1];
+            // run a Prolog query to get the entity IRI
+            const pl = new ROSPrologClient(page.ros, {});
+            pl.jsonQuery("has_base_link_name(Obj, '"+ frame_name0 + "').", function(result) {
+                pl.finishClient();
+                selectEntity(result.solution['Obj'],'object');
+            });
+		};
     </script>
 
     <div id="QA-container" class="w-100 h-100">

@@ -232,7 +232,8 @@ function ROSCanvas(options){
         }
         that.selectedMarker = marker;
         that.rosViewer.highlight(marker);
-        // TODO: update follow-up widget with queries about selected marker
+        // update follow-up widget with queries about selected marker
+        selectTFFrame(marker.frame_id);
     };
     
     this.unselectMarker = function() {

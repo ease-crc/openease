@@ -132,6 +132,7 @@ function KnowrobUI(flask_user,ros_client,options) {
     
     // listen to some ROS topics
     this.onconnect = function (ros) {
+        that.ros = ros;
         that.registerChartClient(ros);
         that.registerImageClient(ros);
         that.registerMarkerClient(ros);
