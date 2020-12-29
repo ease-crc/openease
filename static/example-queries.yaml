@@ -113,6 +113,7 @@ sub_topics:
     - |
       findall([Duration, Evt],
         (  event_interval(Evt, Begin, End),
+           number(End),
            Duration is End - Begin
         ),
         Durations),
@@ -122,6 +123,7 @@ sub_topics:
     - |
       findall([Duration,Evt],
         (  event_interval(Evt, Begin, End),
+           number(End),
            Duration is End - Begin
         ),
         Durations),
@@ -264,16 +266,16 @@ sub_topics:
     queries:
     - |
       has_type(Role, soma:'AgentRole'),
-      has_role(Obj, Role),
       task_role(Tsk, Role),
-      executes_task(Act, Tsk).
+      executes_task(Act, Tsk),
+      has_role(Obj, Role) during Act.
   - description: What objects play the role of an item?
     queries:
     - |
       has_type(Role, soma:'Item'),
-      has_role(Obj, Role),
       task_role(Tsk, Role),
-      executes_task(Act, Tsk).
+      executes_task(Act, Tsk),
+      has_role(Obj, Role) during Act.
   #- description: What objects play the role of an instrument?
   #  queries:
   #  - |
@@ -283,10 +285,9 @@ sub_topics:
   - description: Did an arm play a role in an action?
     queries:
     - |
-      has_type(Arm, soma:'Arm').
-      has_role(Arm, Role),
-      task_role(Tsk, Role),
-      executes_task(Act, Tsk).
+      has_type(Arm, soma:'Arm'),
+      has_participant(Act, Arm),
+      has_role(Arm, Role) during Act.
 
 #################
 ######## ACTION
@@ -325,7 +326,7 @@ sub_topics:
   query_groups:
   - description: What is the shape of objects?
     queries:
-    - object_shape(Obj, Shape, _, _).
+    - object_shape(Obj, _, Shape, _, _).
     binding:
       var: Obj
       type: object
@@ -333,9 +334,8 @@ sub_topics:
   - description: What are the shapes of the objects that participate in an action?
     queries:
     - |
-      has_participant(Act, Obj), 
-      is_object(Obj), 
-      object_shape(Obj, ShapeTerm, _, _).
+      has_participant(Act, Obj),
+      object_shape(Obj, _, ShapeTerm, _, _).
 
 #################
 ######## OBJECT
@@ -425,14 +425,14 @@ sub_topics:
     - |
       is_agent(Agent),
       setof(Part,
-        transitive(triple(Obj, dul:hasComponent, Part)),
+        transitive(triple(Agent, dul:hasComponent, Part)),
         Components).
   - description: How many parts does the agent have?
     queries:
     - |
       is_agent(Agent),
       setof(Part,
-        transitive(triple(Obj, dul:hasComponent, Part)),
+        transitive(triple(Agent, dul:hasComponent, Part)),
         Components),
       length(Components, NumParts).
   # TODO:
