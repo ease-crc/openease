@@ -75,7 +75,7 @@ sub_topics:
     - occurs(Evt)
   - description: When did events occur?
     queries:
-    - occurs(Evt) during [Begin,End]
+    - occurs(Evt) during [Begin, End]
     binding:
       var: Evt
       type: event
@@ -83,17 +83,17 @@ sub_topics:
   - description: When did the first event start?
     queries:
     - |
-      findall([Begin,Evt],
-        occurs(Evt) during [Begin,_],
+      findall([Begin, Evt],
+        occurs(Evt) during [Begin, _],
         StartTimes),
-      min_member([MinTime,FirstEvt],StartTimes).
+      min_member([MinTime, FirstEvt], StartTimes).
   - description: When did the last event end?
     queries:
     - |
-      findall([Begin,Evt],
-        occurs(Evt) during [Begin,_],
+      findall([Begin, Evt],
+        occurs(Evt) during [Begin, _],
         EndTimes),
-      max_member([MaxTime,LastEvt],EndTimes).
+      max_member([MaxTime, LastEvt], EndTimes).
 
 - topic: occurrences
   name: Duration
@@ -102,7 +102,7 @@ sub_topics:
   - description: What is the duration of events that occurred?
     queries:
     - |
-      occurs(Evt) during [Begin,End],
+      occurs(Evt) during [Begin, End],
       Duration is End - Begin.
     binding:
       var: Evt
@@ -111,21 +111,21 @@ sub_topics:
   - description: What is the longest event that occurred?
     queries:
     - |
-      findall([Duration,Evt],
-        (  occurs(Evt) during [Begin,End],
+      findall([Duration, Evt],
+        (  occurs(Evt) during [Begin, End],
            Duration is End - Begin
         ),
         Durations),
-      max_member([MaxDuration,LongestEvt],Durations).
+      max_member([MaxDuration, LongestEvt], Durations).
   - description: What is the shortest event that occurred?
     queries:
     - |
       findall([Duration,Evt],
-        (  occurs(Evt) during [Begin,End],
+        (  occurs(Evt) during [Begin, End],
            Duration is End - Begin
         ),
         Durations),
-      min_member([MinDuration,ShortestEvt],Durations).
+      min_member([MinDuration, ShortestEvt], Durations).
 
 # TODO: enable this section. But I think it won't work at the moment
 #       for non-grounded vars.
@@ -160,7 +160,7 @@ sub_topics:
   query_groups:
   - description: Which objects participate in which action?
     queries:
-    - has_participant(Evt,Obj)
+    - has_participant(Evt, Obj)
     binding:
       var: Evt
       type: event
@@ -174,7 +174,7 @@ sub_topics:
     - |
       is_action(Act),
       findall(Obj,
-      	has_participant(Act,Obj),
+        has_participant(Act, Obj),
       	Participants)
 
 - topic: participation
@@ -184,12 +184,12 @@ sub_topics:
   - description: What agent participated in events?
     queries:
     - |
-      has_participant(Evt,Obj),
+      has_participant(Evt, Obj),
       is_agent(Obj)
   - description: What physical artifacts participated in events?
     queries:
     - |
-      has_participant(Evt,Obj),
+      has_participant(Evt, Obj),
       is_physical_artifact(Obj)
 
 #################
@@ -205,8 +205,8 @@ sub_topics:
     - |
       is_action(Act),
       findall(Sub,
-      	triple(Act,dul:hasConstituent,Sub),
-      	Phases).
+        triple(Act, dul:hasConstituent, Sub),
+        Phases).
     binding:
       var: Act
       type: event
@@ -216,8 +216,8 @@ sub_topics:
     - |
       is_action(Act),
       findall(Sub,
-      	transitive(triple(Act,dul:hasConstituent,Sub)),
-      	Phases).
+        transitive(triple(Act, dul:hasConstituent, Sub)),
+        Phases).
     binding:
       var: Act
       type: event
@@ -308,9 +308,9 @@ sub_topics:
     - |
       is_episode(Ep),
       setof(Act,
-        (  triple(Ep,dul:includesAction,SupAct),
+        (  triple(Ep, dul:includesAction, SupAct),
            transitive(triple(
-               SupAct,dul:hasConstituent,Act))
+               SupAct, dul:hasConstituent, Act))
         ),
         SetOfAct),
       length(SetOfAct,NumAct).
@@ -350,7 +350,7 @@ sub_topics:
     - |
       is_physical_artifact(Obj),
       findall(Sub,
-        triple(Obj,dul:hasComponent,Sub),
+        triple(Obj, dul:hasComponent, Sub),
         Components).
     binding:
       var: Obj
@@ -361,7 +361,7 @@ sub_topics:
     - |
       is_physical_artifact(Obj),
       findall(Sub,
-        transitive(triple(Obj,dul:hasComponent,Sub)),
+        transitive(triple(Obj, dul:hasComponent, Sub)),
         Components).
     binding:
       var: Obj
@@ -373,40 +373,18 @@ sub_topics:
 ######## Kinematics
 #################
 - topic: env_kin
-  name: Links
-  description: Links without parent- or childlinks
+  name: Structure
+  description: About how objects are composed of links and joints.
   query_groups:
-  - description: What is the root link of the kitchen?
+  - description: What is the base link of objects?
+    queries:
+    - has_base_link(Obj, Link).
+  - description: What are the links connected via a revolute joint?
     queries:
     - |
-      is_urdf_link(Link),
-      urdf_root_link(Link, Root).
-  - description: What are the lowest level links of the kitchen?
-    queries:
-    - |
-      is_urdf_link(Link),
-      \+has_child_link(Link,_).
-
-#################
-######## OBJECT
-######## Kinematics
-#################
-- topic: env_kin
-  name: Joints
-  description: Structure of joints
-  query_groups:
-  - description: What are the joints of the kitchen?
-    queries:
-    - |
-      has_type(Kitchen,knowrob:'IAIKitchen'),
-      urdf_joint_names(Kitchen,Joints).
-  - description: Which joints can be moved?
-    queries:
-    - |
-      has_type(Kitchen,knowrob:'IAIKitchen'), 
-      urdf_joint_names(Kitchen,JointList), 
-      member(Joint,JointList), 
-      urdf_joint_hard_limits(Kitchen,Joint,_,_,_).
+      has_type(Joint, urdf:'RevoluteJoint'),
+      has_child_link(Joint, Child),
+      has_parent_link(Joint, Parent).
 
 #################
 ######## OBJECT
@@ -440,23 +418,23 @@ sub_topics:
     - |
       is_agent(Agent),
       setof(Part,
-        triple(Agent,dul:hasComponent,Part),
+        triple(Agent, dul:hasComponent, Part),
         Components).
   - description: What is the transitive component closure of an agent?
     queries:
     - |
       is_agent(Agent),
       setof(Part,
-        transitive(triple(Obj,dul:hasComponent,Part)),
+        transitive(triple(Obj, dul:hasComponent, Part)),
         Components).
   - description: How many parts does the agent have?
     queries:
     - |
       is_agent(Agent),
       setof(Part,
-        transitive(triple(Obj,dul:hasComponent,Part)),
+        transitive(triple(Obj, dul:hasComponent, Part)),
         Components),
-      length(Components,NumParts).
+      length(Components, NumParts).
   # TODO:
   #- description: How many sensors does the agent have?
   #- description: What are the actuators of the agent?
@@ -466,38 +444,57 @@ sub_topics:
 ######## Kinematics
 #################
 - topic: agent_kin
-  name: Links
-  description: Links of the robot
+  name: Structure
+  description: About how agent body parts are composed of links and joints.
   query_groups:
-  - description: What is the root link of the robot?
+  - description: What is the base link of components of the agent?
     queries:
     - |
-      has_type(Robot,urdf:'Robot'),
-      urdf_root_link(Robot, Root).
-  - description: What is the inertia and mass of the links of the robot?
+      is_agent(Agent),
+      triple(Agent, dul:hasComponent, Part),
+      has_base_link(Part, Link).
+  - description: What are the links connected via a revolute joint?
     queries:
     - |
-      has_type(Robot,urdf:'Robot'),
-      urdf_link_names(Robot,LinkList),
-      member(Link,LinkList),
-      urdf_link_inertial(Robot, Link, Inertia, _, Mass).
+      has_type(Joint, urdf:'RevoluteJoint'),
+      has_child_link(Joint, Child),
+      has_parent_link(Joint, Parent).
+  # TODO:
+  #- description: What are the limits of the joint?
+  #- description: How far can the agent reach with end-effectors?
 
-- topic: agent_kin
-  name: Joints
-  description: Links of the robot
-  query_groups:
-  - description: What are the limits of the robot's joints?
-    queries:
-    - |
-      has_type(Robot,urdf:'Robot'),
-      urdf_joint_names(Robot,JointList),
-      member(Joint,JointList),
-      urdf_joint_hard_limits(Robot,Joint,PosLimits,VelMax,EffMax).
-  - description: What is the friction of the robot's joints?
-    queries:
-    - |
-      has_type(Robot,urdf:'Robot'),
-      urdf_joint_names(Robot,JointList),
-      member(Joint,JointList),
-      urdf_joint_friction(Robot,Joint,Friction).
+#  name: Links
+#  description: Links of the robot
+#  query_groups:
+#  - description: What is the root link of the robot?
+#    queries:
+#    - |
+#      has_type(Robot,urdf:'Robot'),
+#      urdf_root_link(Robot, Root).
+#  - description: What is the inertia and mass of the links of the robot?
+#    queries:
+#    - |
+#      has_type(Robot,urdf:'Robot'),
+#      urdf_link_names(Robot,LinkList),
+#      member(Link,LinkList),
+#      urdf_link_inertial(Robot, Link, Inertia, _, Mass).
+#
+#- topic: agent_kin
+#  name: Joints
+#  description: Links of the robot
+#  query_groups:
+#  - description: What are the limits of the robot's joints?
+#    queries:
+#    - |
+#      has_type(Robot,urdf:'Robot'),
+#      urdf_joint_names(Robot,JointList),
+#      member(Joint,JointList),
+#      urdf_joint_hard_limits(Robot,Joint,PosLimits,VelMax,EffMax).
+#  - description: What is the friction of the robot's joints?
+#    queries:
+#    - |
+#      has_type(Robot,urdf:'Robot'),
+#      urdf_joint_names(Robot,JointList),
+#      member(Joint,JointList),
+#      urdf_joint_friction(Robot,Joint,Friction).
 
