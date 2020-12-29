@@ -20,16 +20,16 @@ oe:result_set_show(QueryID,ResultSet) :-
 % TODO: idea: pie chart about how many actions failed vs. succeeded
 %             pie chart of which tasks have failed most often
 %%
-oe:result_set_show(QueryID,ResultSet) :-
-	result_set_events(ResultSet,[Evt]),
-	% collect all tsks performed in phases
-	task_distribution(Evt,Data),
-	%% send message
-	data_vis(piechart(QueryID),
-			[ title: 'Distribution of executed tasks',
-			  array_data: Data
-			]
-	).
+%oe:result_set_show(QueryID,ResultSet) :-
+%	result_set_events(ResultSet,[Evt]),
+%	% collect all tsks performed in phases
+%	task_distribution(Evt,Data),
+%	%% send message
+%	data_vis(piechart(QueryID),
+%			[ title: 'Distribution of executed tasks',
+%			  array_data: Data
+%			]
+%	).
 
 %%
 task_distribution(Evt, Data) :-
