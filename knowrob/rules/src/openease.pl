@@ -55,6 +55,7 @@ result_set(Bindings,
 result_set_entities_([],_,[]) :- !.
 
 result_set_entities_([[_,X]|Xs],Goal,[IRI|Ys]) :-
+	string(X),
 	atom_string(IRI,X),
 	call(Goal, IRI),
 	!,
