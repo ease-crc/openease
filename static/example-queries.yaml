@@ -61,6 +61,10 @@ sections:
     name: Kinematics
     icon: fa-running
 
+#################
+######## ACTION
+######## Occurrences
+#################
 sub_topics:
 - topic: occurrences
   name: Events
@@ -97,7 +101,9 @@ sub_topics:
   query_groups:
   - description: What is the duration of events that occurred?
     queries:
-    - has_duration(Evt,Duration)
+    - |
+      occurs(Evt) during [Begin,End],
+      Duration is End - Begin.
     binding:
       var: Evt
       type: event
@@ -106,152 +112,213 @@ sub_topics:
     queries:
     - |
       findall([Duration,Evt],
-        has_duration(Evt,Duration),
+        (  occurs(Evt) during [Begin,End],
+           Duration is End - Begin
+        ),
         Durations),
       max_member([MaxDuration,LongestEvt],Durations).
   - description: What is the shortest event that occurred?
     queries:
     - |
       findall([Duration,Evt],
-        has_duration(Evt,Duration),
+        (  occurs(Evt) during [Begin,End],
+           Duration is End - Begin
+        ),
         Durations),
       min_member([MinDuration,ShortestEvt],Durations).
 
-- topic: occurrences
-  name: Interval Algebra
-  description: About temporal relationships that hold between events.
+# TODO: enable this section. But I think it won't work at the moment
+#       for non-grounded vars.
+#       probably we could implement the relations in aggregate queries!
+#- topic: occurrences
+#  name: Interval Algebra
+#  description: About temporal relationships that hold between events.
+#  query_groups:
+#  - description: Which events are started by others?
+#    queries:
+#    - interval_starts(Evt1,Evt2)
+#  - description: Which events are stopped by others?
+#    queries:
+#    - interval_stops(Evt1,Evt2)
+#  - description: Which events overlap each other?
+#    queries:
+#    - interval_overlaps(Evt1,Evt2)
+#  - description: Which events occur before others?
+#    queries:
+#    - interval_before(Evt1,Evt2)
+#  - description: Which events occur during others?
+#    queries:
+#    - interval_during(Evt1,Evt2)
+
+#################
+######## ACTION
+######## Participation
+#################
+- topic: participation
+  name: Events
+  description: About the participation of objects in events.
   query_groups:
-  - description: Which events are started by others?
+  - description: Which objects participate in which action?
     queries:
-    - interval_starts(Evt1,Evt2)
-  - description: Which events are stopped by others?
+    - has_participant(Evt,Obj)
+    binding:
+      var: Evt
+      type: event
+      description: What are the participants of this event?
+    binding:
+      var: Obj
+      type: object
+      description: In which events did this object participate?
+  - description: What is the list of participants for each event?
     queries:
-    - interval_stops(Evt1,Evt2)
-  - description: Which events overlap each other?
-    queries:
-    - interval_overlaps(Evt1,Evt2)
-  - description: Which events occur before others?
-    queries:
-    - interval_before(Evt1,Evt2)
-  - description: Which events occur during others?
-    queries:
-    - interval_during(Evt1,Evt2)
+    - |
+      is_action(Act),
+      findall(Obj,
+      	has_participant(Act,Obj),
+      	Participants)
 
 - topic: participation
-  name: Agents
-  description: Agents that participate in an action
+  name: Object Types
+  description: About the the types of objects that participate in events.
   query_groups:
-  - description: Which agents participate in an action?
+  - description: What agent participated in events?
     queries:
     - |
-      has_participant(Act,Part),
-      has_role(Part,soma:'AgentRole').
-  - description: Which actions have the PR2 as an agent?
+      has_participant(Evt,Obj),
+      is_agent(Obj)
+  - description: What physical artifacts participated in events?
     queries:
     - |
-      has_participant(Act,Part),
-      has_role(Part,soma:'AgentRole'),
-      has_type(Part,knowrob:'PR2').
+      has_participant(Evt,Obj),
+      is_physical_artifact(Obj)
 
-- topic: participation
-  name: Objects
-  description: Objects that participate in an action
-  query_groups:
-  - description: Which objects participate in an action?
-    queries:
-    - |
-      has_participant(Act,Part),
-      has_role(Part,soma:'Item').
-  - description: Which actions have a bowl as an participating item?
-    queries:
-    - |
-      has_participant(Act,Part),
-      has_role(Part,soma:'Item'),has_type(Part,soma:'Bowl').
-
-- topic: participation
-  name: Component
-  description: Components that participate in an action
-  query_groups:
-  - description: Which objects are used as instruments in an action?
-    queries:
-    - |
-      has_participant(Act,Part),
-      has_role(Part,soma:'Instrument').
-  - description: Which arms execute a task in an action?
-    queries:
-    - |
-      has_participant(Act,Part),
-      has_role(Part,soma:'Instrument'),
-      has_type(Part,soma:'Arm').
-
+#################
+######## ACTION
+######## Structure
+#################
 - topic: action_structure
-  name: Top- or bottom-level actions
-  description: Actions without parent- or sub-actions
+  name: Action Phases
+  description: About how actions are composed into distinct phases.
   query_groups:
-  - description: Which actions don't have parent-actions?
+  - description: What are the direct sub-events of an action?
     queries:
     - |
-      is_action(Action),
-      \+has_subevent(Parent,Action).
-  - description: What actions don't have sub-actions?
+      is_action(Act),
+      findall(Sub,
+      	triple(Act,dul:hasConstituent,Sub),
+      	Phases).
+    binding:
+      var: Act
+      type: event
+      description: What are the direct phases of this event?
+  - description: What is the transitive sub-event closure of an action?
     queries:
     - |
-      is_action(Action),
-      \+has_subevent(Action,Subevent).
+      is_action(Act),
+      findall(Sub,
+      	transitive(triple(Act,dul:hasConstituent,Sub)),
+      	Phases).
+    binding:
+      var: Act
+      type: event
+      description: What is the transitive sub-event closure of this event?
 
+#################
+######## ACTION
+######## Transformation
+#################
 - topic: action_trans
-  name: Agent transform
-  description: Transformation of agents or their parts during actions
-  query_groups:
-  - description: What is the transform of the gripper during a grasping motion?
-    queries:
-    - |
-      is_classified_by(Act,Mot), 
-      has_type(Mot,soma:'GraspingMotion'), 
-      is_at(pr2:'PR2Gripper_0_L',['map',Pose,Rot]) during Act.
+  name: Coming Soon
+  #name: Agent transform
+  #description: About how action cause transformations of objects.
+  #query_groups:
+  #- description: lorem ipsum
+  #  queries:
+  #  - |
+  #    fail.
 
+#################
+######## ACTION
+######## Conceptualization
+#################
 - topic: concept
-  name: Actions
-  description: Actions are conceptualized by their tasks
+  name: Tasks
+  description: About the tasks executed by an action.
   query_groups:
   - description: Which actions execute a navigation task?
     queries:
     - |
-      is_action(Act), 
-      executes_task(Act,Tsk), 
-      has_type(Tsk,soma:'Navigating').
+      has_type(Tsk, soma:'Navigating'),
+      executes_task(Act, Tsk).
   - description: Which actions execute a grasping task?
     queries:
     - |
-      is_action(Act), 
-      executes_task(Act,Tsk), 
-      has_type(Tsk,soma:'Grasping').
+      has_type(Tsk, soma:'Grasping'),
+      executes_task(Act, Tsk).
 
+- topic: concept
+  name: Roles
+  description: About the roles that object play in an action.
+  query_groups:
+  - description: What objects play the role of an agent?
+    queries:
+    - |
+      has_type(Role, soma:'AgentRole'),
+      has_role(Obj, Role),
+      task_role(Tsk, Role),
+      executes_task(Act, Tsk).
+  - description: What objects play the role of an item?
+    queries:
+    - |
+      has_type(Role, soma:'Item'),
+      has_role(Obj, Role),
+      task_role(Tsk, Role),
+      executes_task(Act, Tsk).
+  #- description: What objects play the role of an instrument?
+  #  queries:
+  #  - |
+  #    has_role(Obj, Role, soma:'Instrument'),
+  #    task_role(Tsk, Role),
+  #    executes_task(Act, Tsk).
+  - description: Did an arm play a role in an action?
+    queries:
+    - |
+      has_type(Arm, soma:'Arm').
+      has_role(Arm, Role),
+      task_role(Tsk, Role),
+      executes_task(Act, Tsk).
+
+#################
+######## ACTION
+######## Contextualization
+#################
 - topic: context
-  name: Episode
-  description: Actions are contextualized by their episode.
+  name: Situations
+  description: About the situational context in which an episode took place.
   query_groups:
   - description: Which episodes are contained in the NEEM?
     queries:
     - is_episode(Ep).
-  - description: Is this episode executed by a robot?
+  - description: What are the agents included in episodes?
     queries:
     - |
-      is_episode(Ep),
-      triple(Ep,dul:includesAction,SupAct),
-      triple(SupAct,soma:isPerformedBy,Agent),
-      has_type(Agent,urdf:'Robot').
+      triple(Ep,dul:includesAgent,Agent).
   - description: How many actions were executed during the episode?
     queries:
     - |
       is_episode(Ep),
-      triple(Ep,dul:includesAction,SupAct),
       setof(Act,
-        transitive(triple(SupAct,dul:hasConstituent,Act)),
+        (  triple(Ep,dul:includesAction,SupAct),
+           transitive(triple(
+               SupAct,dul:hasConstituent,Act))
+        ),
         SetOfAct),
       length(SetOfAct,NumAct).
 
-
+#################
+######## OBJECT
+######## Appearance
+#################
 - topic: appearance
   name: Shapes
   description: Shapes of obects in the environment
