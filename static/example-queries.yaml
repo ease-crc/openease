@@ -72,10 +72,10 @@ sub_topics:
   query_groups:
   - description: Which events occurred?
     queries:
-    - occurs(Evt)
+    - is_event(Evt)
   - description: When did events occur?
     queries:
-    - occurs(Evt) during [Begin, End]
+    - event_interval(Evt, Begin, End)
     binding:
       var: Evt
       type: event
@@ -84,14 +84,14 @@ sub_topics:
     queries:
     - |
       findall([Begin, Evt],
-        occurs(Evt) during [Begin, _],
+        event_interval(Evt, Begin, _),
         StartTimes),
       min_member([MinTime, FirstEvt], StartTimes).
   - description: When did the last event end?
     queries:
     - |
       findall([Begin, Evt],
-        occurs(Evt) during [Begin, _],
+        event_interval(Evt, Begin, _),
         EndTimes),
       max_member([MaxTime, LastEvt], EndTimes).
 
@@ -102,7 +102,7 @@ sub_topics:
   - description: What is the duration of events that occurred?
     queries:
     - |
-      occurs(Evt) during [Begin, End],
+      event_interval(Evt, Begin, End),
       Duration is End - Begin.
     binding:
       var: Evt
@@ -112,7 +112,7 @@ sub_topics:
     queries:
     - |
       findall([Duration, Evt],
-        (  occurs(Evt) during [Begin, End],
+        (  event_interval(Evt, Begin, End),
            Duration is End - Begin
         ),
         Durations),
@@ -121,7 +121,7 @@ sub_topics:
     queries:
     - |
       findall([Duration,Evt],
-        (  occurs(Evt) during [Begin, End],
+        (  event_interval(Evt, Begin, End),
            Duration is End - Begin
         ),
         Durations),
