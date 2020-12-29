@@ -321,35 +321,57 @@ sub_topics:
 #################
 - topic: appearance
   name: Shapes
-  description: Shapes of obects in the environment
+  description: About the shape quality of objects.
   query_groups:
-  - description: What are the shapes of the objects in the episode?
+  - description: What is the shape of objects?
     queries:
-    - |
-      is_object(Obj),
-      object_shape_type(Obj,Shape).
+    - object_shape(Obj, Shape, _, _).
+    binding:
+      var: Obj
+      type: object
+      description: What is the shape of this object?
   - description: What are the shapes of the objects that participate in an action?
     queries:
     - |
       has_participant(Act, Obj), 
       is_object(Obj), 
-      object_shape(Obj, ShapeTerm, ShapeOrigin, MaterialTerm).
+      object_shape(Obj, ShapeTerm, _, _).
 
+#################
+######## OBJECT
+######## Structure
+#################
 - topic: env_structure
-  name: Furniture
-  description: Structure of the furniture
+  name: Components
+  description: About how objects in the environment are composed of components.
   query_groups:
-  - description: What are the parts of a kitchen?
+  - description: What are the direct parts of an object?
     queries:
     - |
-      has_type(Kitchen,knowrob:'IAIKitchen'),
-      has_part(Kitchen,Part).
-  - description: What are the parts of the fridge?
+      is_physical_artifact(Obj),
+      findall(Sub,
+        triple(Obj,dul:hasComponent,Sub),
+        Components).
+    binding:
+      var: Obj
+      type: object
+      description: What are the direct components of this object?
+  - description: What is the transitive sub-event closure of an action?
     queries:
     - |
-      has_type(Fridge,soma:'Refrigerator'),
-      has_part(Fridge,Part).
+      is_physical_artifact(Obj),
+      findall(Sub,
+        transitive(triple(Obj,dul:hasComponent,Sub)),
+        Components).
+    binding:
+      var: Obj
+      type: object
+      description: What is the transitive component closure of this object?
 
+#################
+######## OBJECT
+######## Kinematics
+#################
 - topic: env_kin
   name: Links
   description: Links without parent- or childlinks
@@ -365,6 +387,10 @@ sub_topics:
       is_urdf_link(Link),
       \+has_child_link(Link,_).
 
+#################
+######## OBJECT
+######## Kinematics
+#################
 - topic: env_kin
   name: Joints
   description: Structure of joints
@@ -382,30 +408,63 @@ sub_topics:
       member(Joint,JointList), 
       urdf_joint_hard_limits(Kitchen,Joint,_,_,_).
 
+#################
+######## OBJECT
+######## Dynamics
+#################
 - topic: env_dyn
   name: Coming Soon
+  # TODO:
+  #- description: How much effort is needed to open doors in the environment?
 
+#################
+######## OBJECT
+######## Naive physics
+#################
 - topic: env_phy
   name: Coming soon
+  # TODO:
+  #- description: What objects can be used as container?
+  #- description: Where can this item be parked?
 
+#################
+######## AGENT
+######## Structure
+#################
 - topic: agent_structure
-  name: Robot
-  description: Structure of the robot
+  name: Components
+  description: About how agents are composed of components.
   query_groups:
-  - description: What are the parts of the robot?
+  - description: What are the direct parts of an agent?
     queries:
     - |
-      has_type(Robot,urdf:'Robot'),
-      has_part(Robot,Part).
-  - description: How many parts does the robot have?
-    queries:
-    - |
-      has_type(Robot,urdf:'Robot'),
+      is_agent(Agent),
       setof(Part,
-        has_part(Robot,Part),
-        SetOfParts),
-      length(SetOfParts,NumOfParts).
+        triple(Agent,dul:hasComponent,Part),
+        Components).
+  - description: What is the transitive component closure of an agent?
+    queries:
+    - |
+      is_agent(Agent),
+      setof(Part,
+        transitive(triple(Obj,dul:hasComponent,Part)),
+        Components).
+  - description: How many parts does the agent have?
+    queries:
+    - |
+      is_agent(Agent),
+      setof(Part,
+        transitive(triple(Obj,dul:hasComponent,Part)),
+        Components),
+      length(Components,NumParts).
+  # TODO:
+  #- description: How many sensors does the agent have?
+  #- description: What are the actuators of the agent?
 
+#################
+######## AGENT
+######## Kinematics
+#################
 - topic: agent_kin
   name: Links
   description: Links of the robot
