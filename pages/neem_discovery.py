@@ -27,6 +27,10 @@ __author__ = 'danielb@cs.uni-bremen.de'
 class PasswordForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
+@app.route('/home_page')
+def render_home_page():
+    return render_template('pages/home_page.html', **locals())
+
 
 @app.route('/neems')
 def render_neems():
