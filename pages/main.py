@@ -216,6 +216,9 @@ def render_main():
 
 @app.route('/QA')
 def render_QA_page():
+    # Check if the connection to the neemhub is established
+    neemhub.connect_mongo()
+    # Check if a neem is choosen
     neem = neemhub.get_requested_neem(request)
     if neem is None:
         return redirect(url_for('render_neems'))
