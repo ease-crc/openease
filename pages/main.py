@@ -143,9 +143,11 @@ def inject_ros_params():
 
 @app.context_processor
 def inject_neem_params():
-    return dict(
+    try:
         active_neem=neemhub.get_neem(session.get('neem_id', None))
-    )
+    except Exception as exc:
+        active_neem={}
+    return dict(active_neem)
 
 @user_logged_in.connect_via(app)
 def track_login(sender, user, **extra):
