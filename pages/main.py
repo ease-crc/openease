@@ -144,10 +144,12 @@ def inject_ros_params():
 @app.context_processor
 def inject_neem_params():
     try:
-        active_neem=neemhub.get_neem(session.get('neem_id', None))
+        act_neem=neemhub.get_neem(session.get('neem_id', None))
+        if act_neem is None:
+            act_neem={}
     except Exception as exc:
-        active_neem={}
-    return dict(active_neem)
+        act_neem={}
+    return dict(active_neem=act_neem)
 
 @user_logged_in.connect_via(app)
 def track_login(sender, user, **extra):
@@ -218,7 +220,11 @@ def render_main():
 
 @app.route('/QA')
 def render_QA_page():
-    # Check if the connection to the neemhub is established
+    # Check if the connection to the neemhub is established:
+    # connect_mongo will try to connect to the mongo server. 
+    # If this fails, a NEEMHubConnectionError will be thrown.
+    # In neem_discovery the NEEMHubConnectionError is handled
+    # by redirecting to the invalid settings page
     neemhub.connect_mongo()
     # Check if a neem is choosen
     neem = neemhub.get_requested_neem(request)
