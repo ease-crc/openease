@@ -296,7 +296,6 @@ function KnowrobUI(flask_user,ros_client,options) {
         // Use ace editor for stylized display
         // of query string.
         var ace_edit = ace.edit("input-text");
-        //ace_edit.setTheme("ace/theme/solarized_light");
         ace_edit.getSession().setMode("ace/mode/prolog");
         ace_edit.setOptions({
             // editor options

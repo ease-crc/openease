@@ -1,7 +1,6 @@
 
 function makeQueryButton(where){
 	var queryInput = ace.edit(where.attr('id'));
-	//queryInput.setTheme("ace/theme/solarized_light");
 	queryInput.getSession().setMode("ace/mode/prolog");
 	queryInput.getSession().setUseWrapMode(true);
 	queryInput.setOptions({

@@ -44,7 +44,6 @@ global.ace = require('brace');
 require('brace/mode/prolog');
 require('brace/mode/xml');
 require('brace/theme/monokai');
-require('brace/theme/solarized_light');
 require('brace/ext/language_tools');
 global.aceLangTools = ace.acequire("ace/ext/language_tools");
 
