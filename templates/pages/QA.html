@@ -225,13 +225,19 @@
                     </img>
                 {%endif %}
                 <ul>
-                    <li><a href="{{ neem.downloadUrl }}">Homepage
-                        <span class="pull-right fa fa-home"></span>
-                    </a></li>
+                    <li>
+                        <a href="{{ neem.downloadUrl }}" target="_blank" rel="noopener noreferrer">
+                            Homepage
+                            <span class="pull-right fa fa-home"></span>
+                        </a>
+                    </li>
                     {% if active_neem.mail != 'None' %}
-                    <li><a href="mailto:{{ active_neem.mail }}">Contact
-                        <span class="pull-right fas fa-envelope"></span>
-                    </a></li>
+                    <li>
+                        <a href="mailto:{{ active_neem.mail }}">
+                            Contact
+                            <span class="pull-right fas fa-envelope"></span>
+                        </a>
+                    </li>
                     {%endif %}
                     <!-- TODO: add NEEM citation link here -->
                     <!--
