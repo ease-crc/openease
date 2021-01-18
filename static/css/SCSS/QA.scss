@@ -260,7 +260,29 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 }
 
 .neem-name {
-  font-size: 0.8em;
+  font-size: 0.9rem;
+  padding: 0.2rem 1.8rem 0.3rem 1rem;
+}
+
+.neem-meta-data {
+  font-size: 0.8rem;
+  padding: 0.6rem 0.6rem 0;
+}
+
+.neem-description-container {
+  padding: 0 0.6rem;
+}
+
+.neem-description {
+  font-size: 0.8rem;
+  max-height: 150px;
+  text-align: justify;
+  padding: 0 0.3rem 0 0.2rem; //hotfix for webkit-scroll, but find better alternative or solution in the future
+}
+
+.card hr {
+  background-color: #49aee3;
+  margin: 0.6rem;
 }
 
 #selected-entity {

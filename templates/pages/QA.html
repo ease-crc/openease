@@ -212,7 +212,15 @@
         <div id="qa-sidebar">
             <div class="card ease-border side-card">
                 <!-- NEEM INFO -->
-                <div class="card-header neem-name">Episodic Memory</div>
+                <div class="card-header">
+                    <div class="neem-name">
+                        {% if neem.neem_repo_path != '' %}
+                            {{ neem.neem_repo_path }}
+                        {% else %}
+                            Episodic Memory
+                        {% endif %}
+                    </div>
+                </div>
                 {% if active_neem.image != 'None' %}
                     <img src={{ active_neem.image }} alt="" class="neem-img img-fluid">
                         <a id="neem-fav-a" href="#" onclick="toggleLike('{{ active_neem.neem_id }}')">
@@ -224,6 +232,17 @@
                         </a>
                     </img>
                 {%endif %}
+                <div class="neem-meta-data">
+                    <b>author:</b> {{ neem.created_by }} <br>
+                    <b>date:</b> {{ neem.created_at }}
+                </div>
+                <hr>
+                <div class="neem-description-container">
+                    <div class="neem-description">
+                        {{ neem.description }}
+                    </div>
+                </div>
+                <hr>
                 <ul>
                     <li>
                         <a href="{{ neem.downloadUrl }}" target="_blank" rel="noopener noreferrer">
