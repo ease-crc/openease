@@ -46,8 +46,13 @@
 }
 
 .carousel-control-next,
-.carousel-control-prev /*, .carousel-indicators */ {
+.carousel-control-prev {
   color: #49aee3;
+}
+
+.carousel-control-next:hover,
+.carousel-control-prev:hover {
+  color: #246F98;
 }
 
 // top of the page
