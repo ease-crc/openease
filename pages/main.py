@@ -207,8 +207,6 @@ def render_examples_page():
 
 @app.route('/home_page')
 def render_home_page():
-    # show info about funding agencies
-    funding = FUNDING_DATA
     return render_template('pages/home_page.html', **locals())
 
 # get call handling method for changing password
