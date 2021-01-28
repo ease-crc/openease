@@ -33,7 +33,7 @@
 #qa-content {
   transition: all 0.5s ease;
 }
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 767px) {
   #qa-content {
     padding-left: 0px;
     padding-right: 0px;
@@ -107,6 +107,12 @@
 /******** Sidebar ********/
 /*************************/
 
+#sidebar-container {
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
 #qa-sidebar {
   width: 250px;
   position: fixed;
@@ -114,6 +120,7 @@
   left: 0px;
   transition: left 0.5s ease;
   z-index: 999;
+  height: 100%;
 }
 
 #qa-sidebar-overlay {
@@ -124,7 +131,24 @@
   display: none;
 }
 
-@media only screen and (max-width: 768px) {
+#funding-container {
+  margin-bottom: 150px;
+}
+
+// TODO: need to be changed, if footer changes as well
+@media only screen and (max-width: 345px) {
+  #funding-container {
+    margin-bottom: 210px;
+  }
+}
+
+@media only screen and (max-width: 575px) and (min-width: 346px) {
+  #funding-container {
+    margin-bottom: 180px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
   #qa-sidebar {
     left: -250px;
   }
