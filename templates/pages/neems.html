@@ -37,7 +37,7 @@
                         {% endif %}
                     </h>
                     <h6>{{ neem.created_by }}, {{ neem.created_at }}</h6>
-                    <p class="neem-description">{{ neem.description }}</p>
+                    <p class="neem-description flex-grow-1">{{ neem.description }}</p>
                 </div>
                 <div class="card-footer neem-links">
                     <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}"
