@@ -219,6 +219,7 @@ def render_main():
     return redirect(url_for('render_QA_page'))
 
 @app.route('/QA')
+@login_required
 def render_QA_page():
     # Check if the connection to the neemhub is established:
     # connect_mongo will try to connect to the mongo server. 
