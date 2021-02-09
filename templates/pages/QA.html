@@ -211,6 +211,21 @@
 
         <div id="qa-sidebar">
             <div id="sidebar-container">
+                <div id="ease-funding" class="card ease-border side-card">
+                    <div class="ease-funding-contents">
+                        <center>
+                            <a href="https://www.ease-crc.org">
+                                <img id="ease-funding-logo"
+                                class=""
+                                src="{{ url_for('static', filename='img/ease.png') }}"
+                                alt="EASE Collaborative Research Group Logo">
+                                <p class="">
+                                    Collaborative Research Center
+                                </p>
+                            </a>
+                        </center>
+                    </div>
+                </div>
                 <div class="card ease-border side-card">
                     <!-- NEEM INFO -->
                     <div class="card-header">
@@ -294,7 +309,8 @@
                                 {%for agency in funding%}
                                     <div class="carousel-item {{ agency.class }}">
                                         <a href="{{ agency.href }}" target="_blank">
-                                            <img class="d-block mx-auto carousel-item-img-big"
+                                            <img id="{{ agency.img_id }}"
+                                                class="d-block mx-auto carousel-item-img-big"
                                                 src="{{ url_for('static', filename=agency.img) }}"
                                                 alt="{{ agency.name }}">
                                         </a>
@@ -302,15 +318,11 @@
                                 {%endfor%}
                             </div>
                             <a class="carousel-control-prev" href="#funding-carousel" role="button" data-slide="prev">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chevron-compact-left" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"/>
-                                </svg>
+                                <i class="fa fa-chevron-left carousel-arrow" aria-hidden="true"></i>
                                 <span class="sr-only">Previous</span>
                             </a>
                             <a class="carousel-control-next" href="#funding-carousel" role="button" data-slide="next">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chevron-compact-right" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"/>
-                                </svg>
+                                <i class="fa fa-chevron-right carousel-arrow" aria-hidden="true"></i>
                                 <span class="sr-only">Next</span>
                             </a>
                         </div>
@@ -322,7 +334,6 @@
                         </ol>
                     </div>
                 </div>
-
             </div>
         </div>
 

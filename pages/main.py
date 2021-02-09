@@ -31,23 +31,20 @@ __author__ = 'danielb@uni-bremen.de'
 NODE_MODULES_PATH = "/tmp/npm/node_modules/"
 
 FUNDING_DATA=[
-    {'index': 0, 'class': 'active', 'name': 'EASE',
-     'href': 'https://www.ease-crc.org',
-     'img': 'img/ease.png'},
-    {'index': 1, 'class': '', 'name': 'RoboHow',
-     'href': 'http://www.robohow.eu',
+    {'index': 0, 'class': 'active', 'img_id': 'robohow-logo',
+     'name': 'RoboHow', 'href': 'http://www.robohow.eu',
      'img': 'img/robohow-logo.png'},
-    {'index': 2, 'class': '', 'name': 'RoboEarth',
-     'href': 'http://www.roboearth.org',
+    {'index': 1, 'class': '', 'img_id': 'roboearth-logo',
+     'name': 'RoboEarth', 'href': 'http://www.roboearth.org',
      'img': 'img/roboearth-logo.png'},
-    {'index': 3, 'class': '', 'name': 'Refills',
-     'href': 'http://www.refills-project.eu/',
+    {'index': 2, 'class': '', 'img_id': 'refills-logo',
+     'name': 'Refills', 'href': 'http://www.refills-project.eu/',
      'img': 'img/refills.png'},
-    {'index': 4, 'class': '', 'name': 'SHERPA',
-     'href': 'http://www.sherpa-project.eu',
+    {'index': 3, 'class': '', 'img_id': 'sherpa-logo',
+     'name': 'SHERPA', 'href': 'http://www.sherpa-project.eu',
      'img': 'img/sherpa-logo.png'},
-    {'index': 5, 'class': '', 'name': 'SAPHARI',
-     'href': 'http://www.saphari.eu',
+    {'index': 4, 'class': '', 'img_id': 'saphari-logo',
+     'name': 'SAPHARI', 'href': 'http://www.saphari.eu',
      'img': 'img/saphari-logo.png'}
 ]
 
@@ -254,7 +251,6 @@ def render_examples_page():
     url_quote = lambda x: urllib.pathname2url(x)
     example_query_data = QueryExamples.get().query_data
     return render_template('pages/QA-examples.html', **locals())
-
 
 # get call handling method for changing password
 @app.route('/change_password_get')

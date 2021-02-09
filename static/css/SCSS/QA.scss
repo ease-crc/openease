@@ -66,24 +66,24 @@
   float: right;
 }
 .query_links a {
-    padding-left: 8px;
-    padding-right: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 .query-container {
-    margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
 .query-button{
-    top: 2px;
+  top: 2px;
 }
 .query-button {
-    color: #49aee3;
+  color: #49aee3;
 }
 .query-button:hover {
-    color: #246F98;
+  color: #246F98;
 }
 .query-input-card {
-    border: none;
-    box-shadow: none;
+  border: none;
+  box-shadow: none;
 }
 
 #query_status {
@@ -112,6 +112,18 @@
   overflow-y: auto;
   padding-bottom: 20px;
 }
+#sidebar-container::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+#sidebar-container::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+  padding-bottom: 150px;
+}
+#sidebar-container::-webkit-scrollbar-thumb {
+  background-color: #AAA;
+}
 
 #qa-sidebar {
   width: 250px;
@@ -121,6 +133,26 @@
   transition: left 0.5s ease;
   z-index: 999;
   height: 100%;
+  padding-bottom: 195px;
+}
+
+// TODO: need to be changed, if footer changes as well
+@media only screen and (max-width: 575px) and (min-width: 343px) {
+  #qa-sidebar {
+    padding-bottom: 175px;
+  }
+}
+
+@media only screen and (max-width: 966px) and (min-width: 576px) {
+  #qa-sidebar {
+    padding-bottom: 135px;
+  }
+}
+
+@media only screen and (min-width: 967px) {
+  #qa-sidebar {
+    padding-bottom: 115px;
+  }
 }
 
 #qa-sidebar-overlay {
@@ -129,23 +161,6 @@
   width: 100%;
   height: 100%;
   display: none;
-}
-
-#funding-container {
-  margin-bottom: 150px;
-}
-
-// TODO: need to be changed, if footer changes as well
-@media only screen and (max-width: 345px) {
-  #funding-container {
-    margin-bottom: 210px;
-  }
-}
-
-@media only screen and (max-width: 575px) and (min-width: 346px) {
-  #funding-container {
-    margin-bottom: 180px;
-  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -268,24 +283,53 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 }
 
 #funding-carousel {
-  margin-top: 14px;
-  margin-bottom: 20px;
+  margin-top: 1rem;
+  margin-bottom: 1.4rem;
 }
+
 .carousel-indicators {
     bottom: -24px;
 }
+
 .carousel-indicators li {
     background-color: #49aee3;
 }
+
 .carousel-indicators .active {
     background-color: #246F98;
 }
+
+#funding-carousel-logos {
+  height: 70px;
+}
+
 .carousel-item-img-big {
+  width: 150px;
+  height: auto;
+  max-height: 70px;
+}
+
+#roboearth-logo {
+  padding-top: 12px;
+}
+
+#refills-logo {
   width: auto;
   height: 70px;
-  max-height: 70px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+#sherpa-logo {
+  padding-top: 9px;
+}
+
+#saphari-logo {
   padding-top: 6px;
-  padding-bottom: 20px;
+}
+
+.carousel-arrow {
+  color: #246F98;
 }
 
 .neem-name {
@@ -304,7 +348,7 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 
 .neem-description {
   font-size: 0.8rem;
-  max-height: 150px;
+  max-height: 100px;
   text-align: justify;
   padding: 0 0.3rem 0 0.2rem; //hotfix for webkit-scroll, but find better alternative or solution in the future
 }
@@ -362,4 +406,23 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 #follow-up-list li:hover {
   border-left: none;
   background-color: #b6d6ff;
+}
+
+// ease-funding
+
+#ease-funding-logo {
+  height: 70px;
+  width: auto;
+  margin-top: 0.8rem;
+}
+
+.ease-funding-contents a, .ease-funding-contents a:hover{
+  font-family: Oswald;
+  font-size: 1.1rem;
+  color: #246F98;
+  text-decoration: none;
+}
+
+.ease-funding-contents a p {
+  margin-bottom: 0.8rem;
 }
