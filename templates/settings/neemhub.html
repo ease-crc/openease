@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/neemhub_settings.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='js/PasswordVisibilityToggler.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -47,11 +49,15 @@
                     <label class="col-sm-2 col-form-label">Mongo DB password</label>
                     {# Password field #}
                     {% set field = neem_hub.mongo_pass %}
-                    <div id="pw-field" class="col-sm-10 {% if field.errors %}has-error{% endif %}">
+                    <div id="pw-field" class="col-sm-10 input-group {% if field.errors %}has-error{% endif %}">
                         <input placeholder="Change the password" class="col-sm-6 form-control" id="psw"
                                name="mongo_pass"
                                type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
                                value="{{ neem_hub.mongo_pass }}" required/>
+                        <div class="eye-box">
+                            <a href=""><svg class="fa fa-eye-slash" aria-hidden="true"></svg></a>
+                        </div>
+
                         <div class="invalid-feedback">
                             Password is Invalid, it must contain at least one Uppercase, lowercase, and digit. Additionally, it should be atleast 6 characters long.
                         </div>

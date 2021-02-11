@@ -2,6 +2,7 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/login.css') }}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/PasswordVisibilityToggler.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -60,10 +61,13 @@
                             {% endfor %}
                             {# Password field #}
                             {% set field = form.password %}
-                            <div id="pw-field" class="form-group {% if field.errors %}has-error{% endif %}">
+                            <div id="pw-field" class="form-group input-group {% if field.errors %}has-error{% endif %}">
                                 <input placeholder="Password" class="form-control" id="password" name="password"
                                        type="password"
                                        value="" required/>
+                                <div class="eye-box">
+                                    <a href=""><svg class="fa fa-eye-slash" aria-hidden="true"></svg></a>
+                                </div>
                             </div>
                             {% for error in form.password.errors %}
                                 <p class="alert alert-danger alert-dismissible">

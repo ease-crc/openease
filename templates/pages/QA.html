@@ -210,79 +210,129 @@
     <div id="QA-container" class="w-100 h-100">
 
         <div id="qa-sidebar">
-            <div class="card ease-border side-card">
-                <!-- NEEM INFO -->
-                <div class="card-header neem-name">Episodic Memory</div>
-                {% if active_neem.image != 'None' %}
-                    <img src={{ active_neem.image }} alt="" class="neem-img img-fluid">
-                        <a id="neem-fav-a" href="#" onclick="toggleLike('{{ active_neem.neem_id }}')">
-                            {% if current_user.has_liked_neem(active_neem.neem_id) %}
-                                <span id="neem-fav" class="pull-right fas fa-star liked"></span>
-                            {% else %}
-                                <span id="neem-fav" class="pull-right fas fa-star"></span>
-                            {% endif %}
-                        </a>
-                    </img>
-                {%endif %}
-                <ul>
-                    <li><a href="{{ neem.downloadUrl }}">Homepage
-                        <span class="pull-right fa fa-home"></span>
-                    </a></li>
-                    {% if active_neem.mail != 'None' %}
-                    <li><a href="mailto:{{ active_neem.mail }}">Contact
-                        <span class="pull-right fas fa-envelope"></span>
-                    </a></li>
-                    {%endif %}
-                    <!-- TODO: add NEEM citation link here -->
-                    <!--
-                    <li><a href="#">Cite
-                        <span class="pull-right fas fa-quote-right"></span>
-                    </a></li>
-                    -->
-                </ul>
-                <!-- FOLLOW-UP QUERY -->
-                <div id="follow-up-question" class="collapse">
-                    <div class="card-header neem-name">Follow-up Query</div>
-                    <div id="selected-entity"></div>
-                    <ul>
-                        <li><a href="#" onclick="selectedQuery()">What is this?
-                            <span class="pull-right fas fa-question"></span>
-                        </a></li>
-                        <li>
-                            <a href="#" data-toggle="collapse" data-target="#follow-up-list">
-                                Examples<span class="pull-right fas fa-th"></span></a>
-                            <ul id="follow-up-list" class="collapse">
-                            </ul>
-                        </li>
-                        <li><a href="#" onclick="selectedRandomQuery()">Random
-                            <span class="pull-right fas fa-random"></span>
-                        </a></li>
-                    </ul>
+            <div id="sidebar-container">
+                <div id="ease-funding" class="card ease-border side-card">
+                    <div class="ease-funding-contents">
+                        <center>
+                            <a href="https://www.ease-crc.org">
+                                <img id="ease-funding-logo"
+                                class=""
+                                src="{{ url_for('static', filename='img/ease.png') }}"
+                                alt="EASE Collaborative Research Group Logo">
+                                <p class="">
+                                    Collaborative Research Center
+                                </p>
+                            </a>
+                        </center>
+                    </div>
                 </div>
-            </div>
-            <div class="card ease-border side-card">
-                <!-- ASSOCIATED PROJECTS -->
-                <div class="card-header">Associated Projects</div>
-                <div id="funding-carousel" class="card-img-top carousel slide" data-ride="carousel">
-                    <div id="funding-carousel-logos">
-                        <div class="carousel-inner">
-                            {%for agency in funding%}
-                                <div class="carousel-item {{ agency.class }}">
-                                    <a href="{{ agency.href }}" target="_blank">
-                                        <img class="d-block mx-auto carousel-item-img-big"
-                                             src="{{ url_for('static', filename=agency.img) }}"
-                                             alt="{{ agency.name }}">
-                                    </a>
-                                </div>
-                            {%endfor%}
+                <div class="card ease-border side-card">
+                    <!-- NEEM INFO -->
+                    <div class="card-header">
+                        <div class="neem-name">
+                            {% if neem.neem_repo_path != '' %}
+                                {{ neem.neem_repo_path }}
+                            {% else %}
+                                Episodic Memory
+                            {% endif %}
                         </div>
                     </div>
-                    <ol class="carousel-indicators">
-                        {%for agency in funding%}
-                            <li data-target="#funding-carousel" data-slide-to="{{ agency.index }}"
-                                class="{{ agency.class }}"></li>
-                        {%endfor%}
-                    </ol>
+                    {% if active_neem.image != 'None' %}
+                        <img src={{ active_neem.image }} alt="" class="neem-img img-fluid">
+                            <a id="neem-fav-a" href="#" onclick="toggleLike('{{ active_neem.neem_id }}')">
+                                {% if current_user.has_liked_neem(active_neem.neem_id) %}
+                                    <span id="neem-fav" class="pull-right fas fa-star liked"></span>
+                                {% else %}
+                                    <span id="neem-fav" class="pull-right fas fa-star"></span>
+                                {% endif %}
+                            </a>
+                        </img>
+                    {%endif %}
+                    <div class="neem-meta-data">
+                        {{ neem.created_by }}, {{ neem.created_at }}
+                    </div>
+                    <hr>
+                    <div class="neem-description-container">
+                        <div class="neem-description">
+                            {{ neem.description }}
+                        </div>
+                    </div>
+                    <hr>
+                    <ul>
+                        <li>
+                            <a href="{{ neem.downloadUrl }}" target="_blank" rel="noopener noreferrer">
+                                Homepage
+                                <span class="pull-right fa fa-home"></span>
+                            </a>
+                        </li>
+                        {% if active_neem.mail != 'None' %}
+                        <li>
+                            <a href="mailto:{{ active_neem.mail }}">
+                                Contact
+                                <span class="pull-right fas fa-envelope"></span>
+                            </a>
+                        </li>
+                        {%endif %}
+                        <!-- TODO: add NEEM citation link here -->
+                        <!--
+                        <li><a href="#">Cite
+                            <span class="pull-right fas fa-quote-right"></span>
+                        </a></li>
+                        -->
+                    </ul>
+                    <!-- FOLLOW-UP QUERY -->
+                    <div id="follow-up-question" class="collapse">
+                        <div class="card-header neem-name">Follow-up Query</div>
+                        <div id="selected-entity"></div>
+                        <ul>
+                            <li><a href="#" onclick="selectedQuery()">What is this?
+                                <span class="pull-right fas fa-question"></span>
+                            </a></li>
+                            <li>
+                                <a href="#" data-toggle="collapse" data-target="#follow-up-list">
+                                    Examples<span class="pull-right fas fa-th"></span></a>
+                                <ul id="follow-up-list" class="collapse">
+                                </ul>
+                            </li>
+                            <li><a href="#" onclick="selectedRandomQuery()">Random
+                                <span class="pull-right fas fa-random"></span>
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="funding-container" class="card ease-border side-card">
+                    <!-- ASSOCIATED PROJECTS -->
+                    <div class="card-header">Associated Projects</div>
+                    <div id="funding-carousel" class="card-img-top carousel slide" data-ride="carousel">
+                        <div id="funding-carousel-logos">
+                            <div class="carousel-inner">
+                                {%for agency in funding%}
+                                    <div class="carousel-item {{ agency.class }}">
+                                        <a href="{{ agency.href }}" target="_blank">
+                                            <img id="{{ agency.img_id }}"
+                                                class="d-block mx-auto carousel-item-img-big"
+                                                src="{{ url_for('static', filename=agency.img) }}"
+                                                alt="{{ agency.name }}">
+                                        </a>
+                                    </div>
+                                {%endfor%}
+                            </div>
+                            <a class="carousel-control-prev" href="#funding-carousel" role="button" data-slide="prev">
+                                <i class="fa fa-chevron-left carousel-arrow" aria-hidden="true"></i>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#funding-carousel" role="button" data-slide="next">
+                                <i class="fa fa-chevron-right carousel-arrow" aria-hidden="true"></i>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        <ol class="carousel-indicators">
+                            {%for agency in funding%}
+                                <li data-target="#funding-carousel" data-slide-to="{{ agency.index }}"
+                                    class="{{ agency.class }}"></li>
+                            {%endfor%}
+                        </ol>
+                    </div>
                 </div>
             </div>
         </div>

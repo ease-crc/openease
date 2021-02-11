@@ -29,15 +29,22 @@
                         <img src={{ neem.image }} alt="" class="neem-img img-fluid"/>
                     {%endif %}
                     </a>
-                        <h class="neem-name">{{ neem.neem_repo_path }}</h>
-                        <h6>{{ neem.created_by }}, {{ neem.created_at }}</h6>
-                        <p class="neem-description">{{ neem.description }}</p>
+                    <h class="neem-name">
+                        {% if neem.neem_repo_path != '' %}
+                            {{ neem.neem_repo_path }}
+                        {% else %}
+                            Episodic Memory
+                        {% endif %}
+                    </h>
+                    <h6>{{ neem.created_by }}, {{ neem.created_at }}</h6>
+                    <p class="neem-description flex-grow-1">{{ neem.description }}</p>
                 </div>
                 <div class="card-footer neem-links">
                     <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}"
                        class="btn btn-primary neem-link pull-right">Activate</a>
                     <a href="{{ neem.downloadUrl }}"
-                       class="btn btn-info neem-link pull-right">Homepage</a>
+                       class="btn btn-info neem-link pull-right"
+                       target="_blank" rel="noopener noreferrer">Homepage</a>
                 </div>
             </div>
         </div>
