@@ -3,7 +3,7 @@ from urlparse import urlparse
 
 from flask import request, render_template, Markup, jsonify
 from flask.ext.misaka import markdown
-from flask_user import current_user
+from flask_user import current_user, login_required
 
 from app_and_db import app
 from config.settings import USE_HOST_KNOWROB

@@ -63,7 +63,8 @@ data_vis_participant_graph(Evt,GraphData) :-
         ask(during(aggregate([
             triple(Evt,dul:hasParticipant,Obj),
             ignore(triple(Role,dul:classifies,Obj)),
-            ignore(once(triple(Tsk,dul:isTaskOf,Role)))
+            ignore(once(triple(Tsk,dul:isTaskOf,Role))),
+            once(triple(Evt,dul:isClassifiedBy,Tsk))
         ]),Evt)),
         (   ( Edge=[Evt,Obj,1,2,'hasParticipant'] )
         ;   ( ground(Role),Edge=[Obj,Role,2,3,'hasRole'] )
