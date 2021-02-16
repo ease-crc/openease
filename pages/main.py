@@ -213,7 +213,7 @@ def render_main():
         return redirect(url_for('user.login'))
     if 'user_container_name' not in session:
         return redirect(url_for('user.logout'))
-    return redirect(url_for('render_QA_page'))
+    return redirect(url_for('render_homepage'))
 
 @app.route('/QA')
 @login_required
@@ -288,20 +288,38 @@ def render_change_password_post():
 def admin_cookie():
     return render_template('settings/cookies.html', **locals())
 
+@app.route('/homepage')
+def render_homepage():
+    return render_template('pages/homepage.html', **locals())
 
-#footer
-@app.route('/terms-of-use')
-def render_terms_of_use():
-    return render_template('legal/terms-of-use.html', **locals())
 
-@app.route('/citation-policy')
-def render_citation_policy():
-    return render_template('legal/citation-policy.html', **locals())
 
-@app.route('/privacy-policy')
-def render_privacy_policy():
-    return render_template('legal/privacy-policy.html', **locals())
+# Overview pages
 
-@app.route('/imprint')
-def render_imprint():
-    return render_template('legal/imprint.html', **locals())
+@app.route('/long-term-fetch-place-overview')
+def render_long_term_fetch_overview():
+    return render_template('overview/long-term-fetch-place-overview.html', **locals())
+
+@app.route('/acquiring-everyday-manipulation-skills-through-games-with-a-purpose-overview')
+def render_acquiring_everyday_manipulation_skills_overview():
+    return render_template('overview/acquiring-everyday-manipulation-skills-through-games-with-a-purpose-overview.html', **locals())
+
+@app.route('/humans-setting-the-table-overview')
+def render_humans_setting_table_overview():
+    return render_template('overview/humans-setting-the-table-overview.html', **locals())
+
+@app.route('/perception-for-everyday-manipulation-overview')
+def render_perception_for_everyday_manipulation_overview():
+    return render_template('overview/perception-for-everyday-manipulation-overview.html', **locals())
+
+@app.route('/robot-performing-chemical-experiments-overview')
+def render_robot_performing_chemical_experiments_overview():
+    return render_template('overview/robot-performing-chemical-experiments-overview.html', **locals())
+
+@app.route('/safe-human-robot-activity-overview')
+def render_safe_human_robot_activity_overview():
+    return render_template('overview/safe-human-robot-activity-overview.html', **locals())
+
+@app.route('/nlp-overview')
+def render_nlp_overview():
+    return render_template('overview/nlp-overview.html', **locals())
