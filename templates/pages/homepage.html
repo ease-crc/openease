@@ -1,0 +1,507 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>openEASE HOME</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/homepage.css') }}"/>
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block body %}
+<div class="container flex-column px-md-0">
+    <div id="banner" class="d-none d-md-flex flex-row justify-content-between border-light ease-border">
+        <div class="banner-item">
+            <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}" alt="" class="banner-icon">
+        </div>
+        <div class="banner-item d-flex flex-column justify-content-center">
+            <h2 class="banner-text">
+                Open Knowledge for AI-Enabled Robots
+            </h2>
+        </div>
+        <div class="banner-item">
+            <img src="{{ url_for('static', filename='img/aiATuni.png') }}" alt="" class="banner-icon">
+        </div>
+    </div>
+
+    <div id="page-contents" class="d-flex flex-column flex-md-row">
+        <div class="col-md-6">
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    About openEASE
+                </h1>
+                <p>
+                    openEASE is a web-based knowledge service providing robot and human activity data. It contains semantically annotated data of manipulation actions, including the environment the agent is acting in, the objects it manipulates, the task it performs, and the behavior it generates. The episode representations can include images captured by the robot, other sensor datastreams as well as full-body poses. A powerful query language and inference tools, allow reasoning about the data and retrieving requested information based on semantic queries. Based on the data and using the inference tools robots can answer queries regarding to what they did, why, how, what happened, and what they saw.
+                </p>
+                <p>
+                    openEASE can be used by humans using a browser-based query and visualization interface, but also remotely by robots via a WebSocket API.
+                </p>
+                <div class="video-container">
+                    <iframe class="responsive-iframe"
+                    src="https://www.youtube.com/embed/iu_Y7mxDjgA?feature=oembed"
+                    frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-container">
+                    <iframe class="responsive-iframe"
+                    src="https://www.youtube.com/embed/ycqti57YKkg?feature=oembed"
+                    frameborder="0" allowfullscreen></iframe>
+                </div>
+                <h3>
+                    Overview Paper
+                </h3>
+                <p>
+                    Michael Beetz, Moritz Tenorth, Jan Winkler, “Open-EASE — A Knowledge Processing Service for Robots and Robotics/AI Researchers”, In IEEE International Conference on Robotics and Automation (ICRA), Seattle, Washington, USA, 2015.
+                    <b>
+                        Finalist for the Best Conference Paper Award and Best Cognitive Robotics Paper Award.
+                    </b>
+                    <a href="https://www.open-ease.org/wp-content/uploads/2015/03/knowrob-s.pdf">
+                        [PDF]
+                    </a>
+                </p>
+                <h3>
+                    Background Motivation
+                </h3>
+                <p>
+                    openEASE is an initiative of a more comprehensive research enterprise called EASE (Everyday Activity Science and Engineering), which is explained in this <a href="https://www.youtube.com/watch?v=D8Susiv7L4I">[Video]</a>.
+                </p>
+            </div>
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    openEASE related Publications
+                </h1>
+                <p>
+                    A list of selected publications about the knowledge representation, perception, plan-based control and learning methods used for openEASE.
+                </p>
+                <a type="button" class="btn link-button"
+                href="http://www.open-ease.org/publications-overview/"
+                target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-list"></i>
+                    Publications
+                </a>
+            </div>
+            <div class="content-block mt-2 mt-md-0 d-none">
+                <h1>
+                    What's New
+                </h1>
+                
+                TODO
+            </div>
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    Tutorials & Manuals
+                </h1>
+                <p>
+                    Tutorials, installation guides, instruction videos and documentation about openEASE (requires to be logged in).
+                </p>
+                <a type="button" class="btn link-button" href="/tutorials/">
+                    <i class="fas fa-book-open"></i>
+                    Tutorials
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    Software Components
+                </h1>
+                <div class="d-flex py-3">
+                    <div class="col-4">
+                        <center>
+                            <a href="http://www.actioncores.org/" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ url_for('static', filename='img/small_pracmln.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <br>
+                                pracmln
+                            </a>
+                        </center>
+                    </div>
+                    <div class="col-4">
+                        <center>
+                            <a href="https://www.robcog.org/" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ url_for('static', filename='img/small_robcog.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <br>
+                                RobCoG
+                            </a>
+                        </center>
+                    </div>
+                    <div class="col-4">
+                        <center>
+                            <a href="https://robosherlock.org/" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ url_for('static', filename='img/small_robosherlock.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <br>
+                                RoboSherlock
+                            </a>
+                        </center>
+                    </div>
+                </div>
+            </div>
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    Knowledge Base Experiments
+                </h1>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/spoon-drawer-bullet.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/spoon-drawer-bullet.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Setting Up a Table in Bullet World
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for('render_QA_page') }}?neem_id=5fd0f191f3fc822d8e73d715">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url_for('render_QA_page') }}?neem_id=5fd0f191f3fc822d8e73d715">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.open-ease.org/setting-up-a-table-in-bullet-world-related-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for('render_QA_page') }}?neem_id=5fd0f191f3fc822d8e73d715" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/Kuka_Robot-15.jpg') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/Kuka_Robot-15.jpg') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Kuka KMR-IIWA robot scanning retail shelves
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for('render_QA_page') }}?neem_id=5fdc979f55605baa6a41da8c">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url_for('render_QA_page') }}?neem_id=5fdc979f55605baa6a41da8c">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.open-ease.org/kuka-kmr-iiwa-robot-scanning-retail-shelves-related-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for('render_QA_page') }}?neem_id=5fdc979f55605baa6a41da8c" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/Popcorn_gray.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/Popcorn_gray.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Long-term fetch & place (Legacy)
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for( 'render_long_term_fetch_overview' ) }}">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://neemgit.informatik.uni-bremen.de/raw/long-term-fetch-place"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/long-term-fetch-place-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for( 'render_long_term_fetch_overview' ) }}" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/overview_pics1.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/overview_pics1.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Acquiring everyday manipulation skills through games (Legacy)
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for( 'render_acquiring_everyday_manipulation_skills_overview' ) }}">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://neemgit.informatik.uni-bremen.de/raw/acquiring-everyday-manipulation-skills-through-games"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/acquiring-everyday-manipulation-skills-through-games-with-a-purpose-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for( 'render_acquiring_everyday_manipulation_skills_overview' ) }}" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/image_preview1.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/image_preview1.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Humans setting the table (Legacy)
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for( 'render_humans_setting_table_overview' ) }}">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://neemgit.informatik.uni-bremen.de/raw/humans-setting-the-table"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/humans-setting-the-table-related-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for( 'render_humans_setting_table_overview' ) }}" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/perception_front_page1.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/perception_front_page1.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Perception for everyday manipulation (Legacy)
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for( 'render_perception_for_everyday_manipulation_overview' ) }}">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://neemgit.informatik.uni-bremen.de/raw/perception-for-everyday-manipulation"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/perception-for-everyday-manipulation-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for( 'render_perception_for_everyday_manipulation_overview' ) }}" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/pr2-neutralize-hcl-open-ease1.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/pr2-neutralize-hcl-open-ease1.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Robot performing chemical experiments (Legacy)
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for( 'render_robot_performing_chemical_experiments_overview' ) }}">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://neemgit.informatik.uni-bremen.de/raw/robot-performing-chemical-experiments"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/robotic-agent-performing-chemical-experiments-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for( 'render_robot_performing_chemical_experiments_overview' ) }}" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/alexis_real_pose_landscape.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/alexis_real_pose_landscape.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Safe human-robot activity (Legacy)
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for( 'render_safe_human_robot_activity_overview' ) }}">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://neemgit.informatik.uni-bremen.de/raw/safe-human-robot-activity"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/safe-human-robot-activity-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for( 'render_safe_human_robot_activity_overview' ) }}" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/pr2-pour-the-mix.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/pr2-pour-the-mix.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Natural-language understanding for intelligent robots
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ url_for( 'render_nlp_overview' ) }}">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://prac.open-ease.org/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/nlp-related-work/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Publications
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="{{ url_for( 'render_nlp_overview' ) }}" class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+                        <div class="oe-grid-item" style="background-image:url('{{ url_for('static', filename='img/knowledge-base/kinematics_teaching.png') | safe }}')">
+                            <div class="oe-grid-item-content" alt="">
+                                <img src="{{ url_for('static', filename='img/knowledge-base/kinematics_teaching.png') }}" class="oe-grid-print-img">
+                                <div class="oe-grid-item-title">
+                                    <h4>
+                                        Teaching
+                                    </h4>
+                                </div>
+                                <div class="oe-grid-item-menu">
+                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                    <ul>
+                                        <li>
+                                            <a href="http://www.open-ease.org/teaching-overview/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Overview
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="http://www.open-ease.org/teaching-data/"
+                                            target="_blank" rel="noopener noreferrer">
+                                                Knowledge Base
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <a href="http://www.open-ease.org/teaching-overview/"
+                                target="_blank" rel="noopener noreferrer"
+                                class="oe-grid-item-link">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
