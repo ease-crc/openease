@@ -63,25 +63,36 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/">
+        <a class="nav-link {{ 'active' if request.path == '/homepage' | safe }}"
+        href="/homepage">
           <i class="fas fa-home"></i>
           Home
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/QA">
+        <a class="nav-link {{ 'active' if '/QA' in request.path | safe }}"
+        href="/QA">
           <i class="fas fa-terminal"></i>
           Query
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/neems">
+        <a class="nav-link {{ 'active' if request.path == '/neems' | safe }}"
+        href="/neems">
           <i class="fas fa-search"></i>
           NEEMs
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/tutorials/">
+        <a class="nav-link" href="http://www.open-ease.org/publications-overview/"
+        target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-list"></i>
+          Publications
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ 'active' if request.path == '/tutorials/' | safe }}"
+        href="/tutorials/">
           <i class="fas fa-book-open"></i>
           Tutorials
         </a>

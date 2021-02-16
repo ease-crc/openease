@@ -1,0 +1,83 @@
+{% extends "overview/overview_template.html" %}
+
+{% block overview_title %}
+Natural-language understanding for intelligent robots
+{% endblock %}
+
+{% block overview_main %}
+<div class="row mb-md-3 mb-lg-4">
+    <div class="col-md-9 col-lg-8 px-0">
+        Knowledge about actions and objects is represented as Probabilistic Robot Action Cores (PRAC), which can be thought of as generic event patterns that enable a robot to infer important information that is missing in an original natural-language instruction. PRAC models are represented in Markov Logic Networks, a powerful knowlegde represenation formalism combing first-order logic and probability theory.
+    </div>
+    <div class="col-md-3 col-lg-4 mt-2 mb-3">
+        <div class="row h-100 flex-md-column justify-content-center align-items-center">
+            <a type="button" class="btn link-button my-1"
+            href="http://www.actioncores.org/"
+            target="_blank" rel="noopener noreferrer">
+                Project Page
+            </a>
+            <a type="button" class="btn link-button my-1"
+            href="http://www.open-ease.org/nlp-related-work/"
+            target="_blank" rel="noopener noreferrer">
+                Publications
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 my-2 px-0">
+        <div class="video-container">
+            <iframe class="responsive-iframe"
+            src="https://www.youtube.com/embed/wJ11d7svshQ?feature=oembed"
+            frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="col-md-6 my-2 px-0 pl-md-4">
+        <a href="http://www.actioncores.org/"
+        target="_blank" rel="noopener noreferrer">
+            <img class="col-12 px-0"
+            src="{{ url_for('static', filename='img/overview/nlp/pr2-pipetting-artistic.jpg')}}"
+            alt="">
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block details %}
+
+<div class="col-12 col-md-8 offset-md-2 pt-3 pb-4 px-0">
+    <center>
+        <a href="{{ url_for('static', filename='img/overview/nlp/prac.png')}}">
+            <img class="col-12 col-lg-10 px-0"
+            src="{{ url_for('static', filename='img/overview/nlp/prac.png')}}"
+            alt="">
+        </a>
+    </center>
+</div>
+
+{% endblock %}
+
+
+{% block acknowledgements_class %}
+{% endblock %}
+
+{% block acknowledgements %}
+    <p>
+        This project is partly supported by ACAT and RoboHow:
+    </p>
+    <div class="row pt-md-3 pb-5 justify-content-center">
+        <a class="mt-2 pb-3 pb-md-0 mx-md-3" href="http://www.acat-project.eu/"
+        target="_blank" rel="noopener noreferrer">
+            <img id="acat-logo" class="col-12"
+            src="{{ url_for('static', filename='img/acat_logo-w-background.png')}}"
+            alt="ACAT logo">
+        </a>
+        <a class="row align-items-center mt-2 mx-md-3" href="http://www.robohow.eu/"
+        target="_blank" rel="noopener noreferrer">
+            <img class="col-12"
+            src="{{ url_for('static', filename='img/overview/acknowledgements/robohow.png')}}"
+            alt="robohow logo">
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "overview/overview_template.html" %}
+
+{% block overview_title %}
+    Long-Term Fetch & Place
+{% endblock %}
+
+{% block overview_main %}
+    <div class="row">
+        <div class="col-12 col-md-5 px-0">
+            <p>
+                The long-term fetch and place knowledge base contains activity episodes of an autonomous robot setting a table. The challenges in this scenario is that the robot has to perform vaguely formulated tasks such as “put the items needed on the table and arrange them in the appropriate way”. The robot reasons about where to find objects, where to stand to pick them up, and how to pick them up and handle them.
+            </p>
+            <a type="button" class="btn link-button"
+            href="https://neemgit.informatik.uni-bremen.de/raw/long-term-fetch-place"
+            target="_blank" rel="noopener noreferrer">
+                Knowledge Base
+            </a>
+            <a type="button" class="btn link-button"
+            href="http://www.open-ease.org/long-term-fetch-place-work/"
+            target="_blank" rel="noopener noreferrer">
+                Publications
+            </a>
+        </div>
+        <div class="col-12 col-md-7 px-0 mt-4 mt-md-0 mb-3">
+            <div class="pl-md-4">
+                <div class="video-container">
+                    <iframe class="responsive-iframe"
+                    src="https://www.youtube.com/embed/TDdWJ5Xu20w?feature=oembed"
+                    frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block details %}
+    <div class="row">
+        <div class="col-12 col-md-7 d-flex flex-column px-0">
+            <p>
+                Long-term fetch and place tasks in partially structured environments depict autonomous mobile robot manipulation platforms in challenging, dynamic environments. From recorded datasets of such repeatedly performed, possibly mundane actions, common structures can be identified and crucial parameters for everyday activities can be extracted. Having knowledge of the general characteristics of how a task should be performed and what to expect when performing it, greatly increases the reasoning capabilities and task awareness of an autonomous agent, raising its chances for success.
+            </p>
+
+            <h3>
+                Description of the Data
+            </h3>
+            <p>
+                The data describes a robot agent that is tasked with acquiring objects from vaguely described locations (“on table“), and transport them over to target locations, described in a similar vague manner (“next to dinner plate“). All tasks are semantically described in-depth, containing information about which actions were performed (perception, navigation, manipulation) and what their outcome was.
+            </p>
+            <div class="p-4">
+                <a href="{{ url_for('static', filename='img/overview/long-term-fetch-place/episodic-memory.png')}}">
+                    <img class="col-12" 
+                    src="{{ url_for('static', filename='img/overview/long-term-fetch-place/episodic-memory.png')}}"
+                    alt="">
+                </a>
+            </div>
+            <p>
+                The physical state of the robot agent is tracked over time and stored for each time point. Perception requests and their subsequent results are available, allowing reasoning about which objects were detected where, and what their exact properties were (as reported by the perception system at that time). With complete information about task success and failure, a comprehensive analysis of why a task failed and what task resolved its failure can be conducted.
+            </p>
+            <p>
+                The data contained in these datasets include:
+            </p>
+            <ul class="details-list">
+                <li>
+                    Complete semantic memory of all performed actions, and their parametrizations and outcomes
+                </li>
+                <li>
+                    Physical, kinematic pose data of all robot links at all times
+                </li>
+                <li>
+                    Head-camera pictures taken at key moments (before and after manipulation or navigation)
+                </li>
+                <li>
+                    Meta-data describing the hardware used, the experiment conducted, a short description, and the experiment’s length
+                </li>
+                <li>
+                    Trajectories of robot links during manipulation actions
+                </li>
+            </ul>
+        </div>
+        <div class="col-12 col-md-5 d-flex flex-column px-0">
+            <div class="pl-md-4 pt-3 pt-md-0 pb-5">
+                <a href="{{ url_for('static', filename='img/overview/long-term-fetch-place/pose-grasping.png')}}">
+                    <img class="col-12"
+                    src="{{ url_for('static', filename='img/overview/long-term-fetch-place/pose-grasping.png')}}"
+                    alt="">
+                </a>
+            </div>
+            <div class="row pl-md-4 pb-5 justify-content-center">
+                <a class="col-8 px-0"
+                href="{{ url_for('static', filename='img/overview/long-term-fetch-place/robot_activity.jpeg')}}">
+                    <img class="col-12 px-0"
+                    src="{{ url_for('static', filename='img/overview/long-term-fetch-place/robot_activity.jpeg')}}"
+                    alt="">
+                </a>
+            </div>
+            <div class="pl-md-4 pb-4 pb-md-5">
+                <a href="{{ url_for('static', filename='img/overview/long-term-fetch-place/plansummary.png')}}">
+                    <img class="col-12"
+                    src="{{ url_for('static', filename='img/overview/long-term-fetch-place/plansummary.png')}}"
+                    alt="">
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block acknowledgements_class %}
+{% endblock %}
+
+{% block acknowledgements %}
+    <p>
+        The development of long-term fetch and place mechanisms has received funding from the EU FP7 RoboHow project, and the DFG Priority Programme 1527 for Autonomous Learning:
+    </p>
+    <div class="row pt-md-3 pb-5 justify-content-center">
+        <a class="pb-3 pb-md-0 mx-md-3" href="http://www.robohow.eu/"
+        target="_blank" rel="noopener noreferrer">
+            <img class="col-12"
+            src="{{ url_for('static', filename='img/overview/acknowledgements/robohow.png')}}"
+            alt="robohow logo">
+        </a>
+        <a class="mx-md-3" href="http://autonomous-learning.org/"
+        target="_blank" rel="noopener noreferrer">
+            <img class="col-12"
+            src="{{ url_for('static', filename='img/overview/acknowledgements/dfg_logo.jpg')}}"
+            alt="dfg logo">
+        </a>
+    </div>
+{% endblock %}
