@@ -1,5 +1,5 @@
 from flask import jsonify, request, session, render_template
-from flask_login import current_user
+from flask_login import current_user, login_user
 from flask_user import login_required
 import time
 from urlparse import urlparse
@@ -142,3 +142,14 @@ def _create_token():
     current_user.api_token = random_string(64)
     db.session.commit()
     session['api_token'] = current_user.api_token
+
+@app.login_manager.request_loader
+def authenticate_user_by_token(request):
+    api_token = request.args.get('token')
+    if api_token:
+        user = _user_by_token(api_token)
+        if user:
+            session['user_container_name'] = user.username
+            login_user(user)
+            return user
+    return None
