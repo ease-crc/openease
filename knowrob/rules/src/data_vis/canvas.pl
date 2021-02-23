@@ -10,6 +10,18 @@ oe:result_set_show(QueryID,ResultSet) :-
 	result_set_events(ResultSet,Evts),
 	openease_canvas(QueryID,Evts).
 
+%%
+% Generate canvas visualization messages.
+%%
+oe:result_set_show(QueryID,ResultSet) :-
+	result_set_has_object(ResultSet),
+	result_set_objects(ResultSet,Objs),
+	maplist(has_base_link_name, Objs, Links),
+	data_vis(type(obj,977), [
+      id: QueryID,
+      values: [ Links, [] ]
+	]).
+
 %% openease_canvas(+Evts) is semidet.
 %
 openease_canvas(QueryID,[Evt]) :-
@@ -30,4 +42,3 @@ openease_canvas(QueryID,[Evt]) :-
 			[Time0,Time1]
 		]
 	]).
-
