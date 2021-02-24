@@ -150,6 +150,7 @@ def authenticate_user_by_token(request):
         user = _user_by_token(api_token)
         if user:
             session['user_container_name'] = user.username
+            session['username'] = user.username
             login_user(user)
             return user
     return None
