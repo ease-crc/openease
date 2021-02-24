@@ -1,4 +1,4 @@
-from flask import jsonify, request, session, render_template
+from flask import jsonify, request, session, render_template, redirect
 from flask_login import current_user, login_user
 from flask_user import login_required
 import time
@@ -6,7 +6,7 @@ from urlparse import urlparse
 from app_and_db import app, db
 import knowrob.container as docker_interface
 from knowrob.container import generate_mac
-from postgres.users import User
+from postgres.users import User, add_user
 from utility import random_string
 
 __author__ = 'mhorst@cs.uni-bremen.de'
@@ -152,4 +152,32 @@ def authenticate_user_by_token(request):
             session['user_container_name'] = user.username
             login_user(user)
             return user
+    return None
+
+def _create_user():
+    username = "tmp_" + random_string(6)
+    email = username+"@openease.org"
+    password = random_string(10)
+    session['user_container_name'] = username
+    session['username'] = username
+    flask_user = add_user(user_manager=app.user_manager,
+                        name= username,
+                        mail = email,
+                        pw = password)
+    return flask_user
+
+@app.route('/ease2')
+def create_temp_new_user():
+    try:
+        flask_user = _create_user()
+        login_user(flask_user)
+        app.logger.info("Logged in successfully " + flask_user.username)
+        preferred_neem = request.args.get('neem')
+        if preferred_neem:
+            url_string = "/QA?neem_id="+str(preferred_neem)
+            return redirect(session['next'] or url_string)
+        return redirect(session['next'] or '/')
+    except:
+        app.logger.warn('Problem with creating a temp user. ')
+        return redirect('/')
     return None
