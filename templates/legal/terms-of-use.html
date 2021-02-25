@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Terms of Use</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/legal.css') }}"/>
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4 px-3">
+    <h1>
+        Terms of Use
+    </h1>
+    <p>
+        The contents on the openEASE website are provided by the Institute of Artificial Intelligence (IAI) at the University of Bremen. We provide the content on our sites as free open resources as a public courtesy.
+    </p>
+    <p>
+        By accessing or using the <a href="/homepage">data.open-ease.org</a> or <a href="http://www.open-ease.org">www.open-ease.org</a>  website, you agree to the following terms of use. Please do not use the sites if you do not agree with any of these terms of use. The terms of use may be changed at any time without prior notice and by continuing to use this site you agree to the change in terms. Any part of the site including features, services or content may be changed, suspended, discontinued or removed at any time without prior notice.
+    </p>
+    <p>
+        <strong>License</strong>
+        <br>
+        You may not use the content, services, data and tools for any other than noncommercial and/or research purposes unless there is a written agreement. With appropriate citation you may use a subset of our content in scholarly journals, textbooks or other academic publications as we encourage the use of our resources for research and other noncommercial purposes. 
+    </p>
+    <p>
+        <strong>Citation</strong>
+        <br>
+        If you cite or display any content or reference the Institute of Artificial Intelligence in any format, written or otherwise, including print or web publications, presentations, grant applications, websites, other online applications such as blogs, or other works, use the proper citation in our <a href="/citation-policy">citation policy</a> when acknowledging the IAI and our online resources.
+    </p>
+</div>
+{% endblock %}

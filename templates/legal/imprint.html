@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Imprint / Impressum</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/legal.css') }}"/>
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4 px-3">
+    <h1>
+        Impressum
+    </h1>
+    <div class="row">
+        <div class="col-md-6">
+            <p>
+                Please contact us for further information about our institute, our research and our projects.
+            </p>
+            <p>
+                Institute for Artifical Intelligence<br>
+                University Bremen<br>
+                Am Fallturm 1, Eingang E<br>
+                28359 Bremen<br>
+                Germany
+            </p>
+            <p>
+                <i class="fa fa-phone" aria-hidden="true"></i> Phone: +49 421 218 64000<br>
+                <i class="fa fa-print" aria-hidden="true"></i> Fax: +49 421 218 64047
+            </p>
+            <p>
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <a href="mailto:ai-office@cs.uni-bremen.de ">
+                    ai-office@cs.uni-bremen.de
+                </a>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed?pb=!1m22!1m12!1m3!1d598.7513297629254!2d8.858741472710197!3d53.11009687324488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m7!1i0!3e6!4m0!4m3!3m2!1d53.1100655!2d8.8584572!5e0!3m2!1sde!2sde!4v1417184441362&amp;output=embed"></iframe>
+            <p>
+                You can use Google Maps to calculate a Route. Please use the Entrance ‘E’ on your arrival for the shortest route to us.
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
