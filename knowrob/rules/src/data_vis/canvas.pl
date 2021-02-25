@@ -2,6 +2,9 @@
 
 :- use_module(library(openease)).
 
+:- use_module(library('semweb/rdf_db'),
+	[ rdf_split_url/3 ]).
+
 %%
 % Generate canvas visualization messages.
 %%
@@ -16,7 +19,7 @@ oe:result_set_show(QueryID,ResultSet) :-
 oe:result_set_show(QueryID,ResultSet) :-
 	result_set_has_object(ResultSet),
 	result_set_objects(ResultSet,Objs),
-	maplist(has_base_link_name, Objs, Links),
+	maplist(has_frame_name_, Objs, Links),
 	data_vis(type(obj,977), [
       id: QueryID,
       values: [ Links, [] ]
@@ -42,3 +45,12 @@ openease_canvas(QueryID,[Evt]) :-
 			[Time0,Time1]
 		]
 	]).
+
+%% has_frame_name_(+Obj, -Frame)
+%
+has_frame_name_(Obj, Frame) :-
+	has_base_link_name(Obj,Frame),
+	!.
+
+has_frame_name_(Obj, Frame) :-
+	rdf_split_url(_, Frame, Obj).
