@@ -9,8 +9,8 @@ from app_and_db import app
 from config.settings import USE_HOST_KNOWROB
 
 
-@login_required
 @app.route('/tutorials/')
+@login_required
 def render_tutorials():
     tutorial_names = [
         {'id': 'prolog', 'title': 'Logic Programming', 'selected': True,

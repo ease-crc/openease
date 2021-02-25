@@ -86,6 +86,9 @@ function KnowrobUI(flask_user,ros_client,options) {
     };
 
     this.initBlackboard = function () {
+        if(that.canvas) {
+            that.canvas.clearHiglights();
+        }
         if(that.blackboard) {
             that.blackboard.delete();
         }
@@ -214,6 +217,13 @@ function KnowrobUI(flask_user,ros_client,options) {
                 } 
                 else if(data_vis_msg.type == 100) {
                     that.blackboard.addResultDescription(that.console, data_vis_msg.id, data_vis_msg.values)
+                }
+                else if(data_vis_msg.type == 977) {
+                    var frameArray = data_vis_msg.values[0].value1;
+                    for(var i in frameArray) {
+                        that.getCanvas().selectFrame(frameArray[i]);
+                        console.info(frameArray[i]);
+                    } 
                 }
                 else {
                     that.blackboard.addChart(data_vis_msg);

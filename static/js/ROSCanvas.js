@@ -249,7 +249,27 @@ function ROSCanvas(options){
             that.unselectMarker();
         }
     };
+
+    this.getMarkerByFrame = function(frame) {
+        for (var markerKey in that.markers) {
+            var marker = that.markers[markerKey][0];
+            if(marker.frame_id === frame) {
+                return marker;
+            }
+        }
+    };
+
+    this.selectFrame = function(frame){
+        var marker = this.getMarkerByFrame(frame);
+        if(marker) {
+            that.rosViewer.highlight(marker);
+        }
+    };
     
+    this.clearHiglights = function(){
+        that.rosViewer.clearHighlights();
+    };
+
     ///////////////////////////////
     //////////// Camera
     ///////////////////////////////
