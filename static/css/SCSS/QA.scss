@@ -32,7 +32,10 @@
 
 #qa-content {
   transition: all 0.5s ease;
+  padding-bottom: 1.5rem;
+  min-height: 86vh;
 }
+
 @media only screen and (max-width: 767px) {
   #qa-content {
     padding-left: 0px;
@@ -133,26 +136,7 @@
   transition: left 0.5s ease;
   z-index: 999;
   height: 100%;
-  padding-bottom: 195px;
-}
-
-// TODO: need to be changed, if footer changes as well
-@media only screen and (max-width: 575px) and (min-width: 343px) {
-  #qa-sidebar {
-    padding-bottom: 175px;
-  }
-}
-
-@media only screen and (max-width: 966px) and (min-width: 576px) {
-  #qa-sidebar {
-    padding-bottom: 135px;
-  }
-}
-
-@media only screen and (min-width: 967px) {
-  #qa-sidebar {
-    padding-bottom: 115px;
-  }
+  padding-bottom: 110px;
 }
 
 #qa-sidebar-overlay {
@@ -165,18 +149,34 @@
 
 @media only screen and (max-width: 767px) {
   #qa-sidebar {
+    z-index: 1001;
     left: -250px;
+    padding-bottom: 0;
+  }
+  #sidebar-container {
+    padding-bottom: 80px;
   }
   body.sidebar-show #qa-sidebar {
     left: 0px;
   }
-  body.sidebar-show #qa-content {
+  body.sidebar-show #qa-content, body.sidebar-show #footer {
     filter: blur(4px);
   }
   body.sidebar-show #qa-sidebar-overlay {
     display: block;
     pointer-events: all;
     z-index: 99;
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  #qa-sidebar {
+    z-index: 1001;
+    padding-bottom: 0;
+  }
+
+  #sidebar-container {
+    padding-bottom: 80px;
   }
 }
 
@@ -343,14 +343,25 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 }
 
 .neem-description-container {
-  padding: 0 0.6rem;
+  padding: 0.5rem;
 }
 
-.neem-description {
+.neem-description-text {
+  line-height: normal;
   font-size: 0.8rem;
   max-height: 100px;
-  text-align: justify;
-  padding: 0 0.3rem 0 0.2rem; //hotfix for webkit-scroll, but find better alternative or solution in the future
+  text-align: left;
+  margin-bottom: 0;
+  overflow-y: auto;
+}
+
+#neem-description {
+  background-color: white;
+  cursor: auto;
+}
+
+#neem-description:hover {
+  border-left: 0px;
 }
 
 .card hr {
@@ -413,7 +424,8 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 #ease-funding-logo {
   height: 70px;
   width: auto;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .ease-funding-contents a, .ease-funding-contents a:hover{
@@ -425,4 +437,12 @@ body.sidebar-show #sidebar-toggle .fa-chevron-down {
 
 .ease-funding-contents a p {
   margin-bottom: 0.8rem;
+}
+
+// acknowledgement
+
+#acknowledgement-text {
+  margin: 0.5rem;
+  font-size: 0.6rem;
+  line-height: normal;
 }
