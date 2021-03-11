@@ -300,6 +300,7 @@
                                         {% if tut.selected %}
                                         selected="selected"
                                         {% endif %}
+                                        value="{{ tut.id }}"
                                         description="{{ tut.description }}">{{ tut.title }}</option>
                                 {%endfor%}
                             </select>
