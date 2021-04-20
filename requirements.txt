@@ -34,7 +34,7 @@ passlib==1.7.1
 pathlib2==2.3.3 ; python_version < '3.6'
 pluggy==0.11.0
 psycopg2-binary==2.8.2
-py==1.8.0
+py==1.10.0
 pycparser==2.19
 pycrypto==2.6.1
 pycryptodome==3.8.1
