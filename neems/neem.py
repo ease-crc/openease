@@ -1,3 +1,5 @@
+import requests
+
 from flask_user import current_user
 
 from knowrob.container import start_user_container, container_started
@@ -52,6 +54,21 @@ class NEEM:
         else:
             self.image = 'static/img/default.jpg'
 
+        self.last_updated = self.fetch_last_updated()
+
+    def update_last_updated(self):
+        self.last_updated = self.fetch_last_updated()
+
+    def fetch_last_updated(self):
+        api_prefix = NEEM_DOWNLOAD_URL_PREFIX + "api/v4/projects/neems%2F"
+        api_suffix = "/repository/commits/master"
+        url = api_prefix + self.downloadUrl.split("/")[-1] + api_suffix
+        response = json.loads(str(requests.get(url, allow_redirects=True).content))
+        
+        if 'committed_date' in response:
+            return response['committed_date']
+        else:
+            return 0
 
     def get_info(self):
         return {
@@ -62,7 +79,8 @@ class NEEM:
             'maintainer': self.maintainer,
             'authors': self.authors,
             'downloadUrl': self.downloadUrl,
-            'neem_repo_path': self.neem_repo_path
+            'neem_repo_path': self.neem_repo_path,
+            'last_updated': self.last_updated
         }
 
     def activate(self):
