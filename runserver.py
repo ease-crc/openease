@@ -16,7 +16,7 @@ from flask.ext.babel import Babel
 from wtforms.validators import ValidationError
 
 from app_and_db import app, db
-from utility import random_string
+from utility import random_string, oe_password_validator
 from postgres.users import Role, User, add_user, create_role
 
 # default password for admin user
@@ -49,12 +49,6 @@ def _run_server():
     http_server.listen(5000)
     print 'Web server is running. Listening on {}'.format(5000)
     IOLoop.instance().start()
-
-
-def oe_password_validator(form, field):
-    password = field.data
-    if len(password) < 3:
-        raise ValidationError(_('Password must have at least 3 characters'))
 
 
 def init_app(extra_config_settings={}):
