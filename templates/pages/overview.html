@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ neem_name + " Overview" }}</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/overview.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div id="overview-content">{{ md_content|safe }}</div>
+</div>
+{% endblock %}
