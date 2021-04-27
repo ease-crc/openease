@@ -22,12 +22,7 @@
             <div class="card neem-card">
                 <div class="card-body neem-card-body">
                     <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
-                    {% if neem.image == 'None' %}
-                        <img src="{{ url_for('static', filename='img/default.jpg') }}"
-                             alt="default image" class="neem-img img-fluid"/>
-                    {% else %}
                         <img src={{ neem.image }} alt="" class="neem-img img-fluid"/>
-                    {%endif %}
                     </a>
                     <h class="neem-name">
                         {% if neem.neem_repo_path != '' %}

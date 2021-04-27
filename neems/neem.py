@@ -50,7 +50,8 @@ class NEEM:
         if 'image' in neem_info:
             self.image = neem_info['image']
         else:
-            self.image = 'None'
+            self.image = 'static/img/default.jpg'
+
 
     def get_info(self):
         return {
