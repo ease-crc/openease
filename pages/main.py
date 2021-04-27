@@ -19,7 +19,8 @@ from wtforms import PasswordField
 from wtforms.validators import DataRequired
 from config.settings import USE_HOST_KNOWROB
 
-from neems.neemhub import instance as neemhub
+from neems.neemhub import instance as neemhub, NEEMHubConnectionError 
+from neems.neem import FEATURED_NEEM_IDS
 
 from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
@@ -290,36 +291,28 @@ def admin_cookie():
 
 @app.route('/homepage')
 def render_homepage():
+    could_connect = True
+
+    try:
+        matching_neems = neemhub.get_neem_ids('', True)
+        neems = list(map(lambda (x): neemhub.get_neem(x), matching_neems))
+    except NEEMHubConnectionError as e:
+        could_connect = False
+        app.logger.error('Could not connect to Neemhub to fetch neems for neem cards.\n\n' + e.__str__())
+
+        message = 'Our apologies! The content for this section could not be loaded. Refresh the page or try again later.'
+    else:
+        featured_neems = []
+        for id in FEATURED_NEEM_IDS:
+            for neem in neems:
+                if id == neem.neem_id:
+                    featured_neems.append(neem)
+                    break
+
+        recent_neems = neems
+        for neem in featured_neems:
+            recent_neems.remove(neem)
+        recent_neems.sort(reverse=True, key=lambda x: x.last_updated)
+        recent_neems = recent_neems[0:6]
+
     return render_template('pages/homepage.html', **locals())
-
-
-
-# Overview pages
-
-@app.route('/long-term-fetch-place-overview')
-def render_long_term_fetch_overview():
-    return render_template('overview/long-term-fetch-place-overview.html', **locals())
-
-@app.route('/acquiring-everyday-manipulation-skills-through-games-with-a-purpose-overview')
-def render_acquiring_everyday_manipulation_skills_overview():
-    return render_template('overview/acquiring-everyday-manipulation-skills-through-games-with-a-purpose-overview.html', **locals())
-
-@app.route('/humans-setting-the-table-overview')
-def render_humans_setting_table_overview():
-    return render_template('overview/humans-setting-the-table-overview.html', **locals())
-
-@app.route('/perception-for-everyday-manipulation-overview')
-def render_perception_for_everyday_manipulation_overview():
-    return render_template('overview/perception-for-everyday-manipulation-overview.html', **locals())
-
-@app.route('/robot-performing-chemical-experiments-overview')
-def render_robot_performing_chemical_experiments_overview():
-    return render_template('overview/robot-performing-chemical-experiments-overview.html', **locals())
-
-@app.route('/safe-human-robot-activity-overview')
-def render_safe_human_robot_activity_overview():
-    return render_template('overview/safe-human-robot-activity-overview.html', **locals())
-
-@app.route('/nlp-overview')
-def render_nlp_overview():
-    return render_template('overview/nlp-overview.html', **locals())
