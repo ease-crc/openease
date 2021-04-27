@@ -1,5 +1,5 @@
 import yaml
-from flask import session, request, redirect, url_for, render_template, send_from_directory, jsonify
+from flask import session, request, redirect, url_for, render_template, send_from_directory, jsonify, flash
 from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
@@ -10,9 +10,13 @@ import traceback
 import os
 import random
 
+import re
+import markdown2
+
 from app_and_db import app
 from app_and_db import db
 from utility import admin_required
+from pages.overview import get_sanitizer
 import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
@@ -316,3 +320,43 @@ def render_homepage():
         recent_neems = recent_neems[0:6]
 
     return render_template('pages/homepage.html', **locals())
+
+
+@app.route('/overview/<neem_path>')
+def render_neem_overview_page(neem_path=None):
+    # When tags or items from the markdown are not displayed correctly,
+    # it might hint to the sanitizer removing unallowed tags. To allow 
+    # these tags to pass, adjust the sanitizer-config from get_sanitizer()
+    # in # pages/overview.py. Afterwards adjust the styling in 
+    # static/css/overview.scss.
+    #
+    # When in doubt, refer to
+    #   https://github.com/trentm/python-markdown2
+    # and
+    #   https://github.com/matthiask/html-sanitizer
+
+    try:
+        with open('/opt/webapp/webrob/overview-contents/' + neem_path + '.md', 'r') as file_in:
+            file_str = file_in.read()
+    except IOError as e:
+        app.logger.error('Could not find markdown-file for neem, therefore cannot render the overview page.\n\n' + e.message)
+        flash('Our apologies! Could not load selected overview page. Please try again later!', "warning")
+        return redirect(url_for('render_homepage'))
+
+    # markdown to html-conversion
+    md_content = markdown2.markdown(file_str, extras=['target-blank-links', 'nofollow', 'tables'])
+    # add noreferrer to links; admittedely not the nicest way of doing this
+    md_content = md_content.replace('rel=\"nofollow noopener\"', 'rel=\"nofollow noopener noreferrer\"')
+
+    # need to sanitize the input, because the template loads the values
+    # as safe, which would otherwise allow for XSS
+    sanitizer = get_sanitizer()
+    md_content = sanitizer.sanitize( md_content )
+
+    # get neem name
+    neem_name = neem_path
+    match = re.match(r'<h1.*?>(?P<neem_name>.*?)</h1>', md_content)
+    if match is not None:
+        neem_name = match.group('neem_name')
+    
+    return render_template('pages/overview.html', **locals())
