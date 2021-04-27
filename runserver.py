@@ -6,6 +6,9 @@
 
 import os
 
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
@@ -18,6 +21,7 @@ from wtforms.validators import ValidationError
 from app_and_db import app, db
 from utility import random_string, oe_password_validator
 from postgres.users import Role, User, add_user, create_role
+from pages.overview import load_markdown_content
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -34,6 +38,15 @@ def _config_is_debug():
     # if environment variable 'EASE_DEBUG' is set to true, then
     # 'DEBUG' in app.config will be set to true by init_app.py
     return 'DEBUG' in app.config and app.config['DEBUG']
+
+
+def _start_background_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=load_markdown_content, trigger="interval", hours=3)
+    scheduler.start()
+
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: scheduler.shutdown())
 
 
 def _run_debug_server():
@@ -100,6 +113,10 @@ def init_app(extra_config_settings={}):
              mail=os.environ.get('OPENEASE_MAIL_USERNAME', 'admin@openease.org'),
              pw=ADMIN_USER_DEFAULT_PW,
              roles=['admin'])
+
+    # Start background scheduler to load markdowns for overview pages
+    _start_background_scheduler()
+    load_markdown_content()        # initial loading of the markdown files
 
     app.logger.info("Webapp started.")
     return app
