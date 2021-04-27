@@ -13,6 +13,11 @@ from postgres.settings import get_neemhub_settings
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 
+FEATURED_NEEM_IDS = [
+    '601042627e765711e2c10ab0', 
+    '603127322113d53026863697'
+]
+
 class NEEM:
     def __init__(self, neem_hub, neem_info):
 
@@ -53,6 +58,11 @@ class NEEM:
             self.image = neem_info['image']
         else:
             self.image = 'static/img/default.jpg'
+
+        if self.neem_id in FEATURED_NEEM_IDS:
+            self.is_featured = True
+        else:
+            self.is_featured = False
 
         self.last_updated = self.fetch_last_updated()
 
