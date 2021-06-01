@@ -179,7 +179,7 @@ def _get_local_neem_cover_image_path(neem):
 
 def _get_static_folder_neem_cover_image_path(neem_image_url, neem_name):
     file_ending = _get_url_image_file_ending(neem_image_url)
-    return _get_static_folder_neem_image_folder_path(neem_name) + '/cover' + file_ending
+    return _get_static_folder_neem_image_folder_path(neem_name) + '/cover/cover_img' + file_ending
 
 
 def _get_url_image_file_ending(image_url):
