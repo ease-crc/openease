@@ -21,7 +21,7 @@ from wtforms.validators import ValidationError
 from app_and_db import app, db
 from utility import random_string, oe_password_validator
 from postgres.users import Role, User, add_user, create_role
-from pages.overview import load_markdown_content
+from pages.overview import download_neem_files, load_neem_files_default
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -42,7 +42,7 @@ def _config_is_debug():
 
 def _start_background_scheduler():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=load_markdown_content, trigger="interval", hours=3)
+    scheduler.add_job(func=download_neem_files, trigger="interval", hours=3)
     scheduler.start()
 
     # Shut down the scheduler when exiting the app
@@ -115,8 +115,12 @@ def init_app(extra_config_settings={}):
              roles=['admin'])
 
     # Start background scheduler to load markdowns for overview pages
-    _start_background_scheduler()
-    load_markdown_content()        # initial loading of the markdown files
+    if _config_is_debug():
+        # do not download neem-overview stuff for development
+        load_neem_files_default()
+    else:
+        _start_background_scheduler()
+        download_neem_files()    # initial download of files
 
     app.logger.info("Webapp started.")
     return app

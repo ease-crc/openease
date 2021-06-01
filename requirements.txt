@@ -22,6 +22,7 @@ flask-wtf==0.14.2
 flask-paginate==0.5.5 
 flask==0.11.1
 funcsigs==1.0.2 ; python_version < '3.0'
+furl==2.1.2
 html-sanitizer==1.9.1
 httplib2==0.18.0
 idna==2.8
@@ -35,6 +36,7 @@ munch==2.3.2
 oauth2==1.9.0.post1
 passlib==1.7.1
 pathlib2==2.3.3 ; python_version < '3.6'
+Pillow==6.2.2
 pluggy==0.11.0
 psycopg2-binary==2.8.2
 py==1.8.0
