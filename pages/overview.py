@@ -82,7 +82,7 @@ def _download_file(url, file_path):
 
 
 def _download_all_neem_cover_images(neems):
-    app.logger.info('Downloading images for neems...')
+    app.logger.info('Downloading cover-images for neems...')
 
     for neem in neems:
         if neem.image == DEFAULT_IMAGE_PATH:
@@ -90,7 +90,7 @@ def _download_all_neem_cover_images(neems):
         else:
             _download_neem_cover_image(neem)
 
-    app.logger.info('Finished downloading images for neems.')
+    app.logger.info('Finished downloading cover-images for neems.')
 
 
 def _download_neem_cover_image(neem):
