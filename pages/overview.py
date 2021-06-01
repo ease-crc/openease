@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 
@@ -15,6 +16,8 @@ from app_and_db import app
 WEBROB_PATH = '/opt/webapp/webrob/'
 NEEM_OVERVIEW_MARKDOWNS_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_IMAGES_PATH = 'img/neem-images/'
+CURR_IMG_DIR = ""
+CURR_NEEM_REPO = ""
 
 FEATURED_NEEM_IDS = [
     '601042627e765711e2c10ab0', 
@@ -50,7 +53,7 @@ def download_neem_files():
 
 
 def _download_all_neem_markdowns(neems):
-    app.logger.info('Downloading markdown-files for neems...')
+    app.logger.info('Downloading markdown-files for neems... (and their images')
 
     for neem in neems:
         _download_neem_markdown(neem)
@@ -62,6 +65,7 @@ def _download_neem_markdown(neem):
     url = neem.downloadUrl + '/-/raw/master/README.md'
     file_path = _get_local_neem_markdown_path(neem.neem_repo_path)
     _download_file(url, file_path)
+    _download_and_replace_all_md_images(neem)
 
 
 def _get_local_neem_markdown_path(neem_name):
@@ -77,8 +81,69 @@ def _download_file(url, file_path):
     if r.status_code == 200:
         parent_dirs = Path(file_path).parent
         Path(parent_dirs).mkdir(parents=True, exist_ok=True)
+        file = Path(file_path)
+        if file.is_file():
+            file.unlink()
         with open(file_path, 'wb') as file:
             file.write(r.content)
+
+
+def _download_and_replace_all_md_images(neem):
+    global CURR_IMG_DIR
+    global CURR_NEEM_REPO
+
+    # open md-file
+    file_path = _get_local_neem_markdown_path(neem.neem_repo_path)
+    with open(file_path, 'r') as file:
+        file_str = file.read()
+
+    CURR_IMG_DIR = "/static/"+ _get_static_folder_neem_image_folder_path(neem.neem_repo_path)
+    CURR_NEEM_REPO = neem.downloadUrl
+
+    file_str = _scan_for_html_images(file_str)
+    file_str = _scan_for_md_images(file_str)
+    
+    CURR_IMG_DIR = ""
+    CURR_NEEM_REPO = ""
+    
+    # write changes back to md-file
+    with open(file_path, 'w') as file:
+        file.write(file_str)
+
+
+def _scan_for_html_images(md_file_str):
+    pattern = r'(?P<begin><\s*?img.*?src=")(?P<url>.*?)(?P<end>".*?>)'
+    return _scan_for_images_in_md_file(pattern, md_file_str)
+
+
+def _scan_for_md_images(md_file_str):
+    pattern = r'(?P<begin>!\[.*?\]\()(?P<url>.*?)(?P<end>\))'
+    return _scan_for_images_in_md_file(pattern, md_file_str)
+
+
+def _scan_for_images_in_md_file(pattern, md_file_str):
+    return re.sub(pattern, _download_image_and_replace_url, md_file_str)
+
+
+def _download_image_and_replace_url(matchobj):
+    url = furl(matchobj.group('url')).remove(args=True, fragment=True).url
+    file_path = Path(CURR_IMG_DIR) / Path(url).name
+
+    if not _is_weburl(url):
+        neemgit_url = CURR_NEEM_REPO
+        neemgit_url_suffix = '/-/raw/master/' + url
+
+        url = neemgit_url + neemgit_url_suffix
+
+    final_path = WEBROB_PATH + str(file_path)
+    _download_file(url, final_path)
+    _compress_image(final_path)
+
+    return matchobj.group('begin') + str(file_path) + matchobj.group('end')
+
+
+def _is_weburl(string):
+    return True if re.match('https{,1}://', string) else False
 
 
 def _download_all_neem_cover_images(neems):
