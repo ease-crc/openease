@@ -100,12 +100,12 @@ def _download_neem_cover_image(neem):
     _compress_image(file_path)
 
 
-def _compress_image(file_path):
+def _compress_image(file_path, compression_value=30):
     if Path(file_path).suffix not in SUPPORTED_IMAGE_TYPES_FOR_COMPRESSION:
         return
     
     im = Image.open(file_path)
-    im.save(file_path,optimize=True,quality=30)
+    im.save(file_path,optimize=True,quality=compression_value)
 
 
 def _get_local_neem_cover_image_path(neem):
