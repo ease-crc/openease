@@ -150,9 +150,9 @@
                         {% for neem in featured_neems %}
                         <div class="col-12 px-0">
                             <div class="oe-grid-item"
-                            style="background-image: url( {{ neem.image }} )">
+                            style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">
                                 <div class="oe-grid-item-content" alt="">
-                                    <!-- img src={{ neem.image }} class="oe-grid-print-img" -->
+                                    <img src={{ url_for('static', filename=neem.image) }} class="oe-grid-print-img">
                                     <div class="oe-grid-item-title">
                                         <h4>
                                             {{ neem.name }}
@@ -190,9 +190,9 @@
                         {% for neem in recent_neems %}
                         <div class="col-12 col-sm-6 col-md-12 col-lg-6 px-0 pr-sm-2 pr-md-0 pr-lg-2">
                             <div class="oe-grid-item"
-                            style="background-image: url( {{ neem.image }} )">
+                            style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">
                                 <div class="oe-grid-item-content" alt="">
-                                    <!-- img src={{ neem.image }} loading="lazy" class="oe-grid-print-img" -->
+                                    <img src={{ url_for('static', filename=neem.image) }} class="oe-grid-print-img">
                                     <div class="oe-grid-item-title">
                                         <h4>
                                             {{ neem.name }}
