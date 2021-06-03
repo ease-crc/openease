@@ -4,6 +4,8 @@ import requests
 
 from PIL import Image
 from furl import furl
+from shutil import move
+from zipfile import ZipFile
 from pathlib2 import Path, PurePath
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
@@ -16,8 +18,9 @@ from app_and_db import app
 WEBROB_PATH = '/opt/webapp/webrob/'
 NEEM_OVERVIEW_MARKDOWNS_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_IMAGES_PATH = 'img/neem-images/'
-CURR_IMG_DIR = ""
-CURR_NEEM_REPO = ""
+DEFAULT_NEEM_DATA_PATH = WEBROB_PATH + 'overview_data.json'
+CURR_IMG_DIR = ''
+CURR_NEEM_REPO = ''
 
 FEATURED_NEEM_IDS = [
     '601042627e765711e2c10ab0', 
@@ -48,6 +51,7 @@ def download_neem_files():
         _download_all_neem_markdowns(neems)
         _download_all_neem_cover_images(neems)
         _update_neem_data(neems)
+        _dump_neem_data_as_json()
 
     app.logger.info('Finished all downloads.')
 
@@ -97,14 +101,14 @@ def _download_and_replace_all_md_images(neem):
     with open(file_path, 'r') as file:
         file_str = file.read()
 
-    CURR_IMG_DIR = "/static/"+ _get_static_folder_neem_image_folder_path(neem.neem_repo_path)
+    CURR_IMG_DIR = '/static/'+ _get_static_folder_neem_image_folder_path(neem.neem_repo_path)
     CURR_NEEM_REPO = neem.downloadUrl
 
     file_str = _scan_for_html_images(file_str)
     file_str = _scan_for_md_images(file_str)
     
-    CURR_IMG_DIR = ""
-    CURR_NEEM_REPO = ""
+    CURR_IMG_DIR = ''
+    CURR_NEEM_REPO = ''
     
     # write changes back to md-file
     with open(file_path, 'w') as file:
@@ -248,8 +252,50 @@ def get_neem_data_from_repo_path(neem_repo_path):
     return next((n_data for n_data in NEEM_DATA['all_neems'] if n_data['neem_repo_path'] == neem_repo_path), None)
 
 
-def load_neem_files_default():
-    return
+def _dump_neem_data_as_json():
+    # This method is used to dump the NEEM_DATA dict to a file.
+    # This is useful, if overview_data.json inside overview.zip
+    # should be updated, which contains the default data for the
+    # developer mode. You can copy files from within the docker 
+    # container with the docker cp command. For more information
+    # look at load_overview_files_default().
+    with open(DEFAULT_NEEM_DATA_PATH, "w") as fp:
+        json.dump(NEEM_DATA, fp)
+
+
+def load_overview_files_default():
+    # This method loads the contents of overview.zip and moves
+    # them to the correct locations.
+    # overview.zip contains:
+    #   - overview_data.json, which is a json copy of the default NEEM_DATA
+    #       should be placed in /opt/webapp/webrob/
+    #   - overview-contents, which contains all the overview md-files
+    #       should be placed in /opt/webapp/webrob/
+    #   - neem-images, which contains the neem cover and md images
+    #       should be placed in /opt/webapp/webrob/static/img/
+    # 
+    # All the mentioned files and dirs can be found inside the container
+    # in the given locations, if the container is run in production mode 
+    # instead of developer mode. For that, make sure that docker-compose
+    # is run with EASE-DEBUG set to False or the if-conditional in
+    # runserver.py that calls this method is changed to 
+    # 
+    #   if not _config_is_debug():
+    #       load_overview_files_default()
+    # 
+    # (do one or the other, don't do both). The contents of the container
+    # can then be copied with docker cp (please check the official
+    # documentation).
+    global NEEM_DATA
+    
+    zip_path = WEBROB_PATH + 'overview.zip'
+    with ZipFile(zip_path) as zip_obj:
+        zip_obj.extractall(WEBROB_PATH)
+    
+    move(WEBROB_PATH + 'neem-images', WEBROB_PATH + 'static/img/')
+
+    with open(DEFAULT_NEEM_DATA_PATH, 'r') as fp:
+        NEEM_DATA = json.load(fp)   # load default NEEM_DATA
 
 
 def get_sanitizer():

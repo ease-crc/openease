@@ -21,7 +21,7 @@ from wtforms.validators import ValidationError
 from app_and_db import app, db
 from utility import random_string, oe_password_validator
 from postgres.users import Role, User, add_user, create_role
-from pages.overview import download_neem_files, load_neem_files_default
+from pages.overview import download_neem_files, load_overview_files_default
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -116,10 +116,11 @@ def init_app(extra_config_settings={}):
 
     # Start background scheduler to load markdowns for overview pages
     if _config_is_debug():
-        # do not download neem-overview stuff for development
-        load_neem_files_default()
+        # loads default neem-overview stuff for development
+        # instead of fetching them
+        load_overview_files_default()
     else:
-        _start_background_scheduler()
+        _start_background_scheduler() 
         download_neem_files()    # initial download of files
 
     app.logger.info("Webapp started.")
