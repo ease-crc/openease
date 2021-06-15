@@ -4,7 +4,7 @@ import requests
 
 from PIL import Image
 from furl import furl
-from shutil import move
+from shutil import move, rmtree
 from zipfile import ZipFile
 from pathlib2 import Path, PurePath
 from html_sanitizer import Sanitizer
@@ -109,7 +109,7 @@ def _download_and_replace_all_md_images(neem):
     
     CURR_IMG_DIR = ''
     CURR_NEEM_REPO = ''
-    
+
     # write changes back to md-file
     with open(file_path, 'w') as file:
         file.write(file_str)
@@ -291,6 +291,11 @@ def load_overview_files_default():
     zip_path = WEBROB_PATH + 'overview.zip'
     with ZipFile(zip_path) as zip_obj:
         zip_obj.extractall(WEBROB_PATH)
+    
+    # necessary if the container is restarted after having been
+    # put on pause
+    if Path(WEBROB_PATH + 'static/img/neem-images').is_dir():
+        rmtree(WEBROB_PATH + 'static/img/neem-images')
     
     move(WEBROB_PATH + 'neem-images', WEBROB_PATH + 'static/img/')
 
