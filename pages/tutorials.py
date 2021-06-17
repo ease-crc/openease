@@ -20,8 +20,7 @@ def render_tutorials():
          },
         {'id': 'semweb', 'title': 'Semantic Web introduction', 'selected': False,
          'description': """
-         In this tutorial you can learn about the semantic web.
-         Lorem Ipsum foo bar baz."""
+         In this tutorial you can learn about the semantic web."""
          }
     ]
     return render_template('pages/tutorials.html', **locals())
