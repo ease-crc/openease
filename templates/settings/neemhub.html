@@ -6,51 +6,51 @@
 {% endblock %}
 
 {% block body %}
-<div class="container p-4">
+<div class="container py-4 px-3">
     <div class="card" id="user-data">
         <div class="card-header bg-ease-light">{% trans %}NEEM Hub settings{% endtrans %}</div>
-        <div class="card-body">
+        <div class="card-body mb-2">
             <form action="{{ url_for('post_neem_hub_settings') }}" method="post">
 
                 <!-- MONGO_HOST -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Mongo DB host</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-4 col-md-3 col-xl-2 col-form-label">Mongo DB host</label>
+                    <div class="col-sm-8 col-md-9 col-xl-10">
                         <input type="text" placeholder="Provide host name for NEEM Hub configuration"
                                class="form-control" name="mongo_host" value="{{ neem_hub.mongo_host }}">
                     </div>
                 </div>
                 <!-- MONGO_PORT -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Mongo DB port</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-4 col-md-3 col-xl-2 col-form-label">Mongo DB port</label>
+                    <div class="col-sm-8 col-md-9 col-xl-10">
                         <input type="text" placeholder="Provide port for NEEM Hub configuration"
                                class="form-control" name="mongo_port" value="{{ neem_hub.mongo_port }}">
                     </div>
                 </div>
                 <!-- MONGO_DB -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Mongo DB name</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-4 col-md-3 col-xl-2 col-form-label">Mongo DB name</label>
+                    <div class="col-sm-8 col-md-9 col-xl-10">
                         <input type="text" placeholder="Provide db name for NEEM Hub configuration"
                                class="form-control" name="mongo_db" value="{{ neem_hub.mongo_db_name }}">
                     </div>
                 </div>
                 <!-- MONGO_USER -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Mongo DB user</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-4 col-md-3 col-xl-2 col-form-label">Mongo DB user</label>
+                    <div class="col-sm-8 col-md-9 col-xl-10">
                         <input type="text" placeholder="Provide user name for NEEM Hub configuration"
                                class="form-control" name="mongo_user" value="{{ neem_hub.mongo_user }}">
                     </div>
                 </div>
                 <!-- MONGO_PASS -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Mongo DB password</label>
+                    <label class="col-sm-4 col-md-3 col-xl-2 col-form-label">Mongo DB password</label>
                     {# Password field #}
                     {% set field = neem_hub.mongo_pass %}
-                    <div id="pw-field" class="col-sm-10 input-group {% if field.errors %}has-error{% endif %}">
-                        <input placeholder="Change the password" class="col-sm-6 form-control" id="psw"
+                    <div id="pw-field" class="col-sm-8 col-md-9 col-xl-10 input-group {% if field.errors %}has-error{% endif %}">
+                        <input placeholder="Change the password" class="col-sm-12 form-control" id="psw"
                                name="mongo_pass"
                                type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
                                value="{{ neem_hub.mongo_pass }}" required/>
@@ -65,31 +65,31 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">URDF server</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-4 col-md-3 col-xl-2 col-form-label">URDF server</label>
+                    <div class="col-sm-8 col-md-9 col-xl-10">
                         <input type="text" placeholder="Provide host name for URDF Server"
                                class="form-control" name="urdf_server" value="{{ neem_hub.urdf_server }}">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Mesh server</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-4 col-md-3 col-xl-2 col-form-label">Mesh server</label>
+                    <div class="col-sm-8 col-md-9 col-xl-10">
                         <input type="text" placeholder="Provide host name for mesh Server"
                                class="form-control" name="mesh_server" value="{{ neem_hub.mesh_server }}">
                     </div>
                 </div>
                 <!-- NEEM_VISIBILITY_FLAG -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Only show published NEEMs</label>
-                    <div class="col-sm-10">
-                        <input type="checkbox" placeholder="Only show published neems"
+                    <label class="col-9 col-form-label">Only show published NEEMs</label>
+                    <div class="col-3 row align-items-center justify-content-end pr-0">
+                        <input id="visibility-flag" type="checkbox" placeholder="Only show published neems"
                                class="form-control" name="visibility_flag" value="{{ neem_hub.visibility_flag }}"
                                {{'checked="checked"' if neem_hub.visibility_flag else ""}}>
                     </div>
                 </div>
-                <button class="col-sm-2 btn btn-sm btn-success" type="submit" name="Update"
+                <button class="col-5 col-sm-3 col-md-2 col-xl-1 btn btn-sm btn-success" type="submit" name="Update"
                         value="Configure">Save</button>
-                <button class="col-sm-2 btn btn-sm btn-primary" type="button"
+                <button class="col-5 col-sm-3 col-md-2 col-xl-1 ml-2 btn btn-sm btn-primary" type="button"
                         onclick="window.location.href='{{ url_for('render_neems') }}';" name="Cancel"
                         value="Cancel">Cancel</button>
             </form>
