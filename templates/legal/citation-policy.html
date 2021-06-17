@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Citation Policy</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/legal.css') }}"/>
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4 px-3">
+    <h1>
+        Citation Policy
+    </h1>
+    <p>
+        The contents on the openEASE website are provided by the Institute of Artificial Intelligence (IAI) at the University of Bremen as free open resources as a public courtesy.
+    </p>
+    <p>
+        Except for the social media icons in the website header, we own the copyright for all the copyrightable content on our sites, such as viewable data files, images, illustrations, text, services, tools, data and the site as a whole.
+        <br>
+        You may use these resources for your research or other noncommercial purposes, if our content is afforded proper citation.
+        <br>
+        Particularly, in all cases where it is used publicly, cite
+    </p>
+    <p>
+        <b>
+            Michael Beetz, Moritz Tenorth, Jan Winkler, “Open-EASE — A Knowledge Processing Service for Robots and Robotics/AI Researchers”, In IEEE International Conference on Robotics and Automation (ICRA), Seattle, Washington, USA, 2015. Accepted for publication. Finalist for the Best Conference Paper Award and Best Cognitive Robotics Paper Award.
+        </b>
+    </p>
+    <p>
+        and all publications specifically related to the content you use.
+        <br>
+        In case of the knowledge bases we provide additional information and relevant publications for citation on the respective overview page.
+    </p>
+    <p>
+        If you are unsure about how to cite a source or would like written approval for a specific use that is otherwise prohibited, please contact us at:
+    </p>
+    <p>
+        <i class="fa fa-envelope" aria-hidden="true"></i>
+        <a href="mailto:ai-office@cs.uni-bremen.de">contact@open-ease.org</a>
+    </p>
+</div>
+{% endblock %}

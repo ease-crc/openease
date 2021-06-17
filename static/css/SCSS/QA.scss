@@ -30,10 +30,12 @@
 /****** Main content *****/
 /*************************/
 
+$qa-view-height: calc(100vh - 105px);
+
 #qa-content {
   transition: all 0.5s ease;
   padding-bottom: 1.5rem;
-  min-height: 86vh;
+  min-height: $qa-view-height;
 }
 
 @media only screen and (max-width: 767px) {
@@ -136,7 +138,7 @@
   transition: left 0.5s ease;
   z-index: 999;
   height: 100%;
-  padding-bottom: 110px;
+  padding-bottom: calc(100vh - #{$qa-view-height});
 }
 
 #qa-sidebar-overlay {

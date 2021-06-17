@@ -287,3 +287,21 @@ def render_change_password_post():
 @admin_required
 def admin_cookie():
     return render_template('settings/cookies.html', **locals())
+
+
+#footer
+@app.route('/terms-of-use')
+def render_terms_of_use():
+    return render_template('legal/terms-of-use.html', **locals())
+
+@app.route('/citation-policy')
+def render_citation_policy():
+    return render_template('legal/citation-policy.html', **locals())
+
+@app.route('/privacy-policy')
+def render_privacy_policy():
+    return render_template('legal/privacy-policy.html', **locals())
+
+@app.route('/imprint')
+def render_imprint():
+    return render_template('legal/imprint.html', **locals())
