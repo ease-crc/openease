@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Privacy Policy</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/legal.css') }}"/>
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block body %}
+<div class="container py-4 px-3">
+    <h1>
+        Privacy Policy
+    </h1>
+    <p>
+        Information we collect for registration are not used for advertising or promotional purposes. We will not provide these information to a third party without your knowledge and consent.
+        <br>
+        This Privacy Policy applies only to information collected through <a href="http://www.open-ease.org">www.open-ease.org</a> or <a href="/homepage">data.open-ease.org</a>. Other websites (including those that the IAI may link to) may be governed by other policies.
+    </p>
+
+    <h2>
+        Responsibilities
+    </h2>
+    <p>
+        We can not guarantee that every information on this website is correct and up to date. The Institute for Artificial Intelligence is responsible for the creation and maintenance of the web content on this web page. The web server is maintained by the central IT group of the Fachbereich 3 of the University of Bremen.
+    </p>
+    <p>
+        <b>Contact</b><br>
+        Universität Bremen<br>
+        Arbeitsgruppe Künstliche Intelligenz<br>
+        Fachbereich 3<br>
+        Am Fallturm 1<br>
+        28359 Bremen
+    </p>
+
+    <h2>
+        Data
+    </h2>
+    <p>
+        We are taking data privacy very seriously. Personal data that is compiled during your visit on our website is processed in regard to the valid data privacy regulations.&nbsp;We will not provide your personal data information to a third party without your knowledge and consent. In the following, we’ll explain which personal data is compiled and processed on our website.
+    </p>
+    <p>
+        When you visit our website, every access will be stored in a protocol (see below). This data is separated from other data that you might create by using our web service. We can not reference this data to other data you might create on our website. The data is stored in an anonmymous way and is used for statistical analysis of our webservice with AWStats and will be deleted.
+        <br>
+        For every website access, the IP address of the requesting device, date, time, requested URL, transferred amount of data, access state (File transferred, File not found, Command not executed, etc.) as well as the User Agent is saved for a limited amount of time. An individual-related exploitation is not happening.
+    </p>
+    <p>
+        By using the openEASE webservice, you can create a comprehensive, virtual environment for experimental use linked with your account. It allows you to enter your own ontologies, models and other related informations. To allow you to easily use your latest entered commands, the command history of the openEASE command line will be saved as well. Please note that all of this data is stored on our servers, but will not be processed by us any further.
+    </p>
+
+    <h2>Cookies</h2>
+    <p>
+        Our Websites use cookies, which are small text files that your browser places on your device. The cookies we use are session cookies, which are used to identify the current session and allows the customization of the website. Cookies are not harmful and will not damage your device. You can configure your browser to not allow cookies.
+    </p>
+
+    <h2>
+        Embedding of other services
+    </h2>
+    <p>
+        To embed videos, we use the external web service YouTube. Information about the data privacy of Youtube can be found here:
+        <br>
+        <a href="http://www.youtube.com/t/privacy_at_youtube"
+        target="_blank" rel="noopener noreferrer">
+            www.youtube.com/t/privacy_at_youtube
+        </a>
+    </p>
+
+    <h2>
+        Other
+    </h2>
+    <p>
+        By using our website, you agree with the above data privacy conditions. You can request information about your personal data that we’ve collected. To do this, please write an E-Mail to <a href="mailto:ai-office@cs.uni-bremen.de">ai-office@cs.uni-bremen.de</a>.
+    </p>
+
+</div>
+{% endblock %}

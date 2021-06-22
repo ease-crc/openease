@@ -292,7 +292,6 @@ def render_change_password_post():
 def admin_cookie():
     return render_template('settings/cookies.html', **locals())
 
-
 @app.route('/homepage')
 def render_homepage():
     could_connect = True
@@ -302,7 +301,6 @@ def render_homepage():
     recent_neems = neem_data['recent_neems']
 
     return render_template('pages/homepage.html', **locals())
-
 
 @app.route('/overview/<neem_path>')
 def render_neem_overview_page(neem_path=None):
@@ -344,6 +342,22 @@ def render_neem_overview_page(neem_path=None):
     
     return render_template('pages/overview.html', **locals())
 
-
 def _flash_cannot_display_overview_page():
     flash('Our apologies! Could not load the selected overview page. Please try again later!', "warning")
+
+#footer
+@app.route('/terms-of-use')
+def render_terms_of_use():
+    return render_template('legal/terms-of-use.html', **locals())
+
+@app.route('/citation-policy')
+def render_citation_policy():
+    return render_template('legal/citation-policy.html', **locals())
+
+@app.route('/privacy-policy')
+def render_privacy_policy():
+    return render_template('legal/privacy-policy.html', **locals())
+
+@app.route('/imprint')
+def render_imprint():
+    return render_template('legal/imprint.html', **locals())
