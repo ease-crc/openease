@@ -1,0 +1,255 @@
+#page-contents {
+    margin-bottom: 20px;
+}
+
+.video-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+}
+
+.responsive-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.link-button {
+    font-size: 1rem!important;
+    background-color: #144f78!important;
+    color: white!important;
+}
+
+// banner stuff
+
+#banner {
+    margin-top: 15px;
+}
+
+.banner-item {
+    padding: 20px 0;
+}
+
+.banner-icon {
+    height: 80px;
+    margin-left: 1.2rem;
+    margin-right: 1.2rem;
+}
+
+.banner-text {
+    font-size: 2rem;
+    font-family: Oswald;
+    font-weight: 400;
+    line-height: 1.1;
+    color: #144f78;
+    margin: 0px 20px;
+    text-align: center;
+}
+
+hr {
+    background-color: #49aee3;
+}
+
+// page-content
+
+.content-block h1, .content-block h2, .content-block h3 {
+    font-family: Oswald;
+    font-weight: 400;
+    line-height: 1.1;
+
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.content-block h1 {
+    border-bottom: solid 2px #706f6f;
+    padding-bottom: 5px;
+    font-size: 28px;
+    color: #144f78;
+}
+
+.content-block h3 {
+    color: #5586a2;
+    font-size: 20px;
+}
+
+.content-block p {
+    box-sizing: border-box;
+    color: rgb(51, 51, 51);
+    display: block;
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+.content-block a {
+    font-size: 14px;
+    font-family: Oswald;
+    color: rgba(20,79,120,1);
+    text-decoration: none;
+}
+
+.content-block a:hover {
+    color: #428bca;
+    text-decoration: underline;
+}
+
+.software-component-icon {
+    height: 70px;
+}
+
+@media only screen and (max-width: 345px) {
+    .software-component-icon {
+        height: 55px;
+    }
+}
+
+// grid-cards
+.oe-grid-item{
+    height: 200px;
+    margin-bottom: 40px;
+    background-size: cover;
+    background-position: 0px center;
+    
+    position: relative;
+    overflow: hidden;
+    
+    transition: all 0.5s ease;
+
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.oe-grid-item-content{
+    width: 100%;
+    background-color: rgba(85, 134, 162, 0.3);
+    height: 100%;
+    transition: all 0.5s ease;
+}
+
+.oe-grid-print-img{
+    display:none;
+}
+
+@media print {
+    .oe-grid-print-img{
+        display: inline;
+    }
+}
+
+.oe-grid-item-link{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.oe-grid-item-menu{
+    width: 215px;
+    height: 200px;
+    background-color:  #706f6f;;
+    font-family: Oswald;
+    
+    position: absolute;
+    left: -190px;
+    transition: all 0.5s ease;
+}
+
+.oe-right-arrow{
+    position:absolute;
+    right: 7px;
+    top: 92px;
+    color: #fff;
+}
+
+.oe-grid-item-menu ul{
+    list-style: none;
+    padding: 0;
+    width:190px;
+    overflow: hidden;
+}
+
+.oe-grid-item-menu li{
+    height: 50px;
+    line-height: 50px;
+    transition: all 0.25s ease;
+    padding: 0 20px;
+    color: #fff;
+}
+
+.oe-grid-item-menu li a{
+    font-size: 20px;
+    font-family: Oswald;
+    color: #ffffff;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+.oe-grid-item-menu li a:hover{
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.oe-grid-item-menu li:hover{
+    box-shadow: inset 10px 0px 0px 0px #333;
+    color: #fff;
+}
+
+.oe-grid-item-title{
+    background-color: rgba(20,79,120,1);
+    max-width: 80%;
+    padding: 5px 20px;
+    bottom:0px;
+    
+    position: absolute;
+    right: 0px;
+    transition: all 0.5s ease;
+
+}
+
+.oe-grid-item-title h4{
+    color: #fff;
+    font-family: Oswald;
+    font-weight: 400;
+    line-height: 1.1;
+    font-size: 17px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.oe-grid-item:hover{
+    background-position: 20px center;
+}
+
+.oe-grid-item:hover .oe-grid-item-menu{
+    left: 0;
+}
+
+.oe-grid-item:hover .oe-grid-item-title{
+    right: -190px;
+}
+
+#knowledge-base-error-message{
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+
+    border: 4px solid #f00!important;
+    border-radius: 10px;
+    
+    margin: 1rem;
+    padding: 1rem;
+}

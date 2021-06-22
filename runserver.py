@@ -6,6 +6,9 @@
 
 import os
 
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
@@ -16,8 +19,9 @@ from flask.ext.babel import Babel
 from wtforms.validators import ValidationError
 
 from app_and_db import app, db
-from utility import random_string
+from utility import random_string, oe_password_validator
 from postgres.users import Role, User, add_user, create_role
+from pages.overview import download_neem_files, load_overview_files_default
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -36,6 +40,15 @@ def _config_is_debug():
     return 'DEBUG' in app.config and app.config['DEBUG']
 
 
+def _start_background_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=download_neem_files, trigger="interval", hours=3)
+    scheduler.start()
+
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: scheduler.shutdown())
+
+
 def _run_debug_server():
     # print 'Run web server in DEBUG mode'
     # app.run(host='0.0.0.0', debug=True)
@@ -49,12 +62,6 @@ def _run_server():
     http_server.listen(5000)
     print 'Web server is running. Listening on {}'.format(5000)
     IOLoop.instance().start()
-
-
-def oe_password_validator(form, field):
-    password = field.data
-    if len(password) < 3:
-        raise ValidationError(_('Password must have at least 3 characters'))
 
 
 def init_app(extra_config_settings={}):
@@ -106,6 +113,15 @@ def init_app(extra_config_settings={}):
              mail=os.environ.get('OPENEASE_MAIL_USERNAME', 'admin@openease.org'),
              pw=ADMIN_USER_DEFAULT_PW,
              roles=['admin'])
+
+    # Start background scheduler to load markdowns for overview pages
+    if _config_is_debug():
+        # loads default neem-overview stuff for development
+        # instead of fetching them
+        load_overview_files_default()
+    else:
+        _start_background_scheduler() 
+        download_neem_files()    # initial download of files
 
     app.logger.info("Webapp started.")
     return app

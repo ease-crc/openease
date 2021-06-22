@@ -1,5 +1,5 @@
 import yaml
-from flask import session, request, redirect, url_for, render_template, send_from_directory, jsonify
+from flask import session, request, redirect, url_for, render_template, send_from_directory, jsonify, flash
 from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
@@ -10,16 +10,20 @@ import traceback
 import os
 import random
 
+import re
+import markdown2
+
 from app_and_db import app
 from app_and_db import db
 from utility import admin_required
+from pages.overview import get_sanitizer, get_neem_data, get_neem_data_from_repo_path
 import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
 from config.settings import USE_HOST_KNOWROB
 
-from neems.neemhub import instance as neemhub
+from neems.neemhub import instance as neemhub, NEEMHubConnectionError 
 
 from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
@@ -213,7 +217,7 @@ def render_main():
         return redirect(url_for('user.login'))
     if 'user_container_name' not in session:
         return redirect(url_for('user.logout'))
-    return redirect(url_for('render_QA_page'))
+    return redirect(url_for('render_homepage'))
 
 @app.route('/QA')
 @login_required
@@ -288,6 +292,58 @@ def render_change_password_post():
 def admin_cookie():
     return render_template('settings/cookies.html', **locals())
 
+@app.route('/homepage')
+def render_homepage():
+    could_connect = True
+
+    neem_data = get_neem_data()
+    featured_neems = neem_data['featured_neems']
+    recent_neems = neem_data['recent_neems']
+
+    return render_template('pages/homepage.html', **locals())
+
+@app.route('/overview/<neem_path>')
+def render_neem_overview_page(neem_path=None):
+    # When tags or items from the markdown are not displayed correctly,
+    # it might hint to the sanitizer removing unallowed tags. To allow 
+    # these tags to pass, adjust the sanitizer-config from get_sanitizer()
+    # in # pages/overview.py. Afterwards adjust the styling in 
+    # static/css/overview.scss.
+    #
+    # When in doubt, refer to
+    #   https://github.com/trentm/python-markdown2
+    # and
+    #   https://github.com/matthiask/html-sanitizer
+    
+    neem_data = get_neem_data_from_repo_path(neem_path)
+    
+    if neem_data is None:
+        app.logger.error('Could not retrieve neem data for selected neem.')
+        _flash_cannot_display_overview_page()
+        return redirect(url_for('render_homepage'))
+
+    try:
+        with open(neem_data['md_path'], 'r') as file_in:
+            file_str = file_in.read()
+    except IOError as e:
+        app.logger.error('Could not find markdown-file for neem, therefore cannot render the overview page.\n\n' + e.message)
+        _flash_cannot_display_overview_page()
+        return redirect(url_for('render_homepage'))
+
+    # markdown to html-conversion
+    md_content = markdown2.markdown(file_str, extras=['target-blank-links', 'nofollow', 'tables'])
+    # add noreferrer to links; admittedely not the nicest way of doing this
+    md_content = md_content.replace('rel=\"nofollow noopener\"', 'rel=\"nofollow noopener noreferrer\"')
+
+    # need to sanitize the input, because the template loads the values
+    # as safe, which would otherwise allow for XSS
+    sanitizer = get_sanitizer()
+    md_content = sanitizer.sanitize( md_content )
+    
+    return render_template('pages/overview.html', **locals())
+
+def _flash_cannot_display_overview_page():
+    flash('Our apologies! Could not load the selected overview page. Please try again later!', "warning")
 
 #footer
 @app.route('/terms-of-use')
