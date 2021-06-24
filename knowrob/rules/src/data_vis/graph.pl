@@ -60,12 +60,12 @@ node_type_(4,event_type) :- !.
 data_vis_participant_graph(Evt,GraphData) :-
     % get all edges
     findall(Edge, (
-        ask(during(aggregate([
+        kb_call(during([
             triple(Evt,dul:hasParticipant,Obj),
             ignore(triple(Role,dul:classifies,Obj)),
             ignore(once(triple(Tsk,dul:isTaskOf,Role))),
             once(triple(Evt,dul:isClassifiedBy,Tsk))
-        ]),Evt)),
+        ],Evt)),
         (   ( Edge=[Evt,Obj,1,2,'hasParticipant'] )
         ;   ( ground(Role),Edge=[Obj,Role,2,3,'hasRole'] )
         ;   ( ground(Tsk),Edge=[Role,Tsk,3,4,'hasTask'] )

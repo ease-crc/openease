@@ -32,11 +32,11 @@ openease_canvas(QueryID,[Evt]) :-
 	% TODO: handle situation where multiple events are shown
 	% TODO: handler situation where no event but an object is part of result set
 	%%
-	once(ask(aggregate([
+	once(kb_call([
 		triple(Evt,dul:hasTimeInterval,Interval),
 		triple(Interval,soma:hasIntervalBegin,Time0),
 		triple(Interval,soma:hasIntervalEnd,Time1)
-	]))),
+	])),
 	tf_plugin:tf_republish_set_goal(Time0,Time1),
 	data_vis(type(evt,989), [
 	    id: QueryID,

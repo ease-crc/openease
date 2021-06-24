@@ -35,12 +35,10 @@ oe:result_set_show(QueryID,ResultSet) :-
 task_distribution(Evt, Data) :-
 	% collect all tsks performed in phases
 	findall([TskName,TskIRI,task],
-		(	ask(aggregate([
-		        transitive( reflexive(
-		            triple(Evt,dul:hasConstituent,SubEvt)
-		        )),
+		(	kb_call([
+		        triple(Evt,transitive(reflexive(dul:hasConstituent)),SubEvt),
 		        once(triple(SubEvt,dul:executesTask,Tsk))
-		    ])),
+		    ]),
 		    rdf_db:rdf_split_url(X,TskName0,Tsk),
 			atomic_list_concat([TskName,_],'_',TskName0),
 		    rdf_db:rdf_split_url(X,TskName,TskIRI)
