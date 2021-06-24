@@ -50,26 +50,26 @@ openease_timeline_data(EventsData,Options) :-
 
 %%
 timeline_data_a(Evt,Sub,Task,Start,End) :-
-	ask(aggregate([
-		transitive(reflexive(triple(Evt,dul:hasConstituent,Sub))),
+	kb_call([
+		triple(Evt,transitive(reflexive(dul:hasConstituent)),Sub),
 		triple(Sub,rdf:type,dul:'Event'),
 		triple(Sub,rdf:type,regex('^.*(?!Action).*')),
 		triple(Sub,dul:isClassifiedBy,TaskInstance),
 		triple(Sub,dul:hasTimeInterval,Interval),
 		triple(Interval,soma:hasIntervalBegin,Start),
 		triple(Interval,soma:hasIntervalEnd,End)
-	])),
+	]),
 	atomic_list_concat([Task,_],'_',TaskInstance).
 
 %%
 timeline_data_b(Evts,E,Task,Start,End) :-
-	ask(aggregate([
+	kb_call([
 		triple(in(Evts) -> E,rdf:type,dul:'Event'),
 		triple(E,rdf:type,regex('^.*(?!Action).*')),
 		triple(E,dul:isClassifiedBy,TaskInstance),
 		triple(E,dul:hasTimeInterval,Interval),
 		triple(Interval,soma:hasIntervalBegin,Start),
 		triple(Interval,soma:hasIntervalEnd,End)
-	])),
+	]),
 	atomic_list_concat([Task,_],'_',TaskInstance).
 
