@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>openEASE HOME</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/homepage.css') }}"/>
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block body %}
+<div class="container flex-column px-0">
+    <div id="banner" class="d-none d-md-flex flex-row justify-content-between border-light ease-border">
+        <div class="banner-item">
+            <img src="{{ url_for('static', filename='img/logo_openEASE_neu2018.png') }}" alt="" class="banner-icon">
+        </div>
+        <div class="banner-item d-flex flex-column justify-content-center">
+            <h2 class="banner-text">
+                Open Knowledge for AI-Enabled Robots
+            </h2>
+        </div>
+        <div class="banner-item">
+            <a href="https://ai.uni-bremen.de/"
+            target="_blank" rel="noopener noreferrer">
+                <img src="{{ url_for('static', filename='img/aiATuni.png') }}" alt="" class="banner-icon">
+            </a>
+        </div>
+    </div>
+
+    <div id="page-contents" class="d-flex flex-column flex-md-row">
+        <div class="col-md-6">
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    About openEASE
+                </h1>
+                <p>
+                    openEASE is a web-based knowledge service providing robot and human activity data. It contains semantically annotated data of manipulation actions, including the environment the agent is acting in, the objects it manipulates, the task it performs, and the behavior it generates. The episode representations can include images captured by the robot, other sensor datastreams as well as full-body poses. A powerful query language and inference tools, allow reasoning about the data and retrieving requested information based on semantic queries. Based on the data and using the inference tools robots can answer queries regarding to what they did, why, how, what happened, and what they saw.
+                </p>
+                <p>
+                    openEASE can be used by humans using a browser-based query and visualization interface, but also remotely by robots via a WebSocket API.
+                </p>
+                <div class="video-container">
+                    <iframe class="responsive-iframe"
+                    src="https://www.youtube.com/embed/iu_Y7mxDjgA?feature=oembed"
+                    frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="video-container">
+                    <iframe class="responsive-iframe"
+                    src="https://www.youtube.com/embed/ycqti57YKkg?feature=oembed"
+                    frameborder="0" allowfullscreen></iframe>
+                </div>
+                <h3>
+                    Overview Paper
+                </h3>
+                <p>
+                    Michael Beetz, Moritz Tenorth, Jan Winkler, “Open-EASE — A Knowledge Processing Service for Robots and Robotics/AI Researchers”, In IEEE International Conference on Robotics and Automation (ICRA), Seattle, Washington, USA, 2015.
+                    <b>
+                        Finalist for the Best Conference Paper Award and Best Cognitive Robotics Paper Award.
+                    </b>
+                    <a href="https://www.open-ease.org/wp-content/uploads/2015/03/knowrob-s.pdf">
+                        [PDF]
+                    </a>
+                </p>
+                <h3>
+                    Background Motivation
+                </h3>
+                <p>
+                    openEASE is an initiative of a more comprehensive research enterprise called EASE (Everyday Activity Science and Engineering), which is explained in this <a href="https://www.youtube.com/watch?v=D8Susiv7L4I">[Video]</a>.
+                </p>
+            </div>
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    openEASE related Publications
+                </h1>
+                <p>
+                    A list of selected publications about the knowledge representation, perception, plan-based control and learning methods used for openEASE.
+                </p>
+                <a type="button" class="btn link-button"
+                href="http://www.open-ease.org/publications-overview/"
+                target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-list"></i>
+                    Publications
+                </a>
+            </div>
+            <div class="content-block mt-2 mt-md-0 d-none">
+                <h1>
+                    What's New
+                </h1>
+                
+                TODO
+            </div>
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    Tutorials & Manuals
+                </h1>
+                <p>
+                    Tutorials, installation guides, instruction videos and documentation about openEASE (requires to be logged in).
+                </p>
+                <a type="button" class="btn link-button" href="/tutorials/">
+                    <i class="fas fa-book-open"></i>
+                    Tutorials
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    Software Components
+                </h1>
+                <div class="d-flex py-3">
+                    <div class="col-4">
+                        <center>
+                            <a href="http://www.actioncores.org/" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ url_for('static', filename='img/small_pracmln.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <br>
+                                pracmln
+                            </a>
+                        </center>
+                    </div>
+                    <div class="col-4">
+                        <center>
+                            <a href="https://www.robcog.org/" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ url_for('static', filename='img/small_robcog.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <br>
+                                RobCoG
+                            </a>
+                        </center>
+                    </div>
+                    <div class="col-4">
+                        <center>
+                            <a href="https://robosherlock.org/" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ url_for('static', filename='img/small_robosherlock.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <br>
+                                RoboSherlock
+                            </a>
+                        </center>
+                    </div>
+                </div>
+            </div>
+            <div class="content-block mt-2 mt-md-0">
+                <h1>
+                    Knowledge Base Experiments
+                </h1>
+                <div class="row">
+                    {% if could_connect is sameas true %}                 
+                        {% for neem in featured_neems %}
+                        <div class="col-12 px-0">
+                            <div class="oe-grid-item"
+                            style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">
+                                <div class="oe-grid-item-content" alt="">
+                                    <img src={{ url_for('static', filename=neem.image) }} class="oe-grid-print-img">
+                                    <div class="oe-grid-item-title">
+                                        <h4>
+                                            {{ neem.name }}
+                                        </h4>
+                                    </div>
+                                    <div class="oe-grid-item-menu">
+                                        <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                        <ul>
+                                            <li>
+                                                <a href="/overview/{{ neem.neem_repo_path }}">
+                                                    Overview
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
+                                                    Knowledge Base
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <a href="/overview/{{ neem.neem_repo_path }}" class="oe-grid-item-link">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        {% for neem in recent_neems %}
+                        <div class="col-12 col-sm-6 col-md-12 col-lg-6 px-0 pr-sm-2 pr-md-0 pr-lg-2">
+                            <div class="oe-grid-item"
+                            style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">
+                                <div class="oe-grid-item-content" alt="">
+                                    <img src={{ url_for('static', filename=neem.image) }} class="oe-grid-print-img">
+                                    <div class="oe-grid-item-title">
+                                        <h4>
+                                            {{ neem.name }}
+                                        </h4>
+                                    </div>
+                                    <div class="oe-grid-item-menu">
+                                        <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
+                                        <ul>
+                                            <li>
+                                                <a href="/overview/{{ neem.neem_repo_path }}">
+                                                    Overview
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
+                                                    Knowledge Base
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <!-- TODO: specific publication links -->
+                                                <a href="http://www.open-ease.org/publications-overview/"
+                                                target="_blank" rel="noopener noreferrer">
+                                                    Publications
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <a href="/overview/{{ neem.neem_repo_path }}" class="oe-grid-item-link">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div id="knowledge-base-error-message">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,3 +1,5 @@
+import requests
+
 from flask_user import current_user
 
 from knowrob.container import start_user_container, container_started
@@ -10,6 +12,8 @@ from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
+DEFAULT_IMAGE_PATH = 'static/img/default.jpg'
+DEFAULT_IMAGE_PATH_NO_STATIC = 'img/default.jpg'
 
 class NEEM:
     def __init__(self, neem_hub, neem_info):
@@ -21,7 +25,6 @@ class NEEM:
         self.created_by = neem_info['created_by']
         self.created_at = parser.parse(neem_info['created_at']).strftime('%m/%d/%y %H:%M')
         self.maintainer = neem_info['created_by']
-        self.authors = neem_info['created_by']
 
         if 'mail' in neem_info:
             self.mail = neem_info['mail']
@@ -50,19 +53,34 @@ class NEEM:
         if 'image' in neem_info:
             self.image = neem_info['image']
         else:
-            self.image = 'None'
+            self.image = DEFAULT_IMAGE_PATH
+
+    def fetch_last_updated(self):
+        api_prefix = NEEM_DOWNLOAD_URL_PREFIX + "api/v4/projects/neems%2F"
+        api_suffix = "/repository/commits/master"
+        url = api_prefix + self.downloadUrl.split("/")[-1] + api_suffix
+        response = json.loads(str(requests.get(url, allow_redirects=True).content))
+        
+        if 'committed_date' in response:
+            return response['committed_date']
+        else:
+            return 0
 
     def get_info(self):
         return {
             'neem_id': self.neem_id,
-            'neem_tag': self.neem_tag,
             'name': self.name,
             'description': self.description,
             'maintainer': self.maintainer,
-            'authors': self.authors,
             'downloadUrl': self.downloadUrl,
-            'neem_repo_path': self.neem_repo_path
+            'neem_repo_path': self.neem_repo_path,
+            'image': self.image
         }
+    
+    def get_info_with_last_updated(self):
+        info = self.get_info()
+        info['last_updated'] = self.fetch_last_updated()
+        return info
 
     def activate(self):
         app.logger.info('Activate neem')
