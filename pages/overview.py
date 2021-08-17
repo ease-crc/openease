@@ -5,12 +5,11 @@ import requests
 from PIL import Image
 from furl import furl
 from shutil import move, rmtree
-from zipfile import ZipFile
 from pathlib2 import Path
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
-from utility import download_file, read_file, write_non_binary_file, write_binary_file, dump_dict_to_json, get_dict_from_json
+from utility import download_file, read_file, unzip_file, write_non_binary_file, write_binary_file, dump_dict_to_json, get_dict_from_json
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
@@ -271,8 +270,7 @@ def load_overview_files_default():
     global NEEM_DATA
     
     zip_path = WEBROB_PATH + 'overview.zip'
-    with ZipFile(zip_path) as zip_obj:
-        zip_obj.extractall(WEBROB_PATH)
+    unzip_file(zip_path, WEBROB_PATH)
     
     # necessary if the container is restarted after having been
     # put on pause
