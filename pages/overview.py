@@ -6,7 +6,7 @@ from PIL import Image
 from furl import furl
 from shutil import move, rmtree
 from zipfile import ZipFile
-from pathlib2 import Path, PurePath
+from pathlib2 import Path
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 

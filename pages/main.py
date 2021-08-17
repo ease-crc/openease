@@ -10,7 +10,6 @@ import traceback
 import os
 import random
 
-import re
 import markdown2
 
 from app_and_db import app
