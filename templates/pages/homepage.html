@@ -2,11 +2,11 @@
 
 {% block head %}
 <title>openEASE HOME</title>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-<meta name="description" content=""/>
-<meta name="keywords" content=""/>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/homepage.css') }}"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/homepage.css') }}" />
 {% endblock %}
 
 {% block nav_right %}
@@ -24,8 +24,7 @@
             </h2>
         </div>
         <div class="banner-item">
-            <a href="https://ai.uni-bremen.de/"
-            target="_blank" rel="noopener noreferrer">
+            <a href="https://ai.uni-bremen.de/" target="_blank" rel="noopener noreferrer">
                 <img src="{{ url_for('static', filename='img/aiATuni.png') }}" alt="" class="banner-icon">
             </a>
         </div>
@@ -38,26 +37,34 @@
                     About openEASE
                 </h1>
                 <p>
-                    openEASE is a web-based knowledge service providing robot and human activity data. It contains semantically annotated data of manipulation actions, including the environment the agent is acting in, the objects it manipulates, the task it performs, and the behavior it generates. The episode representations can include images captured by the robot, other sensor datastreams as well as full-body poses. A powerful query language and inference tools, allow reasoning about the data and retrieving requested information based on semantic queries. Based on the data and using the inference tools robots can answer queries regarding to what they did, why, how, what happened, and what they saw.
+                    openEASE is a web-based knowledge service providing robot and human activity data. It contains
+                    semantically annotated data of manipulation actions, including the environment the agent is acting
+                    in, the objects it manipulates, the task it performs, and the behavior it generates. The episode
+                    representations can include images captured by the robot, other sensor datastreams as well as
+                    full-body poses. A powerful query language and inference tools, allow reasoning about the data and
+                    retrieving requested information based on semantic queries. Based on the data and using the
+                    inference tools robots can answer queries regarding to what they did, why, how, what happened, and
+                    what they saw.
                 </p>
                 <p>
-                    openEASE can be used by humans using a browser-based query and visualization interface, but also remotely by robots via a WebSocket API.
+                    openEASE can be used by humans using a browser-based query and visualization interface, but also
+                    remotely by robots via a WebSocket API.
                 </p>
                 <div class="video-container">
-                    <iframe class="responsive-iframe"
-                    src="https://www.youtube.com/embed/iu_Y7mxDjgA?feature=oembed"
+                    <iframe class="responsive-iframe" src="https://www.youtube.com/embed/iu_Y7mxDjgA?feature=oembed"
                     frameborder="0" allowfullscreen></iframe>
                 </div>
                 <div class="video-container">
-                    <iframe class="responsive-iframe"
-                    src="https://www.youtube.com/embed/ycqti57YKkg?feature=oembed"
+                    <iframe class="responsive-iframe" src="https://www.youtube.com/embed/ycqti57YKkg?feature=oembed"
                     frameborder="0" allowfullscreen></iframe>
                 </div>
                 <h3>
                     Overview Paper
                 </h3>
                 <p>
-                    Michael Beetz, Moritz Tenorth, Jan Winkler, “Open-EASE — A Knowledge Processing Service for Robots and Robotics/AI Researchers”, In IEEE International Conference on Robotics and Automation (ICRA), Seattle, Washington, USA, 2015.
+                    Michael Beetz, Moritz Tenorth, Jan Winkler, “Open-EASE — A Knowledge Processing Service for Robots
+                    and Robotics/AI Researchers”, In IEEE International Conference on Robotics and Automation (ICRA),
+                    Seattle, Washington, USA, 2015.
                     <b>
                         Finalist for the Best Conference Paper Award and Best Cognitive Robotics Paper Award.
                     </b>
@@ -69,7 +76,9 @@
                     Background Motivation
                 </h3>
                 <p>
-                    openEASE is an initiative of a more comprehensive research enterprise called EASE (Everyday Activity Science and Engineering), which is explained in this <a href="https://www.youtube.com/watch?v=D8Susiv7L4I">[Video]</a>.
+                    openEASE is an initiative of a more comprehensive research enterprise called EASE (Everyday Activity
+                    Science and Engineering), which is explained in this <a
+                        href="https://www.youtube.com/watch?v=D8Susiv7L4I">[Video]</a>.
                 </p>
             </div>
             <div class="content-block mt-2 mt-md-0">
@@ -77,10 +86,10 @@
                     openEASE related Publications
                 </h1>
                 <p>
-                    A list of selected publications about the knowledge representation, perception, plan-based control and learning methods used for openEASE.
+                    A list of selected publications about the knowledge representation, perception, plan-based control
+                    and learning methods used for openEASE.
                 </p>
-                <a type="button" class="btn link-button"
-                href="http://www.open-ease.org/publications-overview/"
+                <a type="button" class="btn link-button" href="http://www.open-ease.org/publications-overview/"
                 target="_blank" rel="noopener noreferrer">
                     <i class="fas fa-list"></i>
                     Publications
@@ -98,7 +107,8 @@
                     Tutorials & Manuals
                 </h1>
                 <p>
-                    Tutorials, installation guides, instruction videos and documentation about openEASE (requires to be logged in).
+                    Tutorials, installation guides, instruction videos and documentation about openEASE (requires to be
+                    logged in).
                 </p>
                 <a type="button" class="btn link-button" href="/tutorials/">
                     <i class="fas fa-book-open"></i>
@@ -115,7 +125,8 @@
                     <div class="col-4">
                         <center>
                             <a href="http://www.actioncores.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="{{ url_for('static', filename='img/small_pracmln.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <img src="{{ url_for('static', filename='img/small_pracmln.png') }}"
+                                    alt="pracmln link & icon" class="software-component-icon">
                                 <br>
                                 pracmln
                             </a>
@@ -124,7 +135,8 @@
                     <div class="col-4">
                         <center>
                             <a href="https://www.robcog.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="{{ url_for('static', filename='img/small_robcog.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <img src="{{ url_for('static', filename='img/small_robcog.png') }}"
+                                    alt="pracmln link & icon" class="software-component-icon">
                                 <br>
                                 RobCoG
                             </a>
@@ -133,7 +145,8 @@
                     <div class="col-4">
                         <center>
                             <a href="https://robosherlock.org/" target="_blank" rel="noopener noreferrer">
-                                <img src="{{ url_for('static', filename='img/small_robosherlock.png') }}" alt="pracmln link & icon" class="software-component-icon">
+                                <img src="{{ url_for('static', filename='img/small_robosherlock.png') }}"
+                                    alt="pracmln link & icon" class="software-component-icon">
                                 <br>
                                 RoboSherlock
                             </a>
