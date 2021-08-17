@@ -15,7 +15,7 @@ import markdown2
 
 from app_and_db import app
 from app_and_db import db
-from utility import admin_required
+from utility import admin_required, read_file
 from pages.overview import get_sanitizer, get_neem_data, get_neem_data_from_repo_path
 import knowrob.container as docker_interface
 from flask_wtf import Form
@@ -203,8 +203,7 @@ def send_from_node_modules(url_path, file_path):
     # remove possibility for miss use of file_path by removing any sort
     # of directory path manipulation
     file_path.replace("..", "").replace("./", "")
-    with open(os.path.join(NODE_MODULES_PATH, file_path), 'r') as f:
-        file_content = f.read()
+    file_content = read_file(os.path.join(NODE_MODULES_PATH, file_path))
     return file_content
 
 @app.route('/node_modules/<path:file_path>')
@@ -325,8 +324,7 @@ def render_neem_overview_page(neem_path=None):
         return redirect(url_for('render_homepage'))
 
     try:
-        with open(neem_data['md_path'], 'r') as file_in:
-            file_str = file_in.read()
+        file_str = read_file(neem_data['md_path'])
     except IOError as e:
         app.logger.error('Could not find markdown-file for neem, therefore cannot render the overview page.\n\n' + e.message)
         _flash_cannot_display_overview_page()

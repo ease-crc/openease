@@ -10,6 +10,7 @@ from pathlib2 import Path, PurePath
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
+from utility import download_file, read_file, write_non_binary_file, write_binary_file, dump_dict_to_json, get_dict_from_json
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
@@ -68,28 +69,12 @@ def _download_all_neem_markdowns(neems):
 def _download_neem_markdown(neem):
     url = neem.downloadUrl + '/-/raw/master/README.md'
     file_path = _get_local_neem_markdown_path(neem.neem_repo_path)
-    _download_file(url, file_path)
+    download_file(url, file_path)
     _download_and_replace_all_md_images(neem)
 
 
 def _get_local_neem_markdown_path(neem_name):
     return NEEM_OVERVIEW_MARKDOWNS_PATH + neem_name + '.md'
-
-
-def _download_file(url, file_path):
-    try:
-        r = requests.get(url, allow_redirects=True)
-    except Exception as e:
-        app.logger.error('Sending the request had some issues.\n\n' + e.__str__())
-        return
-    if r.status_code == 200:
-        parent_dirs = Path(file_path).parent
-        Path(parent_dirs).mkdir(parents=True, exist_ok=True)
-        file = Path(file_path)
-        if file.is_file():
-            file.unlink()
-        with open(file_path, 'wb') as file:
-            file.write(r.content)
 
 
 def _download_and_replace_all_md_images(neem):
@@ -98,8 +83,7 @@ def _download_and_replace_all_md_images(neem):
 
     # open md-file
     file_path = _get_local_neem_markdown_path(neem.neem_repo_path)
-    with open(file_path, 'r') as file:
-        file_str = file.read()
+    file_str = read_file(file_path)
 
     CURR_IMG_DIR = '/static/'+ _get_static_folder_neem_image_folder_path(neem.neem_repo_path)
     CURR_NEEM_REPO = neem.downloadUrl
@@ -111,8 +95,7 @@ def _download_and_replace_all_md_images(neem):
     CURR_NEEM_REPO = ''
 
     # write changes back to md-file
-    with open(file_path, 'w') as file:
-        file.write(file_str)
+    write_non_binary_file(file_str, file_path)
 
 
 def _scan_for_html_images(md_file_str):
@@ -140,7 +123,7 @@ def _download_image_and_replace_url(matchobj):
         url = neemgit_url + neemgit_url_suffix
 
     final_path = WEBROB_PATH + str(file_path)
-    _download_file(url, final_path)
+    download_file(url, final_path)
     _compress_image(final_path)
 
     return matchobj.group('begin') + str(file_path) + matchobj.group('end')
@@ -165,7 +148,7 @@ def _download_all_neem_cover_images(neems):
 def _download_neem_cover_image(neem):
     url = neem.image
     file_path = _get_local_neem_cover_image_path(neem)
-    _download_file(url, file_path)
+    download_file(url, file_path)
     _compress_image(file_path)
 
 
@@ -259,8 +242,7 @@ def _dump_neem_data_as_json():
     # developer mode. You can copy files from within the docker 
     # container with the docker cp command. For more information
     # look at load_overview_files_default().
-    with open(DEFAULT_NEEM_DATA_PATH, "w") as fp:
-        json.dump(NEEM_DATA, fp)
+    dump_dict_to_json(NEEM_DATA, DEFAULT_NEEM_DATA_PATH)
 
 
 def load_overview_files_default():
@@ -299,8 +281,7 @@ def load_overview_files_default():
     
     move(WEBROB_PATH + 'neem-images', WEBROB_PATH + 'static/img/')
 
-    with open(DEFAULT_NEEM_DATA_PATH, 'r') as fp:
-        NEEM_DATA = json.load(fp)   # load default NEEM_DATA
+    NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_DATA_PATH)  # load default NEEM_DATA
 
 
 def get_sanitizer():
