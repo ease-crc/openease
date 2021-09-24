@@ -317,7 +317,7 @@ def render_neem_overview_page(neem_path=None):
     
     neem_data = get_neem_data_from_repo_path(neem_path)
     
-    if neem_data is None:
+    if neem_data is None or neem_data == {}:
         app.logger.error('Could not retrieve neem data for selected neem.')
         _flash_cannot_display_overview_page()
         return redirect(url_for('render_homepage'))
@@ -350,7 +350,7 @@ def _convert_md_to_html(md_str):
 
 def _sanitize_html(html_str):
     # need to sanitize the input, because the template loads the values
-    # as safe, which could otherwise allow XSS-exploits
+    # as 'safe', which could otherwise allow XSS-exploits
     sanitizer = get_sanitizer()
     return sanitizer.sanitize( html_str )
 

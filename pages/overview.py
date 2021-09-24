@@ -4,7 +4,7 @@ import requests
 
 from PIL import Image
 from furl import furl
-from shutil import move, rmtree
+from shutil import copytree, rmtree
 from pathlib2 import Path
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
@@ -16,9 +16,10 @@ from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 from app_and_db import app
 
 WEBROB_PATH = '/opt/webapp/webrob/'
+DEFAULT_FILES_PATH = WEBROB_PATH + 'default_files/'
 NEEM_OVERVIEW_MARKDOWNS_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_IMAGES_PATH = 'img/neem-images/'
-DEFAULT_NEEM_DATA_PATH = WEBROB_PATH + 'overview_data.json'
+DEFAULT_NEEM_DATA_PATH = DEFAULT_FILES_PATH + 'default_overview_data.json'
 CURR_IMG_DIR = ''
 CURR_NEEM_REPO = ''
 
@@ -37,6 +38,7 @@ SUPPORTED_IMAGE_TYPES_FOR_COMPRESSION = [
     ".bmp"
 ]
 
+# for structure of NEEM_DATA check default_files/default_overview_data.json
 NEEM_DATA = {}
 
 def download_neem_files():
@@ -51,9 +53,13 @@ def download_neem_files():
         _download_all_neem_markdowns(neems)
         _download_all_neem_cover_images(neems)
         _update_neem_data(neems)
-        _dump_neem_data_as_json()
 
-    app.logger.info('Finished all downloads.')
+    if NEEM_DATA is None or NEEM_DATA == {}:
+        app.logger.info('Neem-Data was empty or None. Loading default files instead.')
+        load_default_overview_files()
+        return
+
+    app.logger.info('Finished all downloads for overview pages.')
 
 
 def _download_all_neem_markdowns(neems):
@@ -244,12 +250,12 @@ def _dump_neem_data_as_json():
     dump_dict_to_json(NEEM_DATA, DEFAULT_NEEM_DATA_PATH)
 
 
-def load_overview_files_default():
+def load_default_overview_files():
     # This method loads the contents of overview.zip and moves
     # them to the correct locations.
     # overview.zip contains:
     #   - overview_data.json, which is a json copy of the default NEEM_DATA
-    #       should be placed in /opt/webapp/webrob/
+    #       should be placed in /opt/webapp/webrob/default_files/
     #   - overview-contents, which contains all the overview md-files
     #       should be placed in /opt/webapp/webrob/
     #   - neem-images, which contains the neem cover and md images
@@ -267,19 +273,53 @@ def load_overview_files_default():
     # (do one or the other, don't do both). The contents of the container
     # can then be copied with docker cp (please check the official
     # documentation).
-    global NEEM_DATA
-    
-    zip_path = WEBROB_PATH + 'overview.zip'
-    unzip_file(zip_path, WEBROB_PATH)
-    
-    # necessary if the container is restarted after having been
-    # put on pause
-    if Path(WEBROB_PATH + 'static/img/neem-images').is_dir():
-        rmtree(WEBROB_PATH + 'static/img/neem-images')
-    
-    move(WEBROB_PATH + 'neem-images', WEBROB_PATH + 'static/img/')
+    _unzip_default_files()
+    _load_default_overview_mds()    
+    _load_default_overview_images()
+    _load_default_neem_data()
 
-    NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_DATA_PATH)  # load default NEEM_DATA
+
+def _unzip_default_files():
+    _remove_previous_default_files()
+    zip_path = DEFAULT_FILES_PATH + 'overview.zip'
+    unzip_file(zip_path, DEFAULT_FILES_PATH)
+    app.logger.info("Unzipped default overview files.")
+
+
+def _remove_previous_default_files():
+    _remove_if_is_dir(DEFAULT_FILES_PATH + 'overview-contents')
+    _remove_if_is_dir(DEFAULT_FILES_PATH + 'neem-images')
+
+
+def _load_default_overview_mds():
+    # necessary if the container is restarted after having been put on pause
+    _remove_if_is_dir(NEEM_OVERVIEW_MARKDOWNS_PATH)
+    copytree(DEFAULT_FILES_PATH + 'overview-contents', WEBROB_PATH + 'overview-contents')
+    app.logger.info("Loaded default overview markdowns.")
+
+
+def _load_default_overview_images():
+    # necessary if the container is restarted after having been put on pause
+    _remove_if_is_dir(WEBROB_PATH + 'static/img/neem-images')
+    copytree(DEFAULT_FILES_PATH + 'neem-images', WEBROB_PATH + 'static/img/neem-images')
+    app.logger.info("Loaded default overview images.")
+
+
+def _load_default_neem_data():
+    global NEEM_DATA
+
+    NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_DATA_PATH)
+    app.logger.info("Loaded default overview database.")
+
+
+def _remove_if_is_dir(path):
+    if Path(path).is_dir():
+        rmtree(path)
+
+
+def _remove_if_is_file(path):
+    if Path(path).is_file():
+        Path(path).unlink()
 
 
 def get_sanitizer():
