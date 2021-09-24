@@ -302,6 +302,9 @@ def render_homepage():
 
     return render_template('pages/homepage.html', **locals())
 
+@app.route('/news')
+def render_news():
+    return render_template('pages/news.html', **locals())
 
 @app.route('/overview/<neem_path>')
 def render_neem_overview_page(neem_path=None):
