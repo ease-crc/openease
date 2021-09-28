@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>
+Publications
+</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/publications.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div id="content">
+        <h1>
+            openEASE related Publications
+        </h1>
+
+        {% set count = namespace(value=1) %}
+        {% for item in website_entries %}
+            <h2>
+                {{ item['title'] }}
+            </h2>
+            
+            {% for elem in item['publications'] %}
+            <div class="row pub-item">
+                <div class="col-auto d-flex align-items-center pub-count">
+                    [{{ count.value }}]
+                </div>
+                <div class="col pub-reference">
+                    {{ elem['html_str'] | safe }}
+
+                    <a href={{ '/publications/' + elem['key'] }}>
+                        [bib]
+                    </a>
+
+                    {% if elem['has_pdf'] is sameas true %}
+                    <a href={{ '/papers/' + elem['key'] + '.pdf' }}
+                    target="_blank" rel="noopener noreferrer">
+                        [pdf]
+                    </a>
+                    {% endif %}
+
+                    {% if elem['url'] != '' %}
+                    <a href={{ elem['url'] | safe }}
+                    target="_blank" rel="noopener noreferrer">
+                        [url]
+                    </a>
+                    {% endif %}
+                    
+                    {% if elem['doi'] != '' %}
+                    <a 
+                    {% if 'doi.org/' in elem['doi'] %}
+                        href={{ elem['doi'] }}
+                    {% else %}
+                        href={{ 'https://doi.org/' + elem['doi'] }}
+                    {% endif %}
+                    target="_blank" rel="noopener noreferrer">
+                        [doi]
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% set count.value = count.value + 1 %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}

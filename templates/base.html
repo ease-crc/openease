@@ -84,8 +84,8 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://www.open-ease.org/publications-overview/"
-        target="_blank" rel="noopener noreferrer">
+        <a class="nav-link {{ 'active' if '/publications' in request.path | safe }}"
+        href="/publications">
           <i class="fas fa-list"></i>
           Publications
         </a>

@@ -20,6 +20,7 @@ from wtforms.validators import ValidationError
 
 from app_and_db import app, db
 from utility import random_string, oe_password_validator
+from pages.publications import load_default_publications_and_papers, download_and_update_papers_and_bibtex
 from postgres.users import Role, User, add_user, create_role
 from pages.overview import download_neem_files, load_default_overview_files
 
@@ -43,6 +44,7 @@ def _config_is_debug():
 def _start_background_scheduler():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=download_neem_files, trigger="interval", hours=3)
+    scheduler.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", hours=3)
     scheduler.start()
 
     # Shut down the scheduler when exiting the app
@@ -118,11 +120,14 @@ def init_app(extra_config_settings={}):
     if _config_is_debug():
         # loads default neem-overview stuff for development, instead of fetching them
         load_default_overview_files()
+        # loads default publications-bib and papers for development, instead of fetching them
+        load_default_publications_and_papers()
     else:
-        _start_background_scheduler() 
+        _start_background_scheduler()
         # initial download of files
         download_neem_files()
-
+        download_and_update_papers_and_bibtex()
+    
     app.logger.info("Webapp started.")
     return app
 

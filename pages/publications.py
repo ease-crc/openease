@@ -1,0 +1,364 @@
+from postgres import db
+import re
+import json
+
+from shutil import rmtree, move
+from string import punctuation
+from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
+from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
+from pathlib2 import Path
+from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/pylatexenc/
+
+from app_and_db import app
+from utility import download_file, unzip_file, dump_dict_to_json, get_dict_from_json
+
+# for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
+PUBLICATIONS_DATA = {}
+PUBLICATIONS_URL = ''
+PAPERS_URL = ''
+DEFAULT_PUBLICATIONS_JSON_PATH = '/opt/webapp/webrob/default_files/default_publications_data.json'
+DEFAULT_PUBLICATIONS_PATH = '/opt/webapp/webrob/default_files/default_publications.bib'
+# has to be split due to GitHub file size limit
+DEFAULT_PAPERS_1_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers_1.zip'
+DEFAULT_PAPERS_2_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers_2.zip'
+PUBLICATIONS_DIR_PATH = '/opt/webapp/webrob/publications'
+ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/all_publications.bib'
+PAPERS_ZIP_PATH = PUBLICATIONS_DIR_PATH + '/papers.zip'
+PAPERS_PATH = '/opt/webapp/webrob/static/papers/'
+
+PUBLICATIONS_KEYWORDS = [
+    ('openease_overview', 'Overview: Cognition-enabled Control'),
+    ('openease_kb_of_exp_data', 'Knowledge Bases of Robot Experience Data'),
+    ('openease_cram', 'Cognitive Robot Abstract Machine'),
+    ('openease_knowledge_representation', 'Knowledge Representation and Processing'),
+    ('openease_perception', 'Perception'),
+    ('openease_human_activity', 'Human Activity Models'),
+    ('openease_manipulation', 'Manipulation and Control'),
+    ('openease_natural_language', 'Natural-language Instruction Interpretation')
+]
+
+
+def download_and_update_papers_and_bibtex():
+    # papers need to be loaded before (!) the publications
+    try:
+        _download_and_unzip_papers()
+        _download_and_update_bibtex()
+        bibtex_db = _load_bibtex_db_from_file(ALL_PUBLICATIONS_PATH)
+        _update_publications_data(bibtex_db)
+    except Exception as e:
+        app.logger.error('Had issues downloading papers and files for publications.' + e.__str__())
+    
+    if PUBLICATIONS_DATA is None or PUBLICATIONS_DATA == {}:
+        app.logger.info('Neem-Data was empty or None. Loading default files instead.')
+        load_default_publications_and_papers()
+        return
+
+    app.logger.info('Finished all downloads for publications pages.')  
+
+
+def _download_and_unzip_papers():
+    # fetch papers.zip from url
+    _download_papers()
+    _clear_papers_dir()
+    _unzip_papers()
+
+
+def _download_papers():
+    download_file(PAPERS_URL, PAPERS_ZIP_PATH)
+
+
+def _clear_papers_dir():
+    if Path(PAPERS_PATH).is_dir():
+        rmtree(PAPERS_PATH)
+
+
+def _unzip_papers():
+    unzip_file(PAPERS_ZIP_PATH, PAPERS_PATH)
+
+
+def _download_and_update_bibtex():
+    download_file(PUBLICATIONS_URL, ALL_PUBLICATIONS_PATH)
+
+
+def _load_bibtex_db_from_file(file_path):
+    try:
+        bibtex_db = parse_file(file_path)
+    except Exception as e:
+        app.logger.error('Parsing the bibtex-database failed.\n\n' + e.__str__())
+        bibtex_db = {}
+    finally:
+        return bibtex_db
+
+
+def _update_publications_data(bibtex_db):
+    global PUBLICATIONS_DATA
+
+    if bibtex_db is None or bibtex_db == []:
+        return
+
+    all_entries = {}
+    website_entries = []
+
+    for keyword_title_tupel in PUBLICATIONS_KEYWORDS:
+        website_entry = {}
+        keyword = keyword_title_tupel[0]
+        keyword_publications = []
+
+        for key in bibtex_db.entries:
+            if 'keywords' in bibtex_db.entries[key].fields:
+                if keyword in bibtex_db.entries[key].fields['keywords']:
+                    # check if publication is already in 'all_publications'
+                    if key in all_entries.keys():
+                        pub_entry = all_entries[key]
+                    else:
+                        pub_entry = {}
+                        curr_db_entry = bibtex_db.entries[key]
+
+                        pub_entry['key'] = _get_db_entry_key(curr_db_entry)
+                        pub_entry['year'] = _get_db_entry_year(curr_db_entry)
+                        pub_entry['authors'] = _get_db_entry_authors(curr_db_entry)
+                        pub_entry['abstract'] = _get_db_entry_abstract(curr_db_entry)
+                        pub_entry['has_pdf'] = _check_if_publication_key_has_pdf(pub_entry['key'])
+
+                        pub_entry['title'] = _get_db_entry_title(curr_db_entry)
+                        # Need to adjust title of the entry to have
+                        # proper capitalization of the text
+                        _correctly_set_db_entry_title(curr_db_entry, pub_entry['title'])
+
+                        pub_entry['doi'], pub_entry['url'] = _get_db_entry_doi_and_url(curr_db_entry)
+                        # Remove url and doi fields from pybtech db-entry
+                        # because otherwise the html-string provided by
+                        # pybtex will also include the link, but we provide
+                        # our own links -> no need for duplication 
+                        _remove_db_entry_url_and_doi_fields(curr_db_entry)
+
+                        # these four methods need to be called last
+                        # as they depends on changes made to the
+                        # pybtex db-entries by the previous methods,
+                        # namely:
+                        #   - _correctly_set_db_entry_title()
+                        #   - _remove_db_entry_url_and_doi_fields()
+                        pub_entry['bibtex_str'] = _get_db_entry_bibtex_str(curr_db_entry)
+                        pub_entry['bibtex_html_str'] = _get_db_entry_bibtex_html_str(curr_db_entry)
+                        pub_entry['html_str'] = _get_db_entry_html_str(curr_db_entry)
+                        pub_entry['reference_str'] = _get_db_entry_reference_str(curr_db_entry)
+
+                        all_entries[key] = pub_entry
+                    
+                    keyword_publications.append(pub_entry)
+
+        keyword_publications.sort(key=lambda x: x['year'], reverse=True)
+
+        website_entry['title'] = keyword_title_tupel[1]
+        website_entry['publications'] = keyword_publications
+
+        website_entries.append(website_entry)
+
+    PUBLICATIONS_DATA = {
+        'all_entries': all_entries,
+        'website_entries': website_entries
+    }
+
+
+def _get_db_entry_key(db_entry):
+    return db_entry.key
+
+
+def _get_db_entry_title(db_entry):
+    title = db_entry.fields['title']
+    
+    # due to latex & bibtex stuff the title can include
+    # certain unwanted characters, so they need to be removed
+    title = re.sub(r'[{}]', '', title)
+    title = title.strip('"')
+    
+    return title
+
+
+def _correctly_set_db_entry_title(db_entry, title):
+    db_entry.fields['title'] = '{' + title + '}'
+                        
+
+def _get_db_entry_authors(db_entry):
+    authors = []
+    name_parts = ['first',
+                'middle',
+                'prelast',
+                'last',
+                'lineage']
+    
+    for author in db_entry.persons['author']:
+        auth_name = ''
+        for part in name_parts:
+            if author.get_part_as_text(part) != '':
+                auth_name += author.get_part_as_text(part) + ' '
+        authors.append(_latex_to_text(auth_name.strip()))
+
+    return authors
+
+
+def _get_db_entry_abstract(db_entry):
+    abstract = ''
+    
+    if 'abstract' in db_entry.fields:
+        abstract = _latex_to_text(db_entry.fields['abstract'])
+
+    return abstract
+
+
+def _check_if_publication_key_has_pdf(entry_key):
+    paper_path = PAPERS_PATH + entry_key.encode('utf-8') + '.pdf'
+
+    if Path(paper_path).is_file():
+        return True
+    
+    return False
+
+
+def _get_db_entry_doi_and_url(db_entry):
+    doi = ''
+    url = ''
+
+    if 'doi' in db_entry.fields:
+        doi = db_entry.fields['doi']
+    
+    if 'url' in db_entry.fields:
+        url = db_entry.fields['url']
+        
+        if doi != '' and doi in url:
+            url = ''
+
+    return doi, url
+
+
+def _remove_db_entry_url_and_doi_fields(db_entry):
+    if 'doi' in db_entry.fields:
+        db_entry.fields.pop('doi')
+    if 'url' in db_entry.fields:
+        db_entry.fields.pop('url')
+
+
+def _get_db_entry_bibtex_str(db_entry):
+    return db_entry.to_string('bibtex')
+
+
+def _get_db_entry_bibtex_html_str(db_entry):
+    bibtex_str = _get_db_entry_bibtex_str(db_entry)
+
+    # replace bibtex line_breaks and tabs for html-equivalents
+    bibtex_str = re.sub(r'\n', '<br>', bibtex_str)
+    bibtex_str = re.sub(r'    ', '&nbsp;&nbsp;&nbsp;&nbsp;', bibtex_str)
+    
+    return bibtex_str
+
+
+def _get_db_entry_year(db_entry):
+    year = 0
+
+    if 'year' in db_entry.fields:
+        year = int(db_entry.fields['year'])
+    
+    return year
+
+
+def _get_db_entry_reference_str(db_entry):
+    reference_str = _get_db_entry_formatted_str(db_entry, 'text')
+    reference_str = re.search(r'\[.*?\] (.*)', reference_str).group(1)
+
+    return reference_str
+
+
+def _get_db_entry_html_str(db_entry):
+    html_str = _get_db_entry_formatted_str(db_entry, 'html')
+    html_str = re.search(r'<dd>(.*?)</dd>', html_str, re.DOTALL).group(1)
+
+    # certain characters are not converted properly from
+    # latex to html, so it needs to be done manually
+    html_str = _remove_latex_artifacts_from_html_str(html_str)
+
+    return html_str
+
+
+def _get_db_entry_formatted_str(db_entry, output_type):
+    # possible output types: html, text
+    pb_engine = PybtexEngine()
+    bibtex_str = _get_db_entry_bibtex_str(db_entry)
+
+    return pb_engine.format_from_string(bibtex_str, style='unsrt', output_backend=output_type, bib_encoding='bibtex')
+
+
+def _remove_latex_artifacts_from_html_str(html_str):
+    # certain characters are not converted properly from
+    # latex to html by the pybtex library, so it needs to
+    # be done manually and in a cumbersome fashion...
+    #
+    # might need to be extended in the future
+    clean_html_str = re.sub(r'[\\][\\]textasciitilde[&]nbsp[;][<]span class[=]["]bibtex[-]protected["][>]a[<][/]span[>]', 'a&#771;', html_str)
+    clean_html_str = re.sub(r'[\\][\\][&]', '&', clean_html_str)
+
+    return clean_html_str
+
+def _latex_to_text(tex):
+    return LatexNodes2Text().latex_to_text(tex)
+
+
+def load_default_publications_and_papers():
+    # This method loads the contents of publications_data.json and extracts
+    # the contents of paper.zip and moves them to the correct locations.
+    # 
+    # papers.zip contains the pdf which should be linked to the entries
+    # on the publications page. papers.zip should be extracted to
+    # 
+    #   PAPERS_PATH = '/opt/webapp/webrob/static/papers/'
+    # 
+    # All the mentioned files and dirs can be found inside the container
+    # in the given locations, if the container is run in production mode 
+    # instead of developer mode. For that, make sure that docker-compose
+    # is run with EASE-DEBUG set to False or the if-conditional in
+    # runserver.py that calls this method is changed to 
+    # 
+    #   if not _config_is_debug():
+    #       load_overview_files_default()
+    # 
+    # (do one or the other, don't do both). The contents of the container
+    # can then be copied with docker cp (please check the official
+    # documentation).
+    
+    # papers need to be loaded before (!) the publications
+    _load_default_papers()
+    _load_default_publications()
+
+
+def _load_default_papers():
+    _clear_papers_dir()
+    unzip_file(DEFAULT_PAPERS_1_ZIP_PATH, PAPERS_PATH)
+    unzip_file(DEFAULT_PAPERS_2_ZIP_PATH, PAPERS_PATH)
+    app.logger.info("Loaded and extracted default papers.")
+    
+
+def _load_default_publications():
+    global PUBLICATIONS_DATA
+
+    PUBLICATIONS_DATA = get_dict_from_json(DEFAULT_PUBLICATIONS_JSON_PATH)
+    app.logger.info("Loaded default publications database.")
+
+
+def _dump_publications_data_as_json():
+    # This method is used to dump the PUBLICATIONS_DATA dict to a
+    # file. This is useful when the publications_data.json 
+    # should be updated, which contains the default data for the
+    # developer mode. You can copy files from within the docker 
+    # container with the docker cp command. For more information
+    # look at load_default_publications_and_papers().
+    
+    dump_dict_to_json(PUBLICATIONS_DATA, DEFAULT_PUBLICATIONS_JSON_PATH)
+
+
+def get_publications_data():
+    global PUBLICATIONS_DATA
+    return PUBLICATIONS_DATA
+
+
+def get_papers_path():
+    global PAPERS_PATH
+    return PAPERS_PATH

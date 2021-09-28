@@ -16,6 +16,7 @@ from app_and_db import app
 from app_and_db import db
 from utility import admin_required, read_file
 from pages.overview import get_sanitizer, get_neem_data, get_neem_data_from_repo_path
+from pages.publications import get_papers_path, get_publications_data
 import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
@@ -353,6 +354,28 @@ def _sanitize_html(html_str):
     # as 'safe', which could otherwise allow XSS-exploits
     sanitizer = get_sanitizer()
     return sanitizer.sanitize( html_str )
+
+@app.route('/publications')
+def render_all_publications():
+    p_data = get_publications_data()
+
+    website_entries = p_data['website_entries']
+
+    return render_template('pages/publications.html', **locals())
+
+@app.route('/publications/<publication>')
+def render_bibtex_entry(publication=None):
+    p_data = get_publications_data()
+
+    bibtex_entry = p_data['all_entries'][publication]
+
+    return render_template('pages/bibtex.html', **locals())
+
+@app.route('/papers/<paper>')
+def get_paper(paper=None):
+    papers_path = get_papers_path()
+
+    return send_from_directory(papers_path, paper)
 
 #footer
 @app.route('/terms-of-use')
