@@ -44,7 +44,7 @@ def _config_is_debug():
 def _start_background_scheduler():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=download_neem_files, trigger="interval", hours=3)
-    scheduler.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", hours=3)
+    scheduler.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", days=1)
     scheduler.start()
 
     # Shut down the scheduler when exiting the app
