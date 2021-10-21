@@ -10,6 +10,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 
 from app_and_db import app
 from utility import download_file, move_file, remove_if_is_dir, unzip_file, dump_dict_to_json, get_dict_from_json
+from pages.content import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH
 
 # for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
 PUBLICATIONS_DATA = {}
@@ -18,15 +19,15 @@ PUBLICATIONS_URL = ''
 PAPERS_URL = ''
 DEFAULT_PAPERS_URL = ''
 
-DEFAULT_PUBLICATIONS_JSON_PATH = '/opt/webapp/webrob/default_files/default_publications_data.json'
-DEFAULT_PUBLICATIONS_PATH = '/opt/webapp/webrob/default_files/default_publications.bib'
-DEFAULT_PAPERS_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers.zip'
+DEFAULT_PUBLICATIONS_JSON_PATH = DEFAULT_FILES_PATH + 'default_publications_data.json'
+DEFAULT_PUBLICATIONS_PATH = DEFAULT_FILES_PATH + 'default_publications.bib'
+DEFAULT_PAPERS_ZIP_PATH = DEFAULT_FILES_PATH + 'default_papers.zip'
 
-PUBLICATIONS_DIR_PATH = '/opt/webapp/webrob/publications'
+PUBLICATIONS_DIR_PATH = WEBROB_PATH + 'publications'
 ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/all_publications.bib'
 TEST_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/test_publications.bib'
 PAPERS_ZIP_PATH = PUBLICATIONS_DIR_PATH + '/papers.zip'
-PAPERS_PATH = '/opt/webapp/webrob/static/papers/'
+PAPERS_PATH = STATIC_DIR_PATH + 'papers/'
 
 PUBLICATIONS_KEYWORDS = [
     ('openease_overview', 'Overview: Cognition-enabled Control'),
