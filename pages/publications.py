@@ -13,13 +13,15 @@ from utility import download_file, move_file, remove_if_is_dir, unzip_file, dump
 
 # for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
 PUBLICATIONS_DATA = {}
+
 PUBLICATIONS_URL = ''
 PAPERS_URL = ''
 DEFAULT_PAPERS_URL = ''
+
 DEFAULT_PUBLICATIONS_JSON_PATH = '/opt/webapp/webrob/default_files/default_publications_data.json'
 DEFAULT_PUBLICATIONS_PATH = '/opt/webapp/webrob/default_files/default_publications.bib'
-# has to be split due to GitHub file size limit
 DEFAULT_PAPERS_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers.zip'
+
 PUBLICATIONS_DIR_PATH = '/opt/webapp/webrob/publications'
 ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/all_publications.bib'
 TEST_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/test_publications.bib'
