@@ -80,6 +80,10 @@ def init_app(extra_config_settings={}):
             app.config['SECRET_KEY'] = open('/etc/ease_secret/secret', 'rb').read()
         except IOError:
             app.config['SECRET_KEY'] = random_string(64)
+    if os.environ['DOWNLOAD_DEFAULT_PAPERS'] == 'true':
+        app.config['DOWNLOAD_DEFAULT_PAPERS'] = True
+    else:
+        app.config['DOWNLOAD_DEFAULT_PAPERS'] = False
 
     # Setup Flask-Mail
     mail = Mail(app)

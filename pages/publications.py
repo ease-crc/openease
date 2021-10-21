@@ -16,11 +16,11 @@ from utility import download_file, unzip_file, dump_dict_to_json, get_dict_from_
 PUBLICATIONS_DATA = {}
 PUBLICATIONS_URL = ''
 PAPERS_URL = ''
+DEFAULT_PAPERS_URL = ''
 DEFAULT_PUBLICATIONS_JSON_PATH = '/opt/webapp/webrob/default_files/default_publications_data.json'
 DEFAULT_PUBLICATIONS_PATH = '/opt/webapp/webrob/default_files/default_publications.bib'
 # has to be split due to GitHub file size limit
-DEFAULT_PAPERS_1_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers_1.zip'
-DEFAULT_PAPERS_2_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers_2.zip'
+DEFAULT_PAPERS_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers.zip'
 PUBLICATIONS_DIR_PATH = '/opt/webapp/webrob/publications'
 ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/all_publications.bib'
 PAPERS_ZIP_PATH = PUBLICATIONS_DIR_PATH + '/papers.zip'
@@ -302,7 +302,7 @@ def _latex_to_text(tex):
     return LatexNodes2Text().latex_to_text(tex)
 
 
-def load_default_publications_and_papers():
+def load_default_publications_and_papers(download_default_papers=False):
     # This method loads the contents of publications_data.json and extracts
     # the contents of paper.zip and moves them to the correct locations.
     # 
@@ -325,16 +325,36 @@ def load_default_publications_and_papers():
     # documentation).
     
     # papers need to be loaded before (!) the publications
-    _load_default_papers()
+    if app.config['DOWNLOAD_DEFAULT_PAPERS']:
+        download_default_papers = True
+    
+    _load_default_papers(download_default_papers)
     _load_default_publications()
 
 
-def _load_default_papers():
+def _load_default_papers(download_default_papers=False):
+    if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
+        if download_default_papers or not app.config['DEBUG']:
+            download_file(DEFAULT_PAPERS_URL, DEFAULT_PAPERS_ZIP_PATH)
+
+            if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
+                _log_failed_default_papers_download()
+        else:
+            _log_could_not_find_default_papers()
+            return
+
     _clear_papers_dir()
-    unzip_file(DEFAULT_PAPERS_1_ZIP_PATH, PAPERS_PATH)
-    unzip_file(DEFAULT_PAPERS_2_ZIP_PATH, PAPERS_PATH)
+    unzip_file(DEFAULT_PAPERS_ZIP_PATH, PAPERS_PATH)
     app.logger.info("Loaded and extracted default papers.")
-    
+
+
+def _log_failed_default_papers_download():
+    app.logger.info("Download of default_papers.zip failed. Check if the URL is correct or instead try to manually download the file, place it /default_files and rebuild.")
+
+
+def _log_could_not_find_default_papers():
+    app.logger.info("Could not find default_papers.zip, therefore not loading any default papers.\n\nIf you wish to view papers on the publications-page during development, you have three option:\n1. Download the zip.file from " + DEFAULT_PAPERS_URL + " and put it into /default_files and re-run docker-compose up. This will increase build times a bit, especially if you have a slow drive.\n2. Set DOWNLOAD_DEFAULT_PAPERS in docker-compose.yml to true; this will download the papers each-time when building the container. This will increase build times quite a bit.\n3. Only if you have an admin account: Go to the admin's content-settings page and click 'Load Default'. This will download the zip.file into the running container and update all the necessary data-structures. WARNING: When the container is rebuilt, the file won't be there anymore. If you need a persistent solution, please follow either 1. or 2.")
+
 
 def _load_default_publications():
     global PUBLICATIONS_DATA
