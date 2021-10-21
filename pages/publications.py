@@ -2,7 +2,6 @@ from postgres import db
 import re
 import json
 
-from shutil import rmtree, move
 from string import punctuation
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
@@ -10,7 +9,7 @@ from pathlib2 import Path
 from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/pylatexenc/
 
 from app_and_db import app
-from utility import download_file, unzip_file, dump_dict_to_json, get_dict_from_json
+from utility import download_file, move_file, remove_if_is_dir, unzip_file, dump_dict_to_json, get_dict_from_json
 
 # for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
 PUBLICATIONS_DATA = {}
@@ -23,6 +22,7 @@ DEFAULT_PUBLICATIONS_PATH = '/opt/webapp/webrob/default_files/default_publicatio
 DEFAULT_PAPERS_ZIP_PATH = '/opt/webapp/webrob/default_files/default_papers.zip'
 PUBLICATIONS_DIR_PATH = '/opt/webapp/webrob/publications'
 ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/all_publications.bib'
+TEST_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/test_publications.bib'
 PAPERS_ZIP_PATH = PUBLICATIONS_DIR_PATH + '/papers.zip'
 PAPERS_PATH = '/opt/webapp/webrob/static/papers/'
 
@@ -68,8 +68,7 @@ def _download_papers():
 
 
 def _clear_papers_dir():
-    if Path(PAPERS_PATH).is_dir():
-        rmtree(PAPERS_PATH)
+    remove_if_is_dir(PAPERS_PATH)
 
 
 def _unzip_papers():
