@@ -43,7 +43,7 @@ def admin_required(f):
 def oe_password_validator(form, field):
     password = field.data
     if len(password) < 3:
-        raise ValidationError(_('Password must have at least 3 characters'))
+        raise ValidationError(('Password must have at least 3 characters'))
 
 
 def download_file(url, file_path):
