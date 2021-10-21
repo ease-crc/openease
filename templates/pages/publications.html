@@ -37,7 +37,7 @@ Publications
                         [bib]
                     </a>
 
-                    {% if elem['has_pdf'] is sameas true %}
+                    {% if elem['has_pdf'] is sameas true and show_pdf_field is sameas true %}
                     <a href={{ '/papers/' + elem['key'] + '.pdf' }}
                     target="_blank" rel="noopener noreferrer">
                         [pdf]

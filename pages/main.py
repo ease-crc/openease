@@ -18,6 +18,7 @@ from utility import admin_required, read_file
 from pages.overview import get_sanitizer, get_neem_data, get_neem_data_from_repo_path
 from pages.publications import get_papers_path, get_publications_data
 import knowrob.container as docker_interface
+from pathlib2 import Path
 from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
@@ -355,6 +356,11 @@ def render_all_publications():
 
     website_entries = p_data['website_entries']
 
+    if Path(get_papers_path()).is_dir():
+        show_pdf_field = any(Path(get_papers_path()).iterdir())
+    else:
+        show_pdf_field = False
+    
     return render_template('pages/publications.html', **locals())
 
 @app.route('/publications/<publication>')
