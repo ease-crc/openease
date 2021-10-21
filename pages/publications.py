@@ -76,7 +76,20 @@ def _unzip_papers():
 
 
 def _download_and_update_bibtex():
-    download_file(PUBLICATIONS_URL, ALL_PUBLICATIONS_PATH)
+    if _new_publications_has_no_errors():
+        move_file(TEST_PUBLICATIONS_PATH, ALL_PUBLICATIONS_PATH, overwrite=True)
+
+
+def _new_publications_has_no_errors():
+    try:
+        download_file(PUBLICATIONS_URL, TEST_PUBLICATIONS_PATH)
+        bibtex_db = parse_file(TEST_PUBLICATIONS_PATH)
+    except Exception as e:
+        app.logger.info('Had issues loading the new bibtex-file with pybtex. Check for errors and update the svn-repo. Using the old bibtex-file for now.\n\n' + e.__str__())
+        Path(TEST_PUBLICATIONS_PATH).unlink()
+        return False
+
+    return True
 
 
 def _load_bibtex_db_from_file(file_path):
