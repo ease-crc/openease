@@ -28,7 +28,7 @@
                 </em>
             </p>
     
-            {% if bibtex_entry['has_pdf'] is sameas true %}
+            {% if bibtex_entry['has_pdf'] is sameas true and show_pdf_field is sameas true %}
             <p class="col-12 d-flex justify-content-center justify-content-md-start col-md-auto mt-2 mt-md-0 ml-md-3">
                 <a href={{ '/papers/' + bibtex_entry['key'] + '.pdf' }}
                 target="_blank" rel="noopener noreferrer"

@@ -356,12 +356,18 @@ def render_all_publications():
 
     website_entries = p_data['website_entries']
     
-    if Path(get_papers_path()).is_dir():
-        show_pdf_field = any(Path(get_papers_path()).iterdir())
-    else:
-        show_pdf_field = False
+    show_pdf_field = _papers_dir_not_empty()
     
     return render_template('pages/publications.html', **locals())
+
+def _papers_dir_not_empty():
+    if Path(get_papers_path()).is_dir():
+        return any(Path(get_papers_path()).iterdir())
+    else:
+        return False
+
+def _papers_dir_empty():
+    return not _papers_dir_not_empty()
 
 @app.route('/publications/<publication>')
 def render_bibtex_entry(publication=None):
@@ -372,6 +378,8 @@ def render_bibtex_entry(publication=None):
     except Exception as e:
         flash('Could not find the specified publication.')
         return redirect(url_for('render_all_publications'))
+    
+    show_pdf_field = _papers_dir_not_empty()
 
     return render_template('pages/bibtex.html', **locals())
 
@@ -379,13 +387,13 @@ def render_bibtex_entry(publication=None):
 def get_paper(paper=None):
     papers_path = get_papers_path()
 
-    if Path(papers_path).is_dir():
-        if not any(Path(papers_path).iterdir()):
-            flash('Currently no papers available to load.')
-            return redirect(url_for('render_all_publications'))
-        if not Path(papers_path + paper).is_file():
-            flash('Cannot find requested paper.')
-            return redirect(url_for('render_all_publications'))
+    if _papers_dir_empty():
+        flash('Currently no papers available to load.')
+        return redirect(url_for('render_all_publications'))
+    
+    if not Path(papers_path + paper).is_file():
+        flash('Cannot find requested paper.')
+        return redirect(url_for('render_all_publications'))
 
     return send_from_directory(papers_path, paper)
 
