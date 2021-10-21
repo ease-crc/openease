@@ -210,14 +210,6 @@ def send_from_node_modules(url_path, file_path):
 def send_from_node_modules_root(file_path):
     return send_from_node_modules('/', file_path)
 
-@app.route('/')
-def render_main():
-    if not current_user.is_authenticated:
-        return redirect(url_for('user.login'))
-    if 'user_container_name' not in session:
-        return redirect(url_for('user.logout'))
-    return redirect(url_for('render_homepage'))
-
 @app.route('/QA')
 @login_required
 def render_QA_page():
@@ -291,8 +283,7 @@ def render_change_password_post():
 def admin_cookie():
     return render_template('settings/cookies.html', **locals())
 
-
-@app.route('/homepage')
+@app.route('/')
 def render_homepage():
     could_connect = True
 
