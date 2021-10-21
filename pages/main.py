@@ -361,7 +361,11 @@ def render_all_publications():
 def render_bibtex_entry(publication=None):
     p_data = get_publications_data()
 
+    try:
     bibtex_entry = p_data['all_entries'][publication]
+    except Exception as e:
+        flash('Could not find the specified publication.')
+        return redirect(url_for('render_all_publications'))
 
     return render_template('pages/bibtex.html', **locals())
 
