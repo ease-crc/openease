@@ -355,7 +355,7 @@ def render_all_publications():
     p_data = get_publications_data()
 
     website_entries = p_data['website_entries']
-
+    
     if Path(get_papers_path()).is_dir():
         show_pdf_field = any(Path(get_papers_path()).iterdir())
     else:
@@ -368,7 +368,7 @@ def render_bibtex_entry(publication=None):
     p_data = get_publications_data()
 
     try:
-    bibtex_entry = p_data['all_entries'][publication]
+        bibtex_entry = p_data['all_entries'][publication]
     except Exception as e:
         flash('Could not find the specified publication.')
         return redirect(url_for('render_all_publications'))
