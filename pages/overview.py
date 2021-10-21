@@ -9,17 +9,25 @@ from pathlib2 import Path
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
-from utility import download_file, read_file, unzip_file, write_non_binary_file, write_binary_file, dump_dict_to_json, get_dict_from_json
+from utility import download_file, read_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
 from app_and_db import app
 
 WEBROB_PATH = '/opt/webapp/webrob/'
-DEFAULT_FILES_PATH = WEBROB_PATH + 'default_files/'
+WEBROB_STATIC_PATH = WEBROB_PATH + 'static/'
+
 NEEM_OVERVIEW_MARKDOWNS_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_IMAGES_PATH = 'img/neem-images/'
+NEEM_IMAGES_STATIC_DIR_PATH = WEBROB_STATIC_PATH + NEEM_IMAGES_PATH
+
+DEFAULT_FILES_PATH = WEBROB_PATH + 'default_files/'
 DEFAULT_NEEM_DATA_PATH = DEFAULT_FILES_PATH + 'default_overview_data.json'
+DEFAULT_NEEM_IMAGES_PATH = DEFAULT_FILES_PATH + 'neem-images'
+DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH = DEFAULT_FILES_PATH + 'overview-contents'
+DEFAULT_OVERVIEW_ZIP_PATH = DEFAULT_FILES_PATH + 'default_overview.zip'
+
 CURR_IMG_DIR = ''
 CURR_NEEM_REPO = ''
 
@@ -166,7 +174,7 @@ def _compress_image(file_path, compression_value=30):
 
 
 def _get_local_neem_cover_image_path(neem):
-    return WEBROB_PATH + 'static/' + _get_static_folder_neem_cover_image_path(neem.image, neem.neem_repo_path)
+    return WEBROB_STATIC_PATH + _get_static_folder_neem_cover_image_path(neem.image, neem.neem_repo_path)
 
 
 def _get_static_folder_neem_cover_image_path(neem_image_url, neem_name):
@@ -281,27 +289,26 @@ def load_default_overview_files():
 
 def _unzip_default_files():
     _remove_previous_default_files()
-    zip_path = DEFAULT_FILES_PATH + 'overview.zip'
-    unzip_file(zip_path, DEFAULT_FILES_PATH)
+    unzip_file(DEFAULT_OVERVIEW_ZIP_PATH, DEFAULT_FILES_PATH)
     app.logger.info("Unzipped default overview files.")
 
 
 def _remove_previous_default_files():
-    _remove_if_is_dir(DEFAULT_FILES_PATH + 'overview-contents')
-    _remove_if_is_dir(DEFAULT_FILES_PATH + 'neem-images')
+    remove_if_is_dir(DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH)
+    remove_if_is_dir(DEFAULT_NEEM_IMAGES_PATH)
 
 
 def _load_default_overview_mds():
     # necessary if the container is restarted after having been put on pause
-    _remove_if_is_dir(NEEM_OVERVIEW_MARKDOWNS_PATH)
-    copytree(DEFAULT_FILES_PATH + 'overview-contents', WEBROB_PATH + 'overview-contents')
+    remove_if_is_dir(NEEM_OVERVIEW_MARKDOWNS_PATH)
+    copytree(DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH, NEEM_OVERVIEW_MARKDOWNS_PATH)
     app.logger.info("Loaded default overview markdowns.")
 
 
 def _load_default_overview_images():
     # necessary if the container is restarted after having been put on pause
-    _remove_if_is_dir(WEBROB_PATH + 'static/img/neem-images')
-    copytree(DEFAULT_FILES_PATH + 'neem-images', WEBROB_PATH + 'static/img/neem-images')
+    remove_if_is_dir(NEEM_IMAGES_STATIC_DIR_PATH)
+    copytree(DEFAULT_NEEM_IMAGES_PATH, NEEM_IMAGES_STATIC_DIR_PATH)
     app.logger.info("Loaded default overview images.")
 
 
@@ -311,15 +318,6 @@ def _load_default_neem_data():
     NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_DATA_PATH)
     app.logger.info("Loaded default overview database.")
 
-
-def _remove_if_is_dir(path):
-    if Path(path).is_dir():
-        rmtree(path)
-
-
-def _remove_if_is_file(path):
-    if Path(path).is_file():
-        Path(path).unlink()
 
 
 def get_sanitizer():

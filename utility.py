@@ -3,6 +3,7 @@
 # @author Daniel Be�ler
 
 import os
+import shutil
 import string
 import requests
 import json
@@ -62,6 +63,24 @@ def download_file(url, file_path):
             file.unlink()
         
         write_binary_file(r.content, file_path)
+
+
+def move_file(src, dest, overwrite=False):
+    if overwrite and Path(dest).is_file():
+        app.logger.info('Cannot move file, because file already exists at destination and overwrite-flag is set to "False".')
+        return
+    
+    shutil.move(src, dest)
+
+
+def remove_if_is_dir(path):
+    if Path(path).is_dir():
+        shutil.rmtree(path)
+
+
+def remove_if_is_file(path):
+    if Path(path).is_file():
+        Path(path).unlink()
 
 
 def unzip_file(src, dest):
