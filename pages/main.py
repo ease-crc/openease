@@ -379,6 +379,14 @@ def render_bibtex_entry(publication=None):
 def get_paper(paper=None):
     papers_path = get_papers_path()
 
+    if Path(papers_path).is_dir():
+        if not any(Path(papers_path).iterdir()):
+            flash('Currently no papers available to load.')
+            return redirect(url_for('render_all_publications'))
+        if not Path(papers_path + paper).is_file():
+            flash('Cannot find requested paper.')
+            return redirect(url_for('render_all_publications'))
+
     return send_from_directory(papers_path, paper)
 
 #footer
