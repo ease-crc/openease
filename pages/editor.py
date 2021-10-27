@@ -8,8 +8,9 @@ from urlparse import urlparse
 from flask import session, request, render_template, jsonify, send_file
 from flask_user import current_app
 
-from app_and_db import app
 import knowrob.container as docker_interface
+from app_and_db import app
+from config.settings import WEBROB_PATH
 from knowrob.container import LFTransfer
 from utility import admin_required
 
@@ -52,7 +53,7 @@ def pkg_new():
         raise PackageError("A package with the name '" + packageName + "' already exists.")
 
     # Make sure templates are available
-    templatePath = '/opt/webapp/webrob/knowrob/pkg_template'
+    templatePath = WEBROB_PATH + 'knowrob/pkg_template'
     if not os.path.exists(templatePath):
         raise PackageError("Package template could not be found.")
 

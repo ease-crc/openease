@@ -10,7 +10,7 @@ from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
 from utility import download_file, read_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
-from pages.content import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH
+from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 

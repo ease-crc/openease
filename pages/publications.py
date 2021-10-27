@@ -9,8 +9,8 @@ from pathlib2 import Path
 from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/pylatexenc/
 
 from app_and_db import app
+from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH
 from utility import download_file, move_file, remove_if_is_dir, unzip_file, dump_dict_to_json, get_dict_from_json
-from pages.content import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH
 
 # for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
 PUBLICATIONS_DATA = {}
