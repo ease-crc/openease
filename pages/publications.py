@@ -9,25 +9,24 @@ from pathlib2 import Path
 from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/pylatexenc/
 
 from app_and_db import app
-from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH
+from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from utility import download_file, move_file, remove_if_is_dir, unzip_file, dump_dict_to_json, get_dict_from_json
-
-# for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
-PUBLICATIONS_DATA = {}
 
 PUBLICATIONS_URL = ''
 PAPERS_URL = ''
 DEFAULT_PAPERS_URL = ''
 
-DEFAULT_PUBLICATIONS_JSON_PATH = DEFAULT_FILES_PATH + 'default_publications_data.json'
+PUBLICATIONS_DIR_PATH = WEBROB_PATH + 'publications/'
+PUBLICATIONS_DATA_PATH = PUBLICATIONS_DIR_PATH + 'publications_data.json'
+ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + 'all_publications.bib'
+TEST_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + 'test_publications.bib'
+PAPERS_ZIP_PATH = PUBLICATIONS_DIR_PATH + 'papers.zip'
+PAPERS_PATH = STATIC_DIR_PATH + 'papers/'
+
+DEFAULT_PUBLICATIONS_DATA_PATH = DEFAULT_FILES_PATH + 'default_publications_data.json'
 DEFAULT_PUBLICATIONS_PATH = DEFAULT_FILES_PATH + 'default_publications.bib'
 DEFAULT_PAPERS_ZIP_PATH = DEFAULT_FILES_PATH + 'default_papers.zip'
 
-PUBLICATIONS_DIR_PATH = WEBROB_PATH + 'publications'
-ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/all_publications.bib'
-TEST_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + '/test_publications.bib'
-PAPERS_ZIP_PATH = PUBLICATIONS_DIR_PATH + '/papers.zip'
-PAPERS_PATH = STATIC_DIR_PATH + 'papers/'
 
 PUBLICATIONS_KEYWORDS = [
     ('openease_overview', 'Overview: Cognition-enabled Control'),
@@ -40,6 +39,8 @@ PUBLICATIONS_KEYWORDS = [
     ('openease_natural_language', 'Natural-language Instruction Interpretation')
 ]
 
+# for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
+PUBLICATIONS_DATA = {}
 
 def download_and_update_papers_and_bibtex():
     # papers need to be loaded before (!) the publications
@@ -374,11 +375,11 @@ def _log_could_not_find_default_papers():
 def _load_default_publications():
     global PUBLICATIONS_DATA
 
-    PUBLICATIONS_DATA = get_dict_from_json(DEFAULT_PUBLICATIONS_JSON_PATH)
+    PUBLICATIONS_DATA = get_dict_from_json(DEFAULT_PUBLICATIONS_DATA_PATH)
     app.logger.info("Loaded default publications database.")
 
 
-def _dump_publications_data_as_json():
+def dump_publications_data_as_json():
     # This method is used to dump the PUBLICATIONS_DATA dict to a
     # file. This is useful when the publications_data.json 
     # should be updated, which contains the default data for the
@@ -386,7 +387,7 @@ def _dump_publications_data_as_json():
     # container with the docker cp command. For more information
     # look at load_default_publications_and_papers().
     
-    dump_dict_to_json(PUBLICATIONS_DATA, DEFAULT_PUBLICATIONS_JSON_PATH)
+    dump_dict_to_json(PUBLICATIONS_DATA, PUBLICATIONS_DATA_PATH)
 
 
 def get_publications_data():

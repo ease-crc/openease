@@ -10,19 +10,21 @@ from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
 from utility import download_file, read_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
-from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH
+from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
 from app_and_db import app
 
-NEEM_OVERVIEW_MARKDOWNS_PATH = WEBROB_PATH + 'overview-contents/'
+NEEM_OVERVIEW_PATH = WEBROB_PATH + 'overview-contents/'
+NEEM_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
+NEEM_OVERVIEW_MARKDOWNS_PATH = WEBROB_PATH + 'neem-markdowns/'
 NEEM_IMAGES_PATH = 'img/neem-images/'
 NEEM_IMAGES_STATIC_DIR_PATH = STATIC_DIR_PATH + NEEM_IMAGES_PATH
 
 DEFAULT_NEEM_DATA_PATH = DEFAULT_FILES_PATH + 'default_overview_data.json'
 DEFAULT_NEEM_IMAGES_PATH = DEFAULT_FILES_PATH + 'neem-images'
-DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH = DEFAULT_FILES_PATH + 'overview-contents'
+DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH = DEFAULT_FILES_PATH + 'neem-markdowns'
 DEFAULT_OVERVIEW_ZIP_PATH = DEFAULT_FILES_PATH + 'default_overview.zip'
 
 CURR_IMG_DIR = ''
@@ -245,14 +247,14 @@ def get_neem_data_from_repo_path(neem_repo_path):
     return next((n_data for n_data in NEEM_DATA['all_neems'] if n_data['neem_repo_path'] == neem_repo_path), None)
 
 
-def _dump_neem_data_as_json():
+def dump_neem_data_as_json():
     # This method is used to dump the NEEM_DATA dict to a file.
     # This is useful, if overview_data.json inside overview.zip
     # should be updated, which contains the default data for the
     # developer mode. You can copy files from within the docker 
     # container with the docker cp command. For more information
     # look at load_overview_files_default().
-    dump_dict_to_json(NEEM_DATA, DEFAULT_NEEM_DATA_PATH)
+    dump_dict_to_json(NEEM_DATA, NEEM_DATA_PATH)
 
 
 def load_default_overview_files():
