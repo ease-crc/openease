@@ -18,7 +18,7 @@ from app_and_db import app
 
 NEEM_OVERVIEW_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
-NEEM_OVERVIEW_MARKDOWNS_PATH = WEBROB_PATH + 'neem-markdowns/'
+NEEM_OVERVIEW_MARKDOWNS_PATH = NEEM_OVERVIEW_PATH + 'neem-markdowns/'
 NEEM_IMAGES_PATH = 'img/neem-images/'
 NEEM_IMAGES_STATIC_DIR_PATH = STATIC_DIR_PATH + NEEM_IMAGES_PATH
 
