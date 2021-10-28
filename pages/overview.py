@@ -4,12 +4,11 @@ import requests
 
 from PIL import Image
 from furl import furl
-from shutil import copytree, rmtree
 from pathlib2 import Path
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
-from utility import download_file, read_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
+from utility import copy_dir, download_file, read_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
@@ -300,14 +299,14 @@ def _remove_previous_default_files():
 def _load_default_overview_mds():
     # necessary if the container is restarted after having been put on pause
     remove_if_is_dir(NEEM_OVERVIEW_MARKDOWNS_PATH)
-    copytree(DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH, NEEM_OVERVIEW_MARKDOWNS_PATH)
+    copy_dir(DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH, NEEM_OVERVIEW_MARKDOWNS_PATH)
     app.logger.info("Loaded default overview markdowns.")
 
 
 def _load_default_overview_images():
     # necessary if the container is restarted after having been put on pause
     remove_if_is_dir(NEEM_IMAGES_STATIC_DIR_PATH)
-    copytree(DEFAULT_NEEM_IMAGES_PATH, NEEM_IMAGES_STATIC_DIR_PATH)
+    copy_dir(DEFAULT_NEEM_IMAGES_PATH, NEEM_IMAGES_STATIC_DIR_PATH)
     app.logger.info("Loaded default overview images.")
 
 
