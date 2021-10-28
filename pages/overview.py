@@ -1,6 +1,4 @@
 import re
-import json
-import requests
 
 from PIL import Image
 from furl import furl
