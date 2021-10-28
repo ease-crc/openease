@@ -65,6 +65,14 @@ def download_file(url, file_path):
         write_binary_file(r.content, file_path)
 
 
+def copy_file(src, dest):
+    shutil.copy(src, dest)
+
+
+def copy_dir(src, dest):
+    shutil.copytree(src, dest)
+
+
 def move_file(src, dest, overwrite=False):
     if overwrite and Path(dest).is_file():
         app.logger.info('Cannot move file, because file already exists at destination and overwrite-flag is set to "False".')
