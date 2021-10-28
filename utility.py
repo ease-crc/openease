@@ -9,6 +9,7 @@ import requests
 import json
 
 from flask import session
+from config.settings import WEBROB_PATH
 from flask_user import current_user
 from flask_user import current_app
 from functools import wraps
@@ -124,3 +125,23 @@ def write_binary_file(data, dest):
 def _write_file(data, dest, mode):
     with open(dest, mode) as file:
         file.write(data)
+
+
+def make_archive_of_files_and_dirs(sources, dest):
+    # src has to be a list, even if it just has one item
+    temp = WEBROB_PATH + 'temp'
+    Path(temp).mkdir(parents=True)
+
+    for item in sources:
+        if Path(item).is_dir():
+            shutil.copytree(item, temp + '/' + Path(item).stem)
+        else:
+            shutil.copy(item, temp)
+
+    zip = '.zip'
+    if zip in dest:
+        p_dest = dest.replace(zip, '')
+    
+    shutil.make_archive(p_dest, 'zip', root_dir=temp)
+
+    remove_if_is_dir(temp)

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Content Settings</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+{% endblock %}
+
+{% block body %}
+<div class="container p-4">
+    <div class="row mx-0 mb-4 flex-column">
+        <h1>Content Management</h1>
+        <div class="row mx-0 pl-4 flex-column">
+            <div class="row mx-0 my-2">
+                <a href="" class="btn btn-success mx-1">
+                    Update All Content
+                </a>
+                <a href="" class="btn btn-outline-secondary mx-1">
+                    Load All Defaults
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mb-4 flex-column">
+        <h2>Publications</h2>
+        <div class="row mx-0 my-2 pl-4">
+            <a href="" class="btn btn-success mx-1">
+                Update Publications & Papers
+            </a>
+            <a href="" class="btn btn-outline-secondary mx-1">
+                Load Defaults
+            </a>
+        </div>
+        <div class="row flex-column mx-0 mt-2 pl-4">
+            <h3>Downloads</h3>
+            <div class="row mx-0 my-2">
+                <a href="{{ url_for('send_publications_data_json') }}" class="btn btn-success mx-1">
+                    Publications Data (JSON)
+                </a>
+                <a href="{{ url_for('send_publications_bibtex') }}" class="btn btn-success mx-1">
+                    Publications BibTex
+                </a>
+                <a href="{{ url_for('send_papers_zip') }}" class="btn btn-success mx-1">
+                    Papers
+                </a>
+                <a href="{{ url_for('send_publications_zip') }}" class="btn btn-outline-primary mx-1">
+                    Download All
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mb-3 flex-column">
+        <h2>Overview Content</h2>
+        <div class="row mx-0 my-2 pl-4">
+            <a href="" class="btn btn-success mx-1">
+                Update Overview Data & Files
+            </a>
+            <a href="" class="btn btn-outline-secondary mx-1">
+                Load Defaults
+            </a>
+        </div>
+        <div class="row flex-column mx-0 mt-2 pl-4">
+            <h3>Downloads</h3>
+            <div class="row mx-0 my-2">
+                <a href="{{ url_for('send_overview_data_json') }}" class="btn btn-success mx-1">
+                    Overview Data (JSON)
+                </a>
+                <a href="{{ url_for('send_overview_mds_and_imgs') }}" class="btn btn-success mx-1">
+                    Overview Markdowns & Images
+                </a>
+                <a href="{{ url_for('send_overview_zip') }}" class="btn btn-outline-primary mx-1">
+                    Download All
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        
+    </div>
+</div>
+{% endblock %}

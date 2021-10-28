@@ -9,7 +9,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 
 from app_and_db import app
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
-from utility import download_file, move_file, remove_if_is_dir, unzip_file, dump_dict_to_json, get_dict_from_json
+from utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json
 
 PUBLICATIONS_URL = ''
 PAPERS_URL = ''
@@ -26,6 +26,10 @@ DEFAULT_PUBLICATIONS_DATA_PATH = DEFAULT_FILES_PATH + 'default_publications_data
 DEFAULT_PUBLICATIONS_PATH = DEFAULT_FILES_PATH + 'default_publications.bib'
 DEFAULT_PAPERS_ZIP_PATH = DEFAULT_FILES_PATH + 'default_papers.zip'
 
+DOWNLOADS_DIR_PUBLICATIONS_DATA = DOWNLOADS_DIR_PATH + 'publication_data.json'
+DOWNLOADS_DIR_PUBLICATIONS_BIBTEX = DOWNLOADS_DIR_PATH + 'publications.bib'
+DOWNLOADS_DIR_PAPERS_ZIP = DOWNLOADS_DIR_PATH + 'papers.zip'
+DOWNLOADS_DIR_PUBLICATIONS_ZIP = DOWNLOADS_DIR_PATH + 'publications.zip'
 
 PUBLICATIONS_KEYWORDS = [
     ('openease_overview', 'Overview: Cognition-enabled Control'),
@@ -55,6 +59,8 @@ def download_and_update_papers_and_bibtex():
         app.logger.info('Neem-Data was empty or None. Loading default files instead.')
         load_default_publications_and_papers()
         return
+
+    _prepare_publications_downloads()
 
     app.logger.info('Finished all downloads for publications pages.')  
 
@@ -346,6 +352,8 @@ def load_default_publications_and_papers(download_default_papers=False):
     _load_default_papers(download_default_papers)
     _load_default_publications()
 
+    _prepare_publications_downloads()
+
 
 def _load_default_papers(download_default_papers=False):
     if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
@@ -385,8 +393,70 @@ def dump_publications_data_as_json():
     # developer mode. You can copy files from within the docker 
     # container with the docker cp command. For more information
     # look at load_default_publications_and_papers().
-    
+    remove_if_is_file(PUBLICATIONS_DATA_PATH)
     dump_dict_to_json(PUBLICATIONS_DATA, PUBLICATIONS_DATA_PATH)
+
+
+def _prepare_publications_downloads():
+    if app.config['DEBUG'] and not app.config['PREPARE_DOWNLOADABLE_FILES']:
+        app.logger.info('Config set to not prepare downloadable files.\nWill not prepare downloadable publication-files.')
+        return
+
+    app.logger.info('Preparing downloadable files for publications.')
+
+    if not Path(PUBLICATIONS_DIR_PATH).is_dir():
+        Path(PUBLICATIONS_DIR_PATH).mkdir(parents=True)
+
+    dump_publications_data_as_json()
+    _prepare_publications_data_download()
+    _prepare_publications_bibtex_download()
+    _prepare_papers_download()
+    _prepare_publications_zip_download()
+
+    app.logger.info('Finished')
+
+
+def _prepare_publications_data_download():
+    remove_if_is_file(DOWNLOADS_DIR_PUBLICATIONS_DATA)
+    copy_file(PUBLICATIONS_DATA_PATH, DOWNLOADS_DIR_PUBLICATIONS_DATA)
+
+
+def _prepare_publications_bibtex_download():
+    bibtex_path = _get_current_bibtex_path()
+    remove_if_is_file(DOWNLOADS_DIR_PUBLICATIONS_BIBTEX)
+    copy_file(bibtex_path, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX)
+
+
+def _get_current_bibtex_path():
+    return ALL_PUBLICATIONS_PATH if Path(ALL_PUBLICATIONS_PATH).is_file() else DEFAULT_PUBLICATIONS_PATH
+
+
+def _prepare_papers_download():
+    if not Path(PAPERS_PATH).is_dir() or not any(Path(PAPERS_PATH).iterdir()):
+        app.logger.info('No papers found, so papers.zip won\'t be created for downloads.')
+        return
+    
+    remove_if_is_file(DOWNLOADS_DIR_PAPERS_ZIP)
+    make_archive_of_files_and_dirs([
+        PAPERS_PATH
+    ], DOWNLOADS_DIR_PAPERS_ZIP)
+
+
+def _prepare_publications_zip_download():
+    bibtex_path = _get_current_bibtex_path()
+
+    path_list = [
+        PUBLICATIONS_DATA_PATH,
+        bibtex_path
+    ]
+
+    if Path(PAPERS_PATH).is_dir() and any(Path(PAPERS_PATH).iterdir()):
+        path_list.append(PAPERS_PATH)
+    else:
+        app.logger.info('No papers found, so no papers added to publications.zip.')
+    
+    remove_if_is_file(DOWNLOADS_DIR_PUBLICATIONS_ZIP)
+    make_archive_of_files_and_dirs(path_list, DOWNLOADS_DIR_PUBLICATIONS_ZIP)
 
 
 def get_publications_data():

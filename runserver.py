@@ -8,6 +8,7 @@ import os
 
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
+from config.settings import DOWNLOADS_DIR_PATH
 
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -17,6 +18,7 @@ from flask_mail import Mail
 from flask_user import UserManager, SQLAlchemyAdapter
 from flask.ext.babel import Babel
 from wtforms.validators import ValidationError
+from pathlib2 import Path
 
 from app_and_db import app, db
 from utility import random_string, oe_password_validator
@@ -80,11 +82,17 @@ def init_app(extra_config_settings={}):
             app.config['SECRET_KEY'] = open('/etc/ease_secret/secret', 'rb').read()
         except IOError:
             app.config['SECRET_KEY'] = random_string(64)
+    
     if os.environ['DOWNLOAD_DEFAULT_PAPERS'] == 'true':
         app.config['DOWNLOAD_DEFAULT_PAPERS'] = True
     else:
         app.config['DOWNLOAD_DEFAULT_PAPERS'] = False
 
+    if os.environ['PREPARE_DOWNLOADABLE_FILES'] == 'true':
+        app.config['PREPARE_DOWNLOADABLE_FILES'] = True
+    else:
+        app.config['PREPARE_DOWNLOADABLE_FILES'] = False
+    
     # Setup Flask-Mail
     mail = Mail(app)
     babel = Babel(app)
@@ -113,12 +121,16 @@ def init_app(extra_config_settings={}):
     from pages import editor
     from pages import tutorials
     from pages import oauth
+    from pages import content
 
     add_user(user_manager=app.user_manager,
              name='admin',
              mail=os.environ.get('OPENEASE_MAIL_USERNAME', 'admin@openease.org'),
              pw=ADMIN_USER_DEFAULT_PW,
              roles=['admin'])
+
+    # create downloads-folder
+    Path(DOWNLOADS_DIR_PATH).mkdir(parents=True)
 
     # Start background scheduler to load markdowns for overview pages
     if _config_is_debug():

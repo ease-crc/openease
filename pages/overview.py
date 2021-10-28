@@ -6,7 +6,7 @@ from pathlib2 import Path
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
-from utility import copy_dir, download_file, read_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
+from utility import copy_dir, copy_file, download_file, make_archive_of_files_and_dirs, read_file, remove_if_is_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
@@ -23,6 +23,10 @@ DEFAULT_NEEM_DATA_PATH = DEFAULT_FILES_PATH + 'default_overview_data.json'
 DEFAULT_NEEM_IMAGES_PATH = DEFAULT_FILES_PATH + 'neem-images'
 DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH = DEFAULT_FILES_PATH + 'neem-markdowns'
 DEFAULT_OVERVIEW_ZIP_PATH = DEFAULT_FILES_PATH + 'default_overview.zip'
+
+DOWNLOADS_DIR_OVERVIEW_DATA = DOWNLOADS_DIR_PATH + 'overview_data.json'
+DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS = DOWNLOADS_DIR_PATH + 'overview_markdowns.zip'
+DOWNLOADS_DIR_OVERVIEW_ZIP = DOWNLOADS_DIR_PATH + 'overview.zip'
 
 CURR_IMG_DIR = ''
 CURR_NEEM_REPO = ''
@@ -62,6 +66,8 @@ def download_neem_files():
         app.logger.info('Neem-Data was empty or None. Loading default files instead.')
         load_default_overview_files()
         return
+
+    _prepare_overview_downloads()
 
     app.logger.info('Finished all downloads for overview pages.')
 
@@ -251,6 +257,7 @@ def dump_neem_data_as_json():
     # developer mode. You can copy files from within the docker 
     # container with the docker cp command. For more information
     # look at load_overview_files_default().
+    remove_if_is_file(NEEM_DATA_PATH)
     dump_dict_to_json(NEEM_DATA, NEEM_DATA_PATH)
 
 
@@ -281,6 +288,7 @@ def load_default_overview_files():
     _load_default_overview_mds()    
     _load_default_overview_images()
     _load_default_neem_data()
+    _prepare_overview_downloads()
 
 
 def _unzip_default_files():
@@ -314,6 +322,42 @@ def _load_default_neem_data():
     NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_DATA_PATH)
     app.logger.info("Loaded default overview database.")
 
+
+def _prepare_overview_downloads():
+    if app.config['DEBUG'] and not app.config['PREPARE_DOWNLOADABLE_FILES']:
+        app.logger.info('Config set to not prepare downloadable files.\nWill not prepare downloadable overview-files.')
+        return
+
+    app.logger.info('Preparing downloadable files for overview-pages.')
+
+    dump_neem_data_as_json()
+    _prepare_overview_data_download()
+    _prepare_overview_mds_and_imgs_download()
+    _prepare_overview_zip_download()
+
+    app.logger.info('Finished.')
+
+
+def _prepare_overview_data_download():
+    remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_DATA)
+    copy_file(NEEM_DATA_PATH, DOWNLOADS_DIR_OVERVIEW_DATA)
+
+
+def _prepare_overview_mds_and_imgs_download():
+    remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS)
+    make_archive_of_files_and_dirs([
+            NEEM_OVERVIEW_MARKDOWNS_PATH,
+            NEEM_IMAGES_STATIC_DIR_PATH
+        ], DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS)
+
+
+def _prepare_overview_zip_download():
+    remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_ZIP)
+    make_archive_of_files_and_dirs([
+            NEEM_DATA_PATH,
+            NEEM_OVERVIEW_MARKDOWNS_PATH,
+            NEEM_IMAGES_STATIC_DIR_PATH
+        ], DOWNLOADS_DIR_OVERVIEW_ZIP)
 
 
 def get_sanitizer():
