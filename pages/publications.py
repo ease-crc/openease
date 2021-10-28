@@ -1,6 +1,5 @@
 from postgres import db
 import re
-import json
 
 from string import punctuation
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
