@@ -1,7 +1,5 @@
-from postgres import db
 import re
 
-from string import punctuation
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
 from pathlib2 import Path
