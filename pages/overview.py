@@ -3,10 +3,11 @@ import re
 from PIL import Image
 from furl import furl
 from pathlib2 import Path
+from threading import Lock
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
-from utility import copy_dir, copy_file, download_file, make_archive_of_files_and_dirs, read_file, remove_if_is_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
+from utility import copy_dir, copy_file, download_file, make_archive_of_files_and_dirs, mutex_lock, read_file, remove_if_is_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
@@ -46,9 +47,12 @@ SUPPORTED_IMAGE_TYPES_FOR_COMPRESSION = [
     ".bmp"
 ]
 
+OVERVIEW_MUTEX = Lock()
+
 # for structure of NEEM_DATA check default_files/default_overview_data.json
 NEEM_DATA = {}
 
+@mutex_lock(OVERVIEW_MUTEX)
 def download_neem_files():
     app.logger.info('Downloading files for neems...')
 
@@ -261,6 +265,7 @@ def dump_neem_data_as_json():
     dump_dict_to_json(NEEM_DATA, NEEM_DATA_PATH)
 
 
+@mutex_lock(OVERVIEW_MUTEX)
 def load_default_overview_files():
     # This method loads the contents of overview.zip and moves
     # them to the correct locations.

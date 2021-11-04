@@ -1,5 +1,6 @@
 import re
 
+from threading import Lock
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
 from pathlib2 import Path
@@ -7,7 +8,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 
 from app_and_db import app
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
-from utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json
+from utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, mutex_lock, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json
 
 PUBLICATIONS_URL = ''
 PAPERS_URL = ''
@@ -40,9 +41,12 @@ PUBLICATIONS_KEYWORDS = [
     ('openease_natural_language', 'Natural-language Instruction Interpretation')
 ]
 
+PUBLICATIONS_MUTEX = Lock()
+
 # for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
 PUBLICATIONS_DATA = {}
 
+@mutex_lock(PUBLICATIONS_MUTEX)
 def download_and_update_papers_and_bibtex():
     # papers need to be loaded before (!) the publications
     try:
@@ -321,6 +325,7 @@ def _latex_to_text(tex):
     return LatexNodes2Text().latex_to_text(tex)
 
 
+@mutex_lock(PUBLICATIONS_MUTEX)
 def load_default_publications_and_papers(download_default_papers=False):
     # This method loads the contents of publications_data.json and extracts
     # the contents of paper.zip and moves them to the correct locations.
