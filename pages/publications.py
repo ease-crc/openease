@@ -64,7 +64,7 @@ def download_and_update_papers_and_bibtex():
 
     _prepare_publications_downloads()
 
-    app.logger.info('Finished all downloads for publications pages.')  
+    app.logger.info('Finished all downloads for publications pages.')
 
 
 def _download_and_unzip_papers():
