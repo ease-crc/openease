@@ -80,7 +80,10 @@ def _download_all_neem_markdowns(neems):
     app.logger.info('Downloading markdown-files for neems... (and their images')
 
     for neem in neems:
-        _download_neem_markdown(neem)
+        try:
+            _download_neem_markdown(neem)
+        except Exception as e:
+            app.logger.warning('Had troubles downloading a markdown-file.\n\n' + e.__str__())
 
     app.logger.info('Finished downloading markdown-files for neems.')
 
