@@ -7,6 +7,7 @@
 import os
 
 import atexit
+from datetime import date, datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from config.settings import DOWNLOADS_DIR_PATH
 
@@ -131,11 +132,16 @@ def _config_is_debug():
 
 def _start_background_scheduler():
     BACKGROUND_SCHEDULER.add_job(func=download_neem_files, trigger="interval", hours=3, coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
-    BACKGROUND_SCHEDULER.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", days=1, coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", days=1, next_run_time=_get_tomorrow_3_am_datetime(), coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
     BACKGROUND_SCHEDULER.start()
 
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: BACKGROUND_SCHEDULER.shutdown())
+
+
+def _get_tomorrow_3_am_datetime():
+    today = date.today()
+    return datetime(today.year, today.month, today.day, 3, 0, 0)
 
 
 def _run_server():
