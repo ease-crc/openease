@@ -16,10 +16,12 @@ from functools import wraps
 from threading import Lock, Thread
 from zipfile import ZipFile
 from pathlib2 import Path
+from concurrent.futures import ThreadPoolExecutor
 
 from app_and_db import app
 from Crypto.Random import random
 
+THREAD_POOL_EXECUTOR = ThreadPoolExecutor(max_workers=3)
 
 def get_user_dir():
     userDir = "/home/ros/user_data/" + session['user_container_name']
@@ -148,7 +150,7 @@ def make_archive_of_files_and_dirs(sources, dest):
 
 
 def start_thread(target_func):
-    Thread(target=target_func).start()
+    THREAD_POOL_EXECUTOR.submit(target_func)
 
 
 def mutex_lock(mutex=None):
