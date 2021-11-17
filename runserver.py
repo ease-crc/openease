@@ -138,15 +138,16 @@ def init_app(extra_config_settings={}):
 
     # Start background scheduler to load markdowns for overview pages
     if _config_is_debug():
-        # loads default neem-overview stuff for development, instead of fetching them
+        # load defaults, instead of fetching updates
+        # saves a lot of time on start-up
         load_default_overview_files()
-        # loads default publications-bib and papers for development, instead of fetching them
         load_default_publications_and_papers()
     else:
-        _start_background_scheduler()
         # initial download of files
         download_neem_files()
         download_and_update_papers_and_bibtex()
+        # start background jobs for periodic fetching
+        _start_background_scheduler()
     
     app.logger.info("Webapp started.")
     return app
