@@ -133,7 +133,8 @@ def init_app(extra_config_settings={}):
              roles=['admin'])
 
     # create downloads-folder
-    Path(DOWNLOADS_DIR_PATH).mkdir(parents=True)
+    if not Path(DOWNLOADS_DIR_PATH).is_dir():
+        Path(DOWNLOADS_DIR_PATH).mkdir(parents=True, exist_ok=True)
 
     # Start background scheduler to load markdowns for overview pages
     if _config_is_debug():
