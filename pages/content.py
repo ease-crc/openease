@@ -3,9 +3,9 @@ from flask.helpers import flash
 from pathlib2 import Path
 
 from app_and_db import app
-from utility import admin_required
-from pages.overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP
-from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_ZIP
+from utility import admin_required, start_thread
+from pages.overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP, download_neem_files, load_default_overview_files
+from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_ZIP, download_and_update_papers_and_bibtex, load_default_publications_and_papers
 
 @app.route('/settings/content')
 @admin_required
@@ -15,6 +15,59 @@ def render_content_settings():
 # TODO
 # - Error Testing all of this stuff
 # - settings and updates
+
+def manually_load_resource(func):
+    try:
+        func()
+    except Exception as e:
+        app.logger.error(e.__str__())
+        flash('Action failed!')
+    else:
+        flash('Action succeeded!')
+
+
+@app.route('/settings/content/update_all')
+@admin_required
+def manually_load_all_content_updates():
+    start_thread(manually_load_resource(download_neem_files))
+    start_thread(manually_load_resource(download_and_update_papers_and_bibtex))
+    return render_content_settings()
+
+
+@app.route('/settings/content/load_all_default')
+@admin_required
+def manually_load_all_default_content():
+    start_thread(manually_load_resource(load_default_overview_files))
+    start_thread(manually_load_resource(load_default_publications_and_papers))
+    return render_content_settings()
+
+
+@app.route('/settings/content/update_publications')
+@admin_required
+def manually_load_publications_updates():
+    start_thread(manually_load_resource(download_and_update_papers_and_bibtex))
+    return render_content_settings()
+
+
+@app.route('/settings/content/load_default_publications')
+@admin_required
+def manually_load_publications_defaults():
+    start_thread(manually_load_resource(load_default_publications_and_papers))
+    return render_content_settings()
+
+
+@app.route('/settings/content/update_overview_files')
+@admin_required
+def manually_load_overview_updates():
+    start_thread(manually_load_resource(download_neem_files))
+    return render_content_settings()
+
+
+@app.route('/settings/content/load_overview_default')
+@admin_required
+def manually_load_overview_defaults():
+    start_thread(manually_load_resource(load_default_overview_files))
+    return render_content_settings()
 
 
 @app.route('/settings/content/overview_data_json')
