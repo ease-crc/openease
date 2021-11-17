@@ -8,7 +8,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 
 from app_and_db import app
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
-from utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, mutex_lock, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json
+from utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, mutex_lock, remove_if_is_dir, remove_if_is_file, start_thread, unzip_file, dump_dict_to_json, get_dict_from_json
 
 PUBLICATIONS_URL = ''
 PAPERS_URL = ''
@@ -56,10 +56,12 @@ def download_and_update_papers_and_bibtex():
         _update_publications_data(bibtex_db)
     except Exception as e:
         app.logger.error('Had issues downloading papers and files for publications.' + e.__str__())
+        start_thread(load_default_publications_and_papers)
+        return
     
     if PUBLICATIONS_DATA is None or PUBLICATIONS_DATA == {}:
         app.logger.info('Neem-Data was empty or None. Loading default files instead.')
-        load_default_publications_and_papers()
+        start_thread(load_default_publications_and_papers)
         return
 
     _prepare_publications_downloads()

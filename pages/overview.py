@@ -7,7 +7,7 @@ from threading import Lock
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
-from utility import copy_dir, copy_file, download_file, make_archive_of_files_and_dirs, mutex_lock, read_file, remove_if_is_file, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
+from utility import copy_dir, copy_file, download_file, make_archive_of_files_and_dirs, mutex_lock, read_file, remove_if_is_file, start_thread, unzip_file, remove_if_is_dir, write_non_binary_file, dump_dict_to_json, get_dict_from_json
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
@@ -62,13 +62,18 @@ def download_neem_files():
     except Exception as e:
         app.logger.error('Could not connect to Neemhub to fetch data for neems.\n\n' + e.__str__())
     else:
-        _download_all_neem_markdowns(neems)
-        _download_all_neem_cover_images(neems)
-        _update_neem_data(neems)
-
+        try:
+            _download_all_neem_markdowns(neems)
+            _download_all_neem_cover_images(neems)
+            _update_neem_data(neems)
+        except Exception as e:
+            app.logger.info('Had issues downloading files for overview-content. Loading defaults instead.\n\n' + e.__str__())
+            start_thread(load_default_overview_files)
+            return
+    
     if NEEM_DATA is None or NEEM_DATA == {}:
         app.logger.info('Neem-Data was empty or None. Loading default files instead.')
-        load_default_overview_files()
+        start_thread(load_default_overview_files)
         return
 
     _prepare_overview_downloads()
