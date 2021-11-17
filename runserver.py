@@ -25,7 +25,7 @@ from app_and_db import app, db
 from utility import random_string, oe_password_validator
 from pages.publications import load_default_publications_and_papers, download_and_update_papers_and_bibtex
 from postgres.users import Role, User, add_user, create_role
-from pages.overview import download_neem_files, load_default_overview_files
+from pages.neem_overview import download_neem_files, load_default_overview_files
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
