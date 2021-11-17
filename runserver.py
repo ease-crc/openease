@@ -39,37 +39,7 @@ USER_ROLES = [
 OVERVIEW_SCHEDULER_JOB_ID = 'overview'
 PUBLICATIONS_SCHEDULER_JOB_ID = 'publications'
 
-
-def _config_is_debug():
-    # if environment variable 'EASE_DEBUG' is set to true, then
-    # 'DEBUG' in app.config will be set to true by init_app.py
-    return 'DEBUG' in app.config and app.config['DEBUG']
-
-
-def _start_background_scheduler():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=download_neem_files, trigger="interval", hours=3, id=OVERVIEW_SCHEDULER_JOB_ID)
-    scheduler.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", days=1, id=PUBLICATIONS_SCHEDULER_JOB_ID)
-    scheduler.start()
-
-    # Shut down the scheduler when exiting the app
-    atexit.register(lambda: scheduler.shutdown())
-
-
-def _run_debug_server():
-    # print 'Run web server in DEBUG mode'
-    # app.run(host='0.0.0.0', debug=True)
-    print 'DEBUG mode currently does not work'
-    print 'Start normal web server'
-    _run_server()
-
-
-def _run_server():
-    http_server = HTTPServer(WSGIContainer(app))
-    http_server.listen(5000)
-    print 'Web server is running. Listening on {}'.format(5000)
-    IOLoop.instance().start()
-
+BACKGROUND_SCHEDULER = BackgroundScheduler()
 
 def init_app(extra_config_settings={}):
     # Initialize app config settings
@@ -153,11 +123,27 @@ def init_app(extra_config_settings={}):
     return app
 
 
-init_app()
+def _config_is_debug():
+    # if environment variable 'EASE_DEBUG' is set to true, then
+    # 'DEBUG' in app.config will be set to true by init_app.py
+    return 'DEBUG' in app.config and app.config['DEBUG']
 
-# Start a development web server if executed from the command line
+
+def _start_background_scheduler():
+    BACKGROUND_SCHEDULER.add_job(func=download_neem_files, trigger="interval", hours=3, id=OVERVIEW_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", days=1, id=PUBLICATIONS_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.start()
+
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: BACKGROUND_SCHEDULER.shutdown())
+
+
+def _run_server():
+    http_server = HTTPServer(WSGIContainer(app))
+    http_server.listen(5000)
+    IOLoop.instance().start()
+
+
 if __name__ == '__main__':
-    if _config_is_debug():
-        _run_debug_server()
-    else:
-        _run_server()
+    init_app()
+    _run_server()
