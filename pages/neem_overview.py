@@ -52,6 +52,8 @@ OVERVIEW_MUTEX = Lock()
 # for structure of NEEM_DATA check default_files/default_overview_data.json
 NEEM_DATA = {}
 
+# ideally only start this function in a seperate thread with utility.start_thread
+# exception is the app start-up
 @mutex_lock(OVERVIEW_MUTEX)
 def download_neem_files():
     app.logger.info('Downloading files for neems...')

@@ -46,6 +46,8 @@ PUBLICATIONS_MUTEX = Lock()
 # for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
 PUBLICATIONS_DATA = {}
 
+# ideally only start this function in a seperate thread with utility.start_thread
+# exception is the app start-up
 @mutex_lock(PUBLICATIONS_MUTEX)
 def download_and_update_papers_and_bibtex():
     # papers need to be loaded before (!) the publications
