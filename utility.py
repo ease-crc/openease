@@ -160,11 +160,7 @@ def mutex_lock(mutex=None):
     # the current thread create a new one to run the desired
     # function. You can do that, for example, with "start_thread"
     def wrap_inner(func):
-        if mutex is None:
-            func.lock = Lock()
-            p_mutex = func.lock
-        else:
-            p_mutex = mutex
+        p_mutex = _determine_mutex(mutex, func)
 
         @wraps(func)
         def inner(*args, **kwargs):
@@ -176,3 +172,11 @@ def mutex_lock(mutex=None):
 
         return inner
     return wrap_inner
+
+
+def _determine_mutex(mutex, func):
+    if mutex is None:
+        func.lock = Lock()
+        return func.lock
+    else:
+        return mutex
