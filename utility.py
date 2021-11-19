@@ -58,14 +58,19 @@ def download_file(url, file_path):
         return
     
     if r.status_code == 200:
-        parent_dirs = Path(file_path).parent
-        Path(parent_dirs).mkdir(parents=True, exist_ok=True)
-        file = Path(file_path)
+        temp_downloads_dir = WEBROB_PATH + 'temp_downloads/'
+        Path(temp_downloads_dir).mkdir(parents=True, exist_ok=True)
+        temp_file = temp_downloads_dir + Path(file_path).name
+        write_binary_file(r.content, temp_file)
 
-        if file.is_file():
-            file.unlink()
-        
-        write_binary_file(r.content, file_path)
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+        move_file(temp_file, file_path)
+
+        try:
+            if not any(Path(temp_downloads_dir).iterdir()):
+                Path(temp_downloads_dir).rmdir()
+        except Exception as e:
+            app.logger.info('Could not remove temp dir.\n\n' + e.__str__())
 
 
 def copy_file(src, dest):
