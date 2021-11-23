@@ -106,25 +106,25 @@ class ContentSettings(db.Model):
         return ContentSettings.get_first_entry()
     
     @staticmethod
-    def set_download_default_papers(value):
+    def set_download_default_papers(bool_value):
         content_settings = ContentSettings.get_settings()
-        content_settings.download_default_papers = value
+        content_settings.download_default_papers = bool_value
         db.session.commit()
 
     @staticmethod
-    def set_prepare_downloadable_files(value):
+    def set_prepare_downloadable_files(bool_value):
         content_settings = ContentSettings.get_settings()
-        content_settings.prepare_downloadable_files = value
+        content_settings.prepare_downloadable_files = bool_value
         db.session.commit()
 
     @staticmethod
-    def set_update_neem_overview(value):
+    def set_update_neem_overview(bool_value):
         content_settings = ContentSettings.get_settings()
-        content_settings.update_neem_overview = value
+        content_settings.update_neem_overview = bool_value
         db.session.commit()
 
     @staticmethod
-    def set_update_publications(value):
+    def set_update_publications(bool_value):
         content_settings = ContentSettings.get_settings()
-        content_settings.update_publications = value
+        content_settings.update_publications = bool_value
         db.session.commit()
