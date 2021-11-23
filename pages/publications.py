@@ -374,9 +374,12 @@ def _load_default_papers(download_default_papers=False):
             _log_could_not_find_default_papers()
             return
 
-    _clear_papers_dir()
-    unzip_file(DEFAULT_PAPERS_ZIP_PATH, PAPERS_PATH)
-    app.logger.info("Loaded and extracted default papers.")
+    try:
+        _clear_papers_dir()
+        unzip_file(DEFAULT_PAPERS_ZIP_PATH, PAPERS_PATH)
+        app.logger.info("Loaded and extracted default papers.")
+    except Exception as e:
+        app.logger.warning('Had issues unzipping default papers.\n\n' + e.__str__())
 
 
 def _log_failed_default_papers_download():
