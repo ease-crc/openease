@@ -102,8 +102,7 @@ def init_app(extra_config_settings={}):
     app.config['DOWNLOAD_DEFAULT_PAPERS'] = content_settings.download_default_papers
     app.config['PREPARE_DOWNLOADABLE_FILES'] = content_settings.prepare_downloadable_files
 
-    if not Path(DOWNLOADS_DIR_PATH).is_dir():
-        Path(DOWNLOADS_DIR_PATH).mkdir(parents=True, exist_ok=True)
+    _create_downloads_folder()
 
     if _config_is_debug():
         # load defaults, instead of fetching updates
@@ -122,6 +121,11 @@ def init_app(extra_config_settings={}):
     
     app.logger.info("Webapp started.")
     return app
+
+
+def _create_downloads_folder():
+    if not Path(DOWNLOADS_DIR_PATH).is_dir():
+        Path(DOWNLOADS_DIR_PATH).mkdir(parents=True, exist_ok=True)
 
 
 def _config_is_debug():
