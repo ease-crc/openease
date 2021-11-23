@@ -22,8 +22,9 @@ from app_and_db import app, db
 from utility import random_string, oe_password_validator
 from helpers.background_scheduler import start_background_scheduler
 from pages.publications import load_default_publications_and_papers, download_and_update_papers_and_bibtex
-from postgres.users import Role, User, add_user, create_role
 from pages.neem_overview import download_neem_files, load_default_overview_files
+from postgres.users import Role, User, add_user, create_role
+from postgres.settings import ContentSettings
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -49,16 +50,6 @@ def init_app(extra_config_settings={}):
             app.config['SECRET_KEY'] = open('/etc/ease_secret/secret', 'rb').read()
         except IOError:
             app.config['SECRET_KEY'] = random_string(64)
-    
-    if os.environ['DOWNLOAD_DEFAULT_PAPERS'] == 'true':
-        app.config['DOWNLOAD_DEFAULT_PAPERS'] = True
-    else:
-        app.config['DOWNLOAD_DEFAULT_PAPERS'] = False
-
-    if os.environ['PREPARE_DOWNLOADABLE_FILES'] == 'true':
-        app.config['PREPARE_DOWNLOADABLE_FILES'] = True
-    else:
-        app.config['PREPARE_DOWNLOADABLE_FILES'] = False
     
     # Setup Flask-Mail
     mail = Mail(app)
@@ -95,12 +86,25 @@ def init_app(extra_config_settings={}):
              mail=os.environ.get('OPENEASE_MAIL_USERNAME', 'admin@openease.org'),
              pw=ADMIN_USER_DEFAULT_PW,
              roles=['admin'])
+    
+    # set content-settings accordingly
+    # if the app is restarted after being run in production-mode
+    # all the settings will be set to true (from the previous run);
+    # they can be set to false in the content settings
+    if not _config_is_debug():
+        ContentSettings.set_download_default_papers(True)
+        ContentSettings.set_prepare_downloadable_files(True)
+        ContentSettings.set_update_neem_overview(True)
+        ContentSettings.set_update_publications(True)
+    
+    content_settings = ContentSettings.get_settings()
 
-    # create downloads-folder
+    app.config['DOWNLOAD_DEFAULT_PAPERS'] = content_settings.download_default_papers
+    app.config['PREPARE_DOWNLOADABLE_FILES'] = content_settings.prepare_downloadable_files
+
     if not Path(DOWNLOADS_DIR_PATH).is_dir():
         Path(DOWNLOADS_DIR_PATH).mkdir(parents=True, exist_ok=True)
 
-    # Start background scheduler to load markdowns for overview pages
     if _config_is_debug():
         # load defaults, instead of fetching updates
         # saves a lot of time on start-up
@@ -110,8 +114,11 @@ def init_app(extra_config_settings={}):
         # initial download of files
         download_neem_files()
         download_and_update_papers_and_bibtex()
-        # start background jobs for periodic fetching
-        start_background_scheduler()
+        
+    # start background jobs for periodic fetching
+    # this needs to executed even if the config is debug because
+    # the admin can still change settings for the jobs later
+    start_background_scheduler()
     
     app.logger.info("Webapp started.")
     return app

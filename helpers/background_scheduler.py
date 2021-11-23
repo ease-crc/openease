@@ -3,8 +3,10 @@ import atexit
 from datetime import date, datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 
+from app_and_db import app
 from pages.publications import download_and_update_papers_and_bibtex
 from pages.neem_overview import download_neem_files
+from postgres.settings import ContentSettings
 
 OVERVIEW_SCHEDULER_JOB_ID = 'overview'
 PUBLICATIONS_SCHEDULER_JOB_ID = 'publications'
@@ -21,6 +23,8 @@ def start_background_scheduler():
     BACKGROUND_SCHEDULER.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", days=1, next_run_time=_get_tomorrow_3_am_datetime(), coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
     BACKGROUND_SCHEDULER.start()
 
+    _pause_update_jobs_if_necessary()
+
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: BACKGROUND_SCHEDULER.shutdown())
 
@@ -30,5 +34,46 @@ def _get_tomorrow_3_am_datetime():
     return datetime(today.year, today.month, today.day, 3, 0, 0)
 
 
+def _pause_update_jobs_if_necessary():
+    """ Since the background scheduler is started even when in debug /
+    developer mode, it is necessary to check whether the update jobs
+    need to be active or not.
+    
+    This way it is ensures that the jobs already exist and only need
+    to be paused or resumed later on, in case settings are changed."""
+    
+    content_settings = ContentSettings.get_settings()
+    
+    if not content_settings.update_neem_overview:
+        pause_neem_overview_job()
+    
+    if not content_settings.update_publications:
+        pause_publications_job()
+
+
 def background_scheduler_is_running():
     return BACKGROUND_SCHEDULER.running
+
+
+def pause_neem_overview_job():
+    _pause_job(OVERVIEW_SCHEDULER_JOB_ID)
+
+
+def resume_neem_overview_job():
+    _resume_job(OVERVIEW_SCHEDULER_JOB_ID)
+
+
+def pause_publications_job():
+    _pause_job(PUBLICATIONS_SCHEDULER_JOB_ID)
+
+
+def resume_publications_job():
+    _resume_job(PUBLICATIONS_SCHEDULER_JOB_ID)
+
+
+def _pause_job(job_id):
+    BACKGROUND_SCHEDULER.pause_job(job_id)
+
+
+def _resume_job(job_id):
+    BACKGROUND_SCHEDULER.resume_job(job_id)

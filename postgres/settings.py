@@ -1,4 +1,4 @@
-from app_and_db import db
+from app_and_db import app, db
 
 FIRST_DOCUMENT_ID = 1
 
@@ -73,3 +73,58 @@ def get_neemhub_settings():
         db.session.commit()
         # try again
         return query()
+
+
+class ContentSettings(db.Model):
+    """
+    DB model class for storing content settings into postgresql.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    download_default_papers = db.Column(db.Boolean(), nullable=False, default=False)
+    prepare_downloadable_files = db.Column(db.Boolean(), nullable=False, default=False)
+    update_neem_overview = db.Column(db.Boolean(), nullable=False, default=False)
+    update_publications = db.Column(db.Boolean(), nullable=False, default=False)
+
+    @staticmethod
+    def create_first_entry():
+        if db.session.query(ContentSettings).count() > 0:
+            app.logger.info('First entry already available. Will not create new entry for content settings table.')
+
+        first_entry = ContentSettings()
+        db.session.add(first_entry)
+        db.session.commit()
+
+    @staticmethod
+    def get_first_entry():
+        if db.session.query(ContentSettings).count() == 0:
+            ContentSettings.create_first_entry()
+        
+        return ContentSettings.query.filter_by(id=FIRST_DOCUMENT_ID).one()
+
+    @staticmethod
+    def get_settings():
+        return ContentSettings.get_first_entry()
+    
+    @staticmethod
+    def set_download_default_papers(value):
+        content_settings = ContentSettings.get_settings()
+        content_settings.download_default_papers = value
+        db.session.commit()
+
+    @staticmethod
+    def set_prepare_downloadable_files(value):
+        content_settings = ContentSettings.get_settings()
+        content_settings.prepare_downloadable_files = value
+        db.session.commit()
+
+    @staticmethod
+    def set_update_neem_overview(value):
+        content_settings = ContentSettings.get_settings()
+        content_settings.update_neem_overview = value
+        db.session.commit()
+
+    @staticmethod
+    def set_update_publications(value):
+        content_settings = ContentSettings.get_settings()
+        content_settings.update_publications = value
+        db.session.commit()
