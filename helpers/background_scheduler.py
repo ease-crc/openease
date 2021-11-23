@@ -13,7 +13,7 @@ BACKGROUND_SCHEDULER = BackgroundScheduler()
 
 def start_background_scheduler():
     # ensures there is always only one BackgrounScheduler running
-    if BACKGROUND_SCHEDULER.running is False:
+    if background_scheduler_is_running():
         app.logger.info('The scheduler is already active. Will not start new one.')
         return
     
@@ -28,3 +28,7 @@ def start_background_scheduler():
 def _get_tomorrow_3_am_datetime():
     today = date.today()
     return datetime(today.year, today.month, today.day, 3, 0, 0)
+
+
+def background_scheduler_is_running():
+    return BACKGROUND_SCHEDULER.running
