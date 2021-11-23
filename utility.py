@@ -159,13 +159,14 @@ def start_thread(target_func):
 
 
 def mutex_lock(mutex=None):
-    # decorator function that provides a mutex-lock
-    #
-    # If no mutex lock is assigned, a per-function mutex is used.
-    #
-    # The lock is thread-blocking, so in order to not block
-    # the current thread create a new one to run the desired
-    # function. You can do that, for example, with "start_thread"
+    """ decorator function that provides a mutex-lock
+    
+    If no mutex lock is assigned, a per-function mutex is used.
+    
+    The lock is thread-blocking, so in order to not block
+    the current thread create a new one to run the desired
+    function. You can do that, for example, with "start_thread" """
+    
     def wrap_inner(func):
         p_mutex = _determine_mutex(mutex, func)
 

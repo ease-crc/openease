@@ -300,16 +300,16 @@ def render_news():
 
 @app.route('/overview/<neem_path>')
 def render_neem_overview_page(neem_path=None):
-    # When tags or items from the markdown are not displayed correctly,
-    # it might hint to the sanitizer removing unallowed tags. To allow 
-    # these tags to pass, adjust the sanitizer-config from get_sanitizer()
-    # in # pages/overview.py. Afterwards adjust the styling in 
-    # static/css/overview.scss.
-    #
-    # When in doubt, refer to
-    #   https://github.com/trentm/python-markdown2
-    # and
-    #   https://github.com/matthiask/html-sanitizer
+    """ When tags or items from the markdown are not displayed correctly,
+    it might hint to the sanitizer removing unallowed tags. To allow 
+    these tags to pass, adjust the sanitizer-config from get_sanitizer()
+    in # pages/overview.py. Afterwards adjust the styling in 
+    static/css/overview.scss.
+    
+    When in doubt, refer to
+      https://github.com/trentm/python-markdown2
+    and
+      https://github.com/matthiask/html-sanitizer """
     
     neem_data = get_neem_data_from_repo_path(neem_path)
     

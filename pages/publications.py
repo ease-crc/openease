@@ -331,28 +331,29 @@ def _latex_to_text(tex):
 
 @mutex_lock(PUBLICATIONS_MUTEX)
 def load_default_publications_and_papers(download_default_papers=False):
-    # This method loads the contents of publications_data.json and extracts
-    # the contents of paper.zip and moves them to the correct locations.
-    # 
-    # papers.zip contains the pdf which should be linked to the entries
-    # on the publications page. papers.zip should be extracted to
-    # 
-    #   PAPERS_PATH = '/opt/webapp/webrob/static/papers/'
-    # 
-    # All the mentioned files and dirs can be found inside the container
-    # in the given locations, if the container is run in production mode 
-    # instead of developer mode. For that, make sure that docker-compose
-    # is run with EASE-DEBUG set to False or the if-conditional in
-    # runserver.py that calls this method is changed to 
-    # 
-    #   if not _config_is_debug():
-    #       load_overview_files_default()
-    # 
-    # (do one or the other, don't do both). The contents of the container
-    # can then be copied with docker cp (please check the official
-    # documentation).
+    """ This method loads the contents of publications_data.json and extracts
+    the contents of paper.zip and moves them to the correct locations.
     
-    # papers need to be loaded before (!) the publications
+    papers.zip contains the pdf which should be linked to the entries
+    on the publications page. papers.zip should be extracted to
+    
+      PAPERS_PATH = '/opt/webapp/webrob/static/papers/'
+    
+    All the mentioned files and dirs can be found inside the container
+    in the given locations, if the container is run in production mode 
+    instead of developer mode. For that, make sure that docker-compose
+    is run with EASE-DEBUG set to False or the if-conditional in
+    runserver.py that calls this method is changed to 
+    
+      if not _config_is_debug():
+          load_overview_files_default()
+    
+    (do one or the other, don't do both). The contents of the container
+    can then be copied with docker cp (please check the official
+    documentation).
+    
+    papers need to be loaded before (!) the publications """
+
     if app.config['DOWNLOAD_DEFAULT_PAPERS']:
         download_default_papers = True
     
@@ -394,12 +395,13 @@ def _load_default_publications():
 
 
 def dump_publications_data_as_json():
-    # This method is used to dump the PUBLICATIONS_DATA dict to a
-    # file. This is useful when the publications_data.json 
-    # should be updated, which contains the default data for the
-    # developer mode. You can copy files from within the docker 
-    # container with the docker cp command. For more information
-    # look at load_default_publications_and_papers().
+    """ This method is used to dump the PUBLICATIONS_DATA dict to a
+    file. This is useful when the publications_data.json 
+    should be updated, which contains the default data for the
+    developer mode. You can copy files from within the docker 
+    container with the docker cp command. For more information
+    look at load_default_publications_and_papers(). """
+
     remove_if_is_file(PUBLICATIONS_DATA_PATH)
     dump_dict_to_json(PUBLICATIONS_DATA, PUBLICATIONS_DATA_PATH)
 

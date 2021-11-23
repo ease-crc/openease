@@ -265,40 +265,41 @@ def get_neem_data_from_repo_path(neem_repo_path):
 
 
 def dump_neem_data_as_json():
-    # This method is used to dump the NEEM_DATA dict to a file.
-    # This is useful, if overview_data.json inside overview.zip
-    # should be updated, which contains the default data for the
-    # developer mode. You can copy files from within the docker 
-    # container with the docker cp command. For more information
-    # look at load_overview_files_default().
+    """ This method is used to dump the NEEM_DATA dict to a file.
+    This is useful, if overview_data.json inside overview.zip
+    should be updated, which contains the default data for the
+    developer mode. You can copy files from within the docker 
+    container with the docker cp command. For more information
+    look at load_overview_files_default(). """
     remove_if_is_file(NEEM_DATA_PATH)
     dump_dict_to_json(NEEM_DATA, NEEM_DATA_PATH)
 
 
 @mutex_lock(OVERVIEW_MUTEX)
 def load_default_overview_files():
-    # This method loads the contents of overview.zip and moves
-    # them to the correct locations.
-    # overview.zip contains:
-    #   - overview_data.json, which is a json copy of the default NEEM_DATA
-    #       should be placed in /opt/webapp/webrob/default_files/
-    #   - overview-contents, which contains all the overview md-files
-    #       should be placed in /opt/webapp/webrob/
-    #   - neem-images, which contains the neem cover and md images
-    #       should be placed in /opt/webapp/webrob/static/img/
-    # 
-    # All the mentioned files and dirs can be found inside the container
-    # in the given locations, if the container is run in production mode 
-    # instead of developer mode. For that, make sure that docker-compose
-    # is run with EASE-DEBUG set to False or the if-conditional in
-    # runserver.py that calls this method is changed to 
-    # 
-    #   if not _config_is_debug():
-    #       load_overview_files_default()
-    # 
-    # (do one or the other, don't do both). The contents of the container
-    # can then be copied with docker cp (please check the official
-    # documentation).
+    """ This method loads the contents of overview.zip and moves
+    them to the correct locations.
+    overview.zip contains:
+      - overview_data.json, which is a json copy of the default NEEM_DATA
+          should be placed in /opt/webapp/webrob/default_files/
+      - overview-contents, which contains all the overview md-files
+          should be placed in /opt/webapp/webrob/
+      - neem-images, which contains the neem cover and md images
+          should be placed in /opt/webapp/webrob/static/img/
+    
+    All the mentioned files and dirs can be found inside the container
+    in the given locations, if the container is run in production mode 
+    instead of developer mode. For that, make sure that docker-compose
+    is run with EASE-DEBUG set to False or the if-conditional in
+    runserver.py that calls this method is changed to 
+    
+      if not _config_is_debug():
+          load_overview_files_default()
+    
+    (do one or the other, don't do both). The contents of the container
+    can then be copied with docker cp (please check the official
+    documentation). """
+
     _unzip_default_files()
     _load_default_overview_mds()    
     _load_default_overview_images()
@@ -376,16 +377,16 @@ def _prepare_overview_zip_download():
 
 
 def get_sanitizer():
-    # When tags or items from the markdown are not displayed correctly,
-    # it might hint to the sanitizer removing unallowed tags. To allow 
-    # these tags to pass, adjust the sanitizer-config from get_sanitizer()
-    # in # pages/overview.py. Afterwards adjust the styling in 
-    # static/css/overview.scss.
-    #
-    # When in doubt, refer to
-    #   https://github.com/trentm/python-markdown2
-    # and
-    #   https://github.com/matthiask/html-sanitizer
+    """ When tags or items from the markdown are not displayed correctly,
+    it might hint to the sanitizer removing unallowed tags. To allow 
+    these tags to pass, adjust the sanitizer-config from get_sanitizer()
+    in # pages/overview.py. Afterwards adjust the styling in 
+    static/css/overview.scss.
+    
+    When in doubt, refer to
+      https://github.com/trentm/python-markdown2
+    and
+      https://github.com/matthiask/html-sanitizer """
     
     return Sanitizer({
         'tags': {
