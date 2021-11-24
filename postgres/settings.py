@@ -95,7 +95,7 @@ class ContentSettings(db.Model):
         db.session.commit()
 
     @staticmethod
-    def get_first_entry():
+    def _get_first_entry():
         if db.session.query(ContentSettings).count() == 0:
             ContentSettings.create_first_entry()
         
@@ -103,7 +103,7 @@ class ContentSettings(db.Model):
 
     @staticmethod
     def get_settings():
-        return ContentSettings.get_first_entry()
+        return ContentSettings._get_first_entry()
     
     @staticmethod
     def set_download_default_papers(bool_value):
