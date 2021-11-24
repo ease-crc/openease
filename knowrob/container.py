@@ -8,7 +8,7 @@ import pyjsonrpc
 from flask import flash, session
 from pyjsonrpc.rpcerror import JsonRpcError
 from app_and_db import app
-from utility import random_string
+from helpers.utility import random_string
 
 client = pyjsonrpc.HttpClient(url='http://dockerbridge:5001')
 

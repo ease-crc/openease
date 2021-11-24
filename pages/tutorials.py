@@ -1,5 +1,5 @@
 import json
-from utility import read_file
+from helpers.utility import read_file
 from urlparse import urlparse
 
 from flask import request, render_template, Markup, jsonify

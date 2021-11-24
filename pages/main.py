@@ -14,7 +14,7 @@ import markdown2
 
 from app_and_db import app
 from app_and_db import db
-from utility import admin_required, read_file
+from helpers.utility import admin_required, read_file
 from pages.neem_overview import get_sanitizer, get_neem_data, get_neem_data_from_repo_path
 from pages.publications import get_papers_path, get_publications_data
 import knowrob.container as docker_interface

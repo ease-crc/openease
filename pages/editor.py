@@ -12,7 +12,7 @@ import knowrob.container as docker_interface
 from app_and_db import app
 from config.settings import WEBROB_PATH
 from knowrob.container import LFTransfer
-from utility import admin_required
+from helpers.utility import admin_required
 
 __author__ = 'danielb@cs.uni-bremen.de'
 

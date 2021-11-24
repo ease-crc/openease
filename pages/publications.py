@@ -8,7 +8,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 
 from app_and_db import app
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
-from utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, mutex_lock, remove_if_is_dir, remove_if_is_file, start_thread, unzip_file, dump_dict_to_json, get_dict_from_json
+from helpers.utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, mutex_lock, remove_if_is_dir, remove_if_is_file, start_thread, unzip_file, dump_dict_to_json, get_dict_from_json
 
 PUBLICATIONS_URL = ''
 PAPERS_URL = ''
