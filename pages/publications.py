@@ -410,7 +410,7 @@ def dump_publications_data_as_json():
 
 
 def _prepare_publications_downloads():
-    if app.config['DEBUG'] and not app.config['PREPARE_DOWNLOADABLE_FILES']:
+    if not app.config['PREPARE_DOWNLOADABLE_FILES']:
         app.logger.info('Config set to not prepare downloadable files.\nWill not prepare downloadable publication-files.')
         return
 
