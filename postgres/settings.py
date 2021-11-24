@@ -107,24 +107,22 @@ class ContentSettings(db.Model):
     
     @staticmethod
     def set_download_default_papers(bool_value):
-        content_settings = ContentSettings.get_settings()
-        content_settings.download_default_papers = bool_value
-        db.session.commit()
+        ContentSettings._set_attribute('download_default_papers', bool_value)
 
     @staticmethod
     def set_prepare_downloadable_files(bool_value):
-        content_settings = ContentSettings.get_settings()
-        content_settings.prepare_downloadable_files = bool_value
-        db.session.commit()
+        ContentSettings._set_attribute('prepare_downloadable_files', bool_value)
 
     @staticmethod
     def set_update_neem_overview(bool_value):
-        content_settings = ContentSettings.get_settings()
-        content_settings.update_neem_overview = bool_value
-        db.session.commit()
+        ContentSettings._set_attribute('update_neem_overview', bool_value)
 
     @staticmethod
     def set_update_publications(bool_value):
+        ContentSettings._set_attribute('set_update_publications', bool_value)
+
+    @staticmethod
+    def _set_attribute(attr_as_str, value):
         content_settings = ContentSettings.get_settings()
-        content_settings.update_publications = bool_value
+        setattr(content_settings, attr_as_str, value)
         db.session.commit()
