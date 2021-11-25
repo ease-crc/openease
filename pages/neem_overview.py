@@ -1,6 +1,8 @@
 import re
+import markdown2
 
 from PIL import Image
+from flask import redirect, url_for, render_template, flash
 from furl import furl
 from pathlib2 import Path
 from threading import Lock
@@ -51,6 +53,58 @@ OVERVIEW_MUTEX = Lock()
 
 # for structure of NEEM_DATA check default_files/default_overview_data.json
 NEEM_DATA = {}
+
+@app.route('/overview/<neem_path>')
+def render_neem_overview_page(neem_path=None):
+    """ When tags or items from the markdown are not displayed correctly,
+    it might hint to the sanitizer removing unallowed tags. To allow 
+    these tags to pass, adjust the sanitizer-config from get_sanitizer()
+    in # pages/overview.py. Afterwards adjust the styling in 
+    static/css/overview.scss.
+    
+    When in doubt, refer to
+      https://github.com/trentm/python-markdown2
+    and
+      https://github.com/matthiask/html-sanitizer """
+    
+    neem_data = get_neem_data_from_repo_path(neem_path)
+    
+    if neem_data is None or neem_data == {}:
+        app.logger.error('Could not retrieve neem data for selected neem.')
+        _flash_cannot_display_overview_page()
+        return redirect(url_for('render_homepage'))
+
+    try:
+        file_str = read_file(neem_data['md_path'])
+    except IOError as e:
+        app.logger.error('Could not find markdown-file for neem, therefore cannot render the overview page.\n\n' + e.message)
+        _flash_cannot_display_overview_page()
+        return redirect(url_for('render_homepage'))
+
+    md_content = _convert_md_to_html_and_sanitize(file_str)
+    
+    return render_template('pages/overview.html', **locals())
+
+def _flash_cannot_display_overview_page():
+    flash('Our apologies! Could not load the selected overview page. Please try again later!', "warning")
+
+def _convert_md_to_html_and_sanitize(md_str):
+    md_content = _convert_md_to_html(md_str)
+    return _sanitize_html(md_content)
+
+def _convert_md_to_html(md_str):
+    # markdown to html-conversion
+    md_html = markdown2.markdown(md_str, extras=['target-blank-links', 'nofollow', 'tables'])
+    # add noreferrer to links; admittedely not the nicest way of doing this
+    md_html = md_html.replace('rel=\"nofollow noopener\"', 'rel=\"nofollow noopener noreferrer\"')
+    return md_html
+
+def _sanitize_html(html_str):
+    # need to sanitize the input, because the template loads the values
+    # as 'safe', which could otherwise allow XSS-exploits
+    sanitizer = get_sanitizer()
+    return sanitizer.sanitize( html_str )
+
 
 # ideally only start this function in a seperate thread with utility.start_thread
 # exception is the app start-up

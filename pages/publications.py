@@ -1,6 +1,7 @@
 import re
 
 from threading import Lock
+from flask import redirect, url_for, render_template, send_from_directory, flash
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
 from pathlib2 import Path
@@ -45,6 +46,56 @@ PUBLICATIONS_MUTEX = Lock()
 
 # for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
 PUBLICATIONS_DATA = {}
+
+@app.route('/publications')
+def render_all_publications():
+    p_data = get_publications_data()
+
+    website_entries = p_data['website_entries']
+    
+    show_pdf_field = _papers_dir_not_empty()
+    
+    return render_template('pages/publications.html', **locals())
+
+def _papers_dir_not_empty():
+    if Path(get_papers_path()).is_dir():
+        return any(Path(get_papers_path()).iterdir())
+    else:
+        return False
+
+def _papers_dir_empty():
+    return not _papers_dir_not_empty()
+
+
+@app.route('/publications/<publication>')
+def render_bibtex_entry(publication=None):
+    p_data = get_publications_data()
+
+    try:
+        bibtex_entry = p_data['all_entries'][publication]
+    except Exception as e:
+        flash('Could not find the specified publication.')
+        return redirect(url_for('render_all_publications'))
+    
+    show_pdf_field = _papers_dir_not_empty()
+
+    return render_template('pages/bibtex.html', **locals())
+
+
+@app.route('/papers/<paper>')
+def get_paper(paper=None):
+    papers_path = get_papers_path()
+
+    if _papers_dir_empty():
+        flash('Currently no papers available to load.')
+        return redirect(url_for('render_all_publications'))
+    
+    if not Path(papers_path + paper).is_file():
+        flash('Cannot find requested paper.')
+        return redirect(url_for('render_all_publications'))
+
+    return send_from_directory(papers_path, paper)
+
 
 # ideally only start this function in a seperate thread with utility.start_thread
 # exception is the app start-up

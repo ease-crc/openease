@@ -79,6 +79,8 @@ def init_app(extra_config_settings={}):
     from pages import editor
     from pages import tutorials
     from pages import oauth
+    from pages import neem_overview
+    from pages import publications
     from pages import content
 
     add_user(user_manager=app.user_manager,

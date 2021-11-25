@@ -1,5 +1,5 @@
 import yaml
-from flask import session, request, redirect, url_for, render_template, send_from_directory, jsonify, flash
+from flask import session, request, redirect, url_for, render_template, send_from_directory, jsonify
 from flask.ext.user.signals import user_logged_in
 from flask.ext.user.signals import user_logged_out
 from flask_user import current_user, login_required
@@ -10,15 +10,11 @@ import traceback
 import os
 import random
 
-import markdown2
-
 from app_and_db import app
 from app_and_db import db
 from helpers.utility import admin_required, read_file
-from pages.neem_overview import get_sanitizer, get_neem_data, get_neem_data_from_repo_path
-from pages.publications import get_papers_path, get_publications_data
+from pages.neem_overview import get_neem_data
 import knowrob.container as docker_interface
-from pathlib2 import Path
 from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
@@ -293,109 +289,6 @@ def render_homepage():
     recent_neems = neem_data['recent_neems']
 
     return render_template('pages/homepage.html', **locals())
-
-@app.route('/news')
-def render_news():
-    return render_template('pages/news.html', **locals())
-
-@app.route('/overview/<neem_path>')
-def render_neem_overview_page(neem_path=None):
-    """ When tags or items from the markdown are not displayed correctly,
-    it might hint to the sanitizer removing unallowed tags. To allow 
-    these tags to pass, adjust the sanitizer-config from get_sanitizer()
-    in # pages/overview.py. Afterwards adjust the styling in 
-    static/css/overview.scss.
-    
-    When in doubt, refer to
-      https://github.com/trentm/python-markdown2
-    and
-      https://github.com/matthiask/html-sanitizer """
-    
-    neem_data = get_neem_data_from_repo_path(neem_path)
-    
-    if neem_data is None or neem_data == {}:
-        app.logger.error('Could not retrieve neem data for selected neem.')
-        _flash_cannot_display_overview_page()
-        return redirect(url_for('render_homepage'))
-
-    try:
-        file_str = read_file(neem_data['md_path'])
-    except IOError as e:
-        app.logger.error('Could not find markdown-file for neem, therefore cannot render the overview page.\n\n' + e.message)
-        _flash_cannot_display_overview_page()
-        return redirect(url_for('render_homepage'))
-
-    md_content = _convert_md_to_html_and_sanitize(file_str)
-    
-    return render_template('pages/overview.html', **locals())
-
-
-def _flash_cannot_display_overview_page():
-    flash('Our apologies! Could not load the selected overview page. Please try again later!', "warning")
-
-def _convert_md_to_html_and_sanitize(md_str):
-    md_content = _convert_md_to_html(md_str)
-    return _sanitize_html(md_content)
-
-def _convert_md_to_html(md_str):
-    # markdown to html-conversion
-    md_html = markdown2.markdown(md_str, extras=['target-blank-links', 'nofollow', 'tables'])
-    # add noreferrer to links; admittedely not the nicest way of doing this
-    md_html = md_html.replace('rel=\"nofollow noopener\"', 'rel=\"nofollow noopener noreferrer\"')
-    return md_html
-
-def _sanitize_html(html_str):
-    # need to sanitize the input, because the template loads the values
-    # as 'safe', which could otherwise allow XSS-exploits
-    sanitizer = get_sanitizer()
-    return sanitizer.sanitize( html_str )
-
-@app.route('/publications')
-def render_all_publications():
-    p_data = get_publications_data()
-
-    website_entries = p_data['website_entries']
-    
-    show_pdf_field = _papers_dir_not_empty()
-    
-    return render_template('pages/publications.html', **locals())
-
-def _papers_dir_not_empty():
-    if Path(get_papers_path()).is_dir():
-        return any(Path(get_papers_path()).iterdir())
-    else:
-        return False
-
-def _papers_dir_empty():
-    return not _papers_dir_not_empty()
-
-@app.route('/publications/<publication>')
-def render_bibtex_entry(publication=None):
-    p_data = get_publications_data()
-
-    try:
-        bibtex_entry = p_data['all_entries'][publication]
-    except Exception as e:
-        flash('Could not find the specified publication.')
-        return redirect(url_for('render_all_publications'))
-    
-    show_pdf_field = _papers_dir_not_empty()
-
-    return render_template('pages/bibtex.html', **locals())
-
-@app.route('/papers/<paper>')
-def get_paper(paper=None):
-    papers_path = get_papers_path()
-
-    if _papers_dir_empty():
-        flash('Currently no papers available to load.')
-        return redirect(url_for('render_all_publications'))
-    
-    if not Path(papers_path + paper).is_file():
-        flash('Cannot find requested paper.')
-        return redirect(url_for('render_all_publications'))
-
-    return send_from_directory(papers_path, paper)
 
 #footer
 @app.route('/terms-of-use')

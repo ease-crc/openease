@@ -7,6 +7,11 @@ from helpers.utility import admin_required, start_thread
 from pages.neem_overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP, download_neem_files, load_default_overview_files
 from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_ZIP, download_and_update_papers_and_bibtex, load_default_publications_and_papers
 
+@app.route('/news')
+def render_news():
+    return render_template('pages/news.html', **locals())
+
+
 @app.route('/settings/content')
 @admin_required
 def render_content_settings():
