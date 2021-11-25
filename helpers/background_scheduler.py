@@ -4,8 +4,8 @@ from datetime import date, datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from app_and_db import app
-from pages.publications import download_and_update_papers_and_bibtex
-from pages.neem_overview import download_neem_files
+from pages.publications import update_publications_and_papers
+from pages.neem_overview import update_neem_overview_files
 from postgres.settings import ContentSettings, UpdateMethod, UpdateState
 
 OVERVIEW_SCHEDULER_JOB_ID = 'overview'
@@ -30,12 +30,12 @@ def start_background_scheduler():
 
 
 def _update_neem_overview_files_job():
-    download_neem_files()()
+    update_neem_overview_files()()
     ContentSettings.set_last_update_type_neem_overview(UpdateMethod.AUTOMATIC)
 
 
 def _update_publications_and_papers_job():
-    download_and_update_papers_and_bibtex()
+    update_publications_and_papers()
     ContentSettings.set_last_update_publications_and_papers(UpdateMethod.AUTOMATIC)
 
 

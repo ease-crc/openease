@@ -115,8 +115,8 @@ def init_app(extra_config_settings={}):
     # already been created. This is not the case at the time the
     # imports are loaded, hence the error. 
     from helpers.background_scheduler import start_background_scheduler
-    from pages.publications import load_default_publications_and_papers, download_and_update_papers_and_bibtex
-    from pages.neem_overview import download_neem_files, load_default_overview_files
+    from pages.publications import load_default_publications_and_papers, update_publications_and_papers
+    from pages.neem_overview import update_neem_overview_files, load_default_overview_files
 
     if _config_is_debug():
         # load defaults, instead of fetching updates
@@ -125,8 +125,8 @@ def init_app(extra_config_settings={}):
         load_default_publications_and_papers()
     else:
         # initial download of files
-        download_neem_files()
-        download_and_update_papers_and_bibtex()
+        update_neem_overview_files()
+        update_publications_and_papers()
         
     # start background jobs for periodic fetching
     # this needs to executed even if the config is debug because

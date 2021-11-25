@@ -104,7 +104,7 @@ def get_paper(paper=None):
 # ideally only start this function in a seperate thread with utility.start_thread
 # exception is the app start-up
 @mutex_lock(PUBLICATIONS_MUTEX)
-def download_and_update_papers_and_bibtex():
+def update_publications_and_papers():
     # papers need to be loaded before (!) the publications
     try:
         _download_and_unzip_papers()

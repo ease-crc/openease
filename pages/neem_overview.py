@@ -115,7 +115,7 @@ def _sanitize_html(html_str):
 # ideally only start this function in a seperate thread with utility.start_thread
 # exception is the app start-up
 @mutex_lock(OVERVIEW_MUTEX)
-def download_neem_files():
+def update_neem_overview_files():
     app.logger.info('Downloading files for neems...')
 
     try:
