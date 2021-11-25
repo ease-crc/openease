@@ -6,7 +6,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from app_and_db import app
 from pages.publications import download_and_update_papers_and_bibtex
 from pages.neem_overview import download_neem_files
-from postgres.settings import ContentSettings
+from postgres.settings import ContentSettings, UpdateMethod, UpdateState
 
 OVERVIEW_SCHEDULER_JOB_ID = 'overview'
 PUBLICATIONS_SCHEDULER_JOB_ID = 'publications'
@@ -19,14 +19,24 @@ def start_background_scheduler():
         app.logger.info('The scheduler is already active. Will not start new one.')
         return
     
-    BACKGROUND_SCHEDULER.add_job(func=download_neem_files, trigger="interval", hours=3, coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
-    BACKGROUND_SCHEDULER.add_job(func=download_and_update_papers_and_bibtex, trigger="interval", days=1, next_run_time=_get_tomorrow_3_am_datetime(), coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=_update_neem_overview_files_job, trigger="interval", hours=3, coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=_update_publications_and_papers_job, trigger="interval", days=1, next_run_time=_get_tomorrow_3_am_datetime(), coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
     BACKGROUND_SCHEDULER.start()
 
     _pause_update_jobs_if_necessary()
 
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: BACKGROUND_SCHEDULER.shutdown())
+
+
+def _update_neem_overview_files_job():
+    download_neem_files()()
+    ContentSettings.set_last_update_type_neem_overview(UpdateMethod.AUTOMATIC)
+
+
+def _update_publications_and_papers_job():
+    download_and_update_papers_and_bibtex()
+    ContentSettings.set_last_update_publications_and_papers(UpdateMethod.AUTOMATIC)
 
 
 def _get_tomorrow_3_am_datetime():
@@ -44,10 +54,10 @@ def _pause_update_jobs_if_necessary():
     
     content_settings = ContentSettings.get_settings()
     
-    if not content_settings.update_neem_overview:
+    if content_settings.update_state_neem_overview == UpdateState.PAUSED:
         pause_neem_overview_job()
     
-    if not content_settings.update_publications:
+    if not content_settings.update_state_publications_and_papers == UpdateState.PAUSED:
         pause_publications_job()
 
 
@@ -57,18 +67,22 @@ def background_scheduler_is_running():
 
 def pause_neem_overview_job():
     _pause_job(OVERVIEW_SCHEDULER_JOB_ID)
+    ContentSettings.set_update_state_neem_overview(UpdateState.PAUSED)
 
 
 def resume_neem_overview_job():
     _resume_job(OVERVIEW_SCHEDULER_JOB_ID)
+    ContentSettings.set_update_state_neem_overview(UpdateState.ACTIVE)
 
 
 def pause_publications_job():
     _pause_job(PUBLICATIONS_SCHEDULER_JOB_ID)
+    ContentSettings.set_update_state_publications_and_papers(UpdateState.PAUSED)
 
 
 def resume_publications_job():
     _resume_job(PUBLICATIONS_SCHEDULER_JOB_ID)
+    ContentSettings.set_update_state_publications_and_papers(UpdateState.ACTIVE)
 
 
 def _pause_job(job_id):

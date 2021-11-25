@@ -1,7 +1,9 @@
 import re
 
+from datetime import datetime
 from threading import Lock
 from flask import redirect, url_for, render_template, send_from_directory, flash
+from postgres.settings import ContentSettings, ContentState
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
 from pathlib2 import Path
@@ -109,6 +111,9 @@ def download_and_update_papers_and_bibtex():
         _download_and_update_bibtex()
         bibtex_db = _load_bibtex_db_from_file(ALL_PUBLICATIONS_PATH)
         _update_publications_data(bibtex_db)
+
+        ContentSettings.set_content_type_papers(ContentState.LATEST)
+        ContentSettings.set_content_type_publications(ContentState.LATEST)
     except Exception as e:
         app.logger.error('Had issues downloading papers and files for publications.' + e.__str__())
         start_thread(load_default_publications_and_papers)
@@ -122,6 +127,8 @@ def download_and_update_papers_and_bibtex():
     _prepare_publications_downloads()
 
     app.logger.info('Finished all downloads for publications pages.')
+
+    ContentSettings.set_last_update_publications_and_papers(datetime.now)
 
 
 def _download_and_unzip_papers():
@@ -423,14 +430,17 @@ def _load_default_papers(download_default_papers=False):
 
             if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
                 _log_failed_default_papers_download()
+                ContentSettings.set_content_type_papers(ContentState.BLANK)
         else:
             _log_could_not_find_default_papers()
+            ContentSettings.set_content_type_papers(ContentState.BLANK)
             return
 
     try:
         _clear_papers_dir()
         unzip_file(DEFAULT_PAPERS_ZIP_PATH, PAPERS_PATH)
         app.logger.info("Loaded and extracted default papers.")
+        ContentSettings.set_content_type_papers(ContentState.DEFAULT)
     except Exception as e:
         app.logger.warning('Had issues unzipping default papers.\n\n' + e.__str__())
 
@@ -448,6 +458,8 @@ def _load_default_publications():
 
     PUBLICATIONS_DATA = get_dict_from_json(DEFAULT_PUBLICATIONS_DATA_PATH)
     app.logger.info("Loaded default publications database.")
+
+    ContentSettings.set_content_type_publications(ContentState.DEFAULT)
 
 
 def dump_publications_data_as_json():

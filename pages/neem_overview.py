@@ -1,6 +1,7 @@
 import re
 import markdown2
 
+from datetime import datetime
 from PIL import Image
 from flask import redirect, url_for, render_template, flash
 from furl import furl
@@ -15,6 +16,7 @@ from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
 from app_and_db import app
+from postgres.settings import ContentSettings, ContentState
 
 NEEM_OVERVIEW_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
@@ -139,6 +141,9 @@ def download_neem_files():
     _prepare_overview_downloads()
 
     app.logger.info('Finished all downloads for overview pages.')
+
+    ContentSettings.set_last_update_neem_overview(datetime.now)
+    ContentSettings.set_content_type_neem_overview(ContentState.LATEST)
 
 
 def _download_all_neem_markdowns(neems):
@@ -363,6 +368,8 @@ def load_default_overview_files():
     _load_default_overview_images()
     _load_default_neem_data()
     _prepare_overview_downloads()
+
+    ContentSettings.set_content_type_neem_overview(ContentState.DEFAULT)
 
 
 def _unzip_default_files():

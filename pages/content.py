@@ -6,6 +6,7 @@ from app_and_db import app
 from helpers.utility import admin_required, start_thread
 from pages.neem_overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP, download_neem_files, load_default_overview_files
 from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_ZIP, download_and_update_papers_and_bibtex, load_default_publications_and_papers
+from postgres.settings import ContentSettings, UpdateMethod
 
 @app.route('/news')
 def render_news():
@@ -31,11 +32,21 @@ def manually_load_resource(func):
         flash('Action succeeded!')
 
 
+def manual_update_neem_overview_files():
+    download_neem_files()()
+    ContentSettings.set_last_update_type_neem_overview(UpdateMethod.MANUAL)
+
+
+def manual_update_publications_and_papers():
+    download_and_update_papers_and_bibtex()
+    ContentSettings.set_last_update_type_publications_and_papers(UpdateMethod.MANUAL)
+
+
 @app.route('/settings/content/update_all')
 @admin_required
 def manually_load_all_content_updates():
-    start_thread(manually_load_resource(download_neem_files))
-    start_thread(manually_load_resource(download_and_update_papers_and_bibtex))
+    start_thread(manually_load_resource(manual_update_neem_overview_files))
+    start_thread(manually_load_resource(manual_update_publications_and_papers))
     return render_content_settings()
 
 
@@ -50,7 +61,7 @@ def manually_load_all_default_content():
 @app.route('/settings/content/update_publications')
 @admin_required
 def manually_load_publications_updates():
-    start_thread(manually_load_resource(download_and_update_papers_and_bibtex))
+    start_thread(manually_load_resource(manual_update_publications_and_papers))
     return render_content_settings()
 
 
@@ -64,7 +75,7 @@ def manually_load_publications_defaults():
 @app.route('/settings/content/update_overview_files')
 @admin_required
 def manually_load_overview_updates():
-    start_thread(manually_load_resource(download_neem_files))
+    start_thread(manually_load_resource(manual_update_neem_overview_files))
     return render_content_settings()
 
 
