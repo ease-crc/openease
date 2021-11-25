@@ -21,7 +21,7 @@ from pathlib2 import Path
 from app_and_db import app, db
 from helpers.utility import random_string, oe_password_validator
 from postgres.users import Role, User, add_user, create_role
-from postgres.settings import ContentSettings
+from postgres.settings import ContentSettings, UpdateState
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -90,11 +90,14 @@ def init_app(extra_config_settings={}):
     # if the app is restarted after being run in production-mode
     # all the settings will be set to true (from the previous run);
     # they can be set to false in the content settings
+
+    ContentSettings.init_last_update_settings()
+
     if not _config_is_debug():
         ContentSettings.set_download_default_papers(True)
         ContentSettings.set_prepare_downloadable_files(True)
-        ContentSettings.set_update_neem_overview(True)
-        ContentSettings.set_update_publications(True)
+        ContentSettings.set_update_state_neem_overview(UpdateState.ACTIVE)
+        ContentSettings.set_update_state_publications_and_papers(UpdateState.ACTIVE)
     
     content_settings = ContentSettings.get_settings()
 
