@@ -2,7 +2,6 @@ from app_and_db import app, db
 
 FIRST_DOCUMENT_ID = 1
 
-
 class OAuthModel(db.Model):
     """
     DB model class for storing OAuth configuration into postgresql.

@@ -85,12 +85,15 @@ def render_neem_overview_page(neem_path=None):
     
     return render_template('pages/overview.html', **locals())
 
+
 def _flash_cannot_display_overview_page():
     flash('Our apologies! Could not load the selected overview page. Please try again later!', "warning")
+
 
 def _convert_md_to_html_and_sanitize(md_str):
     md_content = _convert_md_to_html(md_str)
     return _sanitize_html(md_content)
+
 
 def _convert_md_to_html(md_str):
     # markdown to html-conversion
@@ -98,6 +101,7 @@ def _convert_md_to_html(md_str):
     # add noreferrer to links; admittedely not the nicest way of doing this
     md_html = md_html.replace('rel=\"nofollow noopener\"', 'rel=\"nofollow noopener noreferrer\"')
     return md_html
+
 
 def _sanitize_html(html_str):
     # need to sanitize the input, because the template loads the values

@@ -57,11 +57,13 @@ def render_all_publications():
     
     return render_template('pages/publications.html', **locals())
 
+
 def _papers_dir_not_empty():
     if Path(get_papers_path()).is_dir():
         return any(Path(get_papers_path()).iterdir())
     else:
         return False
+
 
 def _papers_dir_empty():
     return not _papers_dir_not_empty()
