@@ -20,9 +20,6 @@ from pathlib2 import Path
 
 from app_and_db import app, db
 from helpers.utility import random_string, oe_password_validator
-from helpers.background_scheduler import start_background_scheduler
-from pages.publications import load_default_publications_and_papers, download_and_update_papers_and_bibtex
-from pages.neem_overview import download_neem_files, load_default_overview_files
 from postgres.users import Role, User, add_user, create_role
 from postgres.settings import ContentSettings
 
@@ -105,6 +102,18 @@ def init_app(extra_config_settings={}):
     app.config['PREPARE_DOWNLOADABLE_FILES'] = content_settings.prepare_downloadable_files
 
     _create_downloads_folder()
+
+    # the following imports need to be declared here
+    # If declared at the beginning of the file and the neemhub
+    # settings are not yet configured (for example on a fresh
+    # install), then the container will just error out. That is
+    # because the neem_overview module will try to access the
+    # neemhub instance which depends on the db tables to have
+    # already been created. This is not the case at the time the
+    # imports are loaded, hence the error. 
+    from helpers.background_scheduler import start_background_scheduler
+    from pages.publications import load_default_publications_and_papers, download_and_update_papers_and_bibtex
+    from pages.neem_overview import download_neem_files, load_default_overview_files
 
     if _config_is_debug():
         # load defaults, instead of fetching updates
