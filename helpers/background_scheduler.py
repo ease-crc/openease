@@ -77,3 +77,15 @@ def _pause_job(job_id):
 
 def _resume_job(job_id):
     BACKGROUND_SCHEDULER.resume_job(job_id)
+
+
+def get_neem_overview_job_next_runtime():
+    return _get_job_next_runtime(OVERVIEW_SCHEDULER_JOB_ID)
+
+
+def get_publications_job_next_runtime():
+    return _get_job_next_runtime(PUBLICATIONS_SCHEDULER_JOB_ID)
+
+
+def _get_job_next_runtime(job_id):
+    return BACKGROUND_SCHEDULER.get_job(job_id).next_run_time
