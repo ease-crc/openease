@@ -5,6 +5,7 @@ from datetime import datetime
 from app_and_db import app, db
 
 FIRST_DOCUMENT_ID = 1
+DATETIME_MIN = datetime.min
 
 class OAuthModel(db.Model):
     """
@@ -107,8 +108,8 @@ class ContentSettings(db.Model):
     prepare_downloadable_files = db.Column(db.Boolean(), nullable=False, default=False)
     update_state_neem_overview = db.Column(db.Enum(UpdateState), nullable=False, default=UpdateState.PAUSED)
     update_state_publications_and_papers = db.Column(db.Enum(UpdateState), nullable=False, default=UpdateState.PAUSED)
-    last_update_neem_overview = db.Column(db.DateTime(), nullable=False, default=datetime.min)
-    last_update_publications_and_papers = db.Column(db.DateTime(), nullable=False, default=datetime.min)
+    last_update_neem_overview = db.Column(db.DateTime(), nullable=False, default=DATETIME_MIN)
+    last_update_publications_and_papers = db.Column(db.DateTime(), nullable=False, default=DATETIME_MIN)
     last_update_type_neem_overview = db.Column(db.Enum(UpdateMethod), nullable=False, default=UpdateMethod.NO_UPDATE)
     last_update_type_publications_and_papers = db.Column(db.Enum(UpdateMethod), nullable=False, default=UpdateMethod.NO_UPDATE)
     content_type_neem_overview = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.DEFAULT)
