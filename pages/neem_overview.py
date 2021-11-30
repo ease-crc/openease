@@ -16,7 +16,7 @@ from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
 from app_and_db import app
-from postgres.settings import ContentSettings, ContentState
+from postgres.settings import DATETIME_MIN, ContentSettings, ContentState
 
 NEEM_OVERVIEW_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
@@ -369,6 +369,7 @@ def load_default_overview_files():
     _load_default_neem_data()
     _prepare_overview_downloads()
 
+    ContentSettings.set_last_update_neem_overview(DATETIME_MIN)
     ContentSettings.set_content_type_neem_overview(ContentState.DEFAULT)
 
 

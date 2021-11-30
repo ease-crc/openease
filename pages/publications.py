@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from threading import Lock
 from flask import redirect, url_for, render_template, send_from_directory, flash
-from postgres.settings import ContentSettings, ContentState
+from postgres.settings import DATETIME_MIN, ContentSettings, ContentState
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
 from pathlib2 import Path
@@ -421,6 +421,8 @@ def load_default_publications_and_papers(download_default_papers=False):
     _load_default_publications()
 
     _prepare_publications_downloads()
+
+    ContentSettings.set_last_update_publications_and_papers(DATETIME_MIN)
 
 
 def _load_default_papers(download_default_papers=False):
