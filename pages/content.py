@@ -86,6 +86,14 @@ def manually_load_overview_defaults():
     return render_content_settings()
 
 
+def _send_file_if_available(FILE_PATH):
+    if not Path(FILE_PATH).is_file():
+        flash('Could not retrieve requested file. Check app-settings or try again later.')
+        return render_content_settings()
+
+    return send_file(FILE_PATH, as_attachment=True)
+
+
 @app.route('/settings/content/overview_data_json')
 @admin_required
 def send_overview_data_json():
@@ -126,12 +134,4 @@ def send_papers_zip():
 @admin_required
 def send_publications_zip():
     return _send_file_if_available(DOWNLOADS_DIR_PUBLICATIONS_ZIP)
-
-
-def _send_file_if_available(FILE_PATH):
-    if not Path(FILE_PATH).is_file():
-        flash('Could not retrieve requested file. Check app-settings or try again later.')
-        return render_content_settings()
-
-    return send_file(FILE_PATH, as_attachment=True)
     
