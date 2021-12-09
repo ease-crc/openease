@@ -1,4 +1,4 @@
-from flask import render_template, send_file
+from flask import render_template, send_file, redirect, url_for
 from flask.helpers import flash
 from pathlib2 import Path
 
@@ -48,7 +48,7 @@ def manual_update_publications_and_papers():
 def manually_load_all_content_updates():
     start_thread(manually_load_resource(manual_update_neem_overview_files))
     start_thread(manually_load_resource(manual_update_publications_and_papers))
-    return render_content_settings()
+    return redirect(url_for('render_content_settings'))
 
 
 @app.route('/settings/content/load_all_default')
@@ -56,41 +56,41 @@ def manually_load_all_content_updates():
 def manually_load_all_default_content():
     start_thread(manually_load_resource(load_default_overview_files))
     start_thread(manually_load_resource(load_default_publications_and_papers))
-    return render_content_settings()
+    return redirect(url_for('render_content_settings'))
 
 
 @app.route('/settings/content/update_publications')
 @admin_required
 def manually_load_publications_updates():
     start_thread(manually_load_resource(manual_update_publications_and_papers))
-    return render_content_settings()
+    return redirect(url_for('render_content_settings'))
 
 
 @app.route('/settings/content/load_default_publications')
 @admin_required
 def manually_load_publications_defaults():
     start_thread(manually_load_resource(load_default_publications_and_papers))
-    return render_content_settings()
+    return redirect(url_for('render_content_settings'))
 
 
 @app.route('/settings/content/update_overview_files')
 @admin_required
 def manually_load_overview_updates():
     start_thread(manually_load_resource(manual_update_neem_overview_files))
-    return render_content_settings()
+    return redirect(url_for('render_content_settings'))
 
 
 @app.route('/settings/content/load_overview_default')
 @admin_required
 def manually_load_overview_defaults():
     start_thread(manually_load_resource(load_default_overview_files))
-    return render_content_settings()
+    return redirect(url_for('render_content_settings'))
 
 
 def _send_file_if_available(FILE_PATH):
     if not Path(FILE_PATH).is_file():
         flash('Could not retrieve requested file. Check app-settings or try again later.', 'warning')
-        return render_content_settings()
+        return redirect(url_for('render_content_settings'))
 
     return send_file(FILE_PATH, as_attachment=True)
 
