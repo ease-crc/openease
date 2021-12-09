@@ -128,7 +128,7 @@ def update_publications_and_papers():
 
     app.logger.info('Finished all downloads for publications pages.')
 
-    ContentSettings.set_last_update_publications_and_papers(datetime.now)
+    ContentSettings.set_last_update_publications_and_papers(datetime.now())
 
 
 def _download_and_unzip_papers():

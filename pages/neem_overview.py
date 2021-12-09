@@ -142,7 +142,7 @@ def update_neem_overview_files():
 
     app.logger.info('Finished all downloads for overview pages.')
 
-    ContentSettings.set_last_update_neem_overview(datetime.now)
+    ContentSettings.set_last_update_neem_overview(datetime.now())
     ContentSettings.set_content_type_neem_overview(ContentState.LATEST)
 
 
