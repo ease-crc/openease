@@ -189,21 +189,21 @@ class ContentSettings(db.Model):
     @staticmethod
     def init_last_update_settings():
         """ Resets content type and last update time for all content. """
-        content_settings = ContentSettings.get_settings()
-        ContentSettings.last_update_neem_overview = datetime.min
-        ContentSettings.last_update_publications_and_papers = datetime.min
-        ContentSettings.last_update_type_neem_overview = UpdateMethod.NO_UPDATE
-        ContentSettings.last_update_type_publications_and_papers = UpdateMethod.NO_UPDATE
-        ContentSettings.content_type_neem_overview = ContentState.DEFAULT
-        ContentSettings.content_type_publications = ContentState.DEFAULT
-        ContentSettings.content_type_papers = ContentState.NONE
+        settings = ContentSettings.get_settings()
+        settings.last_update_neem_overview = datetime.min
+        settings.last_update_publications_and_papers = datetime.min
+        settings.last_update_type_neem_overview = UpdateMethod.NO_UPDATE
+        settings.last_update_type_publications_and_papers = UpdateMethod.NO_UPDATE
+        settings.content_type_neem_overview = ContentState.DEFAULT
+        settings.content_type_publications = ContentState.DEFAULT
+        settings.content_type_papers = ContentState.NONE
         db.session.commit()
 
     @staticmethod
     def set_debug_settings():
-        content_settings = ContentSettings.get_settings()
-        ContentSettings.download_default_papers = False
-        ContentSettings.prepare_downloadable_files = False
-        ContentSettings.update_state_neem_overview = UpdateState.PAUSED
-        ContentSettings.update_state_publications_and_papers = UpdateState.PAUSED
+        settings = ContentSettings.get_settings()
+        settings.download_default_papers = False
+        settings.prepare_downloadable_files = False
+        settings.update_state_neem_overview = UpdateState.PAUSED
+        settings.update_state_publications_and_papers = UpdateState.PAUSED
         db.session.commit()
