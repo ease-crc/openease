@@ -183,6 +183,11 @@ class ContentSettings(db.Model):
     @staticmethod
     def _set_attribute(attr_as_str, value):
         content_settings = ContentSettings.get_settings()
+
+        if not isinstance(value, type(getattr(content_settings, attr_as_str))):
+            app.logger.error('Wrong parameter type passed for content-settings ' + attr_as_str + '\nExpected ' + type_str(getattr(content_settings, attr_as_str)) + ', received ' + type_str(value))
+            return
+
         setattr(content_settings, attr_as_str, value)
         db.session.commit()
 
