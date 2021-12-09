@@ -303,11 +303,15 @@ def _get_featured_neems_data(neem_data_list):
 def _get_recent_neems_data(neem_data_list):
     recent_neems = [n_data
                     for n_data in neem_data_list
-                    if n_data['neem_id'] not in FEATURED_NEEM_IDS]
+                    if n_data['neem_id'] not in FEATURED_NEEM_IDS and _neem_has_md(n_data)]
     # list.sort() does in-place sorting and returns None, therefore
     # it shouldn't be called when assigning or returning the list
     recent_neems.sort(reverse=True, key=lambda x: x['last_updated'])
     return recent_neems[0:6] 
+
+
+def _neem_has_md(n_data):
+    return Path(n_data['md_path']).is_file()
 
 
 def get_neem_data():
