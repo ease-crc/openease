@@ -432,10 +432,10 @@ def _load_default_papers(download_default_papers=False):
 
             if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
                 _log_failed_default_papers_download()
-                ContentSettings.set_content_type_papers(ContentState.BLANK)
+                ContentSettings.set_content_type_papers(ContentState.NONE)
         else:
             _log_could_not_find_default_papers()
-            ContentSettings.set_content_type_papers(ContentState.BLANK)
+            ContentSettings.set_content_type_papers(ContentState.NONE)
             return
 
     try:

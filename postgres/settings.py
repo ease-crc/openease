@@ -96,7 +96,7 @@ class UpdateMethod(enum.Enum):
 class ContentState(enum.Enum):
     DEFAULT = 0
     LATEST = 1
-    BLANK = 2
+    NONE = 2
 
 
 class ContentSettings(db.Model):
@@ -114,7 +114,7 @@ class ContentSettings(db.Model):
     last_update_type_publications_and_papers = db.Column(db.Enum(UpdateMethod), nullable=False, default=UpdateMethod.NO_UPDATE)
     content_type_neem_overview = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.DEFAULT)
     content_type_publications = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.DEFAULT)
-    content_type_papers = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.BLANK)
+    content_type_papers = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.NONE)
 
     @staticmethod
     def create_first_entry():
@@ -196,7 +196,7 @@ class ContentSettings(db.Model):
         ContentSettings.last_update_type_publications_and_papers = UpdateMethod.NO_UPDATE
         ContentSettings.content_type_neem_overview = ContentState.DEFAULT
         ContentSettings.content_type_publications = ContentState.DEFAULT
-        ContentSettings.content_type_papers = ContentState.BLANK
+        ContentSettings.content_type_papers = ContentState.NONE
         db.session.commit()
 
     @staticmethod
