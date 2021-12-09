@@ -26,10 +26,11 @@ def manually_load_resource(func):
     try:
         func()
     except Exception as e:
-        app.logger.error(e.__str__())
-        flash('Action failed!')
+        app.logger.warning(e.__str__())
+        flash('Action failed!', 'warning')
     else:
         flash('Action succeeded!')
+        flash('Action succeeded!', 'success')
 
 
 def manual_update_neem_overview_files():
@@ -88,7 +89,7 @@ def manually_load_overview_defaults():
 
 def _send_file_if_available(FILE_PATH):
     if not Path(FILE_PATH).is_file():
-        flash('Could not retrieve requested file. Check app-settings or try again later.')
+        flash('Could not retrieve requested file. Check app-settings or try again later.', 'warning')
         return render_content_settings()
 
     return send_file(FILE_PATH, as_attachment=True)
