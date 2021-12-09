@@ -188,3 +188,7 @@ def _determine_mutex(mutex, func):
         return func.lock
     else:
         return mutex
+
+
+def type_str(obj):
+    return str(type(obj))
