@@ -417,7 +417,7 @@ def _prepare_overview_downloads():
     _prepare_overview_mds_and_imgs_download()
     _prepare_overview_zip_download()
 
-    app.logger.info('Finished.')
+    app.logger.info('Finished preparing downloadable files for overview-pages.')
 
 
 def _prepare_overview_data_download():

@@ -481,7 +481,7 @@ def _prepare_publications_downloads():
         app.logger.info('Config set to not prepare downloadable files.\nWill not prepare downloadable publication-files.')
         return
 
-    app.logger.info('Preparing downloadable files for publications.')
+    app.logger.info('Preparing downloadable files for publications & papers.')
 
     if not Path(PUBLICATIONS_DIR_PATH).is_dir():
         Path(PUBLICATIONS_DIR_PATH).mkdir(parents=True)
@@ -492,7 +492,7 @@ def _prepare_publications_downloads():
     _prepare_papers_download()
     _prepare_publications_zip_download()
 
-    app.logger.info('Finished')
+    app.logger.info('Finished preparing downloadable files for publications & papers.')
 
 
 def _prepare_publications_data_download():
