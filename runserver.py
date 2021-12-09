@@ -113,7 +113,7 @@ def init_app(extra_config_settings={}):
     # because the neem_overview module will try to access the
     # neemhub instance which depends on the db tables to have
     # already been created. This is not the case at the time the
-    # imports are loaded, hence the error. 
+    # imports are loaded, hence the error.
     from helpers.background_scheduler import start_background_scheduler
     from pages.publications import load_default_publications_and_papers, update_publications_and_papers
     from pages.neem_overview import update_neem_overview_files, load_default_overview_files
