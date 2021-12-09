@@ -370,6 +370,7 @@ def load_default_overview_files():
     _prepare_overview_downloads()
 
     ContentSettings.set_last_update_neem_overview(DATETIME_MIN)
+    ContentSettings.set_last_update_type_neem_overview(UpdateMethod.NO_UPDATE)
     ContentSettings.set_content_type_neem_overview(ContentState.DEFAULT)
 
 

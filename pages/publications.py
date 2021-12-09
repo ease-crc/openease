@@ -423,6 +423,8 @@ def load_default_publications_and_papers(download_default_papers=False):
     _prepare_publications_downloads()
 
     ContentSettings.set_last_update_publications_and_papers(DATETIME_MIN)
+    ContentSettings.set_last_update_type_publications_and_papers(UpdateMethod.NO_UPDATE)
+
 
 
 def _load_default_papers(download_default_papers=False):
