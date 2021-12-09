@@ -3,6 +3,7 @@ import enum
 from datetime import datetime
 
 from app_and_db import app, db
+from helpers.utility import type_str
 
 FIRST_DOCUMENT_ID = 1
 DATETIME_MIN = datetime.min
@@ -115,6 +116,9 @@ class ContentSettings(db.Model):
     content_type_neem_overview = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.DEFAULT)
     content_type_publications = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.DEFAULT)
     content_type_papers = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.NONE)
+    publications_bibtex_url = db.Column(db.String(255), nullable=False, default='')
+    default_papers_zip_url = db.Column(db.String(255), nullable=False, default='')
+    papers_zip_url = db.Column(db.String(255), nullable=False, default='')
 
     @staticmethod
     def create_first_entry():
@@ -179,6 +183,18 @@ class ContentSettings(db.Model):
     @staticmethod
     def set_content_type_papers(content_state_enum_value):
         ContentSettings._set_attribute('content_type_papers', content_state_enum_value)
+    
+    @staticmethod
+    def set_default_papers_zip_url(str_value):
+        ContentSettings._set_attribute('default_papers_zip_url', str_value)
+
+    @staticmethod
+    def set_papers_zip_url(str_value):
+        ContentSettings._set_attribute('papers_zip_url', str_value)
+
+    @staticmethod
+    def set_publications_bibtex_url(str_value):
+        ContentSettings._set_attribute('publications_bibtex_url', str_value)
         
     @staticmethod
     def _set_attribute(attr_as_str, value):
