@@ -31,7 +31,7 @@ DEFAULT_PAPERS_ZIP_PATH = DEFAULT_FILES_PATH + 'default_papers.zip'
 DOWNLOADS_DIR_PUBLICATIONS_DATA = DOWNLOADS_DIR_PATH + 'publication_data.json'
 DOWNLOADS_DIR_PUBLICATIONS_BIBTEX = DOWNLOADS_DIR_PATH + 'publications.bib'
 DOWNLOADS_DIR_PAPERS_ZIP = DOWNLOADS_DIR_PATH + 'papers.zip'
-DOWNLOADS_DIR_PUBLICATIONS_ZIP = DOWNLOADS_DIR_PATH + 'publications.zip'
+DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP = DOWNLOADS_DIR_PATH + 'publications_and_papers.zip'
 
 PUBLICATIONS_KEYWORDS = [
     ('openease_overview', 'Overview: Cognition-enabled Control'),
@@ -534,8 +534,8 @@ def _prepare_publications_zip_download():
     else:
         app.logger.info('No papers found, so no papers added to publications.zip.')
     
-    remove_if_is_file(DOWNLOADS_DIR_PUBLICATIONS_ZIP)
-    make_archive_of_files_and_dirs(path_list, DOWNLOADS_DIR_PUBLICATIONS_ZIP)
+    remove_if_is_file(DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP)
+    make_archive_of_files_and_dirs(path_list, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP)
 
 
 def get_publications_data():
