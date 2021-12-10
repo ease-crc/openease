@@ -17,7 +17,7 @@
             <h2 class="text-center mb-1">
                 <u>General</u>
             </h2>
-            <div class="row mx-0 mt-1 flex-column">
+            <div class="row mx-0 mt-2 flex-column">
                 <h3>Status</h3>
                 <table class="table table-hover mb-3">
                     <tbody>
@@ -25,48 +25,111 @@
                             <th scope="row">
                                 Download Default Papers
                             </th>
+                            {% if content_settings.download_default_papers -%}
                             <td>
-                                TODO (On/Off)
+                                ON
                             </td>
                             <td>
-                                TODO (Toggle)
+                                <a href="{{ url_for('turn_off_download_default_papers') }}" class="btn btn-primary">
+                                    <b>Turn OFF</b>
+                                </a>
                             </td>
+                            {% else -%}
+                            <td>
+                                OFF
+                            </td>
+                            <td>
+                                <a href="{{ url_for('turn_on_download_default_papers') }}" class="btn btn-primary">
+                                    <b>Turn ON</b>
+                                </a>
+                            </td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th scope="row">
                                 Prepare Downloadable Files
                             </th>
+                            {% if content_settings.prepare_downloadable_files -%}
                             <td>
-                                TODO (On/Off)
+                                ON
                             </td>
                             <td>
-                                TODO (Toggle)
+                                <a href="{{ url_for('turn_off_prepare_downloadable_files') }}" class="btn btn-primary">
+                                    <b>Turn OFF</b>
+                                </a>
                             </td>
+                            {% else -%}
+                            <td>
+                                OFF
+                            </td>
+                            <td>
+                                <a href="{{ url_for('turn_on_prepare_downloadable_files') }}" class="btn btn-primary">
+                                    <b>Turn ON</b>
+                                </a>
+                            </td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="row flex-column mx-0">
+            <div class="row flex-column mx-0 mb-4">
                 <h3>Manual Actions</h3>
-                <a href="" class="btn btn-warning m-1">
-                    Pause/Resume <br> All Update Jobs (TODO)
+                {% if content_settings.update_state_neem_overview == UpdateState.PAUSED or content_settings.update_state_publications_and_papers == UpdateState.PAUSED -%}
+                <a href="{{ url_for('resume_all_update_jobs') }}" class="btn btn-primary m-1">
+                    Resume all Update Jobs
                 </a>
-                <a href="{{ url_for('manually_load_all_content_updates') }}" class="btn btn-success m-1">
+                {% endif %}
+                {% if content_settings.update_state_neem_overview == UpdateState.ACTIVE or content_settings.update_state_publications_and_papers == UpdateState.ACTIVE -%}
+                <a href="{{ url_for('pause_all_update_jobs') }}" class="btn btn-warning m-1">
+                    Pause all Update Jobs
+                </a>
+                {% endif %}
+                <a href="{{ url_for('manually_load_all_content_updates') }}" class="btn btn-success m-1 mt-3">
                     Update All Content
                 </a>
-                <a href="{{ url_for('manually_load_all_default_content') }}" class="btn btn-outline-secondary m-1 mb-3">
-                    Load All Defaults
+                <a href="{{ url_for('manually_load_all_default_content') }}" class="btn btn-outline-secondary m-1">
+                    Load All Default Content
                 </a>
-                <a href="" class="btn btn-secondary m-1">
-                    Load Developer Settings (TODO)
+                <a href="{{ url_for('load_developer_settings') }}" class="btn btn-secondary m-1 mt-3">
+                    Load Developer Settings
                 </a>
+            </div>
+            <div class="row mx-0 flex-column">
+                <h3>Publications & Papers Urls</h3>
+                <form action="{{ url_for('store_publications_and_papers_urls') }}" method="post">
+                    <div class="form-group row flex-column mx-0 mb-1">
+                        <label class="font-weight-bold col-form-label">Publications BibTex_Url</label>
+                        <div class="">
+                            <input type="text" placeholder=""
+                                   class="form-control"
+                                   name="bibtex_url" value="{{ content_settings.publications_bibtex_url }}">
+                        </div>
+                    </div>
+                    <div class="form-group row flex-column mx-0 mb-1">
+                        <label class="font-weight-bold col-form-label">default_papers.zip Url</label>
+                        <div class="">
+                            <input type="text" placeholder=""
+                                   class="form-control" name="default_papers_zip_url" value="{{ content_settings.default_papers_zip_url }}">
+                        </div>
+                    </div>
+                    <div class="form-group row flex-column mx-0">
+                        <label class="font-weight-bold col-form-label">papers.zip Url</label>
+                        <div class="">
+                            <input type="text" placeholder=""
+                                   class="form-control"
+                                   name="papers_zip_url" value="{{ content_settings.papers_zip_url }}">
+                        </div>
+                    </div>
+                    <button class="col btn btn-success" type="submit" name="Update"
+                            value="Configure">Save</button>
+                </form>
             </div>
         </div>
         <div class="col-lg-4 row content-block mx-0 flex-column">
             <h2 class="text-center mb-1">
                 <u>Publications</u>
             </h2>
-            <div class="row mx-0 mt-1 flex-column">
+            <div class="row mx-0 mt-2 flex-column">
                 <h3>Status</h3>
                 <table class="table table-hover mb-3">
                     <tbody>
@@ -75,7 +138,7 @@
                                 Publications Data
                             </th>
                             <td>
-                                TODO (Default / Latest)
+                                {{ content_settings.content_type_publications.name }}
                             </td>
                         </tr>
                         <tr>
@@ -83,7 +146,7 @@
                                 Papers
                             </th>
                             <td>
-                                TODO (None / Default / Latest)
+                                {{ content_settings.content_type_papers.name }}
                             </td>
                         </tr>
                         <tr>
@@ -91,7 +154,7 @@
                                 Update Job Status
                             </th>
                             <td>
-                                TODO (Paused / Active)
+                                {{ content_settings.update_state_publications_and_papers.name }}
                             </td>
                         </tr>
                         <tr>
@@ -99,9 +162,13 @@
                                 Last Update
                             </th>
                             <td>
-                                TODO
+                                {% if content_settings.last_update_type_publications_and_papers == UpdateMethod.NO_UPDATE -%}
+                                -
+                                {% else -%}
+                                {{ last_update_publications }}
+                                {% endif %}
                                 <br>
-                                Automatic / Manual (TODO)
+                                {{ content_settings.last_update_type_publications_and_papers.name }}
                             </td>
                         </tr>
                         <tr>
@@ -109,7 +176,11 @@
                                 Next Update
                             </th>
                             <td>
-                                TODO
+                                {% if content_settings.update_state_publications_and_papers == UpdateState.ACTIVE -%}
+                                {{ next_update_publications.isoformat(sep=' ') }}
+                                {% else -%}
+                                -
+                                {% endif %}
                             </td>
                         </tr>
                     </tbody>
@@ -117,10 +188,16 @@
             </div>
             <div class="row flex-column mx-0 mb-3">
                 <h3>Manual Actions</h3>
-                <a href="" class="btn btn-warning mx-1">
-                    Pause/Resume Update Job (TODO)
+                {% if content_settings.update_state_publications_and_papers == UpdateState.PAUSED -%}
+                <a href="{{ url_for('route_resume_publications_job') }}" class="btn btn-primary m-1">
+                    Resume Update Job
                 </a>
-                <a href="{{ url_for('manually_load_publications_updates') }}" class="btn btn-success m-1">
+                {% else -%}
+                <a href="{{ url_for('route_pause_publications_job') }}" class="btn btn-warning m-1">
+                    Pause Update Job
+                </a>
+                {% endif %}
+                <a href="{{ url_for('manually_load_publications_updates') }}" class="btn btn-success m-1 mt-3">
                     Update Publications & Papers
                 </a>
                 <a href="{{ url_for('manually_load_publications_defaults') }}" class="btn btn-outline-secondary m-1">
@@ -135,7 +212,11 @@
                 <a href="{{ url_for('send_publications_bibtex') }}" class="btn btn-success m-1">
                     Publications BibTex
                 </a>
+                {% if papers_zip_download_exists -%}
                 <a href="{{ url_for('send_papers_zip') }}" class="btn btn-success m-1">
+                {% else -%}
+                <a href="{{ url_for('send_papers_zip') }}" class="btn btn-success disabled m-1">
+                {% endif %}
                     Papers
                 </a>
                 <a href="{{ url_for('send_publications_zip') }}" class="btn btn-outline-primary m-1">
@@ -147,7 +228,7 @@
             <h2 class="text-center mb-1">
                 <u>Overview Content</u>
             </h2>
-            <div class="row mx-0 mt-1 flex-column">
+            <div class="row mx-0 mt-2 flex-column">
                 <h3>Status</h3>
                 <table class="table table-hover mb-3">
                     <tbody>
@@ -156,7 +237,7 @@
                                 Overview Data
                             </th>
                             <td>
-                                TODO (Default / Latest)
+                                {{ content_settings.content_type_neem_overview.name }}
                             </td>
                         </tr>
                         <tr class="d-none d-lg-block" style="margin-top: 1px;">
@@ -172,7 +253,7 @@
                                 Update Job Status
                             </th>
                             <td>
-                                TODO (Paused / Active)
+                                {{ content_settings.update_state_neem_overview.name }}
                             </td>
                         </tr>
                         <tr>
@@ -180,9 +261,13 @@
                                 Last Update
                             </th>
                             <td>
-                                TODO
+                                {% if content_settings.last_update_type_neem_overview == UpdateMethod.NO_UPDATE -%}
+                                -
+                                {% else -%}
+                                {{ last_update_overview }}
+                                {% endif %}
                                 <br>
-                                Automatic / Manual (TODO)
+                                {{ content_settings.last_update_type_neem_overview.name }}
                             </td>
                         </tr>
                         <tr>
@@ -190,7 +275,11 @@
                                 Next Update
                             </th>
                             <td>
-                                TODO
+                                {% if content_settings.update_state_neem_overview == UpdateState.ACTIVE -%}
+                                {{ next_update_overview.isoformat(sep=' ') }}
+                                {% else -%}
+                                -
+                                {% endif %}
                             </td>
                         </tr>
                     </tbody>
@@ -198,10 +287,16 @@
             </div>
             <div class="row flex-column mx-0 mb-3">
                 <h3>Manual Actions</h3>
-                <a href="" class="btn btn-warning mx-1">
-                    Pause/Resume Update Job (TODO)
+                {% if content_settings.update_state_neem_overview == UpdateState.PAUSED -%}
+                <a href="{{ url_for('route_resume_neem_overview_job') }}" class="btn btn-primary m-1">
+                    Resume Update Job
                 </a>
-                <a href="{{ url_for('manually_load_overview_updates') }}" class="btn btn-success m-1">
+                {% else -%}
+                <a href="{{ url_for('route_pause_neem_overview_job') }}" class="btn btn-warning m-1">
+                    Pause Update Job
+                </a>
+                {% endif %}
+                <a href="{{ url_for('manually_load_overview_updates') }}" class="btn btn-success m-1 mt-3">
                     Update Overview Data & Files
                 </a>
                 <a href="{{ url_for('manually_load_overview_defaults') }}" class="btn btn-outline-secondary m-1">
