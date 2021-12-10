@@ -1,6 +1,6 @@
 import atexit
+import logging
 
-from datetime import date, datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from app_and_db import app
@@ -12,8 +12,10 @@ OVERVIEW_SCHEDULER_JOB_ID = 'overview'
 PUBLICATIONS_SCHEDULER_JOB_ID = 'publications'
 
 BACKGROUND_SCHEDULER = BackgroundScheduler()
+SCHEDULER_LOGGER = logging.getLogger('apscheduler.executors.default')
 
 def start_background_scheduler():
+    _init_scheduler_logger()
     # ensures there is always only one BackgrounScheduler running
     if background_scheduler_is_running():
         app.logger.info('The scheduler is already active. Will not start new one.')
@@ -28,6 +30,16 @@ def start_background_scheduler():
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: BACKGROUND_SCHEDULER.shutdown())
 
+
+def _init_scheduler_logger():
+    global SCHEDULER_LOGGER
+
+    SCHEDULER_LOGGER.setLevel(logging.INFO)  # DEBUG
+
+    fmt = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
+    h = logging.StreamHandler()
+    h.setFormatter(fmt)
+    SCHEDULER_LOGGER.addHandler(h)
 
 
 def _get_tomorrow_3_am_datetime():
