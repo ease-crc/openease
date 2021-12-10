@@ -4,8 +4,8 @@ from datetime import date, datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from app_and_db import app
-from pages.publications import update_publications_and_papers
-from pages.neem_overview import update_neem_overview_files
+from pages.publications import automatic_update_publications_and_papers
+from pages.neem_overview import automatic_update_neem_overview_files
 from postgres.settings import ContentSettings, UpdateMethod, UpdateState
 
 OVERVIEW_SCHEDULER_JOB_ID = 'overview'
@@ -19,8 +19,8 @@ def start_background_scheduler():
         app.logger.info('The scheduler is already active. Will not start new one.')
         return
     
-    BACKGROUND_SCHEDULER.add_job(func=_update_neem_overview_files_job, trigger="interval", hours=3, coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
-    BACKGROUND_SCHEDULER.add_job(func=_update_publications_and_papers_job, trigger="interval", days=1, next_run_time=_get_tomorrow_3_am_datetime(), coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=automatic_update_neem_overview_files, trigger="interval", hours=3, coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=automatic_update_publications_and_papers, trigger="interval", days=1, next_run_time=_get_tomorrow_3_am_datetime(), coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
     BACKGROUND_SCHEDULER.start()
 
     _pause_update_jobs_if_necessary()
@@ -28,15 +28,6 @@ def start_background_scheduler():
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: BACKGROUND_SCHEDULER.shutdown())
 
-
-def _update_neem_overview_files_job():
-    update_neem_overview_files()()
-    ContentSettings.set_last_update_type_neem_overview(UpdateMethod.AUTOMATIC)
-
-
-def _update_publications_and_papers_job():
-    update_publications_and_papers()
-    ContentSettings.set_last_update_publications_and_papers(UpdateMethod.AUTOMATIC)
 
 
 def _get_tomorrow_3_am_datetime():

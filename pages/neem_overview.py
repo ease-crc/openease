@@ -16,7 +16,7 @@ from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
 from app_and_db import app
-from postgres.settings import DATETIME_MIN, ContentSettings, ContentState
+from postgres.settings import DATETIME_MIN, ContentSettings, ContentState, UpdateMethod
 
 NEEM_OVERVIEW_PATH = WEBROB_PATH + 'overview-contents/'
 NEEM_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
@@ -112,10 +112,22 @@ def _sanitize_html(html_str):
     return sanitizer.sanitize( html_str )
 
 
+def manual_update_neem_overview_files():
+    '''Should only be used where the user triggers manual updates.'''
+    _update_neem_overview_files()
+    ContentSettings.set_last_update_type_neem_overview(UpdateMethod.MANUAL)
+
+
+def automatic_update_neem_overview_files():
+    '''Should only be used where updates are triggered automatically'''
+    _update_neem_overview_files()
+    ContentSettings.set_last_update_type_neem_overview(UpdateMethod.AUTOMATIC)
+
+
 # ideally only start this function in a seperate thread with utility.start_thread
 # exception is the app start-up
 @mutex_lock(OVERVIEW_MUTEX)
-def update_neem_overview_files():
+def _update_neem_overview_files():
     app.logger.info('Downloading files for neems...')
 
     try:

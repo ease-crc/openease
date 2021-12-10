@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from threading import Lock
 from flask import redirect, url_for, render_template, send_from_directory, flash
-from postgres.settings import DATETIME_MIN, ContentSettings, ContentState
+from postgres.settings import DATETIME_MIN, ContentSettings, ContentState, UpdateMethod
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
 from pathlib2 import Path
@@ -101,10 +101,22 @@ def get_paper(paper=None):
     return send_from_directory(papers_path, paper)
 
 
+def manual_update_publications_and_papers():
+    '''Should only be used where the user triggers manual updates.'''
+    _update_publications_and_papers()
+    ContentSettings.set_last_update_type_publications_and_papers(UpdateMethod.MANUAL)
+
+
+def automatic_update_publications_and_papers():
+    '''Should only be used where updates are triggered automatically'''
+    _update_publications_and_papers()
+    ContentSettings.set_last_update_type_publications_and_papers(UpdateMethod.AUTOMATIC)
+
+
 # ideally only start this function in a seperate thread with utility.start_thread
 # exception is the app start-up
 @mutex_lock(PUBLICATIONS_MUTEX)
-def update_publications_and_papers():
+def _update_publications_and_papers():
     # papers need to be loaded before (!) the publications
     try:
         _download_and_unzip_papers()

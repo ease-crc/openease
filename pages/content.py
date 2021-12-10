@@ -4,8 +4,8 @@ from pathlib2 import Path
 
 from app_and_db import app
 from helpers.utility import admin_required, start_thread
-from pages.neem_overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP, update_neem_overview_files, load_default_overview_files
-from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP, update_publications_and_papers, load_default_publications_and_papers
+from pages.neem_overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP, manual_update_neem_overview_files, load_default_overview_files
+from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP, manual_update_publications_and_papers, load_default_publications_and_papers
 from postgres.settings import ContentSettings, UpdateMethod
 
 @app.route('/news')
@@ -31,16 +31,6 @@ def manually_load_resource(func):
     else:
         flash('Action succeeded!')
         flash('Action succeeded!', 'success')
-
-
-def manual_update_neem_overview_files():
-    update_neem_overview_files()()
-    ContentSettings.set_last_update_type_neem_overview(UpdateMethod.MANUAL)
-
-
-def manual_update_publications_and_papers():
-    update_publications_and_papers()
-    ContentSettings.set_last_update_type_publications_and_papers(UpdateMethod.MANUAL)
 
 
 @app.route('/settings/content/update_all')
