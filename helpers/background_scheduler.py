@@ -21,8 +21,8 @@ def start_background_scheduler():
         app.logger.info('The scheduler is already active. Will not start new one.')
         return
     
-    BACKGROUND_SCHEDULER.add_job(func=automatic_update_neem_overview_files, trigger="interval", hours=3, coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
-    BACKGROUND_SCHEDULER.add_job(func=automatic_update_publications_and_papers, trigger="interval", days=1, next_run_time=_get_tomorrow_3_am_datetime(), coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=automatic_update_neem_overview_files, trigger="cron", hour='*/3', coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=automatic_update_publications_and_papers, trigger="cron", hour='3', coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
     BACKGROUND_SCHEDULER.start()
 
     _pause_update_jobs_if_necessary()
@@ -40,11 +40,6 @@ def _init_scheduler_logger():
     h = logging.StreamHandler()
     h.setFormatter(fmt)
     SCHEDULER_LOGGER.addHandler(h)
-
-
-def _get_tomorrow_3_am_datetime():
-    today = date.today()
-    return datetime(today.year, today.month, today.day, 3, 0, 0)
 
 
 def _pause_update_jobs_if_necessary():
