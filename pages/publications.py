@@ -13,10 +13,6 @@ from app_and_db import app
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, mutex_lock, remove_if_is_dir, remove_if_is_file, start_thread, unzip_file, dump_dict_to_json, get_dict_from_json
 
-PUBLICATIONS_URL = ''
-PAPERS_URL = ''
-DEFAULT_PAPERS_URL = ''
-
 PUBLICATIONS_DIR_PATH = WEBROB_PATH + 'publications/'
 PUBLICATIONS_DATA_PATH = PUBLICATIONS_DIR_PATH + 'publications_data.json'
 ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + 'all_publications.bib'
@@ -151,7 +147,11 @@ def _download_and_unzip_papers():
 
 
 def _download_papers():
-    download_file(PAPERS_URL, PAPERS_ZIP_PATH)
+    download_file(_get_papers_zip_url(), PAPERS_ZIP_PATH)
+
+
+def _get_papers_zip_url():
+    return ContentSettings.get_settings().papers_zip_url
 
 
 def _clear_papers_dir():
@@ -169,7 +169,7 @@ def _download_and_update_bibtex():
 
 def _new_publications_has_no_errors():
     try:
-        download_file(PUBLICATIONS_URL, TEST_PUBLICATIONS_PATH)
+        download_file(_get_publications_bibtex_url(), TEST_PUBLICATIONS_PATH)
         bibtex_db = parse_file(TEST_PUBLICATIONS_PATH)
     except Exception as e:
         app.logger.info('Had issues loading the new bibtex-file with pybtex. Check for errors and update the svn-repo. Using the old bibtex-file for now.\n\n' + e.__str__())
@@ -177,6 +177,10 @@ def _new_publications_has_no_errors():
         return False
 
     return True
+
+
+def _get_publications_bibtex_url():
+    return ContentSettings.get_settings().publications_bibtex_url
 
 
 def _load_bibtex_db_from_file(file_path):
@@ -402,7 +406,7 @@ def _latex_to_text(tex):
 
 
 @mutex_lock(PUBLICATIONS_MUTEX)
-def load_default_publications_and_papers(download_default_papers=False):
+def load_default_publications_and_papers():
     """ This method loads the contents of publications_data.json and extracts
     the contents of paper.zip and moves them to the correct locations.
     
@@ -425,11 +429,8 @@ def load_default_publications_and_papers(download_default_papers=False):
     documentation).
     
     papers need to be loaded before (!) the publications """
-
-    if app.config['DOWNLOAD_DEFAULT_PAPERS']:
-        download_default_papers = True
     
-    _load_default_papers(download_default_papers)
+    _load_default_papers()
     _load_default_publications()
 
     _prepare_publications_downloads()
@@ -438,11 +439,12 @@ def load_default_publications_and_papers(download_default_papers=False):
     ContentSettings.set_last_update_type_publications_and_papers(UpdateMethod.NO_UPDATE)
 
 
+def _load_default_papers():
+    download_default_papers = True if ContentSettings.get_settings().download_default_papers else False
 
-def _load_default_papers(download_default_papers=False):
     if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
         if download_default_papers or not app.config['DEBUG']:
-            download_file(DEFAULT_PAPERS_URL, DEFAULT_PAPERS_ZIP_PATH)
+            download_file(_get_default_papers_zip_url(), DEFAULT_PAPERS_ZIP_PATH)
 
             if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
                 _log_failed_default_papers_download()
@@ -459,6 +461,10 @@ def _load_default_papers(download_default_papers=False):
         ContentSettings.set_content_type_papers(ContentState.DEFAULT)
     except Exception as e:
         app.logger.warning('Had issues unzipping default papers.\n\n' + e.__str__())
+
+
+def _get_default_papers_zip_url():
+    return ContentSettings.get_settings().default_papers_zip_url
 
 
 def _log_failed_default_papers_download():
@@ -491,7 +497,7 @@ def dump_publications_data_as_json():
 
 
 def _prepare_publications_downloads():
-    if not app.config['PREPARE_DOWNLOADABLE_FILES']:
+    if not ContentSettings.get_settings().prepare_downloadable_files:
         app.logger.info('Config set to not prepare downloadable files.\nWill not prepare downloadable publication-files.')
         return
 

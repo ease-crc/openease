@@ -101,9 +101,6 @@ def init_app(extra_config_settings={}):
     
     content_settings = ContentSettings.get_settings()
 
-    app.config['DOWNLOAD_DEFAULT_PAPERS'] = content_settings.download_default_papers
-    app.config['PREPARE_DOWNLOADABLE_FILES'] = content_settings.prepare_downloadable_files
-
     _create_downloads_folder()
 
     # the following imports need to be declared here
@@ -119,10 +116,17 @@ def init_app(extra_config_settings={}):
     from pages.neem_overview import automatic_update_neem_overview_files, load_default_overview_files
 
     if _config_is_debug():
-        # load defaults, instead of fetching updates
-        # saves a lot of time on start-up
-        load_default_overview_files()
-        load_default_publications_and_papers()
+        # load defaults if update-state is set to paused, instead of 
+        # fetching updates; saves a lot of time on start-up
+        if _update_state_neem_overview_job_is_active():
+            automatic_update_neem_overview_files()
+        else:
+            load_default_overview_files()
+        
+        if _update_state_publications_and_papers_job_is_active():
+            automatic_update_publications_and_papers()
+        else:
+            load_default_publications_and_papers()
     else:
         # initial download of files
         automatic_update_neem_overview_files()
@@ -135,6 +139,14 @@ def init_app(extra_config_settings={}):
     
     app.logger.info("Webapp started.")
     return app
+
+
+def _update_state_neem_overview_job_is_active():
+    return ContentSettings.get_settings().update_state_neem_overview == UpdateState.ACTIVE
+
+
+def _update_state_publications_and_papers_job_is_active():
+    return ContentSettings.get_settings().update_state_publications_and_papers == UpdateState.ACTIVE
 
 
 def _create_downloads_folder():
