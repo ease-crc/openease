@@ -113,6 +113,14 @@ def automatic_update_publications_and_papers():
 # exception is the app start-up
 @mutex_lock(PUBLICATIONS_MUTEX)
 def _update_publications_and_papers():
+    content_settings = ContentSettings.get_settings()
+    if content_settings.publications_bibtex_url == '':
+        app.logger.info('Cannot update publications-data if no URL for the publications bibtex is provided.\nUpdate the content settings and retry.\nPublications update job will also be paused if active.')
+
+        from helpers.background_scheduler import pause_publications_job
+        pause_publications_job()
+        return
+
     # papers need to be loaded before (!) the publications
     try:
         _download_and_unzip_papers()
