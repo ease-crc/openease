@@ -130,10 +130,9 @@ def manually_load_resource(func):
         func()
     except Exception as e:
         app.logger.warning(e.__str__())
-        flash('Action failed!', 'warning')
+        flash('Action failed!', 'error')
     else:
-        flash('Action succeeded!')
-        flash('Action succeeded!', 'success')
+        flash('Action finished!', 'warning')
 
 
 @app.route('/settings/content/update_all')
@@ -235,7 +234,7 @@ def send_publications_zip():
 def store_publications_and_papers_urls():
     req = request.form
     if req is None:
-        flash('Null request is submitted while form submission!', 'warning')
+        flash('Null request is submitted while form submission!', 'error')
         redirect(url_for('render_content_settings'))
 
     ContentSettings.set_publications_bibtex_url(req.get('bibtex_url'))
@@ -243,5 +242,5 @@ def store_publications_and_papers_urls():
     ContentSettings.set_papers_zip_url(req.get('papers_zip_url'))
     
     app.logger.info("Content settings have been updated")
-    flash('Urls for papers and publications have been stored!', 'success')
+    flash('Urls for papers and publications have been stored!', 'warning')
     return redirect(url_for('render_content_settings'))
