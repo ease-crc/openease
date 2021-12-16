@@ -26,6 +26,7 @@ def render_content_settings():
     from postgres.settings import DATETIME_MIN, UpdateMethod, UpdateState, ContentState
 
     papers_zip_download_exists = Path(DOWNLOADS_DIR_PAPERS_ZIP).is_file()
+    publications_url_is_not_set = (content_settings.publications_bibtex_url == '')
 
     return render_template('settings/content.html', **locals())
 

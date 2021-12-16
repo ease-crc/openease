@@ -75,7 +75,11 @@
             <div class="row flex-column mx-0 mb-4">
                 <h3>Manual Actions</h3>
                 {% if content_settings.update_state_neem_overview == UpdateState.PAUSED or content_settings.update_state_publications_and_papers == UpdateState.PAUSED -%}
+                {% if publications_url_is_not_set -%}
+                <a href="{{ url_for('resume_all_update_jobs') }}" class="btn btn-primary disabled m-1">
+                {% else -%}
                 <a href="{{ url_for('resume_all_update_jobs') }}" class="btn btn-primary m-1">
+                {% endif %}
                     Resume all Update Jobs
                 </a>
                 {% endif %}
@@ -84,7 +88,11 @@
                     Pause all Update Jobs
                 </a>
                 {% endif %}
+                {% if publications_url_is_not_set -%}
+                <a href="{{ url_for('manually_load_all_content_updates') }}" class="btn btn-success disabled m-1 mt-3">
+                {% else -%}
                 <a href="{{ url_for('manually_load_all_content_updates') }}" class="btn btn-success m-1 mt-3">
+                {% endif %}
                     Update All Content
                 </a>
                 <a href="{{ url_for('manually_load_all_default_content') }}" class="btn btn-outline-secondary m-1">
@@ -189,7 +197,11 @@
             <div class="row flex-column mx-0 mb-3">
                 <h3>Manual Actions</h3>
                 {% if content_settings.update_state_publications_and_papers == UpdateState.PAUSED -%}
+                {% if publications_url_is_not_set -%}
+                <a href="{{ url_for('route_resume_publications_job') }}" class="btn btn-primary disabled m-1">
+                {% else -%}
                 <a href="{{ url_for('route_resume_publications_job') }}" class="btn btn-primary m-1">
+                {% endif %}
                     Resume Update Job
                 </a>
                 {% else -%}
@@ -197,7 +209,11 @@
                     Pause Update Job
                 </a>
                 {% endif %}
+                {% if publications_url_is_not_set -%}
+                <a href="{{ url_for('manually_load_publications_updates') }}" class="btn btn-success disabled m-1 mt-3">
+                {% else -%}
                 <a href="{{ url_for('manually_load_publications_updates') }}" class="btn btn-success m-1 mt-3">
+                {% endif %}
                     Update Publications & Papers
                 </a>
                 <a href="{{ url_for('manually_load_publications_defaults') }}" class="btn btn-outline-secondary m-1">
