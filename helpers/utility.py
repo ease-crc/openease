@@ -8,6 +8,7 @@ import string
 import requests
 import json
 
+from urlparse import urlparse
 from flask import session
 from config.settings import WEBROB_PATH
 from flask_user import current_user
@@ -192,3 +193,11 @@ def _determine_mutex(mutex, func):
 
 def type_str(obj):
     return str(type(obj))
+
+
+def is_url(url):
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
