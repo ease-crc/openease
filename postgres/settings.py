@@ -3,7 +3,7 @@ import enum
 from datetime import datetime
 
 from app_and_db import app, db
-from helpers.utility import type_str
+from helpers.utility import type_str, is_url
 
 FIRST_DOCUMENT_ID = 1
 DATETIME_MIN = datetime.min
@@ -186,14 +186,26 @@ class ContentSettings(db.Model):
     
     @staticmethod
     def set_default_papers_zip_url(str_value):
+        if not is_url(str_value) and str_value != '':
+            app.logger.info('String is not a url or empty string. Will not update field.')
+            return
+        
         ContentSettings._set_attribute('default_papers_zip_url', str_value)
 
     @staticmethod
     def set_papers_zip_url(str_value):
+        if not is_url(str_value) and str_value != '':
+            app.logger.info('String is not a url or empty string. Will not update field.')
+            return
+        
         ContentSettings._set_attribute('papers_zip_url', str_value)
 
     @staticmethod
     def set_publications_bibtex_url(str_value):
+        if not is_url(str_value) and str_value != '':
+            app.logger.info('String is not a url or empty string. Will not update field.')
+            return
+        
         ContentSettings._set_attribute('publications_bibtex_url', str_value)
         
     @staticmethod
