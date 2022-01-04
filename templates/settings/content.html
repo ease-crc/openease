@@ -29,10 +29,10 @@
                     <tbody>
                         <tr>
                             <th scope="row">
+                                Download Default Papers
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Download Default Papers
                             </th>
                             {% if content_settings.download_default_papers -%}
                             <td>
@@ -56,10 +56,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Prepare Downloadable Files
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Prepare Downloadable Files
                             </th>
                             {% if content_settings.prepare_downloadable_files -%}
                             <td>
@@ -87,9 +87,6 @@
             <div class="row flex-column mx-0 mb-4">
                 <h3>Manual Actions</h3>
                 <div class="row m-0">
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                        <i class="far fa-question-circle"></i>
-                    </button>
                     {% if content_settings.update_state_neem_overview == UpdateState.PAUSED or content_settings.update_state_publications_and_papers == UpdateState.PAUSED -%}
                     {% if publications_url_is_not_set -%}
                     <a href="{{ url_for('resume_all_update_jobs') }}" class="col btn btn-primary disabled m-1">
@@ -98,17 +95,20 @@
                     {% endif %}
                         Resume all Update Jobs
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                     {% endif %}
                     {% if content_settings.update_state_neem_overview == UpdateState.ACTIVE or content_settings.update_state_publications_and_papers == UpdateState.ACTIVE -%}
                     <a href="{{ url_for('pause_all_update_jobs') }}" class="col btn btn-warning m-1">
                         Pause all Update Jobs
                     </a>
-                    {% endif %}
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                    {% endif %}
+                </div>
+                <div class="row m-0">
                     {% if publications_url_is_not_set -%}
                     <a href="{{ url_for('manually_load_all_content_updates') }}" class="col btn btn-success disabled m-1 mt-3">
                     {% else -%}
@@ -116,22 +116,25 @@
                     {% endif %}
                         Update All Content
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('manually_load_all_default_content') }}" class="col btn btn-outline-secondary m-1">
                         Load All Default Content
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('load_developer_settings') }}" class="col btn btn-secondary m-1 mt-3">
                         Load Developer Settings
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                 </div>
             </div>
             <div class="row mx-0 flex-column">
@@ -139,10 +142,10 @@
                 <form action="{{ url_for('store_publications_and_papers_urls') }}" method="post">
                     <div class="form-group row flex-column mx-0 mb-1">
                         <div>
+                            <label class="font-weight-bold col-form-label">Publications BibTex_Url</label>
                             <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                 <i class="far fa-question-circle"></i>
                             </button>
-                            <label class="font-weight-bold col-form-label">Publications BibTex_Url</label>
                         </div>
                         <div>
                             <input type="text" placeholder=""
@@ -152,10 +155,10 @@
                     </div>
                     <div class="form-group row flex-column mx-0 mb-1">
                         <div>
+                            <label class="font-weight-bold col-form-label">default_papers.zip Url</label>
                             <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                 <i class="far fa-question-circle"></i>
                             </button>
-                            <label class="font-weight-bold col-form-label">default_papers.zip Url</label>
                         </div>
                         <div>
                             <input type="text" placeholder=""
@@ -164,10 +167,10 @@
                     </div>
                     <div class="form-group row flex-column mx-0">
                         <div>
+                            <label class="font-weight-bold col-form-label">papers.zip Url</label>
                             <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                 <i class="far fa-question-circle"></i>
                             </button>
-                            <label class="font-weight-bold col-form-label">papers.zip Url</label>
                         </div>
                         <div>
                             <input type="text" placeholder=""
@@ -190,10 +193,10 @@
                     <tbody>
                         <tr>
                             <th scope="row">
+                                Publications Data
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Publications Data
                             </th>
                             <td>
                                 {{ content_settings.content_type_publications.name }}
@@ -201,10 +204,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Papers
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Papers
                             </th>
                             <td>
                                 {{ content_settings.content_type_papers.name }}
@@ -212,10 +215,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Update Job Status
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Update Job Status
                             </th>
                             <td>
                                 {{ content_settings.update_state_publications_and_papers.name }}
@@ -223,10 +226,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Last Update
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Last Update
                             </th>
                             <td>
                                 {% if content_settings.last_update_type_publications_and_papers == UpdateMethod.NO_UPDATE -%}
@@ -240,10 +243,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Next Update
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Next Update
                             </th>
                             <td>
                                 {% if content_settings.update_state_publications_and_papers == UpdateState.ACTIVE -%}
@@ -259,9 +262,6 @@
             <div class="row flex-column mx-0 mb-3">
                 <h3>Manual Actions</h3>
                 <div class="row m-0">
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                        <i class="far fa-question-circle"></i>
-                    </button>
                     {% if content_settings.update_state_publications_and_papers == UpdateState.PAUSED -%}
                     {% if publications_url_is_not_set -%}
                     <a href="{{ url_for('route_resume_publications_job') }}" class="col btn btn-primary disabled m-1">
@@ -275,11 +275,11 @@
                         Pause Update Job
                     </a>
                     {% endif %}
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     {% if publications_url_is_not_set -%}
                     <a href="{{ url_for('manually_load_publications_updates') }}" class="col btn btn-success disabled m-1 mt-3">
                     {% else -%}
@@ -287,38 +287,38 @@
                     {% endif %}
                         Update Publications & Papers
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('manually_load_publications_defaults') }}" class="col btn btn-outline-secondary m-1">
                         Load Defaults
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                 </div>
             </div>
             <div class="row flex-column mx-0">
                 <h3>Downloads</h3>
                 <div class="row m-0">
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                        <i class="far fa-question-circle"></i>
-                    </button>
                     <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1">
                         Publications Data (JSON)
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1">
                         Publications BibTex
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     {% if papers_zip_download_exists -%}
                     <a href="{{ url_for('send_papers_zip') }}" class="col btn btn-success m-1">
                     {% else -%}
@@ -326,14 +326,17 @@
                     {% endif %}
                         Papers
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('send_publications_zip') }}" class="col btn btn-outline-primary m-1">
                         Download All
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -347,10 +350,10 @@
                     <tbody>
                         <tr>
                             <th scope="row">
+                                Overview Data
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Overview Data
                             </th>
                             <td>
                                 {{ content_settings.content_type_neem_overview.name }}
@@ -366,10 +369,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Update Job Status
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Update Job Status
                             </th>
                             <td>
                                 {{ content_settings.update_state_neem_overview.name }}
@@ -377,10 +380,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Last Update
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Last Update
                             </th>
                             <td>
                                 {% if content_settings.last_update_type_neem_overview == UpdateMethod.NO_UPDATE -%}
@@ -394,10 +397,10 @@
                         </tr>
                         <tr>
                             <th scope="row">
+                                Next Update
                                 <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                                     <i class="far fa-question-circle"></i>
                                 </button>
-                                Next Update
                             </th>
                             <td>
                                 {% if content_settings.update_state_neem_overview == UpdateState.ACTIVE -%}
@@ -413,9 +416,6 @@
             <div class="row flex-column mx-0 mb-3">
                 <h3>Manual Actions</h3>
                 <div class="row m-0">
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                        <i class="far fa-question-circle"></i>
-                    </button>
                     {% if content_settings.update_state_neem_overview == UpdateState.PAUSED -%}
                     <a href="{{ url_for('route_resume_neem_overview_job') }}" class="col btn btn-primary m-1">
                         Resume Update Job
@@ -425,49 +425,52 @@
                         Pause Update Job
                     </a>
                     {% endif %}
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('manually_load_overview_updates') }}" class="col btn btn-success m-1 mt-3">
                         Update Overview Data & Files
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('manually_load_overview_defaults') }}" class="col btn btn-outline-secondary m-1">
                         Load Defaults
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                 </div>
             </div>
             <div class="row flex-column mx-0">
                 <h3>Downloads</h3>
                 <div class="row m-0">
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                        <i class="far fa-question-circle"></i>
-                    </button>
                     <a href="{{ url_for('send_overview_data_json') }}" class="col btn btn-success m-1">
                         Overview Data (JSON)
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('send_overview_mds_and_imgs') }}" class="col btn btn-success m-1">
                         Overview Markdowns & Images
                     </a>
-                </div>
-                <div class="row m-0">
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
                         <i class="far fa-question-circle"></i>
                     </button>
+                </div>
+                <div class="row m-0">
                     <a href="{{ url_for('send_overview_zip') }}" class="col btn btn-outline-primary m-1">
                         Download All
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                 </div>
             </div>
         </div>
