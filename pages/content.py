@@ -24,8 +24,16 @@ def render_content_settings():
     last_update_overview = _reset_datetime_microseconds_and_utc_offset(content_settings.last_update_neem_overview)
     next_update_overview = _reset_datetime_microseconds_and_utc_offset(get_neem_overview_job_next_runtime())
     from postgres.settings import DATETIME_MIN, UpdateMethod, UpdateState, ContentState
-
+    
+    publications_data_json_download_exists = Path(DOWNLOADS_DIR_PUBLICATIONS_DATA).is_file()
+    publications_bibtex_download_exists = Path(DOWNLOADS_DIR_PUBLICATIONS_BIBTEX).is_file()
     papers_zip_download_exists = Path(DOWNLOADS_DIR_PAPERS_ZIP).is_file()
+    publications_and_papers_zip_download_exists = Path(DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP).is_file()
+
+    overview_data_json_download_exists = Path(DOWNLOADS_DIR_OVERVIEW_DATA).is_file()
+    overview_mds_and_imgs_zip_download_exists = Path(DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS).is_file()
+    overview_zip_download_exists = Path(DOWNLOADS_DIR_OVERVIEW_ZIP).is_file()
+
     publications_url_is_not_set = (content_settings.publications_bibtex_url == '')
 
     return render_template('settings/content.html', **locals())

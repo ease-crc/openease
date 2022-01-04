@@ -303,7 +303,7 @@
             <div class="row flex-column mx-0">
                 <h3>Downloads</h3>
                 <div class="row m-0">
-                    {% if content_settings.prepare_downloadable_files -%}
+                    {% if publications_data_json_download_exists -%}
                     <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1">
                     {% else -%}
                     <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1 disabled"></a>
@@ -315,7 +315,7 @@
                     </button>
                 </div>
                 <div class="row m-0">
-                    {% if content_settings.prepare_downloadable_files -%}
+                    {% if publications_bibtex_download_exists -%}
                     <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1">
                     {% else -%}
                     <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1 disabled"></a>
@@ -327,7 +327,7 @@
                     </button>
                 </div>
                 <div class="row m-0">
-                    {% if papers_zip_download_exists and content_settings.prepare_downloadable_files -%}
+                    {% if papers_zip_download_exists -%}
                     <a href="{{ url_for('send_papers_zip') }}" class="col btn btn-success m-1">
                     {% else -%}
                     <a href="{{ url_for('send_papers_zip') }}" class="col btn btn-success m-1 disabled">
@@ -339,7 +339,7 @@
                     </button>
                 </div>
                 <div class="row m-0">
-                    {% if content_settings.prepare_downloadable_files -%}
+                    {% if publications_and_papers_zip_download_exists -%}
                     <a href="{{ url_for('send_publications_zip') }}" class="col btn btn-outline-primary m-1">
                     {% else -%}
                     <a href="{{ url_for('send_publications_zip') }}" class="col btn btn-outline-primary m-1 disabled">
@@ -461,7 +461,7 @@
             <div class="row flex-column mx-0">
                 <h3>Downloads</h3>
                 <div class="row m-0">
-                    {% if content_settings.prepare_downloadable_files -%}
+                    {% if overview_data_json_download_exists -%}
                     <a href="{{ url_for('send_overview_data_json') }}" class="col btn btn-success m-1">
                     {% else -%}
                     <a href="{{ url_for('send_overview_data_json') }}" class="col btn btn-success m-1 disabled">
@@ -473,7 +473,7 @@
                     </button>
                 </div>
                 <div class="row m-0">
-                    {% if content_settings.prepare_downloadable_files -%}
+                    {% if overview_mds_and_imgs_zip_download_exists -%}
                     <a href="{{ url_for('send_overview_mds_and_imgs') }}" class="col btn btn-success m-1">
                     {% else -%}
                     <a href="{{ url_for('send_overview_mds_and_imgs') }}" class="col btn btn-success m-1 disabled">
@@ -485,7 +485,7 @@
                     </button>
                 </div>
                 <div class="row m-0">
-                    {% if content_settings.prepare_downloadable_files -%}
+                    {% if overview_zip_download_exists -%}
                     <a href="{{ url_for('send_overview_zip') }}" class="col btn btn-outline-primary m-1">
                     {% else -%}
                     <a href="{{ url_for('send_overview_zip') }}" class="col btn btn-outline-primary m-1 disabled">
