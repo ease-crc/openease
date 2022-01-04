@@ -303,7 +303,11 @@
             <div class="row flex-column mx-0">
                 <h3>Downloads</h3>
                 <div class="row m-0">
+                    {% if content_settings.prepare_downloadable_files -%}
                     <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1">
+                    {% else -%}
+                    <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1 disabled"></a>
+                    {% endif %}
                         Publications Data (JSON)
                     </a>
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
@@ -311,7 +315,11 @@
                     </button>
                 </div>
                 <div class="row m-0">
+                    {% if content_settings.prepare_downloadable_files -%}
                     <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1">
+                    {% else -%}
+                    <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1 disabled"></a>
+                    {% endif %}
                         Publications BibTex
                     </a>
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
@@ -319,10 +327,10 @@
                     </button>
                 </div>
                 <div class="row m-0">
-                    {% if papers_zip_download_exists -%}
+                    {% if papers_zip_download_exists and content_settings.prepare_downloadable_files -%}
                     <a href="{{ url_for('send_papers_zip') }}" class="col btn btn-success m-1">
                     {% else -%}
-                    <a href="{{ url_for('send_papers_zip') }}" class="col btn btn-success disabled m-1">
+                    <a href="{{ url_for('send_papers_zip') }}" class="col btn btn-success m-1 disabled">
                     {% endif %}
                         Papers
                     </a>
@@ -331,7 +339,11 @@
                     </button>
                 </div>
                 <div class="row m-0">
+                    {% if content_settings.prepare_downloadable_files -%}
                     <a href="{{ url_for('send_publications_zip') }}" class="col btn btn-outline-primary m-1">
+                    {% else -%}
+                    <a href="{{ url_for('send_publications_zip') }}" class="col btn btn-outline-primary m-1 disabled">
+                    {% endif %}
                         Download All
                     </a>
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
@@ -449,7 +461,11 @@
             <div class="row flex-column mx-0">
                 <h3>Downloads</h3>
                 <div class="row m-0">
+                    {% if content_settings.prepare_downloadable_files -%}
                     <a href="{{ url_for('send_overview_data_json') }}" class="col btn btn-success m-1">
+                    {% else -%}
+                    <a href="{{ url_for('send_overview_data_json') }}" class="col btn btn-success m-1 disabled">
+                    {% endif %}
                         Overview Data (JSON)
                     </a>
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
@@ -457,7 +473,11 @@
                     </button>
                 </div>
                 <div class="row m-0">
+                    {% if content_settings.prepare_downloadable_files -%}
                     <a href="{{ url_for('send_overview_mds_and_imgs') }}" class="col btn btn-success m-1">
+                    {% else -%}
+                    <a href="{{ url_for('send_overview_mds_and_imgs') }}" class="col btn btn-success m-1 disabled">
+                    {% endif %}
                         Overview Markdowns & Images
                     </a>
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
@@ -465,7 +485,11 @@
                     </button>
                 </div>
                 <div class="row m-0">
+                    {% if content_settings.prepare_downloadable_files -%}
                     <a href="{{ url_for('send_overview_zip') }}" class="col btn btn-outline-primary m-1">
+                    {% else -%}
+                    <a href="{{ url_for('send_overview_zip') }}" class="col btn btn-outline-primary m-1 disabled">
+                    {% endif %}
                         Download All
                     </a>
                     <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
