@@ -30,7 +30,7 @@
                         <tr>
                             <th scope="row">
                                 Download Default Papers
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Determines whether the default papers should be downloaded when loading the default files for the publications. Works only if a download-Url for the file is provided (s. Publications & Papers Urls).">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -57,7 +57,7 @@
                         <tr>
                             <th scope="row">
                                 Prepare Downloadable Files
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Determines whether downloadable files should be provided after loading content files. These files might be useful for debugging or when default files in the main repository should be replaced.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -95,7 +95,7 @@
                     {% endif %}
                         Resume all Update Jobs
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Resumes update jobs for all content. This will not immediately trigger the updates to run. Instead updates will be run in their respective intervals. Files for neem-overview will be updated every full hour that is divisible by three (3, 6, 9, etc.), while publications will be updated daily at 3 a.m.">
                         <i class="far fa-question-circle"></i>
                     </button>
                     {% endif %}
@@ -103,7 +103,7 @@
                     <a href="{{ url_for('pause_all_update_jobs') }}" class="col btn btn-warning m-1">
                         Pause all Update Jobs
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Pauses update jobs for all content. Current content will remain accessible (they will not be replaced by default files). If an update job is executing at the time of request, it will finish executing before going into pause. This field is disabled if no URL is provided for the publications bibtex-file.">
                         <i class="far fa-question-circle"></i>
                     </button>
                     {% endif %}
@@ -116,7 +116,7 @@
                     {% endif %}
                         Update All Content
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Manually trigger an update of all content. This is useful if you want the latest content without waiting for or resuming the update jobs. This field is disabled if no URL is provided for the publications bibtex-file (s. Publications & Papers Urls).">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -124,7 +124,7 @@
                     <a href="{{ url_for('manually_load_all_default_content') }}" class="col btn btn-outline-secondary m-1">
                         Load All Default Content
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Loads the default content files and deletes content files from previous updates (if any exist). THIS IS NOT REVERSIBLE! This does not pause update jobs, so the default files will be replaced with the next update.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -132,7 +132,7 @@
                     <a href="{{ url_for('load_developer_settings') }}" class="col btn btn-secondary m-1 mt-3">
                         Load Developer Settings
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Sets all settings for better development (e.g. faster container start up). Pauses all update jobs, loads all default content, and turns off downloading default papers and preparing downloadable files.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -143,7 +143,7 @@
                     <div class="form-group row flex-column mx-0 mb-1">
                         <div>
                             <label class="font-weight-bold col-form-label">Publications BibTex_Url</label>
-                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Url-location of the publications bibtex file that should be requested during updates. This file provides the data about all EASE publications.">
                                 <i class="far fa-question-circle"></i>
                             </button>
                         </div>
@@ -156,7 +156,7 @@
                     <div class="form-group row flex-column mx-0 mb-1">
                         <div>
                             <label class="font-weight-bold col-form-label">default_papers.zip Url</label>
-                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Url-location of the default_papers.zip that should be requested when loading default publications. This file contains papers of EASE publications that can be viewed and downloaded on the publications-page. If left empty, users cannot access papers when default publications are loaded.">
                                 <i class="far fa-question-circle"></i>
                             </button>
                         </div>
@@ -168,7 +168,7 @@
                     <div class="form-group row flex-column mx-0">
                         <div>
                             <label class="font-weight-bold col-form-label">papers.zip Url</label>
-                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Url-location of the latest papers.zip that should be requested during updates. This file contains EASE publications that can be viewed and downloaded on the publications-page. If left empty, users cannot access papers when the latest publications are loaded.">
                                 <i class="far fa-question-circle"></i>
                             </button>
                         </div>
@@ -194,7 +194,7 @@
                         <tr>
                             <th scope="row">
                                 Publications Data
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Current state of the publications data. Can be either DEFAULT or LATEST.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -205,7 +205,7 @@
                         <tr>
                             <th scope="row">
                                 Papers
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Current state of the papers for the publications. Can be either DEFAULT, LATEST, NONE if no download URLs are provided for either papers.zip and default_papers.zip (and if download default papers is set to OFF).">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -216,7 +216,7 @@
                         <tr>
                             <th scope="row">
                                 Update Job Status
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Current status of the update job for publications and papers. Can be either ACTIVE or PAUSED.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -227,7 +227,7 @@
                         <tr>
                             <th scope="row">
                                 Last Update
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Displays when publications and papers were updated last. Also displays whether it was done manually or automatically (on start-up or with an update job). If the latest files are not available, this field will say NO_UPDATE.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -244,7 +244,7 @@
                         <tr>
                             <th scope="row">
                                 Next Update
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Displays when the next update for publications and papers is scheduled (given that the update job is active). Updates are scheduled daily at 3 a.m. If the update job is paused, nothing will be displayed.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -270,14 +270,17 @@
                     {% endif %}
                         Resume Update Job
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Resumes the update job for publications and papers. This will not immediately trigger the update to run, instead the update is run daily at 3 a.m. This field is disabled if no URL is provided for the publications bibtex-file (s. Publications & Papers Urls).">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                     {% else -%}
                     <a href="{{ url_for('route_pause_publications_job') }}" class="col btn btn-warning m-1">
                         Pause Update Job
                     </a>
-                    {% endif %}
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Pauses the update job for publications and papers. Current files will remain accessible (they will not be replaced by default files). If an update job is executing at the time of request, it will finish executing before going into pause.">
                         <i class="far fa-question-circle"></i>
                     </button>
+                    {% endif %}
                 </div>
                 <div class="row m-0">
                     {% if publications_url_is_not_set -%}
@@ -287,7 +290,7 @@
                     {% endif %}
                         Update Publications & Papers
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Manually trigger an update for publications and papers. This is useful if you want the latest files without waiting for or resuming the update job. This field is disabled if no URL is provided for the publications bibtex-file (s. Publications & Papers Urls).">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -295,7 +298,7 @@
                     <a href="{{ url_for('manually_load_publications_defaults') }}" class="col btn btn-outline-secondary m-1">
                         Load Defaults
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Loads the default publications and papers (if available) and deletes content files from previous updates (if any exist). THIS IS NOT REVERSIBLE! This does not pause update jobs, so the default files will be replaced with the next update.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -306,11 +309,11 @@
                     {% if publications_data_json_download_exists -%}
                     <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1">
                     {% else -%}
-                    <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1 disabled"></a>
+                    <a href="{{ url_for('send_publications_data_json') }}" class="col btn btn-success m-1 disabled">
                     {% endif %}
                         Publications Data (JSON)
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Runtime python dictionary of the publications data as JSON file. This might be useful for debugging.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -318,11 +321,11 @@
                     {% if publications_bibtex_download_exists -%}
                     <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1">
                     {% else -%}
-                    <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1 disabled"></a>
+                    <a href="{{ url_for('send_publications_bibtex') }}" class="col btn btn-success m-1 disabled">
                     {% endif %}
                         Publications BibTex
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Publications bibtex-file that the program parses to provide the publications data. This might be useful for debugging.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -334,7 +337,7 @@
                     {% endif %}
                         Papers
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Zip-file of the currently loaded papers (either papers.zip if status of publications & papers is LATEST or default_papers.zip if status is DEFAULT). This field is disabled if no file for download can be found. This is usually the case if no urls for the files are provided (s. Publications & Papers Urls) and the files were therefore not downloaded.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -346,7 +349,7 @@
                     {% endif %}
                         Download All
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Downloads all of the above files in one zip.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -363,7 +366,7 @@
                         <tr>
                             <th scope="row">
                                 Overview Data
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Current state of the neem-overview data. Can be either DEFAULT or LATEST">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -382,7 +385,7 @@
                         <tr>
                             <th scope="row">
                                 Update Job Status
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Current status of the update job for neem-overview files (neem markdowns etc.). Can be either ACTIVE or PAUSED.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -393,7 +396,7 @@
                         <tr>
                             <th scope="row">
                                 Last Update
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Displays when neem-overview files were updated last. Also displays whether it was done manually or automatically (on start-up or with an update job). If the latest files are not available, this field will say NO_UPDATE.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -410,7 +413,7 @@
                         <tr>
                             <th scope="row">
                                 Next Update
-                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Displays when the next update for neem-overview files is scheduled (given that the update job is active). Updates are scheduled every full hour that is divisible by three (3, 6, 9, etc.). If the update job is paused, nothing will be displayed.">
                                     <i class="far fa-question-circle"></i>
                                 </button>
                             </th>
@@ -432,20 +435,23 @@
                     <a href="{{ url_for('route_resume_neem_overview_job') }}" class="col btn btn-primary m-1">
                         Resume Update Job
                     </a>
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Resumes the update job for neem-overview files. This will not immediately trigger the update to run, instead the update is run every full hour that is divisible by three (3, 6, 9, etc.).">
+                        <i class="far fa-question-circle"></i>
+                    </button>
                     {% else -%}
                     <a href="{{ url_for('route_pause_neem_overview_job') }}" class="col btn btn-warning m-1">
                         Pause Update Job
                     </a>
-                    {% endif %}
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Pauses the update job for neem-overview files. Current files will remain accessible (they will not be replaced by default files). If an update job is executing at the time of request, it will finish executing before going into pause.">
                         <i class="far fa-question-circle"></i>
                     </button>
+                    {% endif %}
                 </div>
                 <div class="row m-0">
                     <a href="{{ url_for('manually_load_overview_updates') }}" class="col btn btn-success m-1 mt-3">
                         Update Overview Data & Files
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Manually trigger an update for neem-overview files. This is useful if you want the latest files without waiting for or resuming the update job. ">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -453,7 +459,7 @@
                     <a href="{{ url_for('manually_load_overview_defaults') }}" class="col btn btn-outline-secondary m-1">
                         Load Defaults
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Loads the default neem-overview files and deletes content files from previous updates (if any exist). THIS IS NOT REVERSIBLE! This does not pause update jobs, so the default files will be replaced with the next update.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -468,7 +474,7 @@
                     {% endif %}
                         Overview Data (JSON)
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Runtime python dictionary of the neem-overview data as JSON file. This might be useful for debugging.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -480,7 +486,7 @@
                     {% endif %}
                         Overview Markdowns & Images
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Zip-file that contains all the markdowns and images displayed on the overview pages.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
@@ -492,7 +498,7 @@
                     {% endif %}
                         Download All
                     </a>
-                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    <button type="button" class="col-auto btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Downloads all of the above files in one zip.">
                         <i class="far fa-question-circle"></i>
                     </button>
                 </div>
