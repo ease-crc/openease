@@ -36,6 +36,10 @@
             ros = new_ros;
             waitForProlog(ros, function() {
                 console.info('Connected to KnowRob.');
+                const pl = new ROSPrologClient(ros, {});
+                pl.jsonQuery("register_ros_package(openease_rules).", function(result) {
+                    pl.finishClient();
+                });
                 formatter.connect(ros, function() {});
             });
 		}
