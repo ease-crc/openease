@@ -36,8 +36,8 @@ COPY ./node_modules /tmp/npm/node_modules
 ## openEASE javascript packages from git repositories
 # temporal solution, will be changed in the future
 ARG OPENEASE_MODULES=/tmp/npm/node_modules/@openease
-RUN mkdir -p OPENEASE_MODULES
-WORKDIR ${OPENEASE_MODULES}}
+RUN mkdir -p ${OPENEASE_MODULES}
+WORKDIR ${OPENEASE_MODULES}
 RUN git clone https://github.com/ease-crc/openease_threejs.git canvas-three
 RUN git clone https://github.com/ease-crc/openease_d3.git charts
 RUN git clone https://github.com/ease-crc/ros-js-clients.git ros-clients
