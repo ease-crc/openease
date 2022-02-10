@@ -30,10 +30,7 @@ RUN mkdir -p /tmp/npm/node_modules
 WORKDIR /tmp/npm
 COPY static/package.json /tmp/npm/
 RUN npm install
-# copy local node modules into the image
-# FIXME: needs to be done after npm install
-COPY ./node_modules /tmp/npm/node_modules
-## openEASE javascript packages from git repositories
+## install openEASE javascript packages from git repositories
 # temporal solution, will be changed in the future
 ARG OPENEASE_MODULES=/tmp/npm/node_modules/@openease
 RUN mkdir -p ${OPENEASE_MODULES}
@@ -70,4 +67,3 @@ WORKDIR /opt/webapp/webrob/static/css/SCSS
 RUN sass --update .:.
 
 EXPOSE 5000
-
