@@ -42,6 +42,9 @@ RUN git clone https://github.com/ease-crc/rosprolog-js-console.git rosprolog-con
 RUN mkdir -p ${OPENEASE_MODULES}/rosprolog/node_modules/@openease
 WORKDIR ${OPENEASE_MODULES}/rosprolog/node_modules/@openease
 RUN git clone https://github.com/ease-crc/ros-js-clients.git ros-clients
+# copy local node modules into the image
+# must be done after cloning node-modules, so they are overwritten with local versions
+COPY ./node_modules /tmp/npm/node_modules
 # return to npm folder for following actions
 WORKDIR /tmp/npm
 
