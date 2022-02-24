@@ -30,9 +30,23 @@ RUN mkdir -p /tmp/npm/node_modules
 WORKDIR /tmp/npm
 COPY static/package.json /tmp/npm/
 RUN npm install
+## install openEASE javascript packages from git repositories
+# temporal solution, will be changed in the future
+ARG OPENEASE_MODULES=/tmp/npm/node_modules/@openease
+RUN mkdir -p ${OPENEASE_MODULES}
+WORKDIR ${OPENEASE_MODULES}
+RUN git clone https://github.com/ease-crc/openease_threejs.git canvas-three
+RUN git clone https://github.com/ease-crc/openease_d3.git charts
+RUN git clone https://github.com/ease-crc/ros-js-clients.git ros-clients
+RUN git clone https://github.com/ease-crc/rosprolog-js-console.git rosprolog-console
+RUN mkdir -p ${OPENEASE_MODULES}/rosprolog/node_modules/@openease
+WORKDIR ${OPENEASE_MODULES}/rosprolog/node_modules/@openease
+RUN git clone https://github.com/ease-crc/ros-js-clients.git ros-clients
 # copy local node modules into the image
-# FIXME: needs to be done after npm install
+# must be done after cloning node-modules, so they are overwritten with local versions
 COPY ./node_modules /tmp/npm/node_modules
+# return to npm folder for following actions
+WORKDIR /tmp/npm
 
 COPY static/index.js /tmp/npm/
 RUN npm run build
@@ -56,4 +70,3 @@ WORKDIR /opt/webapp/webrob/static/css/SCSS
 RUN sass --update .:.
 
 EXPOSE 5000
-
