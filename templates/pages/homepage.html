@@ -226,38 +226,68 @@
                 </h1>
                 <div class="row">
                     {% if could_connect is sameas true %}
-                    {% for neem in featured_neems %}
-                    <div class="col-12 px-0">
-                        <div class="oe-grid-item"
-                            style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">
-                            <div class="oe-grid-item-content" alt="">
-                                <img src={{ url_for('static', filename=neem.image) }} class="oe-grid-print-img">
-                                <div class="oe-grid-item-title">
-                                    <h4>
-                                        {{ neem.name }}
-                                    </h4>
-                                </div>
-                                <div class="oe-grid-item-menu">
-                                    <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
-                                    <ul>
-                                        <li>
-                                            <a href="/overview/{{ neem.neem_repo_path }}">
-                                                Overview
+                    <h2 id="title-featured" class="col-12">
+                        Featured
+                    </h2>
+                    <div id="featured-neems-carousel" class="col-12 p-0 carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for neem in featured_neems %}
+                            <div class="carousel-item 
+                                {% if loop.index == 1 %}
+                                    active
+                                {% endif %}">
+                                <div class="d-block w-100 col-12 px-0">
+                                    <div class="oe-grid-item oe-grid-featured mb-0"
+                                        style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">
+                                        <div class="oe-grid-item-content oe-grid-featured" alt="">
+                                            <img src={{ url_for('static', filename=neem.image) }} class="oe-grid-print-img">
+                                            <div class="oe-grid-item-title">
+                                                <h4>
+                                                    {{ neem.name }}
+                                                </h4>
+                                            </div>
+                                            <div class="oe-grid-item-menu oe-grid-featured">
+                                                <i class="fa fa-chevron-right oe-right-arrow oe-right-arrow-featured" aria-hidden="true"></i>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/overview/{{ neem.neem_repo_path }}">
+                                                            Overview
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
+                                                            Knowledge Base
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <a href="/overview/{{ neem.neem_repo_path }}" class="oe-grid-item-link">
                                             </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem.neem_id }}">
-                                                Knowledge Base
-                                            </a>
-                                        </li>
-                                    </ul>
+                                        </div>
+                                    </div>
                                 </div>
-                                <a href="/overview/{{ neem.neem_repo_path }}" class="oe-grid-item-link">
-                                </a>
                             </div>
+                            {% endfor %}
                         </div>
+                        <ol class="col-12 m-0 mb-1 p-1 carousel-indicators">
+                            {% for neem in featured_neems %}
+                            <li data-target="#featured-neems-carousel" data-slide-to="{{ loop.index -1 }}"
+                                {% if loop.index == 1 %}
+                                    class="active"
+                                {% endif %}>
+                            </li>
+                            {% endfor %}
+                        </ol>
                     </div>
-                    {% endfor %}
+                    <script>
+                        $('.carousel').carousel({
+                            interval: 5000
+                        });
+                    </script>
+
+                    <h2 id="title-newest" class="col-12">
+                        Newest
+                    </h2>
 
                     {% for neem in recent_neems %}
                     <div class="col-12 col-sm-6 col-md-12 col-lg-6 px-0 pr-sm-2 pr-md-0 pr-lg-2">

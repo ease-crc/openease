@@ -129,6 +129,8 @@ hr {
 
     margin-top: 15px;
     margin-bottom: 15px;
+
+    border-bottom-right-radius: 1rem;
 }
 
 .oe-grid-item-content{
@@ -168,8 +170,12 @@ hr {
 .oe-right-arrow{
     position:absolute;
     right: 7px;
-    top: 92px;
+    top: 95px;
     color: #fff;
+}
+
+.oe-right-arrow-featured {
+    top: 121px;
 }
 
 .oe-grid-item-menu ul{
@@ -241,6 +247,18 @@ hr {
     right: -190px;
 }
 
+.oe-grid-featured {
+    height: 250px;
+    border-bottom-right-radius: 0;
+}
+
+#title-featured, #title-newest {
+    color: #5586a2;
+    font-size: 26px;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
 #knowledge-base-error-message{
     font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1rem;
@@ -252,4 +270,10 @@ hr {
     
     margin: 1rem;
     padding: 1rem;
+}
+
+.carousel-indicators {
+    position: relative;
+    background-color: #706f6f;
+    border-bottom-right-radius: 1rem;
 }
