@@ -33,7 +33,7 @@ class PasswordForm(Form):
 @app.route('/neems')
 def render_neems():
     show_all = request.args.get('show_all', default=True, type=bool)
-    per_page = request.args.get('limit', default=12, type=int)
+    per_page = request.args.get('limit', default=8, type=int)
     query = request.args.get('neem_query', default='', type=str)
     # compute pagination offset
     current_page = int(request.args.get('page', 1))
