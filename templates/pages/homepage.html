@@ -210,7 +210,7 @@
                                                     {{ neem.name }}
                                                 </h4>
                                             </div>
-                                            <div class="oe-grid-item-menu oe-grid-featured">
+                                            <div class="oe-grid-item-menu oe-grid-featured d-none d-lg-block">
                                                 <i class="fa fa-chevron-right oe-right-arrow oe-right-arrow-featured" aria-hidden="true"></i>
                                                 <ul>
                                                     <li>
@@ -254,7 +254,7 @@
                     </h2>
 
                     {% for neem in recent_neems %}
-                    <div class="col-12 col-sm-6 col-md-12 col-lg-6 px-0 pr-sm-2 pr-md-0 pr-lg-2">
+                    <div class="col-6 col-md-12 col-lg-6 px-0 pr-2 pr-md-0 pr-lg-2">
                         <div class="oe-grid-item"
                             style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">
                             <div class="oe-grid-item-content" alt="">
@@ -264,7 +264,7 @@
                                         {{ neem.name }}
                                     </h4>
                                 </div>
-                                <div class="oe-grid-item-menu">
+                                <div class="oe-grid-item-menu d-none d-lg-block">
                                     <i class="fa fa-chevron-right oe-right-arrow" aria-hidden="true"></i>
                                     <ul>
                                         <li>
