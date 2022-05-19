@@ -4,7 +4,8 @@ from pathlib2 import Path
 from datetime import datetime
 
 from app_and_db import app
-from helpers.utility import admin_required, start_thread
+from helpers.utility import admin_required
+from helpers.threading import start_thread
 from pages.neem_overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP, manual_update_neem_overview_files, load_default_overview_files
 from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP, manual_update_publications_and_papers, load_default_publications_and_papers
 from helpers.background_scheduler import get_neem_overview_job_next_runtime, get_publications_job_next_runtime, resume_neem_overview_job, resume_publications_job, pause_neem_overview_job, pause_publications_job
