@@ -12,7 +12,8 @@ import random
 
 from app_and_db import app
 from app_and_db import db
-from helpers.utility import admin_required, read_file
+from helpers.utility import admin_required
+from helpers.file_handler import read_file
 from pages.neem_overview import get_neem_data
 import knowrob.container as docker_interface
 from flask_wtf import Form

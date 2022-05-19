@@ -11,7 +11,8 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 
 from app_and_db import app
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
-from helpers.utility import copy_file, download_file, make_archive_of_files_and_dirs, move_file, mutex_lock, remove_if_is_dir, remove_if_is_file, start_thread, unzip_file, dump_dict_to_json, get_dict_from_json
+from helpers.utility import download_file, mutex_lock, start_thread
+from helpers.file_handler import copy_file, move_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
 
 PUBLICATIONS_DIR_PATH = WEBROB_PATH + 'publications/'
 PUBLICATIONS_DATA_PATH = PUBLICATIONS_DIR_PATH + 'publications_data.json'
