@@ -13,7 +13,7 @@ from app_and_db import app
 from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file
 from helpers.file_handler import copy_file, move_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
-from helpers.threading import start_thread, mutex_lock
+from helpers.thread_handler import start_thread, mutex_lock
 
 PUBLICATIONS_DIR_PATH = WEBROB_PATH + 'publications/'
 PUBLICATIONS_DATA_PATH = PUBLICATIONS_DIR_PATH + 'publications_data.json'
