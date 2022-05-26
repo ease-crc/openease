@@ -283,8 +283,6 @@ def admin_cookie():
 
 @app.route('/')
 def render_homepage():
-    could_connect = True
-
     neem_data = get_neem_data()
     featured_neems = neem_data['featured_neems']
     recent_neems = neem_data['recent_neems']

@@ -152,7 +152,6 @@
                     Knowledge Base Experiments
                 </h1>
                 <div class="row">
-                    {% if could_connect is sameas true %}
                     <h2 id="title-featured" class="col-12">
                         Featured
                     </h2>
@@ -248,11 +247,6 @@
                         </div>
                     </div>
                     {% endfor %}
-                    {% else %}
-                    <div id="knowledge-base-error-message">
-                        {{ message }}
-                    </div>
-                    {% endif %}
                 </div>
             </div>
             <div class="content-block mt-2 mt-md-0">
