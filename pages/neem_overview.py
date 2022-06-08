@@ -43,16 +43,6 @@ FEATURED_NEEM_IDS = [
     '603127322113d53026863697'
 ]
 
-SUPPORTED_IMAGE_TYPES_FOR_COMPRESSION = [
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".tif",
-    ".tiff",
-    ".bmp"
-]
-
 OVERVIEW_MUTEX = Lock()
 
 # for structure of NEEM_DATA check default_files/default_overview_data.json
@@ -259,7 +249,17 @@ def _download_neem_cover_image(neem):
 
 
 def _compress_image(file_path, compression_value=30):
-    if Path(file_path).suffix not in SUPPORTED_IMAGE_TYPES_FOR_COMPRESSION:
+    supported_image_types_for_compression = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".tif",
+        ".tiff",
+        ".bmp"
+    ]
+
+    if Path(file_path).suffix not in supported_image_types_for_compression:
         return
     
     im = Image.open(file_path)
