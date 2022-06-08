@@ -157,7 +157,7 @@
                     </h2>
                     <div id="featured-neems-carousel" class="col-12 p-0 carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
-                            {% for neem in featured_neems %}
+                            {% for neem in neem_overview_data['featured_neems'] %}
                             <div class="carousel-item 
                                 {% if loop.index == 1 %}
                                     active
@@ -196,7 +196,7 @@
                             {% endfor %}
                         </div>
                         <ol class="col-12 m-0 mb-1 p-1 carousel-indicators">
-                            {% for neem in featured_neems %}
+                            {% for neem in neem_overview_data['featured_neems'] %}
                             <li data-target="#featured-neems-carousel" data-slide-to="{{ loop.index -1 }}"
                                 {% if loop.index == 1 %}
                                     class="active"
@@ -215,7 +215,7 @@
                         Newest
                     </h2>
 
-                    {% for neem in recent_neems %}
+                    {% for neem in neem_overview_data['recent_neems'] %}
                     <div class="col-6 col-md-12 col-lg-6 px-0 pr-2 pr-md-0 pr-lg-2">
                         <div class="oe-grid-item"
                             style="background-image: url( '{{ url_for('static', filename=neem.image) }}' );">

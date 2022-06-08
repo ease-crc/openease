@@ -283,9 +283,7 @@ def admin_cookie():
 
 @app.route('/')
 def render_homepage():
-    neem_data = get_neem_data()
-    featured_neems = neem_data['featured_neems']
-    recent_neems = neem_data['recent_neems']
+    neem_overview_data = get_neem_data()
 
     return render_template('pages/homepage.html', **locals())
 
