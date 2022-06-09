@@ -63,7 +63,7 @@ def render_neem_overview_page(neem_path=None):
     
     neem_data = get_neem_data_from_repo_path(neem_path)
     
-    if neem_data is None or neem_data == {}:
+    if not neem_data:
         app.logger.error('Could not retrieve neem data for selected neem.')
         _flash_cannot_display_overview_page()
         return redirect(url_for('render_homepage'))
