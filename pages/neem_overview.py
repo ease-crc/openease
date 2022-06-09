@@ -21,7 +21,7 @@ from app_and_db import app
 from postgres.settings import DATETIME_MIN, ContentSettings, ContentState, UpdateMethod
 
 NEEM_OVERVIEW_PATH = WEBROB_PATH + 'overview-contents/'
-NEEM_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
+NEEM_OVERVIEW_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
 NEEM_OVERVIEW_MARKDOWNS_PATH = NEEM_OVERVIEW_PATH + 'neem-markdowns/'
 NEEM_IMAGES_PATH = 'img/neem-images/'
 NEEM_IMAGES_STATIC_DIR_PATH = STATIC_DIR_PATH + NEEM_IMAGES_PATH
@@ -352,8 +352,8 @@ def dump_neem_data_as_json():
     developer mode. You can copy files from within the docker 
     container with the docker cp command. For more information
     look at load_overview_files_default(). """
-    remove_if_is_file(NEEM_DATA_PATH)
-    dump_dict_to_json(NEEM_DATA, NEEM_DATA_PATH)
+    remove_if_is_file(NEEM_OVERVIEW_DATA_PATH)
+    dump_dict_to_json(NEEM_DATA, NEEM_OVERVIEW_DATA_PATH)
 
 
 @mutex_lock(OVERVIEW_MUTEX)
@@ -441,7 +441,7 @@ def _prepare_overview_downloads():
 
 def _prepare_overview_data_download():
     remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_DATA)
-    copy_file(NEEM_DATA_PATH, DOWNLOADS_DIR_OVERVIEW_DATA)
+    copy_file(NEEM_OVERVIEW_DATA_PATH, DOWNLOADS_DIR_OVERVIEW_DATA)
 
 
 def _prepare_overview_mds_and_imgs_download():
@@ -455,7 +455,7 @@ def _prepare_overview_mds_and_imgs_download():
 def _prepare_overview_zip_download():
     remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_ZIP)
     make_archive_of_files_and_dirs([
-            NEEM_DATA_PATH,
+            NEEM_OVERVIEW_DATA_PATH,
             NEEM_OVERVIEW_MARKDOWNS_PATH,
             NEEM_IMAGES_STATIC_DIR_PATH
         ], DOWNLOADS_DIR_OVERVIEW_ZIP)
