@@ -101,7 +101,7 @@ def _sanitize_html(html_str):
     # need to sanitize the input, because the template loads the values
     # as 'safe', which could otherwise allow XSS-exploits
     sanitizer = get_sanitizer()
-    return sanitizer.sanitize( html_str )
+    return sanitizer.sanitize(html_str)
 
 
 def manual_update_neem_overview_files():
