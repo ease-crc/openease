@@ -100,7 +100,7 @@ def _convert_md_to_html(md_str):
 def _sanitize_html(html_str):
     # need to sanitize the input, because the template loads the values
     # as 'safe', which could otherwise allow XSS-exploits
-    sanitizer = get_sanitizer()
+    sanitizer = get_html_sanitizer()
     return sanitizer.sanitize(html_str)
 
 
@@ -460,7 +460,7 @@ def _prepare_overview_zip_download():
         ], DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP)
 
 
-def get_sanitizer():
+def get_html_sanitizer():
     """ When tags or items from the markdown are not displayed correctly,
     it might hint to the sanitizer removing unallowed tags. To allow 
     these tags to pass, adjust the sanitizer-config from get_sanitizer()
