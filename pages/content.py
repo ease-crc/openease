@@ -6,7 +6,7 @@ from datetime import datetime
 from app_and_db import app
 from helpers.utility import admin_required
 from helpers.thread_handler import start_thread
-from pages.neem_overview import DOWNLOADS_DIR_OVERVIEW_DATA, DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_OVERVIEW_ZIP, manual_update_neem_overview_files, load_default_overview_files
+from pages.neem_overview import DOWNLOADS_DIR_NEEM_OVERVIEW_DATA, DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP, manual_update_neem_overview_files, load_default_overview_files
 from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP, manual_update_publications_and_papers, load_default_publications_and_papers
 from helpers.background_scheduler import get_neem_overview_job_next_runtime, get_publications_job_next_runtime, resume_neem_overview_job, resume_publications_job, pause_neem_overview_job, pause_publications_job
 from postgres.settings import DATETIME_MIN, ContentSettings, UpdateMethod, UpdateState, ContentState
@@ -31,9 +31,9 @@ def render_content_settings():
     papers_zip_download_exists = Path(DOWNLOADS_DIR_PAPERS_ZIP).is_file()
     publications_and_papers_zip_download_exists = Path(DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP).is_file()
 
-    overview_data_json_download_exists = Path(DOWNLOADS_DIR_OVERVIEW_DATA).is_file()
-    overview_mds_and_imgs_zip_download_exists = Path(DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS).is_file()
-    overview_zip_download_exists = Path(DOWNLOADS_DIR_OVERVIEW_ZIP).is_file()
+    overview_data_json_download_exists = Path(DOWNLOADS_DIR_NEEM_OVERVIEW_DATA).is_file()
+    overview_mds_and_imgs_zip_download_exists = Path(DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS).is_file()
+    overview_zip_download_exists = Path(DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP).is_file()
 
     publications_url_is_not_set = (content_settings.publications_bibtex_url == '')
 
@@ -199,19 +199,19 @@ def _send_file_if_available(FILE_PATH):
 @app.route('/settings/content/overview_data_json')
 @admin_required
 def send_overview_data_json():
-    return _send_file_if_available(DOWNLOADS_DIR_OVERVIEW_DATA)
+    return _send_file_if_available(DOWNLOADS_DIR_NEEM_OVERVIEW_DATA)
 
 
 @app.route('/settings/content/overview_mds_and_imgs')
 @admin_required
 def send_overview_mds_and_imgs():
-    return _send_file_if_available(DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS)
+    return _send_file_if_available(DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS)
 
 
 @app.route('/settings/content/overview_zip')
 @admin_required
 def send_overview_zip():
-    return _send_file_if_available(DOWNLOADS_DIR_OVERVIEW_ZIP)
+    return _send_file_if_available(DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP)
 
 
 @app.route('/settings/content/publications_data_json')

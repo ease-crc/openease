@@ -10,23 +10,23 @@ from pathlib2 import Path
 from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/pylatexenc/
 
 from app_and_db import app
-from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
+from config.settings import CONTENT_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file
 from helpers.file_handler import copy_file, move_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 
-PUBLICATIONS_DIR_PATH = WEBROB_PATH + 'publications/'
+PUBLICATIONS_DIR_PATH = CONTENT_DIR_PATH + 'publications/'
 PUBLICATIONS_DATA_PATH = PUBLICATIONS_DIR_PATH + 'publications_data.json'
 ALL_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + 'all_publications.bib'
 TEST_PUBLICATIONS_PATH = PUBLICATIONS_DIR_PATH + 'test_publications.bib'
 PAPERS_ZIP_PATH = PUBLICATIONS_DIR_PATH + 'papers.zip'
-PAPERS_PATH = STATIC_DIR_PATH + 'papers/'
+PAPERS_PATH = PUBLICATIONS_DIR_PATH + 'papers/'
 
 DEFAULT_PUBLICATIONS_DATA_PATH = DEFAULT_FILES_PATH + 'default_publications_data.json'
 DEFAULT_PUBLICATIONS_PATH = DEFAULT_FILES_PATH + 'default_publications.bib'
 DEFAULT_PAPERS_ZIP_PATH = DEFAULT_FILES_PATH + 'default_papers.zip'
 
-DOWNLOADS_DIR_PUBLICATIONS_DATA = DOWNLOADS_DIR_PATH + 'publication_data.json'
+DOWNLOADS_DIR_PUBLICATIONS_DATA = DOWNLOADS_DIR_PATH + 'publications_data.json'
 DOWNLOADS_DIR_PUBLICATIONS_BIBTEX = DOWNLOADS_DIR_PATH + 'publications.bib'
 DOWNLOADS_DIR_PAPERS_ZIP = DOWNLOADS_DIR_PATH + 'papers.zip'
 DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP = DOWNLOADS_DIR_PATH + 'publications_and_papers.zip'
@@ -423,7 +423,7 @@ def load_default_publications_and_papers():
     papers.zip contains the pdf which should be linked to the entries
     on the publications page. papers.zip should be extracted to
     
-      PAPERS_PATH = '/opt/webapp/webrob/static/papers/'
+      PAPERS_PATH = '/opt/webapp/webrob/content/publications/papers/'
     
     All the mentioned files and dirs can be found inside the container
     in the given locations, if the container is run in production mode 

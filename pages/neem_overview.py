@@ -10,7 +10,7 @@ from threading import Lock
 from html_sanitizer import Sanitizer
 from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
 
-from config.settings import WEBROB_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
+from config.settings import WEBROB_PATH, CONTENT_DIR_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file
 from helpers.file_handler import copy_file, copy_dir, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, read_file, write_non_binary_file, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
@@ -20,20 +20,20 @@ from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 from app_and_db import app
 from postgres.settings import DATETIME_MIN, ContentSettings, ContentState, UpdateMethod
 
-NEEM_OVERVIEW_PATH = WEBROB_PATH + 'overview-contents/'
-NEEM_OVERVIEW_DATA_PATH = NEEM_OVERVIEW_PATH + 'overview_data.json'
-NEEM_OVERVIEW_MARKDOWNS_PATH = NEEM_OVERVIEW_PATH + 'neem-markdowns/'
-NEEM_IMAGES_PATH = 'img/neem-images/'
-NEEM_IMAGES_STATIC_DIR_PATH = STATIC_DIR_PATH + NEEM_IMAGES_PATH
+NEEM_OVERVIEW_PATH = CONTENT_DIR_PATH + 'neem-overview/'
+NEEM_OVERVIEW_DATA_PATH = NEEM_OVERVIEW_PATH + 'neem_overview_data.json'
+NEEM_OVERVIEW_MARKDOWNS_PATH = NEEM_OVERVIEW_PATH + 'neem-overview-markdowns/'
+NEEM_OVERVIEW_IMAGES_PATH =  'img/neem-overview-images/'
+NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH = STATIC_DIR_PATH + NEEM_OVERVIEW_IMAGES_PATH
 
-DEFAULT_NEEM_DATA_PATH = DEFAULT_FILES_PATH + 'default_overview_data.json'
-DEFAULT_NEEM_IMAGES_PATH = DEFAULT_FILES_PATH + 'neem-images'
-DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH = DEFAULT_FILES_PATH + 'neem-markdowns'
-DEFAULT_OVERVIEW_ZIP_PATH = DEFAULT_FILES_PATH + 'default_overview.zip'
+DEFAULT_NEEM_OVERVIEW_DATA_PATH = DEFAULT_FILES_PATH + 'default_neem_overview_data.json'
+DEFAULT_NEEM_OVERVIEW_IMAGES_PATH = DEFAULT_FILES_PATH + 'neem-overview-images'
+DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH = DEFAULT_FILES_PATH + 'neem-overview-markdowns'
+DEFAULT_OVERVIEW_ZIP_PATH = DEFAULT_FILES_PATH + 'default_neem_overview.zip'
 
-DOWNLOADS_DIR_OVERVIEW_DATA = DOWNLOADS_DIR_PATH + 'overview_data.json'
-DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS = DOWNLOADS_DIR_PATH + 'overview_markdowns.zip'
-DOWNLOADS_DIR_OVERVIEW_ZIP = DOWNLOADS_DIR_PATH + 'overview.zip'
+DOWNLOADS_DIR_NEEM_OVERVIEW_DATA = DOWNLOADS_DIR_PATH + 'neem_overview_data.json'
+DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS = DOWNLOADS_DIR_PATH + 'neem_overview_markdowns.zip'
+DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP = DOWNLOADS_DIR_PATH + 'neem_overview.zip'
 
 CURR_IMG_DIR = ''
 CURR_NEEM_REPO = ''
@@ -69,7 +69,7 @@ def render_neem_overview_page(neem_path=None):
         return redirect(url_for('render_homepage'))
 
     try:
-        file_str = read_file(neem_data['md_path'])
+        file_str = read_file(_get_local_neem_markdown_path(neem_data['neem_repo_path']))
     except IOError as e:
         app.logger.error('Could not find markdown-file for neem, therefore cannot render the overview page.\n\n' + e.message)
         _flash_cannot_display_overview_page()
@@ -169,8 +169,8 @@ def _download_neem_markdown(neem):
     _download_and_replace_all_md_images(neem)
 
 
-def _get_local_neem_markdown_path(neem_name):
-    return NEEM_OVERVIEW_MARKDOWNS_PATH + neem_name + '.md'
+def _get_local_neem_markdown_path(neem_repo_path):
+    return NEEM_OVERVIEW_MARKDOWNS_PATH + neem_repo_path + '.md'
 
 
 def _download_and_replace_all_md_images(neem):
@@ -281,7 +281,7 @@ def _get_url_image_file_ending(image_url):
 
 
 def _get_static_folder_neem_image_folder_path(neem_name):
-    return NEEM_IMAGES_PATH + neem_name
+    return NEEM_OVERVIEW_IMAGES_PATH + neem_name
 
 
 def _update_neem_data(neems):
@@ -303,7 +303,6 @@ def _get_all_neems_data_with_last_updated(neems):
             n_data['image'] = DEFAULT_IMAGE_PATH_NO_STATIC
         else:
             n_data['image'] = _get_static_folder_neem_cover_image_path(n_data['image'], n_data['neem_repo_path'])
-        n_data['md_path'] = _get_local_neem_markdown_path(n_data['neem_repo_path'])
 
     return all_neems
 
@@ -325,7 +324,7 @@ def _get_recent_neems_data(neem_data_list):
 
 
 def _neem_has_md(n_data):
-    return Path(n_data['md_path']).is_file()
+    return Path(_get_local_neem_markdown_path(n_data['neem_repo_path'])).is_file()
 
 
 def get_neem_data():
@@ -400,7 +399,7 @@ def _unzip_default_files():
 
 def _remove_previous_default_files():
     remove_if_is_dir(DEFAULT_NEEM_OVERVIEW_MARKDOWNS_PATH)
-    remove_if_is_dir(DEFAULT_NEEM_IMAGES_PATH)
+    remove_if_is_dir(DEFAULT_NEEM_OVERVIEW_IMAGES_PATH)
 
 
 def _load_default_overview_mds():
@@ -412,15 +411,15 @@ def _load_default_overview_mds():
 
 def _load_default_overview_images():
     # necessary if the container is restarted after having been put on pause
-    remove_if_is_dir(NEEM_IMAGES_STATIC_DIR_PATH)
-    copy_dir(DEFAULT_NEEM_IMAGES_PATH, NEEM_IMAGES_STATIC_DIR_PATH)
+    remove_if_is_dir(NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH)
+    copy_dir(DEFAULT_NEEM_OVERVIEW_IMAGES_PATH, NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH)
     app.logger.info("Loaded default overview images.")
 
 
 def _load_default_neem_data():
     global NEEM_DATA
 
-    NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_DATA_PATH)
+    NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_OVERVIEW_DATA_PATH)
     app.logger.info("Loaded default overview database.")
 
 
@@ -440,25 +439,25 @@ def _prepare_overview_downloads():
 
 
 def _prepare_overview_data_download():
-    remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_DATA)
-    copy_file(NEEM_OVERVIEW_DATA_PATH, DOWNLOADS_DIR_OVERVIEW_DATA)
+    remove_if_is_file(DOWNLOADS_DIR_NEEM_OVERVIEW_DATA)
+    copy_file(NEEM_OVERVIEW_DATA_PATH, DOWNLOADS_DIR_NEEM_OVERVIEW_DATA)
 
 
 def _prepare_overview_mds_and_imgs_download():
-    remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS)
+    remove_if_is_file(DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS)
     make_archive_of_files_and_dirs([
             NEEM_OVERVIEW_MARKDOWNS_PATH,
-            NEEM_IMAGES_STATIC_DIR_PATH
-        ], DOWNLOADS_DIR_OVERVIEW_MDS_AND_IMGS)
+            NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH
+        ], DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS)
 
 
 def _prepare_overview_zip_download():
-    remove_if_is_file(DOWNLOADS_DIR_OVERVIEW_ZIP)
+    remove_if_is_file(DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP)
     make_archive_of_files_and_dirs([
             NEEM_OVERVIEW_DATA_PATH,
             NEEM_OVERVIEW_MARKDOWNS_PATH,
-            NEEM_IMAGES_STATIC_DIR_PATH
-        ], DOWNLOADS_DIR_OVERVIEW_ZIP)
+            NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH
+        ], DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP)
 
 
 def get_sanitizer():
