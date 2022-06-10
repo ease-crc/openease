@@ -59,8 +59,8 @@ def render_all_publications():
 
 
 def _papers_dir_not_empty():
-    if Path(get_papers_path()).is_dir():
-        return any(Path(get_papers_path()).iterdir())
+    if Path(PAPERS_PATH).is_dir():
+        return any(Path(PAPERS_PATH).iterdir())
     else:
         return False
 
@@ -86,17 +86,15 @@ def render_bibtex_entry(publication=None):
 
 @app.route('/papers/<paper>')
 def get_paper(paper=None):
-    papers_path = get_papers_path()
-
     if _papers_dir_empty():
         flash('Currently no papers available to load.')
         return redirect(url_for('render_all_publications'))
     
-    if not Path(papers_path + paper).is_file():
+    if not Path(PAPERS_PATH + paper).is_file():
         flash('Cannot find requested paper.')
         return redirect(url_for('render_all_publications'))
 
-    return send_from_directory(papers_path, paper)
+    return send_from_directory(PAPERS_PATH, paper)
 
 
 def manual_update_publications_and_papers():
@@ -571,8 +569,3 @@ def _prepare_publications_zip_download():
 def get_publications_data():
     global PUBLICATIONS_DATA
     return PUBLICATIONS_DATA
-
-
-def get_papers_path():
-    global PAPERS_PATH
-    return PAPERS_PATH
