@@ -63,6 +63,17 @@ def remove_if_is_file(path):
         remove_file(path)
 
 
+def return_all_items_in_dir(dir_path):
+    if not path_is_dir(dir_path):
+        raise ValueError('The path does not point to a directory.')
+
+    return Path(dir_path).iterdir()
+
+
+def dir_has_any_items(dir_path):
+    return any(return_all_items_in_dir(dir_path))
+
+
 def unzip_file(src, dest):
     with ZipFile(src) as zip_obj:
         zip_obj.extractall(dest)

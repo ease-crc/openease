@@ -12,7 +12,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 from app_and_db import app
 from config.settings import CONTENT_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file, is_url
-from helpers.file_handler import copy_file, get_file_extension, move_file, path_is_dir, path_is_file, remove_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
+from helpers.file_handler import copy_file, dir_has_any_items, get_file_extension, move_file, path_is_dir, path_is_file, remove_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 
 PUBLICATIONS_DIR_PATH = CONTENT_DIR_PATH + 'publications/'
@@ -60,7 +60,7 @@ def render_all_publications():
 
 def _papers_dir_not_empty():
     if path_is_dir(PAPERS_PATH):
-        return any(Path(PAPERS_PATH).iterdir())
+        return dir_has_any_items(PAPERS_PATH)
     else:
         return False
 
@@ -549,7 +549,7 @@ def _get_current_bibtex_path():
 
 
 def _prepare_papers_download():
-    if not path_is_dir(PAPERS_PATH) or not any(Path(PAPERS_PATH).iterdir()):
+    if not path_is_dir(PAPERS_PATH) or not dir_has_any_items(PAPERS_PATH):
         app.logger.info('No papers found, so papers.zip won\'t be created for downloads.')
         return
     
@@ -567,7 +567,7 @@ def _prepare_publications_zip_download():
         bibtex_path
     ]
 
-    if path_is_dir(PAPERS_PATH) and any(Path(PAPERS_PATH).iterdir()):
+    if path_is_dir(PAPERS_PATH) and dir_has_any_items(PAPERS_PATH):
         path_list.append(PAPERS_PATH)
     else:
         app.logger.info('No papers found, so no papers added to publications.zip.')
