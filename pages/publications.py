@@ -12,7 +12,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 from app_and_db import app
 from config.settings import CONTENT_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file, is_url
-from helpers.file_handler import copy_file, move_file, path_is_dir, path_is_file, remove_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
+from helpers.file_handler import copy_file, get_file_extension, move_file, path_is_dir, path_is_file, remove_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 
 PUBLICATIONS_DIR_PATH = CONTENT_DIR_PATH + 'publications/'
@@ -160,7 +160,9 @@ def _download_and_unzip_papers():
 
 def _download_papers():
     papers_zip_url = _get_papers_zip_url()
-    if not is_url(papers_zip_url) or not papers_zip_url:
+    if not is_url(papers_zip_url) or \
+        not get_file_extension(papers_zip_url) == '.zip' or \
+        not papers_zip_url:
         return
     
     download_file(_get_papers_zip_url(), PAPERS_ZIP_PATH)

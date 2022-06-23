@@ -12,7 +12,7 @@ from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_s
 
 from config.settings import WEBROB_PATH, CONTENT_DIR_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file
-from helpers.file_handler import copy_file, copy_dir, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, read_file, write_non_binary_file, make_archive_of_files_and_dirs
+from helpers.file_handler import copy_file, copy_dir, get_file_extension, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, read_file, write_non_binary_file, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
@@ -263,7 +263,7 @@ def _compress_image(file_path, compression_value=30):
         ".bmp"
     ]
 
-    if Path(file_path).suffix not in supported_image_types_for_compression:
+    if get_file_extension(file_path) not in supported_image_types_for_compression:
         return
     
     im = Image.open(file_path)
@@ -281,7 +281,7 @@ def _get_static_folder_neem_cover_image_path(neem_image_url, neem_name):
 
 def _get_url_image_file_ending(image_url):
     img_url = furl(image_url).remove(args=True, fragment=True).url
-    return Path(img_url).suffix
+    return get_file_extension(img_url)
 
 
 def _get_static_folder_neem_image_folder_path(neem_name):

@@ -24,6 +24,11 @@ def path_is_dir(path):
     return Path(path).is_dir()
 
 
+def get_file_extension(file_path):
+    '''file_path can be either a file name or a path to the file'''
+    return Path(file_path).suffix
+
+
 def remove_empty_dir(path):
     Path(path).rmdir()
 
