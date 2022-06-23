@@ -59,7 +59,7 @@ def download_file(url, file_path):
         write_binary_file(r.content, temp_file)
 
         make_dir(get_path_parent(file_path), make_parents=True, path_exist_ok=True)
-        move_file(temp_file, file_path)
+        move_file(temp_file, file_path, overwrite=True)
 
         try:
             if not dir_has_any_items(temp_downloads_dir):
