@@ -12,7 +12,7 @@ from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_s
 
 from config.settings import WEBROB_PATH, CONTENT_DIR_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file
-from helpers.file_handler import copy_file, copy_dir, get_file_extension, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, read_file, write_non_binary_file, make_archive_of_files_and_dirs
+from helpers.file_handler import copy_file, copy_dir, get_file_extension, get_path_name, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, read_file, write_non_binary_file, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
@@ -214,7 +214,7 @@ def _scan_for_images_in_md_file(pattern, md_file_str):
 
 def _download_image_and_replace_url(matchobj):
     url = furl(matchobj.group('url')).remove(args=True, fragment=True).url
-    file_path = Path(CURR_IMG_DIR) / Path(url).name
+    file_path = Path(CURR_IMG_DIR) / get_path_name(url)
 
     if not _is_weburl(url):
         neemgit_url = CURR_NEEM_REPO

@@ -24,6 +24,10 @@ def path_is_dir(path):
     return Path(path).is_dir()
 
 
+def get_path_name(path):
+    return Path(path).name
+
+
 def get_file_extension(file_path):
     '''file_path can be either a file name or a path to the file'''
     return Path(file_path).suffix
