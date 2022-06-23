@@ -116,10 +116,14 @@ def automatic_update_neem_overview_files():
     ContentSettings.set_last_update_type_neem_overview(UpdateMethod.AUTOMATIC)
 
 
-# ideally only start this function in a seperate thread with threading.start_thread
-# exception is the app start-up
 @mutex_lock(OVERVIEW_MUTEX)
 def _update_neem_overview_files():
+    '''
+    ideally only start this function in a seperate thread with threading.start_thread
+
+    exception is the app start-up
+    '''
+
     app.logger.info('Downloading files for neems...')
 
     try:
