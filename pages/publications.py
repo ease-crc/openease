@@ -12,7 +12,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 from app_and_db import app
 from config.settings import CONTENT_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file, is_url
-from helpers.file_handler import copy_file, move_file, path_is_dir, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
+from helpers.file_handler import copy_file, move_file, path_is_dir, path_is_file, remove_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 
 PUBLICATIONS_DIR_PATH = CONTENT_DIR_PATH + 'publications/'
@@ -189,7 +189,7 @@ def _new_publications_has_no_errors():
         bibtex_db = parse_file(TEST_PUBLICATIONS_PATH)
     except Exception as e:
         app.logger.info('Had issues loading the new bibtex-file with pybtex. Check for errors and update the svn-repo. Using the old bibtex-file for now.\n\n' + e.__str__())
-        Path(TEST_PUBLICATIONS_PATH).unlink()
+        remove_file(TEST_PUBLICATIONS_PATH)
         return False
 
     return True

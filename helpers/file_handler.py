@@ -29,9 +29,13 @@ def remove_if_is_dir(path):
         shutil.rmtree(path)
 
 
+def remove_file(path):
+    Path(path).unlink()
+
+
 def remove_if_is_file(path):
     if path_is_file(path):
-        Path(path).unlink()
+        remove_file(path)
 
 
 def unzip_file(src, dest):
