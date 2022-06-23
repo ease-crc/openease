@@ -20,8 +20,12 @@ def path_is_file(path):
     return Path(path).is_file()
 
 
+def path_is_dir(path):
+    return Path(path).is_dir()
+
+
 def remove_if_is_dir(path):
-    if Path(path).is_dir():
+    if path_is_dir(path):
         shutil.rmtree(path)
 
 
