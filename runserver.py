@@ -20,7 +20,7 @@ from pathlib2 import Path
 
 from app_and_db import app, db
 from helpers.utility import random_string, oe_password_validator
-from helpers.file_handler import path_is_dir
+from helpers.file_handler import make_dir, path_is_dir
 from postgres.users import Role, User, add_user, create_role
 from postgres.settings import ContentSettings, UpdateState
 
@@ -152,7 +152,7 @@ def _update_state_publications_and_papers_job_is_active():
 
 def _create_downloads_folder():
     if not path_is_dir(DOWNLOADS_DIR_PATH):
-        Path(DOWNLOADS_DIR_PATH).mkdir(parents=True, exist_ok=True)
+        make_dir(DOWNLOADS_DIR_PATH, make_parents=True, path_exist_ok=True)
 
 
 def _config_is_debug():

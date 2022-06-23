@@ -90,6 +90,10 @@ def get_dict_from_json(src):
     return data
 
 
+def make_dir(path, make_parents=False, path_exist_ok=False):
+    Path(path).mkdir(parents=make_parents, exist_ok=path_exist_ok)
+
+
 def read_file(src):
     with open(src, 'r') as file:
         file_str = file.read()
@@ -112,7 +116,7 @@ def _write_file(data, dest, mode):
 def make_archive_of_files_and_dirs(sources, dest):
     # src has to be a list, even if it just has one item
     temp = WEBROB_PATH + 'temp'
-    Path(temp).mkdir(parents=True)
+    make_dir(temp, make_parents=True)
 
     for item in sources:
         if path_is_dir(item):
@@ -123,7 +127,7 @@ def make_archive_of_files_and_dirs(sources, dest):
     zip = '.zip'
     if zip in dest:
         p_dest = dest.replace(zip, '')
-    
+
     shutil.make_archive(p_dest, 'zip', root_dir=temp)
 
     remove_if_is_dir(temp)
@@ -133,5 +137,5 @@ def move_file(src, dest, overwrite=False):
     if not overwrite and path_is_file(dest):
         app.logger.info('Cannot move file, because file already exists at destination and overwrite-flag is set to "False".')
         return
-    
+
     shutil.move(src, dest)

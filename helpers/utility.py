@@ -15,7 +15,7 @@ from functools import wraps
 from pathlib2 import Path
 
 from app_and_db import app
-from helpers.file_handler import dir_has_any_items, get_path_name, get_path_parent, move_file, remove_empty_dir, write_binary_file
+from helpers.file_handler import dir_has_any_items, get_path_name, get_path_parent, make_dir, move_file, remove_empty_dir, write_binary_file
 from Crypto.Random import random
 
 def get_user_dir():
@@ -54,11 +54,11 @@ def download_file(url, file_path):
     
     if r.status_code == 200:
         temp_downloads_dir = WEBROB_PATH + 'temp_downloads/'
-        Path(temp_downloads_dir).mkdir(parents=True, exist_ok=True)
+        make_dir(temp_downloads_dir, make_parents=True, path_exist_ok=True)
         temp_file = temp_downloads_dir + get_path_name(file_path)
         write_binary_file(r.content, temp_file)
 
-        get_path_parent(file_path).mkdir(parents=True, exist_ok=True)
+        make_dir(get_path_parent(file_path), make_parents=True, path_exist_ok=True)
         move_file(temp_file, file_path)
 
         try:
