@@ -87,7 +87,7 @@ def make_archive_of_files_and_dirs(sources, dest):
     Path(temp).mkdir(parents=True)
 
     for item in sources:
-        if Path(item).is_dir():
+        if path_is_dir(item):
             shutil.copytree(item, temp + '/' + Path(item).stem)
         else:
             shutil.copy(item, temp)
