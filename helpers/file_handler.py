@@ -24,6 +24,10 @@ def path_is_dir(path):
     return Path(path).is_dir()
 
 
+def get_path_parent(path):
+    return Path(path).parent
+
+
 def get_path_stem(path):
     return Path(path).stem
 
