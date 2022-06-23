@@ -12,7 +12,7 @@ from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/p
 from app_and_db import app
 from config.settings import CONTENT_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file
-from helpers.file_handler import copy_file, move_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
+from helpers.file_handler import copy_file, move_file, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 
 PUBLICATIONS_DIR_PATH = CONTENT_DIR_PATH + 'publications/'
@@ -90,7 +90,7 @@ def get_paper(paper=None):
         flash('Currently no papers available to load.')
         return redirect(url_for('render_all_publications'))
     
-    if not Path(PAPERS_PATH + paper).is_file():
+    if not path_is_file(PAPERS_PATH + paper):
         flash('Cannot find requested paper.')
         return redirect(url_for('render_all_publications'))
 
@@ -320,7 +320,7 @@ def _get_db_entry_abstract(db_entry):
 def _check_if_publication_key_has_pdf(entry_key):
     paper_path = PAPERS_PATH + entry_key.encode('utf-8') + '.pdf'
 
-    if Path(paper_path).is_file():
+    if path_is_file(paper_path):
         return True
     
     return False
@@ -450,11 +450,11 @@ def load_default_publications_and_papers():
 def _load_default_papers():
     download_default_papers = True if ContentSettings.get_settings().download_default_papers else False
 
-    if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
+    if not path_is_file(DEFAULT_PAPERS_ZIP_PATH):
         if download_default_papers or not app.config['DEBUG']:
             download_file(_get_default_papers_zip_url(), DEFAULT_PAPERS_ZIP_PATH)
 
-            if not Path(DEFAULT_PAPERS_ZIP_PATH).is_file():
+            if not path_is_file(DEFAULT_PAPERS_ZIP_PATH):
                 _log_failed_default_papers_download()
                 ContentSettings.set_content_type_papers(ContentState.NONE)
         else:
@@ -535,7 +535,7 @@ def _prepare_publications_bibtex_download():
 
 
 def _get_current_bibtex_path():
-    return ALL_PUBLICATIONS_PATH if Path(ALL_PUBLICATIONS_PATH).is_file() else DEFAULT_PUBLICATIONS_PATH
+    return ALL_PUBLICATIONS_PATH if path_is_file(ALL_PUBLICATIONS_PATH) else DEFAULT_PUBLICATIONS_PATH
 
 
 def _prepare_papers_download():

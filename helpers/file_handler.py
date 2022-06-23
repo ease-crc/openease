@@ -16,13 +16,17 @@ def copy_dir(src, dest):
     shutil.copytree(src, dest)
 
 
+def path_is_file(path):
+    return Path(path).is_file()
+
+
 def remove_if_is_dir(path):
     if Path(path).is_dir():
         shutil.rmtree(path)
 
 
 def remove_if_is_file(path):
-    if Path(path).is_file():
+    if path_is_file(path):
         Path(path).unlink()
 
 
@@ -81,9 +85,8 @@ def make_archive_of_files_and_dirs(sources, dest):
     remove_if_is_dir(temp)
 
 
-
 def move_file(src, dest, overwrite=False):
-    if not overwrite and Path(dest).is_file():
+    if not overwrite and path_is_file(dest):
         app.logger.info('Cannot move file, because file already exists at destination and overwrite-flag is set to "False".')
         return
     

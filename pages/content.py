@@ -1,5 +1,6 @@
 from flask import render_template, send_file, redirect, url_for, request
 from flask.helpers import flash
+from helpers.file_handler import path_is_file
 from pathlib2 import Path
 from datetime import datetime
 
@@ -26,14 +27,14 @@ def render_content_settings():
     next_update_overview = _reset_datetime_microseconds_and_utc_offset(get_neem_overview_job_next_runtime())
     from postgres.settings import DATETIME_MIN, UpdateMethod, UpdateState, ContentState
     
-    publications_data_json_download_exists = Path(DOWNLOADS_DIR_PUBLICATIONS_DATA).is_file()
-    publications_bibtex_download_exists = Path(DOWNLOADS_DIR_PUBLICATIONS_BIBTEX).is_file()
-    papers_zip_download_exists = Path(DOWNLOADS_DIR_PAPERS_ZIP).is_file()
-    publications_and_papers_zip_download_exists = Path(DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP).is_file()
+    publications_data_json_download_exists = path_is_file(DOWNLOADS_DIR_PUBLICATIONS_DATA)
+    publications_bibtex_download_exists = path_is_file(DOWNLOADS_DIR_PUBLICATIONS_BIBTEX)
+    papers_zip_download_exists = path_is_file(DOWNLOADS_DIR_PAPERS_ZIP)
+    publications_and_papers_zip_download_exists = path_is_file(DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP)
 
-    overview_data_json_download_exists = Path(DOWNLOADS_DIR_NEEM_OVERVIEW_DATA).is_file()
-    overview_mds_and_imgs_zip_download_exists = Path(DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS).is_file()
-    overview_zip_download_exists = Path(DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP).is_file()
+    overview_data_json_download_exists = path_is_file(DOWNLOADS_DIR_NEEM_OVERVIEW_DATA)
+    overview_mds_and_imgs_zip_download_exists = path_is_file(DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS)
+    overview_zip_download_exists = path_is_file(DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP)
 
     publications_url_is_not_set = (content_settings.publications_bibtex_url == '')
 
@@ -189,7 +190,7 @@ def manually_load_overview_defaults():
 
 
 def _send_file_if_available(FILE_PATH):
-    if not Path(FILE_PATH).is_file():
+    if not path_is_file(FILE_PATH):
         flash('Could not retrieve requested file. Check app-settings or try again later.', 'warning')
         return redirect(url_for('render_content_settings'))
 
