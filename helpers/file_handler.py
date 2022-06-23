@@ -83,7 +83,7 @@ def make_archive_of_files_and_dirs(sources, dest):
 
 
 def move_file(src, dest, overwrite=False):
-    if overwrite and Path(dest).is_file():
+    if not overwrite and Path(dest).is_file():
         app.logger.info('Cannot move file, because file already exists at destination and overwrite-flag is set to "False".')
         return
     
