@@ -24,6 +24,10 @@ def path_is_dir(path):
     return Path(path).is_dir()
 
 
+def get_path_stem(path):
+    return Path(path).stem
+
+
 def get_path_name(path):
     return Path(path).name
 
@@ -97,7 +101,7 @@ def make_archive_of_files_and_dirs(sources, dest):
 
     for item in sources:
         if path_is_dir(item):
-            shutil.copytree(item, temp + '/' + Path(item).stem)
+            shutil.copytree(item, temp + '/' + get_path_stem(item))
         else:
             shutil.copy(item, temp)
 
