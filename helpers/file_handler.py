@@ -24,6 +24,10 @@ def path_is_dir(path):
     return Path(path).is_dir()
 
 
+def remove_empty_dir(path):
+    Path(path).rmdir()
+
+
 def remove_dir_with_contents(path):
     shutil.rmtree(path)
 

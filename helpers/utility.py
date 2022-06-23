@@ -15,7 +15,7 @@ from functools import wraps
 from pathlib2 import Path
 
 from app_and_db import app
-from helpers.file_handler import move_file, write_binary_file
+from helpers.file_handler import move_file, remove_empty_dir, write_binary_file
 from Crypto.Random import random
 
 def get_user_dir():
@@ -63,7 +63,7 @@ def download_file(url, file_path):
 
         try:
             if not any(Path(temp_downloads_dir).iterdir()):
-                Path(temp_downloads_dir).rmdir()
+                remove_empty_dir(temp_downloads_dir)
         except Exception as e:
             app.logger.info('Could not remove temp dir.\n\n' + e.__str__())
 
