@@ -24,9 +24,13 @@ def path_is_dir(path):
     return Path(path).is_dir()
 
 
+def remove_dir_with_contents(path):
+    shutil.rmtree(path)
+
+
 def remove_if_is_dir(path):
     if path_is_dir(path):
-        shutil.rmtree(path)
+        remove_dir_with_contents(path)
 
 
 def remove_file(path):
