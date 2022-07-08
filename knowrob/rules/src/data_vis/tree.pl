@@ -29,7 +29,7 @@ data_vis_rdf_tree(QueryID, Root,Property,Options) :-
 
 rdf_tree_data_1(IRI,Property,TreeData) :-
 	setof([Parent,Child],
-		transitive(triple(IRI -> Parent,Property,Child)),
+		triple(IRI,transitive(Property),Child),
 		Edges),
 	rdf_tree_data_2(IRI,Edges,TreeData).
 
@@ -80,4 +80,6 @@ tree_data_1_(Index_0-Index_n,[X|Xs],ArrayData) :-
 	tree_data_(Index_0-Index_1,X,Y),
 	tree_data_1_(Index_1-Index_n,Xs,Ys),
 	append(Y,Ys,ArrayData).
+
+ayData).
 
