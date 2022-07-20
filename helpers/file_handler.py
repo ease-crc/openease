@@ -63,6 +63,19 @@ def remove_if_is_file(path):
         remove_file(path)
 
 
+def number_of_subdirs_in_dir(dir_path):
+    return _number_of_specified_items_in_dir(dir_path, path_is_dir)
+
+
+def number_of_files_in_dir(dir_path):
+    return _number_of_specified_items_in_dir(dir_path, path_is_file)
+
+
+def _number_of_specified_items_in_dir(dir_path, filter_function):
+    return len([item for item in return_all_items_in_dir(dir_path) \
+             if filter_function(item)])
+
+
 def return_all_items_in_dir(dir_path):
     if not path_is_dir(dir_path):
         raise ValueError('The path does not point to a directory.')
