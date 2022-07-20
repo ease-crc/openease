@@ -3,6 +3,7 @@ import enum
 from datetime import datetime
 
 from app_and_db import app, db
+from db import table_empty
 from helpers.utility import type_str, is_url
 
 FIRST_DOCUMENT_ID = 1
@@ -122,7 +123,7 @@ class ContentSettings(db.Model):
 
     @staticmethod
     def create_first_entry():
-        if db.session.query(ContentSettings).count() > 0:
+        if not table_empty(ContentSettings):
             app.logger.info('First entry already available. Will not create new entry for content settings table.')
 
         first_entry = ContentSettings()
@@ -131,7 +132,7 @@ class ContentSettings(db.Model):
 
     @staticmethod
     def _get_first_entry():
-        if db.session.query(ContentSettings).count() == 0:
+        if table_empty(ContentSettings):
             ContentSettings.create_first_entry()
         
         return ContentSettings.query.filter_by(id=FIRST_DOCUMENT_ID).one()

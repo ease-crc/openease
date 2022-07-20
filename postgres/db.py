@@ -1,3 +1,4 @@
+from app_and_db import db
 from flask_user import current_app
 
 __author__ = 'danielb@cs.uni-bremen.de'
@@ -68,3 +69,11 @@ def db_table_class(table_name):
         except Exception:
             pass
     return None
+
+
+def get_table_row_count(table):
+    return db.session.query(table).count()
+
+
+def table_empty(table):
+    return get_table_row_count(table) == 0
