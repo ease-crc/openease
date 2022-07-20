@@ -89,16 +89,16 @@ class UpdateState(enum.Enum):
 
 @enum.unique
 class UpdateMethod(enum.Enum):
-    AUTOMATIC = 0
+    NO_UPDATE = 0
     MANUAL = 1
-    NO_UPDATE = 2
+    AUTOMATIC = 2
 
 
 @enum.unique
 class ContentState(enum.Enum):
-    DEFAULT = 0
-    LATEST = 1
-    NONE = 2
+    NONE = 0
+    DEFAULT = 1
+    LATEST = 2
 
 
 class ContentSettings(db.Model):
