@@ -135,7 +135,7 @@ class ContentSettings(db.Model):
         if table_empty(ContentSettings):
             ContentSettings.create_first_entry()
         
-        return ContentSettings.query.filter_by(id=FIRST_DOCUMENT_ID).one()
+        return ContentSettings.query.filter_by(id=FIRST_DOCUMENT_ID).first()
 
     @staticmethod
     def get_settings():
