@@ -8,22 +8,26 @@ from furl import furl
 from pathlib2 import Path
 from threading import Lock
 from html_sanitizer import Sanitizer
-from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong,italic_span_to_em, target_blank_noopener, tag_replacer
+from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong, italic_span_to_em, target_blank_noopener, tag_replacer
 
-from config.settings import WEBROB_PATH, CONTENT_DIR_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
+from config.settings import DATETIME_FORMAT, WEBROB_PATH, CONTENT_DIR_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file
 from helpers.file_handler import copy_file, copy_dir, get_file_extension, get_path_name, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, read_file, write_non_binary_file, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
-from neems.neemhub import instance as neemhub, NEEMHubConnectionError
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
 
-from app_and_db import app
+from app_and_db import app, db
+from postgres.content import NeemOverviewData
+from postgres.db import table_empty
 from postgres.settings import DATETIME_MIN, ContentSettings, ContentState, UpdateMethod
 
 NEEM_OVERVIEW_PATH = CONTENT_DIR_PATH + 'neem-overview/'
 NEEM_OVERVIEW_DATA_PATH = NEEM_OVERVIEW_PATH + 'neem_overview_data.json'
 NEEM_OVERVIEW_MARKDOWNS_PATH = NEEM_OVERVIEW_PATH + 'neem-overview-markdowns/'
-NEEM_OVERVIEW_IMAGES_PATH =  'img/neem-overview-images/'
+# NEEM_OVERVIEW_IMAGES_PATH needs the subdir 'images', because otherwise
+# there might be issues due to the parent folder being volume path. The
+# program does file operations that would error out, if there is no subdir.
+NEEM_OVERVIEW_IMAGES_PATH =  'img/neem-overview/images/'
 NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH = STATIC_DIR_PATH + NEEM_OVERVIEW_IMAGES_PATH
 
 DEFAULT_NEEM_OVERVIEW_DATA_PATH = DEFAULT_FILES_PATH + 'default_neem_overview_data.json'
@@ -44,9 +48,6 @@ FEATURED_NEEM_IDS = [
 ]
 
 OVERVIEW_MUTEX = Lock()
-
-# for structure of NEEM_DATA check default_files/default_overview_data.json
-NEEM_DATA = {}
 
 @app.route('/overview/<neem_path>')
 def render_neem_overview_page(neem_path=None):
@@ -69,7 +70,7 @@ def render_neem_overview_page(neem_path=None):
         return redirect(url_for('render_homepage'))
 
     try:
-        file_str = read_file(_get_local_neem_markdown_path(neem_data['neem_repo_path']))
+        file_str = read_file(_get_local_neem_markdown_path(neem_data.neem_repo_path))
     except IOError as e:
         app.logger.error('Could not find markdown-file for neem, therefore cannot render the overview page.\n\n' + e.message)
         _flash_cannot_display_overview_page()
@@ -123,6 +124,9 @@ def _update_neem_overview_files():
 
     exception is the app start-up
     '''
+    # needs to be imported here, otherwise there are errors on
+    # start-up for fresh installs
+    from neems.neemhub import instance as neemhub
 
     app.logger.info('Downloading files for neems...')
 
@@ -133,16 +137,16 @@ def _update_neem_overview_files():
         app.logger.error('Could not connect to Neemhub to fetch data for neems.\n\n' + e.__str__())
     else:
         try:
-            _download_all_neem_markdowns(neems)
-            _download_all_neem_cover_images(neems)
-            _update_neem_data(neems)
+            _download_all_overview_markdowns(neems)
+            _download_all_overview_cover_images(neems)
+            _update_overview_data(neems)
         except Exception as e:
             app.logger.info('Had issues downloading files for overview-content. Loading defaults instead.\n\n' + e.__str__())
             start_thread(load_default_overview_files)
             return
     
-    if NEEM_DATA is None or NEEM_DATA == {}:
-        app.logger.info('Neem-Data was empty or None. Loading default files instead.')
+    if table_empty(NeemOverviewData):
+        app.logger.info('No overview data gathered. Loading default files instead.')
         start_thread(load_default_overview_files)
         return
 
@@ -154,7 +158,7 @@ def _update_neem_overview_files():
     ContentSettings.set_content_type_neem_overview(ContentState.LATEST)
 
 
-def _download_all_neem_markdowns(neems):
+def _download_all_overview_markdowns(neems):
     app.logger.info('Downloading markdown-files for neems... (and their images')
 
     for neem in neems:
@@ -233,7 +237,7 @@ def _is_weburl(string):
     return True if re.match('https{,1}://', string) else False
 
 
-def _download_all_neem_cover_images(neems):
+def _download_all_overview_cover_images(neems):
     app.logger.info('Downloading cover-images for neems...')
 
     for neem in neems:
@@ -288,106 +292,163 @@ def _get_static_folder_neem_image_folder_path(neem_name):
     return NEEM_OVERVIEW_IMAGES_PATH + neem_name
 
 
-def _update_neem_data(neems):
-    global NEEM_DATA
+def _update_overview_data(neems):
+    db.session.query(NeemOverviewData).delete()
+
+    overview_neems = _get_overview_data_from_neem_data(neems)
+
+    for neem in overview_neems:
+        overview_entry = _create_overview_db_entry(neem)
+        db.session.add(overview_entry)
+
+    db.session.commit()
+
+
+def _get_overview_data_from_neem_data(neems):
+    overview_neems = [neem.get_info_with_last_updated()
+                    for neem in neems
+                    if _neem_has_markdown(neem)]
+    
+    overview_neems = [neem for neem in overview_neems
+                        if neem['last_updated'] != 0]
+    
+    for n_data in overview_neems:
+        n_data['featured'] = _neem_is_featured(n_data)
+        n_data['image'] = _determine_neem_image_path(n_data)        
+        n_data['recent'] = False
+
+    overview_neems = _set_recent_neems(overview_neems)
+
+    return overview_neems
+
+
+def _neem_has_markdown(n_data):
+    return path_is_file(_get_local_neem_markdown_path(n_data.neem_repo_path))
+
+
+def _neem_is_featured(n_data):
+    return n_data['neem_id'] in FEATURED_NEEM_IDS
+
+
+def _determine_neem_image_path(n_data):
+    if n_data['image'] == DEFAULT_IMAGE_PATH:
+        return DEFAULT_IMAGE_PATH_NO_STATIC
+    else:
+        return _get_static_folder_neem_cover_image_path(n_data['image'], n_data['neem_repo_path'])
+
+
+def _set_recent_neems(overview_neems):
+    overview_neems.sort(reverse=True,
+                        key=lambda x: x['last_updated'])
+    for x in range(6):
+        overview_neems[x]['recent'] = True
+    return overview_neems
+
+
+def _create_overview_db_entry(n_data):
+    overview_entry = NeemOverviewData()
+
+    overview_entry.neem_id = n_data['neem_id']
+    overview_entry.name = n_data['name']
+    overview_entry.description = n_data['description']
+    overview_entry.maintainer = n_data['maintainer']
+    overview_entry.downloadUrl = n_data['downloadUrl']
+    overview_entry.last_updated = n_data['last_updated']
+    overview_entry.recent = n_data['recent']
+    overview_entry.neem_repo_path = n_data['neem_repo_path']
+    overview_entry.image = n_data['image']
+    overview_entry.featured = n_data['featured']
+
+    return overview_entry
+
+
+def get_homepage_overview_data():
     neem_data = {}
 
-    neem_data['all_neems'] = _get_all_neems_data_with_last_updated(neems)
-    neem_data['featured_neems'] = _get_featured_neems_data(neem_data['all_neems'])
-    neem_data['recent_neems'] = _get_recent_neems_data(neem_data['all_neems'])
+    neem_data['featured_neems'] = _get_featured_neems()
+    neem_data['recent_neems'] = _get_recent_neems()
 
-    NEEM_DATA = neem_data
-
-
-def _get_all_neems_data_with_last_updated(neems):
-    all_neems = [neem.get_info_with_last_updated() for neem in neems]
-    
-    for n_data in all_neems:
-        if n_data['image'] == DEFAULT_IMAGE_PATH:
-            n_data['image'] = DEFAULT_IMAGE_PATH_NO_STATIC
-        else:
-            n_data['image'] = _get_static_folder_neem_cover_image_path(n_data['image'], n_data['neem_repo_path'])
-
-    return all_neems
+    return neem_data
 
 
-def _get_featured_neems_data(neem_data_list):
-    return [n_data 
-            for n_data in neem_data_list
-            if n_data['neem_id'] in FEATURED_NEEM_IDS]
-    
-
-def _get_recent_neems_data(neem_data_list):
-    recent_neems = [n_data
-                    for n_data in neem_data_list
-                    if n_data['neem_id'] not in FEATURED_NEEM_IDS and _neem_has_md(n_data)]
-    # list.sort() does in-place sorting and returns None, therefore
-    # it shouldn't be called when assigning or returning the list
-    recent_neems.sort(reverse=True, key=lambda x: x['last_updated'])
-    return recent_neems[0:6] 
+def _get_featured_neems():
+    return NeemOverviewData.query.filter_by(featured=True).all()
 
 
-def _neem_has_md(n_data):
-    return path_is_file(_get_local_neem_markdown_path(n_data['neem_repo_path']))
+def _get_recent_neems():
+    recent_neems = NeemOverviewData.query.filter_by(recent=True).all()
+    recent_neems.sort(reverse=True, key=lambda x: x.last_updated)
+    return recent_neems
 
 
-def get_neem_data():
-    global NEEM_DATA
-    return NEEM_DATA
+def get_neem_data_from_id(s_neem_id):
+    return NeemOverviewData.query.filter_by(neem_id=s_neem_id).first()
 
 
-def get_neem_data_from_id(neem_id):
-    global NEEM_DATA
-    
-    return next((n_data for n_data in NEEM_DATA['all_neems'] if n_data['neem_id'] == neem_id), None)
+def get_neem_data_from_repo_path(s_neem_repo_path):
+    return NeemOverviewData.query.filter_by(neem_repo_path=s_neem_repo_path).first()
 
 
-def get_neem_data_from_repo_path(neem_repo_path):
-    global NEEM_DATA
-    
-    return next((n_data for n_data in NEEM_DATA['all_neems'] if n_data['neem_repo_path'] == neem_repo_path), None)
-
-
-def dump_neem_data_as_json():
-    """ This method is used to dump the NEEM_DATA dict to a file.
-    This is useful, if overview_data.json inside overview.zip
-    should be updated, which contains the default data for the
-    developer mode. You can copy files from within the docker 
-    container with the docker cp command. For more information
-    look at load_overview_files_default(). """
+def dump_overview_data_as_json():
+    """ This method is used to dump the overview table contents
+    to a file. This is useful, if overview_data.json inside
+    /default_files/ should be updated, which contains the default
+    data for the developer mode. You can copy files from within the
+    docker container with the docker cp command or use the admin 
+    content panel to download a copy of said files. For more 
+    information look at load_overview_files_default(). """
     remove_if_is_file(NEEM_OVERVIEW_DATA_PATH)
-    dump_dict_to_json(NEEM_DATA, NEEM_OVERVIEW_DATA_PATH)
+    db_dict = _turn_overview_db_entries_to_dict()
+    dump_dict_to_json(db_dict, NEEM_OVERVIEW_DATA_PATH)
+
+
+def _turn_overview_db_entries_to_dict():
+    overview_neems = []
+    db_data = NeemOverviewData.query.all()
+
+    for entry in db_data:
+        ov_neem = {}
+
+        ov_neem['neem_id'] = entry.neem_id
+        ov_neem['name'] = entry.name
+        ov_neem['description'] = entry.description
+        ov_neem['maintainer'] = entry.maintainer
+        ov_neem['downloadUrl'] = entry.downloadUrl
+        ov_neem['last_updated'] = datetime.strftime(
+                                        entry.last_updated,
+                                        DATETIME_FORMAT)
+        ov_neem['recent'] = entry.recent
+        ov_neem['neem_repo_path'] = entry.neem_repo_path
+        ov_neem['image'] = entry.image
+        ov_neem['featured'] = entry.featured
+
+        overview_neems.append(ov_neem)
+
+    return { 'overview_neems':overview_neems }
 
 
 @mutex_lock(OVERVIEW_MUTEX)
 def load_default_overview_files():
-    """ This method loads the contents of overview.zip and moves
-    them to the correct locations.
-    overview.zip contains:
-      - overview_data.json, which is a json copy of the default NEEM_DATA
-          should be placed in /opt/webapp/webrob/default_files/
-      - overview-contents, which contains all the overview md-files
-          should be placed in /opt/webapp/webrob/
-      - neem-images, which contains the neem cover and md images
-          should be placed in /opt/webapp/webrob/static/img/
+    """ This method loads the default neem-overview files and moves
+    them to the correct locations. That includes:
+      - default_neem_overview_data.json, 
+            which is a json copy of the default NEEM_DATA
+            should be placed in /opt/webapp/webrob/default_files/
+      - overview-contents from default_neem_overview.zip, 
+            which contains all the overview md-files
+            should be placed in /opt/webapp/webrob/
+      - neem-images from default_neem_overview.zip,
+            which contains the neem cover and md images
+            should be placed in /opt/webapp/webrob/static/img/
     
     All the mentioned files and dirs can be found inside the container
-    in the given locations, if the container is run in production mode 
-    instead of developer mode. For that, make sure that docker-compose
-    is run with EASE-DEBUG set to False or the if-conditional in
-    runserver.py that calls this method is changed to 
-    
-      if not _config_is_debug():
-          load_overview_files_default()
-    
-    (do one or the other, don't do both). The contents of the container
-    can then be copied with docker cp (please check the official
-    documentation). """
+    in the given locations. The contents of the container can then be
+    copied with docker cp (please check the official documentation). """
 
     _unzip_default_files()
     _load_default_overview_mds()    
     _load_default_overview_images()
-    _load_default_neem_data()
+    _load_default_overview_data()
     _prepare_overview_downloads()
 
     ContentSettings.set_last_update_neem_overview(DATETIME_MIN)
@@ -420,11 +481,28 @@ def _load_default_overview_images():
     app.logger.info("Loaded default overview images.")
 
 
-def _load_default_neem_data():
-    global NEEM_DATA
+def _load_default_overview_data():
+    db.session.query(NeemOverviewData).delete()
+    overview_neems = get_dict_from_json(DEFAULT_NEEM_OVERVIEW_DATA_PATH)['overview_neems']
+    overview_neems = _turn_datetime_strs_to_objs(overview_neems)
 
-    NEEM_DATA = get_dict_from_json(DEFAULT_NEEM_OVERVIEW_DATA_PATH)
+    for neem in overview_neems:
+        overview_entry = _create_overview_db_entry(neem)
+        db.session.add(overview_entry)
+
+    db.session.commit()
+
     app.logger.info("Loaded default overview database.")
+
+
+def _turn_datetime_strs_to_objs(overview_neems):
+    for neem in overview_neems:
+        neem['last_updated'] = datetime.strptime(
+            neem['last_updated'],
+            DATETIME_FORMAT
+        )
+
+    return overview_neems
 
 
 def _prepare_overview_downloads():
@@ -434,7 +512,7 @@ def _prepare_overview_downloads():
 
     app.logger.info('Preparing downloadable files for overview-pages.')
 
-    dump_neem_data_as_json()
+    dump_overview_data_as_json()
     _prepare_overview_data_download()
     _prepare_overview_mds_and_imgs_download()
     _prepare_overview_zip_download()

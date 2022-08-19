@@ -3,13 +3,15 @@ import re
 from datetime import datetime
 from threading import Lock
 from flask import redirect, url_for, render_template, send_from_directory, flash
+from postgres.content import PublicationsData, PublicationsKeywords, keywords_association_table
+from postgres.db import table_empty
 from postgres.settings import DATETIME_MIN, ContentSettings, ContentState, UpdateMethod
 from pybtex import PybtexEngine             # https://docs.pybtex.org/api/formatting.html#python-api
 from pybtex.database import parse_file      # https://docs.pybtex.org/api/parsing.html#reading-bibliography-data
 from pathlib2 import Path
 from pylatexenc.latex2text import LatexNodes2Text   # https://pypi.org/project/pylatexenc/
 
-from app_and_db import app
+from app_and_db import app, db
 from config.settings import CONTENT_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
 from helpers.utility import download_file, is_url
 from helpers.file_handler import copy_file, dir_has_any_items, get_file_extension, make_dir, move_file, path_is_dir, path_is_file, remove_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, make_archive_of_files_and_dirs
@@ -44,16 +46,13 @@ PUBLICATIONS_KEYWORDS = [
 
 PUBLICATIONS_MUTEX = Lock()
 
-# for structure of PUBLICATIONS_DATA check default_files/default_publications_data.json
-PUBLICATIONS_DATA = {}
-
 @app.route('/publications')
 def render_all_publications():
-    p_data = get_publications_data()
-
-    website_entries = p_data['website_entries']
-    
+    p_keywords = get_publications_keywords()
     show_pdf_field = _papers_dir_not_empty()
+
+    for keyword in p_keywords:
+        keyword.publications.sort(key=lambda x: x.year, reverse=True)
     
     return render_template('pages/publications.html', **locals())
 
@@ -69,12 +68,10 @@ def _papers_dir_empty():
     return not _papers_dir_not_empty()
 
 
-@app.route('/publications/<publication>')
-def render_bibtex_entry(publication=None):
-    p_data = get_publications_data()
-
+@app.route('/publications/<publication_key>')
+def render_bibtex_entry(publication_key=None):
     try:
-        bibtex_entry = p_data['all_entries'][publication]
+        publication = get_publication_by_key(publication_key)
     except Exception as e:
         flash('Could not find the specified publication.')
         return redirect(url_for('render_all_publications'))
@@ -125,18 +122,14 @@ def _update_publications_and_papers():
     try:
         _download_and_unzip_papers()
         _download_and_update_bibtex()
-        bibtex_db = _load_bibtex_db_from_file(ALL_PUBLICATIONS_PATH)
-        _update_publications_data(bibtex_db)
-
-        ContentSettings.set_content_type_papers(ContentState.LATEST)
-        ContentSettings.set_content_type_publications(ContentState.LATEST)
+        _update_publications_data()
     except Exception as e:
         app.logger.error('Had issues downloading papers and files for publications.' + e.__str__())
         start_thread(load_default_publications_and_papers)
         return
     
-    if PUBLICATIONS_DATA is None or PUBLICATIONS_DATA == {}:
-        app.logger.info('Neem-Data was empty or None. Loading default files instead.')
+    if table_empty(PublicationsData) or table_empty(PublicationsKeywords):
+        app.logger.info('No publications data gathered. Loading default files instead.')
         start_thread(load_default_publications_and_papers)
         return
 
@@ -145,6 +138,8 @@ def _update_publications_and_papers():
     app.logger.info('Finished all downloads for publications pages.')
 
     ContentSettings.set_last_update_publications_and_papers(datetime.now())
+    ContentSettings.set_content_type_papers(ContentState.LATEST)
+    ContentSettings.set_content_type_publications(ContentState.LATEST)
 
 
 def _download_and_unzip_papers():
@@ -181,6 +176,7 @@ def _unzip_papers():
 
 
 def _download_and_update_bibtex():
+    # the following also downloads the bibtex file
     if _new_publications_has_no_errors():
         move_file(TEST_PUBLICATIONS_PATH, ALL_PUBLICATIONS_PATH, overwrite=True)
 
@@ -212,73 +208,78 @@ def _load_bibtex_db_from_file(file_path):
 
 
 def _update_publications_data(bibtex_db):
-    global PUBLICATIONS_DATA
+    _reset_publications_db_tables()
+    _update_keywords_table()
+    _update_publications_data()
+
+
+def _reset_publications_db_tables():
+    db.session.query(PublicationsKeywords).delete()
+    db.session.query(PublicationsData).delete()
+    db.session.commit()
+
+
+def _update_keywords_table():
+    for entry in PUBLICATIONS_KEYWORDS:
+        keyword = PublicationsKeywords()
+        keyword.name = entry[0]
+        keyword.title = entry[1]
+        db.session.add(keyword)
+    
+    db.session.commit()
+
+
+def _update_publications_data():
+    bibtex_db = _load_bibtex_db_from_file(ALL_PUBLICATIONS_PATH)
 
     if bibtex_db is None or bibtex_db == []:
         return
 
-    all_entries = {}
-    website_entries = []
+    # load here only once to avoid multiple db accesses
+    p_keywords = get_publications_keywords()    
 
-    for keyword_title_tupel in PUBLICATIONS_KEYWORDS:
-        website_entry = {}
-        keyword = keyword_title_tupel[0]
-        keyword_publications = []
+    for key in bibtex_db.entries:
+        if 'keywords' in bibtex_db.entries[key].fields:
+            curr_db_entry = bibtex_db.entries[key]
+            pub_entry = PublicationsData()
 
-        for key in bibtex_db.entries:
-            if 'keywords' in bibtex_db.entries[key].fields:
-                if keyword in bibtex_db.entries[key].fields['keywords']:
-                    # check if publication is already in 'all_publications'
-                    if key in all_entries.keys():
-                        pub_entry = all_entries[key]
-                    else:
-                        pub_entry = {}
-                        curr_db_entry = bibtex_db.entries[key]
+            pub_entry.keywords = _get_db_entry_keywords(curr_db_entry, p_keywords)
 
-                        pub_entry['key'] = _get_db_entry_key(curr_db_entry)
-                        pub_entry['year'] = _get_db_entry_year(curr_db_entry)
-                        pub_entry['authors'] = _get_db_entry_authors(curr_db_entry)
-                        pub_entry['abstract'] = _get_db_entry_abstract(curr_db_entry)
-                        pub_entry['has_pdf'] = _check_if_publication_key_has_pdf(pub_entry['key'])
+            if not pub_entry.keywords:
+                continue
 
-                        pub_entry['title'] = _get_db_entry_title(curr_db_entry)
-                        # Need to adjust title of the entry to have
-                        # proper capitalization of the text
-                        _correctly_set_db_entry_title(curr_db_entry, pub_entry['title'])
+            pub_entry.key = _get_db_entry_key(curr_db_entry)
+            pub_entry.year = _get_db_entry_year(curr_db_entry)
+            pub_entry.authors = _get_db_entry_authors(curr_db_entry)
+            pub_entry.abstract = _get_db_entry_abstract(curr_db_entry)
+            pub_entry.has_pdf = _check_if_publication_key_has_pdf(pub_entry.key)
 
-                        pub_entry['doi'], pub_entry['url'] = _get_db_entry_doi_and_url(curr_db_entry)
-                        # Remove url and doi fields from pybtech db-entry
-                        # because otherwise the html-string provided by
-                        # pybtex will also include the link, but we provide
-                        # our own links -> no need for duplication 
-                        _remove_db_entry_url_and_doi_fields(curr_db_entry)
+            pub_entry.title = _get_db_entry_title(curr_db_entry)
+            # Need to adjust title of the entry to have
+            # proper capitalization of the text
+            _correctly_set_db_entry_title(curr_db_entry, pub_entry.title)
 
-                        # these four methods need to be called last
-                        # as they depends on changes made to the
-                        # pybtex db-entries by the previous methods,
-                        # namely:
-                        #   - _correctly_set_db_entry_title()
-                        #   - _remove_db_entry_url_and_doi_fields()
-                        pub_entry['bibtex_str'] = _get_db_entry_bibtex_str(curr_db_entry)
-                        pub_entry['bibtex_html_str'] = _get_db_entry_bibtex_html_str(curr_db_entry)
-                        pub_entry['html_str'] = _get_db_entry_html_str(curr_db_entry)
-                        pub_entry['reference_str'] = _get_db_entry_reference_str(curr_db_entry)
+            pub_entry.doi, pub_entry.url = _get_db_entry_doi_and_url(curr_db_entry)
+            # Remove url and doi fields from pybtech db-entry
+            # because otherwise the html-string provided by
+            # pybtex will also include the link, but we provide
+            # our own links -> no need for duplication 
+            _remove_db_entry_url_and_doi_fields(curr_db_entry)
 
-                        all_entries[key] = pub_entry
-                    
-                    keyword_publications.append(pub_entry)
+            # these four methods need to be called last
+            # as they depends on changes made to the
+            # pybtex db-entries by the previous methods,
+            # namely:
+            #   - _correctly_set_db_entry_title()
+            #   - _remove_db_entry_url_and_doi_fields()
+            pub_entry.bibtex_str = _get_db_entry_bibtex_str(curr_db_entry)
+            pub_entry.bibtex_html_str = _get_db_entry_bibtex_html_str(curr_db_entry)
+            pub_entry.html_str = _get_db_entry_html_str(curr_db_entry)
+            pub_entry.reference_str = _get_db_entry_reference_str(curr_db_entry)
 
-        keyword_publications.sort(key=lambda x: x['year'], reverse=True)
-
-        website_entry['title'] = keyword_title_tupel[1]
-        website_entry['publications'] = keyword_publications
-
-        website_entries.append(website_entry)
-
-    PUBLICATIONS_DATA = {
-        'all_entries': all_entries,
-        'website_entries': website_entries
-    }
+            db.session.add(pub_entry)
+    
+    db.session.commit()
 
 
 def _get_db_entry_key(db_entry):
@@ -301,7 +302,7 @@ def _correctly_set_db_entry_title(db_entry, title):
                         
 
 def _get_db_entry_authors(db_entry):
-    authors = []
+    authors = ''
     name_parts = ['first',
                 'middle',
                 'prelast',
@@ -313,9 +314,11 @@ def _get_db_entry_authors(db_entry):
         for part in name_parts:
             if author.get_part_as_text(part) != '':
                 auth_name += author.get_part_as_text(part) + ' '
-        authors.append(_latex_to_text(auth_name.strip()))
+        
+        authors += _latex_to_text(auth_name.strip()) + ', '
 
-    return authors
+    # remove comma and white space from last entry
+    return authors[:-2]
 
 
 def _get_db_entry_abstract(db_entry):
@@ -357,6 +360,16 @@ def _remove_db_entry_url_and_doi_fields(db_entry):
         db_entry.fields.pop('doi')
     if 'url' in db_entry.fields:
         db_entry.fields.pop('url')
+
+
+def _get_db_entry_keywords(db_entry, p_keywords):
+    keyword_list = []
+
+    for keyword in p_keywords:
+        if keyword.name in db_entry.fields['keywords']:
+            keyword_list.append(keyword)
+
+    return keyword_list
 
 
 def _get_db_entry_bibtex_str(db_entry):
@@ -434,17 +447,8 @@ def load_default_publications_and_papers():
       PAPERS_PATH = '/opt/webapp/webrob/content/publications/papers/'
     
     All the mentioned files and dirs can be found inside the container
-    in the given locations, if the container is run in production mode 
-    instead of developer mode. For that, make sure that docker-compose
-    is run with EASE-DEBUG set to False or the if-conditional in
-    runserver.py that calls this method is changed to 
-    
-      if not _config_is_debug():
-          load_overview_files_default()
-    
-    (do one or the other, don't do both). The contents of the container
-    can then be copied with docker cp (please check the official
-    documentation).
+    in the given locations. The contents of the container can then be
+    copied with docker cp (please check the official documentation).
     
     papers need to be loaded before (!) the publications """
     
@@ -486,20 +490,62 @@ def _get_default_papers_zip_url():
 
 
 def _log_failed_default_papers_download():
-    app.logger.info("Download of default_papers.zip failed. Check if the URL is correct or instead try to manually download the file, place it /default_files and rebuild.")
+    app.logger.info("Download of default_papers.zip failed. Check if the URL is correct or instead try to manually download the file, place it into /default_files and rebuild.")
 
 
 def _log_could_not_find_default_papers():
-    app.logger.info("Could not find default_papers.zip and settings are configured not to download default_papers.zip, therefore not loading any default papers.\n\nIf you wish to view papers on the publications-page during development, you have two option:\n1. Manually download the zip.file and put it into /default_files and re-run docker-compose up. This will increase build times a bit, especially if you have a slow drive.\n2. Only if you have an admin account: Go to the admin's content-settings page and set DOWNLOAD_DEFAULT_PAPERS to ON; this will download the papers each-time when building the container. This will increase build times quite a bit. If you do not want to restart, click on 'Load Defaults'. This will download the zip.file into the running container and update all the necessary data-structures. WARNING: When the container is rebuilt, the file won't be there anymore. If you need a persistent solution, please follow solution 1.")
+    app.logger.info("Could not find default_papers.zip and settings are configured not to download default_papers.zip, therefore not loading any default papers.\n\nIf you wish to view papers on the publications-page during development, you have two option:\n1. Only if you have an admin account: Go to the admin's content-settings page, provide a download link for the default_papers.zip, and set DOWNLOAD_DEFAULT_PAPERS to ON, then click on 'Load Defaults'. This will download the zip.file into the running container and update all the necessary data-structures. Afterwards turn the setting off again. The file be retained until the 'content'-volume is deleted, thus you do not need to repeat this step on rebuilds. WARNING: If you forget to turn off the setting again, the container will download the papers on each rebuild. This will increase build times a lot.\n2. Manually download the zip.file and put it into /default_files and re-run docker-compose up. This will increase build times a bit.")
 
 
 def _load_default_publications():
-    global PUBLICATIONS_DATA
-
-    PUBLICATIONS_DATA = get_dict_from_json(DEFAULT_PUBLICATIONS_DATA_PATH)
+    _reset_publications_db_tables()
+    _load_default_publications_data_from_json()
     app.logger.info("Loaded default publications database.")
 
     ContentSettings.set_content_type_publications(ContentState.DEFAULT)
+
+
+def _load_default_publications_data_from_json():
+    json_data = get_dict_from_json(DEFAULT_PUBLICATIONS_DATA_PATH)
+    p_data = json_data['publications_data']
+    p_keywords = json_data['publications_keywords']
+
+    for entry in p_keywords:
+        kw_entry = PublicationsKeywords()
+
+        kw_entry.name = entry['name']
+        kw_entry.title = entry['title']
+
+        db.session.add(kw_entry)
+
+    db.session.commit() 
+
+    # load here only once to avoid multiple db accesses
+    p_keywords = get_publications_keywords()  
+
+    for entry in p_data:
+        pub_entry = PublicationsData()
+
+        pub_entry.key = entry['key']
+        pub_entry.year = entry['year']
+        pub_entry.authors = entry['authors']
+        pub_entry.abstract = entry['abstract']
+        pub_entry.has_pdf = entry['has_pdf']
+        pub_entry.title = entry['title']
+        pub_entry.doi = entry['doi']
+        pub_entry.url = entry['url']
+        pub_entry.bibtex_str = entry['bibtex_str']
+        pub_entry.bibtex_html_str = entry['bibtex_html_str']
+        pub_entry.html_str = entry['html_str']
+        pub_entry.reference_str = entry['reference_str']
+        
+        for kw in p_keywords:
+            if kw.name in entry['keywords']:
+                pub_entry.keywords.append(kw)
+
+        db.session.add(pub_entry)
+
+    db.session.commit() 
 
 
 def dump_publications_data_as_json():
@@ -511,7 +557,60 @@ def dump_publications_data_as_json():
     look at load_default_publications_and_papers(). """
 
     remove_if_is_file(PUBLICATIONS_DATA_PATH)
-    dump_dict_to_json(PUBLICATIONS_DATA, PUBLICATIONS_DATA_PATH)
+    db_dict = _turn_publications_db_entries_to_dict()
+    dump_dict_to_json(db_dict, PUBLICATIONS_DATA_PATH)
+
+
+def _turn_publications_db_entries_to_dict():
+    return {
+        'publications_keywords':_turn_publications_keyword_entries_to_dict(),
+        'publications_data':_turn_publications_data_entries_to_dict()
+    }
+
+
+def _turn_publications_keyword_entries_to_dict():
+    publication_keywords = []
+    db_data = get_publications_keywords()
+
+    for entry in db_data:
+        p_keyword = {}
+
+        p_keyword['name'] = entry.name
+        p_keyword['title'] = entry.title
+
+        publication_keywords.append(p_keyword)
+
+    return publication_keywords
+
+
+def _turn_publications_data_entries_to_dict():
+    publications = []
+    db_data = PublicationsData.query.all()
+
+    for entry in db_data:
+        pub = {}
+
+        pub['key'] = entry.key
+        pub['title'] = entry.title
+        pub['authors'] = entry.authors
+        pub['year'] = entry.year
+        pub['abstract'] = entry.abstract
+        pub['has_pdf'] = entry.has_pdf
+        pub['doi'] = entry.doi
+        pub['url'] = entry.url
+        pub['bibtex_str'] = entry.bibtex_str
+        pub['bibtex_html_str'] = entry.bibtex_html_str
+        pub['html_str'] = entry.html_str
+        pub['reference_str'] = entry.reference_str
+        pub['keywords'] = []
+        
+        # add references to keywords from the association table
+        for keyword in entry.keywords:
+            pub['keywords'].append(keyword.name)
+        
+        publications.append(pub)
+    
+    return publications
 
 
 def _prepare_publications_downloads():
@@ -549,7 +648,7 @@ def _get_current_bibtex_path():
 
 
 def _prepare_papers_download():
-    if not path_is_dir(PAPERS_PATH) or not dir_has_any_items(PAPERS_PATH):
+    if _papers_dir_empty():
         app.logger.info('No papers found, so papers.zip won\'t be created for downloads.')
         return
     
@@ -567,7 +666,7 @@ def _prepare_publications_zip_download():
         bibtex_path
     ]
 
-    if path_is_dir(PAPERS_PATH) and dir_has_any_items(PAPERS_PATH):
+    if _papers_dir_not_empty():
         path_list.append(PAPERS_PATH)
     else:
         app.logger.info('No papers found, so no papers added to publications.zip.')
@@ -576,6 +675,9 @@ def _prepare_publications_zip_download():
     make_archive_of_files_and_dirs(path_list, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP)
 
 
-def get_publications_data():
-    global PUBLICATIONS_DATA
-    return PUBLICATIONS_DATA
+def get_publication_by_key(publication_key):
+    return PublicationsData.query.filter_by(key=publication_key).first()
+
+
+def get_publications_keywords():
+    return PublicationsKeywords.query.all()

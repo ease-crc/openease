@@ -5,9 +5,10 @@ from flask_user import current_user
 from knowrob.container import start_user_container, container_started
 from app_and_db import app
 
-from config.settings import USE_HOST_KNOWROB
+from config.settings import DATETIME_FORMAT, USE_HOST_KNOWROB
 import json
 from dateutil import parser
+from datetime import datetime
 from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
 
@@ -62,7 +63,11 @@ class NEEM:
         response = json.loads(str(requests.get(url, allow_redirects=True).content))
         
         if 'committed_date' in response:
-            return response['committed_date']
+            # remove the last 6 characters which includes the timezone information
+            # 
+            # unfortunate that it needs to be done, but keeping it causes causes
+            # too many problems during datetime parsing
+            return datetime.strptime(response['committed_date'][:-6], DATETIME_FORMAT)
         else:
             return 0
 

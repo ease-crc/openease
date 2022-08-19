@@ -20,43 +20,43 @@ Publications
         </h1>
 
         {% set count = namespace(value=1) %}
-        {% for item in website_entries %}
+        {% for keyword in p_keywords %}
             <h2>
-                {{ item['title'] }}
+                {{ keyword.title }}
             </h2>
             
-            {% for elem in item['publications'] %}
+            {% for publication in keyword.publications %}
             <div class="row pub-item">
                 <div class="col-auto d-flex align-items-center pub-count">
                     [{{ count.value }}]
                 </div>
                 <div class="col pub-reference">
-                    {{ elem['html_str'] | safe }}
+                    {{ publication.html_str | safe }}
 
-                    <a href={{ '/publications/' + elem['key'] }}>
+                    <a href={{ '/publications/' + publication.key }}>
                         [bib]
                     </a>
 
-                    {% if elem['has_pdf'] is sameas true and show_pdf_field is sameas true %}
-                    <a href={{ '/papers/' + elem['key'] + '.pdf' }}
+                    {% if publication.has_pdf is sameas true and show_pdf_field is sameas true %}
+                    <a href={{ '/papers/' + publication.key + '.pdf' }}
                     target="_blank" rel="noopener noreferrer">
                         [pdf]
                     </a>
                     {% endif %}
 
-                    {% if elem['url'] != '' %}
-                    <a href={{ elem['url'] | safe }}
+                    {% if publication.url != '' %}
+                    <a href={{ publication.url | safe }}
                     target="_blank" rel="noopener noreferrer">
                         [url]
                     </a>
                     {% endif %}
                     
-                    {% if elem['doi'] != '' %}
+                    {% if publication.doi != '' %}
                     <a 
-                    {% if 'doi.org/' in elem['doi'] %}
-                        href={{ elem['doi'] }}
+                    {% if 'doi.org/' in publication.doi %}
+                        href={{ publication.doi }}
                     {% else %}
-                        href={{ 'https://doi.org/' + elem['doi'] }}
+                        href={{ 'https://doi.org/' + publication.doi }}
                     {% endif %}
                     target="_blank" rel="noopener noreferrer">
                         [doi]

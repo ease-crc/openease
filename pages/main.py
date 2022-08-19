@@ -14,7 +14,7 @@ from app_and_db import app
 from app_and_db import db
 from helpers.utility import admin_required
 from helpers.file_handler import read_file
-from pages.neem_overview import get_neem_data
+from pages.neem_overview import get_homepage_overview_data
 import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
@@ -283,7 +283,7 @@ def admin_cookie():
 
 @app.route('/')
 def render_homepage():
-    neem_overview_data = get_neem_data()
+    neem_overview_data = get_homepage_overview_data()
 
     return render_template('pages/homepage.html', **locals())
 

@@ -5,24 +5,28 @@
 # - Developers can run it from the command line: python runserver.py
 
 import os
-
-from config.settings import DOWNLOADS_DIR_PATH
+from pages.neem_overview import NEEM_OVERVIEW_DATA_PATH, NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH, NEEM_OVERVIEW_MARKDOWNS_PATH
+from pages.publications import ALL_PUBLICATIONS_PATH, PUBLICATIONS_DATA_PATH
+from postgres.db import get_table_row_count, table_empty
 
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
 
 from flask_mail import Mail
+from flask.helpers import flash
 from flask_user import UserManager, SQLAlchemyAdapter
 from flask.ext.babel import Babel
 from wtforms.validators import ValidationError
 from pathlib2 import Path
 
 from app_and_db import app, db
+from config.settings import DOWNLOADS_DIR_PATH
 from helpers.utility import random_string, oe_password_validator
-from helpers.file_handler import make_dir, path_is_dir
+from helpers.file_handler import make_dir, number_of_files_in_dir, number_of_subdirs_in_dir, path_is_dir, path_is_file
 from postgres.users import Role, User, add_user, create_role
-from postgres.settings import ContentSettings, UpdateState
+from postgres.settings import ContentSettings, ContentState, UpdateState
+from postgres.content import NeemOverviewData, PublicationsData, PublicationsKeywords
 
 # default password for admin user
 ADMIN_USER_DEFAULT_PW = '1234'
@@ -63,6 +67,7 @@ def init_app(extra_config_settings={}):
     # Load all models.py files to register db.Models with SQLAlchemy
     from postgres import users
     from postgres import settings
+    from postgres import content
     # Automatically create all registered DB tables
     db.create_all()
     db.session.commit()
@@ -92,15 +97,16 @@ def init_app(extra_config_settings={}):
     # all the settings will be set to true (from the previous run);
     # they can be set to false in the content settings
 
-    ContentSettings.init_last_update_settings()
+    ContentSettings.init_last_update_settings(
+        _neem_overview_data_and_files_exist(),
+        _publications_data_and_files_exist()
+    )
 
     if not _config_is_debug():
         ContentSettings.set_download_default_papers(True)
         ContentSettings.set_prepare_downloadable_files(True)
         ContentSettings.set_update_state_neem_overview(UpdateState.ACTIVE)
         ContentSettings.set_update_state_publications_and_papers(UpdateState.ACTIVE)
-    
-    content_settings = ContentSettings.get_settings()
 
     _create_downloads_folder()
 
@@ -117,19 +123,27 @@ def init_app(extra_config_settings={}):
     from pages.neem_overview import automatic_update_neem_overview_files, load_default_overview_files
 
     if _config_is_debug():
-        # load defaults if update-state is set to paused, instead of 
-        # fetching updates; saves a lot of time on start-up
-        if _update_state_neem_overview_job_is_active():
+        # if content files are present in the volume and data in the db, 
+        # no default files are loaded to save start up time
+        #
+        # otherwise load defaults if update-state is set to paused,
+        # instead of fetching updates; saves a lot of time on start-up
+
+        if _neem_overview_data_and_files_exist():
+            app.logger.info('Found neem-overview data in db and files in volume thus not (re)loading default files. \n In case of problems, reload content files via the admin content panel.')
+        elif _update_state_neem_overview_job_is_active():
             automatic_update_neem_overview_files()
         else:
             load_default_overview_files()
         
-        if _update_state_publications_and_papers_job_is_active():
+        if _publications_data_and_files_exist():
+            app.logger.info('Found publications data in db and/or files in volume, thus not (re)loading default files. \n In case of problems, reload content files via the admin content panel.')
+        elif _update_state_publications_and_papers_job_is_active():
             automatic_update_publications_and_papers()
         else:
             load_default_publications_and_papers()
     else:
-        # initial download of files
+        # initial download of files in production mode
         automatic_update_neem_overview_files()
         automatic_update_publications_and_papers()
         
@@ -140,6 +154,28 @@ def init_app(extra_config_settings={}):
     
     app.logger.info("Webapp started.")
     return app
+
+
+def _neem_overview_data_and_files_exist():    
+    if table_empty(NeemOverviewData) or \
+        not path_is_dir(NEEM_OVERVIEW_MARKDOWNS_PATH) or \
+        not path_is_dir(NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH):
+        return False
+    if get_table_row_count(NeemOverviewData) > \
+        number_of_files_in_dir(NEEM_OVERVIEW_MARKDOWNS_PATH) or \
+        get_table_row_count(NeemOverviewData) > \
+        number_of_subdirs_in_dir(NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH):
+        return False
+    return True
+
+
+def _publications_data_and_files_exist():
+    if table_empty(PublicationsData) or table_empty(PublicationsKeywords):
+        return False
+    if ContentSettings.get_settings().content_type_publications == ContentState.LATEST and \
+        not path_is_file(ALL_PUBLICATIONS_PATH):
+        return False
+    return True
 
 
 def _update_state_neem_overview_job_is_active():

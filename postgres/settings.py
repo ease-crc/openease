@@ -114,8 +114,8 @@ class ContentSettings(db.Model):
     last_update_publications_and_papers = db.Column(db.DateTime(), nullable=False, default=DATETIME_MIN)
     last_update_type_neem_overview = db.Column(db.Enum(UpdateMethod), nullable=False, default=UpdateMethod.NO_UPDATE)
     last_update_type_publications_and_papers = db.Column(db.Enum(UpdateMethod), nullable=False, default=UpdateMethod.NO_UPDATE)
-    content_type_neem_overview = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.DEFAULT)
-    content_type_publications = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.DEFAULT)
+    content_type_neem_overview = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.NONE)
+    content_type_publications = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.NONE)
     content_type_papers = db.Column(db.Enum(ContentState), nullable=False, default=ContentState.NONE)
     publications_bibtex_url = db.Column(db.String(255), nullable=False, default='')
     default_papers_zip_url = db.Column(db.String(255), nullable=False, default='')
@@ -221,16 +221,18 @@ class ContentSettings(db.Model):
         db.session.commit()
 
     @staticmethod
-    def init_last_update_settings():
+    def init_last_update_settings(neem_overview_content_exists , publications_content_exists):
         """ Resets content type and last update time for all content. """
         settings = ContentSettings.get_settings()
         settings.last_update_neem_overview = datetime.min
         settings.last_update_publications_and_papers = datetime.min
         settings.last_update_type_neem_overview = UpdateMethod.NO_UPDATE
         settings.last_update_type_publications_and_papers = UpdateMethod.NO_UPDATE
-        settings.content_type_neem_overview = ContentState.DEFAULT
-        settings.content_type_publications = ContentState.DEFAULT
-        settings.content_type_papers = ContentState.NONE
+        if not neem_overview_content_exists:
+            settings.content_type_neem_overview = ContentState.NONE
+        if not publications_content_exists:
+            settings.content_type_publications = ContentState.NONE
+            settings.content_type_papers = ContentState.NONE
         db.session.commit()
 
     @staticmethod
