@@ -16,7 +16,7 @@ from flask.ext.babel import Babel
 from wtforms.validators import ValidationError
 
 from app_and_db import app, db
-from utility import random_string
+from helpers.utility import random_string
 from postgres.users import Role, User, add_user, create_role
 
 # default password for admin user

@@ -12,7 +12,7 @@ import random
 
 from app_and_db import app
 from app_and_db import db
-from utility import admin_required
+from helpers.utility import admin_required
 import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField

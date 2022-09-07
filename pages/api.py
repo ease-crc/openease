@@ -7,7 +7,7 @@ from app_and_db import app, db
 import knowrob.container as docker_interface
 from knowrob.container import generate_mac
 from postgres.users import User, add_user
-from utility import random_string
+from helpers.utility import random_string
 
 __author__ = 'mhorst@cs.uni-bremen.de'
 

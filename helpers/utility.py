@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-15 -*-
-# @author Daniel Beßler
+# @author Daniel Beï¿½ler
 
 import os
 import string
@@ -12,7 +12,6 @@ from functools import wraps
 
 from app_and_db import app
 from Crypto.Random import random
-
 
 def get_user_dir():
     userDir = "/home/ros/user_data/" + session['user_container_name']
