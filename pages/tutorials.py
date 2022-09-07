@@ -1,4 +1,5 @@
 import json
+from helpers.file_handler import read_file
 from urlparse import urlparse
 
 from flask import request, render_template, Markup, jsonify
@@ -35,9 +36,7 @@ def get_tutorial_data():
     tut_file = WEBROB_PATH + 'tutorials/' + tut_id + '.md'
 
     # read tutorial md data
-    page_data = ""
-    with open(tut_file, 'r') as f:
-        page_data = f.read()
+    page_data = read_file(tut_file)
     # convert to HTML
     page_data = Markup(markdown(page_data, fenced_code=True))
     # split into pages at <h2> tags

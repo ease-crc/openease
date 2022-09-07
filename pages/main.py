@@ -13,6 +13,7 @@ import random
 from app_and_db import app
 from app_and_db import db
 from helpers.utility import admin_required
+from helpers.file_handler import read_file
 import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
@@ -199,8 +200,7 @@ def send_from_node_modules(url_path, file_path):
     # remove possibility for miss use of file_path by removing any sort
     # of directory path manipulation
     file_path.replace("..", "").replace("./", "")
-    with open(os.path.join(NODE_MODULES_PATH, file_path), 'r') as f:
-        file_content = f.read()
+    file_content = read_file(os.path.join(NODE_MODULES_PATH, file_path))
     return file_content
 
 @app.route('/node_modules/<path:file_path>')
