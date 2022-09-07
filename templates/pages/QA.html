@@ -237,17 +237,15 @@
                             {% endif %}
                         </div>
                     </div>
-                    {% if active_neem.image != 'None' %}
-                        <img src={{ active_neem.image }} alt="" class="neem-img img-fluid">
-                            <a id="neem-fav-a" href="#" onclick="toggleLike('{{ active_neem.neem_id }}')">
-                                {% if current_user.has_liked_neem(active_neem.neem_id) %}
-                                    <span id="neem-fav" class="pull-right fas fa-star liked"></span>
-                                {% else %}
-                                    <span id="neem-fav" class="pull-right fas fa-star"></span>
-                                {% endif %}
-                            </a>
-                        </img>
-                    {%endif %}
+                    <img src={{ active_neem.image }} alt="" class="neem-img img-fluid">
+                        <a id="neem-fav-a" href="#" onclick="toggleLike('{{ active_neem.neem_id }}')">
+                            {% if current_user.has_liked_neem(active_neem.neem_id) %}
+                                <span id="neem-fav" class="pull-right fas fa-star liked"></span>
+                            {% else %}
+                                <span id="neem-fav" class="pull-right fas fa-star"></span>
+                            {% endif %}
+                        </a>
+                    </img>
                     <div class="neem-meta-data">
                         {{ neem.created_by }}, {{ neem.created_at }}
                     </div>
