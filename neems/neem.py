@@ -1,11 +1,14 @@
+import requests
+
 from flask_user import current_user
 
 from knowrob.container import start_user_container, container_started
 from app_and_db import app
 
-from config.settings import USE_HOST_KNOWROB
+from config.settings import DATETIME_FORMAT, USE_HOST_KNOWROB
 import json
 from dateutil import parser
+from datetime import datetime
 from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
 
@@ -52,6 +55,21 @@ class NEEM:
         else:
             self.image = DEFAULT_IMAGE_PATH
 
+    def fetch_last_updated(self):
+        api_prefix = NEEM_DOWNLOAD_URL_PREFIX + "api/v4/projects/neems%2F"
+        api_suffix = "/repository/commits/master"
+        url = api_prefix + self.downloadUrl.split("/")[-1] + api_suffix
+        response = json.loads(str(requests.get(url, allow_redirects=True).content))
+        
+        if 'committed_date' in response:
+            # remove the last 6 characters which includes the timezone information
+            # 
+            # unfortunate that it needs to be done, but keeping it causes causes
+            # too many problems during datetime parsing
+            return datetime.strptime(response['committed_date'][:-6], DATETIME_FORMAT)
+        else:
+            return 0
+
     def get_info(self):
         return {
             'neem_id': self.neem_id,
@@ -62,6 +80,11 @@ class NEEM:
             'neem_repo_path': self.neem_repo_path,
             'image': self.image
         }
+    
+    def get_info_with_last_updated(self):
+        info = self.get_info()
+        info['last_updated'] = self.fetch_last_updated()
+        return info
 
     def activate(self):
         app.logger.info('Activate neem')

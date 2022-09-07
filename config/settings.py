@@ -27,3 +27,5 @@ USER_ENABLE_CONFIRM_EMAIL = False
 MAX_HISTORY_LINES = 100
 
 WEBROB_PATH = '/opt/webapp/webrob/'
+
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
