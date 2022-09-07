@@ -21,7 +21,6 @@ class NEEM:
         self.created_by = neem_info['created_by']
         self.created_at = parser.parse(neem_info['created_at']).strftime('%m/%d/%y %H:%M')
         self.maintainer = neem_info['created_by']
-        self.authors = neem_info['created_by']
 
         if 'mail' in neem_info:
             self.mail = neem_info['mail']
@@ -55,11 +54,9 @@ class NEEM:
     def get_info(self):
         return {
             'neem_id': self.neem_id,
-            'neem_tag': self.neem_tag,
             'name': self.name,
             'description': self.description,
             'maintainer': self.maintainer,
-            'authors': self.authors,
             'downloadUrl': self.downloadUrl,
             'neem_repo_path': self.neem_repo_path
         }
