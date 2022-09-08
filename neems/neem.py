@@ -14,6 +14,7 @@ from postgres.settings import get_neemhub_settings
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
 DEFAULT_IMAGE_PATH = 'static/img/default.jpg'
+DEFAULT_IMAGE_PATH_NO_STATIC = 'img/default.jpg'
 
 class NEEM:
     def __init__(self, neem_hub, neem_info):
