@@ -5,6 +5,7 @@
 import os
 import string
 
+from urlparse import urlparse
 from flask import session
 from flask_user import current_user
 from flask_user import current_app
@@ -38,3 +39,15 @@ def oe_password_validator(form, field):
     password = field.data
     if len(password) < 3:
         raise ValidationError(('Password must have at least 3 characters'))
+
+
+def type_str(obj):
+    return str(type(obj))
+
+
+def is_url(url):
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
