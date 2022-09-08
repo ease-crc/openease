@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>
+{{ publication.title }}
+</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/publications.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div id="content">
+        <h2>
+            {{ publication.title }}
+        </h2>
+
+        <div class="row  authors-and-pdf">
+            <p class="col-12 col-md py-0 px-2 mb-1 mb-md-0">
+                <em>
+                    by {{ publication.authors }}
+                </em>
+            </p>
+    
+            {% if publication.has_pdf is sameas true and show_pdf_field is sameas true %}
+            <p class="col-12 d-flex justify-content-center justify-content-md-start col-md-auto mt-2 mt-md-0 ml-md-3">
+                <a href={{ '/papers/' + publication.key + '.pdf' }}
+                target="_blank" rel="noopener noreferrer"
+                class="btn pdf-link">
+                    View PDF
+                </a>
+            </p>
+            {% endif %}
+        </div>
+        
+        {% if publication.abstract != '' %}
+        <h3>
+            Abstract
+        </h3>
+        <p class="abstract">
+            {{ publication.abstract }}
+        </p>
+        {% endif %}
+
+        <div class="row mx-0">
+            <h3>
+                Reference
+            </h3>
+            <!-- Do not change single quotes to double quotes
+                for the data-clipboard-text attribute-->
+            <button id="reference-clipboard" class="btn btn-clipboard ml-2"
+                data-clipboard-text='{{ publication.reference_str }}'
+                data-toggle="tooltip" data-placement="right"
+                title="Copied to clipboard!"
+                onmouseout="referenceTooltipDisable()">
+                <i class="far fa-copy"></i>
+            </button>
+        </div>
+        <p class="reference">
+            {{ publication.html_str | safe }}
+        </p>
+
+        <div class="row mx-0">
+            <h3>
+                BibTex Entry
+            </h3>
+            <!-- Do not change single quotes to double quotes
+                for the data-clipboard-text attribute-->
+            <button id="bibtex-clipboard" class="btn btn-clipboard ml-2"
+                data-clipboard-text='{{ publication.bibtex_str }}'
+                data-toggle="tooltip" data-placement="right"
+                title="Copied to clipboard!"
+                onmouseout="bibtexTooltipDisable()">
+                <i class="far fa-copy"></i>
+            </button>
+        </div>
+        <p class="bibtex">
+            {{ publication.bibtex_html_str | safe }}
+        </p>
+        
+    </div>
+    
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+<script type="text/javascript">
+    var referenceID = '#reference-clipboard';
+    var referenceTooltipSet = false;
+    var referenceClipboard = new ClipboardJS(referenceID);
+    var bibtexID = '#bibtex-clipboard';
+    var bibtexTooltipSet = false;
+    var bibtexClipboard = new ClipboardJS(bibtexID);
+ 
+    referenceClipboard.on('success', function(e) {
+        enableAndShowTooltip(referenceID);
+        referenceTooltipSet = true;
+    });
+    bibtexClipboard.on('success', function(e) {
+        enableAndShowTooltip(bibtexID);
+        bibtexTooltipSet = true;
+    });
+
+    function enableAndShowTooltip(itemID) {
+        $(itemID).tooltip('enable');
+        $(itemID).tooltip('show');
+    }
+
+    function referenceTooltipDisable() {
+        checkIfTooltipSetAndDisableIfTrue(referenceTooltipSet, referenceID)
+    }
+
+    function bibtexTooltipDisable() {
+        checkIfTooltipSetAndDisableIfTrue(bibtexTooltipSet, bibtexID)
+    }
+
+    function checkIfTooltipSetAndDisableIfTrue(tooltipSet, itemID) {
+        if( tooltipSet == true ){
+            disableTooltip(itemID);
+            tooltipSet = false;
+        }
+    }
+
+    function disableTooltip(itemID) {
+        $(itemID).tooltip('disable');
+    }
+</script>
+{% endblock %}
