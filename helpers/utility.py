@@ -4,14 +4,17 @@
 
 import os
 import string
+import requests
 
 from urlparse import urlparse
 from flask import session
+from config.settings import WEBROB_PATH
 from flask_user import current_user
 from flask_user import current_app
 from functools import wraps
 
 from app_and_db import app
+from helpers.file_handler import dir_has_any_items, get_path_name, get_path_parent, make_dir, move_file, remove_empty_dir, write_binary_file
 from Crypto.Random import random
 
 def get_user_dir():
@@ -39,6 +42,29 @@ def oe_password_validator(form, field):
     password = field.data
     if len(password) < 3:
         raise ValidationError(('Password must have at least 3 characters'))
+
+
+def download_file(url, file_path):
+    try:
+        r = requests.get(url, allow_redirects=True)
+    except Exception as e:
+        app.logger.error('Sending the request to download file had some issues.\n\n' + e.__str__())
+        return
+    
+    if r.status_code == 200:
+        temp_downloads_dir = WEBROB_PATH + 'temp_downloads/'
+        make_dir(temp_downloads_dir, make_parents=True, path_exist_ok=True)
+        temp_file = temp_downloads_dir + get_path_name(file_path)
+        write_binary_file(r.content, temp_file)
+
+        make_dir(get_path_parent(file_path), make_parents=True, path_exist_ok=True)
+        move_file(temp_file, file_path, overwrite=True)
+
+        try:
+            if not dir_has_any_items(temp_downloads_dir):
+                remove_empty_dir(temp_downloads_dir)
+        except Exception as e:
+            app.logger.info('Could not remove temp dir.\n\n' + e.__str__())
 
 
 def type_str(obj):
