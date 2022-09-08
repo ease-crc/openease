@@ -14,6 +14,7 @@ from app_and_db import app
 from app_and_db import db
 from helpers.utility import admin_required
 from helpers.file_handler import read_file
+from pages.neem_overview import get_homepage_overview_data
 import knowrob.container as docker_interface
 from flask_wtf import Form
 from wtforms import PasswordField
@@ -207,14 +208,6 @@ def send_from_node_modules(url_path, file_path):
 def send_from_node_modules_root(file_path):
     return send_from_node_modules('/', file_path)
 
-@app.route('/')
-def render_main():
-    if not current_user.is_authenticated:
-        return redirect(url_for('user.login'))
-    if 'user_container_name' not in session:
-        return redirect(url_for('user.logout'))
-    return redirect(url_for('render_QA_page'))
-
 @app.route('/QA')
 @login_required
 def render_QA_page():
@@ -288,6 +281,11 @@ def render_change_password_post():
 def admin_cookie():
     return render_template('settings/cookies.html', **locals())
 
+@app.route('/')
+def render_homepage():
+    neem_overview_data = get_homepage_overview_data()
+
+    return render_template('pages/homepage.html', **locals())
 
 #footer
 @app.route('/terms-of-use')
