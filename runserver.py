@@ -16,7 +16,9 @@ from flask.ext.babel import Babel
 from wtforms.validators import ValidationError
 
 from app_and_db import app, db
+from config.settings import DOWNLOADS_DIR_PATH
 from helpers.utility import random_string, oe_password_validator
+from helpers.file_handler import make_dir, path_is_dir
 from postgres.users import Role, User, add_user, create_role
 
 # default password for admin user
@@ -79,10 +81,17 @@ def init_app(extra_config_settings={}):
              pw=ADMIN_USER_DEFAULT_PW,
              roles=['admin'])
 
+    _create_downloads_folder()
+
     app.logger.info("Webapp started.")
     return app
 
 
+
+
+def _create_downloads_folder():
+    if not path_is_dir(DOWNLOADS_DIR_PATH):
+        make_dir(DOWNLOADS_DIR_PATH, make_parents=True, path_exist_ok=True)
 
 
 def _run_server():
