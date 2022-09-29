@@ -81,5 +81,3 @@ tree_data_1_(Index_0-Index_n,[X|Xs],ArrayData) :-
 	tree_data_1_(Index_1-Index_n,Xs,Ys),
 	append(Y,Ys,ArrayData).
 
-ayData).
-
