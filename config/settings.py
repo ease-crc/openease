@@ -1,5 +1,7 @@
 import os
 
+TRUE_STRINGS = ["1", "true", "True", "yes", "Yes"]
+
 DEV_SECRET_KEY='\\\xf8\x12\xdc\xf5\xb2W\xd4Lh\xf5\x1a\xbf"\x05@Bg\xdf\xeb>E\xd8<'
 
 SQLALCHEMY_DATABASE_URI = 'postgresql://docker@' + \
@@ -18,7 +20,7 @@ MAIL_USERNAME = os.environ.get('OPENEASE_MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('OPENEASE_MAIL_PASSWORD')
 MAIL_DEFAULT_SENDER = '"Sender" <openease.iai@gmail.com>'
 
-USE_HOST_KNOWROB = bool(os.environ.get('OPENEASE_USE_HOST_KNOWROB', 'False'))
+USE_HOST_KNOWROB = (os.environ.get('OPENEASE_USE_HOST_KNOWROB', 'False') in TRUE_STRINGS)
 
 USER_ENABLE_USERNAME = True
 USER_ENABLE_EMAIL = True
