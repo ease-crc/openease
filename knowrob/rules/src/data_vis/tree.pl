@@ -29,7 +29,7 @@ data_vis_rdf_tree(QueryID, Root,Property,Options) :-
 
 rdf_tree_data_1(IRI,Property,TreeData) :-
 	setof([Parent,Child],
-		triple(IRI,transitive(Property),Child),
+		triple(IRI->Parent,transitive(Property),Child),
 		Edges),
 	rdf_tree_data_2(IRI,Edges,TreeData).
 
