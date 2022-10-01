@@ -69,11 +69,12 @@ class QueryExamples(object):
     def random_query(self):
         return random.choice(self.query_list)
 
-    def entity_queries(self, entity_type):
-        if entity_type in self.binding_map:
-            return self.binding_map[entity_type]
-        else:
-            return []
+    def entity_queries(self, entity_types):
+        bindings = []
+        for entity_type in entity_types:
+            if entity_type in self.binding_map:
+                bindings += self.binding_map[entity_type]
+        return bindings
 
     def add_binding(self, binding, queries):
         entity_type = binding['type']
@@ -243,8 +244,8 @@ def get_random_example_query():
 @app.route('/QA/entity_queries', methods=['POST'])
 def get_example_entity_queries():
     data = json.loads(request.data)
-    entity_type = data['entity_type']
-    return jsonify(queries=QueryExamples.get().entity_queries(entity_type))
+    entity_types = data['entity_types']
+    return jsonify(queries=QueryExamples.get().entity_queries(entity_types))
 
 @app.route('/examples')
 def render_examples_page():

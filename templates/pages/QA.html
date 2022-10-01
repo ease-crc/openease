@@ -174,22 +174,32 @@
             $("#selected-entity").html(iri);
             // show the follow-up question view
             $('#follow-up-question').collapse("show");
-            // update follow-up queries
-            $.ajax({
-                url: "/QA/entity_queries",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ entity_type: entity_type }),
-                dataType: "json",
-                success: function (response) {
-                    updateFollowUpQueries(response.queries);
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status);
-                    alert(thrownError);
+            // query types of selected entity, and show corresponding follow-up queries
+            const pl = new ROSPrologClient(page.ros, {});
+            pl.jsonQuery("findall(Y, kb_call((has_type('" + entity_iri + "', X), triple(X, transitive(reflexive('http://www.w3.org/2000/01/rdf-schema#subClassOf')), Y))), Types).", function(result) {
+                pl.finishClient();
+                // update follow-up queries
+                if(result.status == "OK") {
+                    $.ajax({
+                      url: "/QA/entity_queries",
+                      type: "POST",
+                      contentType: "application/json",
+                      data: JSON.stringify({ entity_types: result.solution['Types'] }),
+                      dataType: "json",
+                      success: function (response) {
+                          updateFollowUpQueries(response.queries);
+                      },
+                      error: function (xhr, ajaxOptions, thrownError) {
+                          alert(xhr.status);
+                          alert(thrownError);
+                      }
+                    });
+                }
+                else {
+                  console.warn(result);
                 }
             });
-		};
+        };
 
         const selectTFFrame = function(frame_name) {
             // HACK: strip TF prefixes as they are not spelled out in IRI names.

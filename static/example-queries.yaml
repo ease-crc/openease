@@ -78,7 +78,7 @@ sub_topics:
     - event_interval(Evt, Begin, End)
     binding:
       var: Evt
-      type: event
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
       description: When did this event occur?
   - description: When did the first event start?
     queries:
@@ -106,7 +106,7 @@ sub_topics:
       Duration is End - Begin.
     binding:
       var: Evt
-      type: event
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
       description: What is the duration of this event?
   - description: What is the longest event that occurred?
     queries:
@@ -165,11 +165,11 @@ sub_topics:
     - has_participant(Evt, Obj)
     binding:
       var: Evt
-      type: event
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
       description: What are the participants of this event?
     binding:
       var: Obj
-      type: object
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object
       description: In which events did this object participate?
   - description: What is the list of participants for each event?
     queries:
@@ -211,7 +211,7 @@ sub_topics:
         Phases).
     binding:
       var: Act
-      type: event
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
       description: What are the direct phases of this event?
   - description: What is the transitive sub-event closure of an action?
     queries:
@@ -222,7 +222,7 @@ sub_topics:
         Phases).
     binding:
       var: Act
-      type: event
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
       description: What is the transitive sub-event closure of this event?
 
 #################
@@ -329,7 +329,7 @@ sub_topics:
     - object_shape(Obj, _, Shape, _, _).
     binding:
       var: Obj
-      type: object
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#PhysicalObject
       description: What is the shape of this object?
   - description: What are the shapes of the objects that participate in an action?
     queries:
@@ -354,7 +354,7 @@ sub_topics:
         Components).
     binding:
       var: Obj
-      type: object
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object
       description: What are the direct components of this object?
   - description: What is the transitive sub-event closure of an action?
     queries:
@@ -365,7 +365,7 @@ sub_topics:
         Components).
     binding:
       var: Obj
-      type: object
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Object
       description: What is the transitive component closure of this object?
 
 #################
