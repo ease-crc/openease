@@ -114,6 +114,23 @@ function Blackboard(options) {
     };
 
     /*********************************************/
+    /****************** Meshes *******************/
+    /*********************************************/
+    
+    
+    this.addMesh = function(ros, data_vis_msg) {
+        let widget = new MeshWidget({
+            path: '/meshes/',
+            ros: ros
+        });
+        widget.addMesh(data_vis_msg.id, data_vis_msg.title);
+        if(!widget.has_failure) {
+            widget.resize();
+            that.push(widget.title, widget.get());
+        }
+    }
+
+    /*********************************************/
     /****************** CHARTS *******************/
     /*********************************************/
 

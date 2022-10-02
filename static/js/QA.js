@@ -215,6 +215,9 @@ function KnowrobUI(flask_user,ros_client,options) {
                     that.getCanvas().link_maximize.click(
                         function() {that.getCanvas().maximize()});
                 } 
+                else if(data_vis_msg.type == 988) {
+                    that.blackboard.addMesh(that.client.ros, data_vis_msg);
+                }
                 else if(data_vis_msg.type == 100) {
                     that.blackboard.addResultDescription(that.console, data_vis_msg.id, data_vis_msg.values)
                 }
