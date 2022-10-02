@@ -109,6 +109,16 @@ $qa-view-height: calc(100vh - 105px);
 }
 
 /*************************/
+/****** QA widgets *******/
+/*************************/
+
+.card-table-text {
+  max-height: 100px;
+  overflow: scroll;
+  white-space: break-spaces;
+}
+
+/*************************/
 /******** Sidebar ********/
 /*************************/
 

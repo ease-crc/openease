@@ -34,7 +34,10 @@ function DescriptionTable(options){
             for(let j=0; j<3; j++) {
                 const value = descriptions[1].value1[i+j];
                 const td = $("<td>");
-                td.text(formatter.format(value));
+                const div = $("<div>");
+                div.addClass("card-table-text");
+                div.text(formatter.format(value));
+                td.append(div);
                 tr.append(td);
             }
 
