@@ -18,6 +18,17 @@ oe:result_set_show(QueryID,ResultSet) :-
 	    [title: 'Graph of event participation']).
 
 %%
+oe:result_set_show(QueryID,ResultSet) :-
+	result_set_objects(ResultSet,Objs),
+	%% TODO move member to aggregate query
+	member(Obj,Objs),
+	data_vis_affordance_graph(Obj,GraphData),
+	GraphData \= [],
+	% publish the message,
+	data_vis_graph(QueryID, GraphData,
+	    [title: 'Graph of typical affordances']).
+
+%%
 data_vis_rdf_graph(InitialNode,EdgeData,GraphData) :-
     %% format DataVis msg
     % 1. find set of all IRIs in the graph
@@ -73,6 +84,39 @@ data_vis_participant_graph(Evt,GraphData) :-
     ), EdgeData),
     % get DataVis graph data
     data_vis_rdf_graph(Evt,EdgeData,GraphData).
+
+%%
+data_vis_affordance_graph(Obj,GraphData) :-
+    % get all edges
+    findall(Edge, (
+        kb_call((
+            triple(Obj,soma:hasDisposition,D),
+            ignore(triple(D,dul:isDescribedBy,A)),
+            ignore(once((
+                triple(A,dul:definesTask,Tsk),
+                has_type(Tsk,TskType),
+                subclass_of(TskType, dul:'Task')
+            ))),
+            ignore(once((
+                triple(A,soma:definesTrigger,Trigger),
+                has_type(Trigger, TriggerType),
+                subclass_of(TriggerType, dul:'Role')
+            ))),
+            ignore(once((
+                triple(A,soma:definesBearer,Bearer),
+                has_type(Bearer, BearerType),
+                subclass_of(BearerType, dul:'Role')
+            )))
+        )),
+        (   ( Edge=[Obj,D,1,2,'hasDisposition'] )
+        ;   ( ground(A),Edge=[D,A,2,3,'isDescribedBy'] )
+        ;   ( ground(A),ground(TskType),Edge=[A,TskType,3,4,'definesTask'] )
+        ;   ( ground(A),ground(TriggerType),Edge=[A,TriggerType,3,4,'definesTrigger'] )
+        ;   ( ground(A),ground(BearerType),Edge=[A,BearerType,3,4,'definesBearer'] )
+        )
+    ), EdgeData),
+    % get DataVis graph data
+    data_vis_rdf_graph(Obj,EdgeData,GraphData).
 
 %%
 data_vis_graph(ID,NodeData,Options) :-
