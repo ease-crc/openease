@@ -20,8 +20,12 @@ function MeshWidget(options){
 
     this.title = "Object mesh";
     this.widget = $("<div>");
-    this.widget.addClass("card-body border-top");
-    this.widget.uniqueId();
+    this.widget.addClass("ease-border card-body bg-light");
+    
+    this.container = $("<div>");
+    this.container.addClass("ease-border m-auto mesh-widget");
+    this.container.uniqueId();
+    this.widget.append(this.container);
     
     // Setup a client to listen to TFs.
     // note thaturdf will be shown in initial pose if no one publishes.
@@ -34,13 +38,16 @@ function MeshWidget(options){
     
     // Create the main viewer.
     this.viewer = new ROS3D.Viewer({
-        elem : { appendChild: function(x){ that.widget.append(x); } },
+        background : '#ffffff',
+        cameraPose : {x : 1, y : 1, z : 1 },
+        elem : { appendChild: function(x){ that.container.append(x); } },
         width : canvas_width,
         height : canvas_height,
         antialias : true
     });
+    this.viewer.cameraControls.autoRotate = true;
     // Add a grid.
-    this.viewer.addObject(new ROS3D.Grid({
+    this.viewer.scene.add(new ROS3D.Grid({
         color: '#cccccc',
         num_cells: 20,
         lineWidth: 1,
@@ -107,12 +114,12 @@ function MeshWidget(options){
         //}
         canvas_height = canvas_width/aspect_ratio;
         // resize
-        this.viewer.camera.width = canvas_width;
-        this.viewer.camera.height = canvas_height;
-        this.viewer.camera.aspect = canvas_width / canvas_height;
-        this.viewer.camera.updateProjectionMatrix();
-        this.viewer.renderer.setSize(canvas_width, canvas_height);
-        //this.viewer.composer.setSize(canvas_width, canvas_height);
+        that.viewer.camera.width = canvas_width;
+        that.viewer.camera.height = canvas_height;
+        that.viewer.camera.aspect = canvas_width / canvas_height;
+        that.viewer.camera.updateProjectionMatrix();
+        that.viewer.renderer.setSize(canvas_width, canvas_height);
+        //that.viewer.composer.setSize(canvas_width, canvas_height);
     };
     $(window).on('resize', that.resize);
 }
