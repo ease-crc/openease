@@ -137,12 +137,12 @@ data_vis_plan_graph(Plan,GraphData) :-
             triple(Plan, soma:hasGoal, Goal),
             triple(Plan, dul:definesTask, Task),
             ignore(triple(Goal,dul:usesConcept,Role)),
-            ignore(once(triple(Goal, dul:hasPart, ImageSchema)))
-        ,Plan)),
+            ignore(triple(Goal, dul:hasPart, ImageSchema))
+        )),
         (   ( Edge=[Plan,Goal,1,2,'hasGoal'] )
         ;   ( ground(Task),Edge=[Plan,Task,1,2,'definesTask'] )
         ;   ( ground(Role),Edge=[Goal,Role,2,3,'usesConcept'] )
-        ;   ( ground(ImageSchema),Edge=[Goal,ImageSchema,2,3,'hasTask'] )
+        ;   ( ground(ImageSchema),Edge=[Goal,ImageSchema,2,3,'hasPart'] )
         )
     ), EdgeData),
     % get DataVis graph data
