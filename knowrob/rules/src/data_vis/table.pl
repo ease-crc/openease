@@ -24,6 +24,7 @@ show_comment_table(QueryID,Entities) :-
 		(
 			member(Val,Entities),
 			triple(Val, rdf:type, Type),
+			\+ rdf_db:rdf_equal(Type, owl:'NamedIndividual'),
 			has_comment(Type,Comment)
 		),
 		CommentData0),
