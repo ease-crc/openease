@@ -20,8 +20,5 @@ show_trajectory(QueryID,[Evt], [Obj]) :-
 		triple(Interval,soma:hasIntervalBegin,Time0),
 		triple(Interval,soma:hasIntervalEnd,Time1)
 	])),
-	findall(
-		Trajectory,
-		trajectory_marker_publish(Obj, Time0, Time1, Trajectory),
-		Trajectories),
-	marker_plugin:show_trajectories(Trajectory).
+	tf:tf_trajectory(Obj, Time0, Time1, 0.5, Trajectory),
+	trajectory_marker_publish(Trajectory).
