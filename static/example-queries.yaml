@@ -218,7 +218,7 @@ sub_topics:
     - |
       is_action(Act),
       findall(Sub,
-        transitive(triple(Act, dul:hasConstituent, Sub)),
+        triple(Act, transitive(dul:hasConstituent), Sub),
         Phases).
     binding:
       var: Act
@@ -310,8 +310,7 @@ sub_topics:
       is_episode(Ep),
       setof(Act,
         (  triple(Ep, dul:includesAction, SupAct),
-           transitive(triple(
-               SupAct, dul:hasConstituent, Act))
+           triple(SupAct, transitive(dul:hasConstituent), Act)
         ),
         SetOfAct),
       length(SetOfAct,NumAct).
@@ -361,7 +360,7 @@ sub_topics:
     - |
       is_physical_artifact(Obj),
       findall(Sub,
-        transitive(triple(Obj, dul:hasComponent, Sub)),
+        triple(Obj, transitive(dul:hasComponent), Sub),
         Components).
     binding:
       var: Obj
@@ -425,14 +424,14 @@ sub_topics:
     - |
       is_agent(Agent),
       setof(Part,
-        transitive(triple(Agent, dul:hasComponent, Part)),
+        triple(Agent, transitive(dul:hasComponent), Part),
         Components).
   - description: How many parts does the agent have?
     queries:
     - |
       is_agent(Agent),
       setof(Part,
-        transitive(triple(Agent, dul:hasComponent, Part)),
+        triple(Agent, transitive(dul:hasComponent), Part),
         Components),
       length(Components, NumParts).
   # TODO:
