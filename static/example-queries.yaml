@@ -64,11 +64,22 @@ sections:
 - name: Plan
   topics:
 
+  # - id: plan_task
+  #   name: Goal
+  #   icon: fa-check
   - id: plan_task
     name: Task
-    icon: fa-object-group
+    icon: fa-list-ol
 
-#################
+  - id: plan_structure
+    name: Plan Phases
+    icon: fa-sitemap
+
+
+  # - id: plan_structure
+  #   name: Image Schema
+  #   icon: fa-object-group
+  
 ######## ACTION
 ######## Occurrences
 #################
@@ -507,87 +518,41 @@ sub_topics:
 ######## Plan
 ######## Task
 #################
+sub_topics:
 - topic: plan_task
-  name: Task
-  description: About the task executed in the plan
+  name: Goal
+  description: About the goal of the task executed in the plan
   query_groups:
   - description: What are the object roles that should be part of the goal state of the task?
     queries:
     - |
-      executes_task(Action, Tsk),
-      is_action(Action),
-      has_type(Tsk, soma:'Grasping'),
-      subclass_of(soma:'Grasping', soma:'PhysicalTask'),
-      has_type(TaskInstance, soma:'Grasping'),
       triple(Plan, dul:definesTask, TaskInstance),
-      has_type(Plan, dul:'Plan'),
+      has_type(TaskInstance, Task),
+      subclass_of(Task, soma:'PhysicalTask'),
       triple(Plan, soma:hasGoal, Goal),
-      has_type(Goal, dul:'Goal'),
       findall(Role,
-      (triple(Goal, dul:usesConcept, RoleInd),
-      has_type(RoleInd, Role),
-      subclass_of(Role, dul:'Role')),
+        (triple(Goal, dul:usesConcept, RoleInd),
+        has_type(RoleInd, Role),
+        subclass_of(Role, dul:'Role')),
       Roles).
-    binding:
-      var: Action
-      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
-      description: What are the object roles that should be participants of the action?
-    binding:
-      var: Tsk
-      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
-      description: What are the object roles that are part of the goal state of the task performed?
   - description: What are the image schema relations that should hold in the goal state when the task is executed?
     queries:
     - |
-      executes_task(Action, Tsk),
-      is_action(Action),
-      has_type(Tsk, Task),
+      kb_call((has_type(Tsk, Task),
       subclass_of(Task, soma:'PhysicalTask'),
       triple(Plan, dul:definesTask, TaskInstance),
       has_type(TaskInstance, Task),
       triple(Plan, soma:hasGoal, Goal),
-      has_type(Goal, dul:'Goal'),
-      triple(Goal, dul:hasPart, ISInstance),
-      instance_of(ISInstance, ImageSchemaRelation),
-      subclass_of(ImageSchemaRelation, soma:'ImageSchemaTheory').
-    binding:
-      var: Tsk
-      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
-      description: What are the image schema relations that holds in the goal state of the task executed?
-  - description: What is the Image schema composition of a task?
-    queries:
-    - |
-      executes_task(Act, TaskInst),
-      is_action(Act),
-      has_type(TaskInst, Task),
-      subclass_of(Task, soma:'PhysicalTask'),
-      subclass_of(Task, Desc),
-      is_restriction(Desc, some(dul:isDescribedBy, Val)),
-      is_intersection_of(Val, intersection_of(TL)),
-      findall(IS,
-          (member(Ins, TL),
-          is_restriction(Ins, some(dul:hasPart, IS))),
-          Composition).
-    binding:
-      var: TaskInst
-      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
-      description: What is the image schema composition of the task executed?
-  - description: What is the task that follows the current task?
-    queries:
-    - |
-      executes_task(Action, Tsk),
-      is_action(Action),
-      has_type(Tsk, Task),
-      subclass_of(Task, soma:'PhysicalTask'),
-      triple(Plan, dul:definesTask, TaskInstance),
-      has_type(TaskInstance, Task),
-      triple(TaskInstance, dul:precedes, NextTaskInstance),
-      has_type(NextTaskInstance, NextTask),
-      subclass_of(NextTask, soma:'PhysicalTask').
-    binding:
-      var: Tsk
-      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
-      description: What is the task that follows the current task?
+      has_type(Goal, dul:'Goal'))),
+      findall(Relation,
+        (triple(Goal, dul:hasPart, ISInstance),
+        has_type(ISInstance, Relation),
+        subclass_of(Relation, soma:'ImageSchemaTheory')),
+      ImageSchemaRelations).
+- topic: plan_task
+  name: Structure
+  description: About the steps followed to complete a complex task
+  query_groups:
   - description:  What are the sub tasks of a complex task executed by an action?
     queries:
     - |
@@ -611,3 +576,92 @@ sub_topics:
       var: Tsk
       type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
       description: What are the sub-tasks necessary to perform the complex task according to the plan?
+  - description: What is the task that follows the current task?
+    queries:
+    - |
+      executes_task(Action, Tsk),
+      is_action(Action),
+      has_type(Tsk, Task),
+      subclass_of(Task, soma:'PhysicalTask'),
+      triple(Plan, dul:definesTask, TaskInstance),
+      has_type(TaskInstance, Task),
+      triple(TaskInstance, dul:precedes, NextTaskInstance),
+      has_type(NextTaskInstance, NextTask),
+      subclass_of(NextTask, soma:'PhysicalTask').
+    binding:
+      var: Tsk
+      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
+      description: What is the task that follows the current task?
+- topic: plan_task
+  name: Image Schema
+  description: About the task executed in the plan
+  query_groups:
+  - description: What is the Image schema composition of a task?
+    queries:
+    - |
+      executes_task(Act, TaskInst),
+      is_action(Act),
+      has_type(TaskInst, Task),
+      subclass_of(Task, soma:'PhysicalTask'),
+      subclass_of(Task, Desc),
+      is_restriction(Desc, some(dul:isDescribedBy, Val)),
+      is_intersection_of(Val, intersection_of(TL)),
+      findall(IS,
+          (member(Ins, TL),
+          is_restriction(Ins, some(dul:hasPart, IS))),
+          Composition).
+    binding:
+      var: TaskInst
+      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
+      description: What is the image schema composition of the task executed?
+    binding:
+      var: Act
+      type: http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
+      description: What is the image schema composition of the task executed in the action?
+#################
+######## Plan
+######## Structure
+#################
+- topic: plan_structure
+  name: Plan phases
+  description: About how plans are composed into distinct phases.
+  query_groups:
+  - description: What are the direct sub-plans of a plan to perfrom a complex task?
+    queries:
+    - |
+      triple(Plan, dul:definesTask, TaskInstance),
+      has_type(TaskInstance, Task),
+      subclass_of(Task, soma:'PhysicalTask'),
+      findall(SubPlan,
+        (triple(Plan, dul:hasConstituent, SubPlan)),
+      SubPlans).
+    binding:
+      var: Plan
+      type: http://www.ease-crc.org/ont/SOMA.owl#ActionExecutionPlan
+      description: What are the sub plan of the plan?
+  - description: What is task defined in the current plan?
+    queries:
+    - |
+      triple(Plan, dul:definesTask, TaskInstance),
+      has_type(TaskInstance, Task),
+      subclass_of(Task, soma:'PhysicalTask').
+    binding:
+      var: Plan
+      type: http://www.ease-crc.org/ont/SOMA.owl#ActionExecutionPlan
+      description: What is the task defined in the plan?
+    binding:
+      var: TaskInstance
+      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
+      description: What is the plan that defines the task?
+  - description: What is the complex task, current task is part of?
+    queries:
+    - |
+      triple(Plan, dul:definesTask, TaskInstance),
+      has_type(TaskInstance, Task),
+      subclass_of(Task, soma:'PhysicalTask'),
+      triple(ComplexPlan, dul:hasConstituent, SubPlan),
+      triple(ComplexPlan, dul:definesTask, ComplexTaskInstance).
+    binding:
+      var: TaskInstance
+      type: http://www.ease-crc.org/ont/SOMA.owl#PhysicalTask
+      description: What is the complex task, current task is part of?
