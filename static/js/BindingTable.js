@@ -31,7 +31,10 @@ function BindingTable(options){
             td1.text(key);
             //
             let td2 = $("<td>");
-            td2.text(formatter.format(solution[key]));
+            const div = $("<div>");
+            div.addClass("card-table-text");
+            div.text(formatter.format(solution[key]));
+            td2.append(div);
             //
             let tr = $("<tr>");
             tr.append(td1);
