@@ -29,6 +29,18 @@ oe:result_set_show(QueryID,ResultSet) :-
 	    [title: 'Graph of typical affordances']).
 
 %%
+oe:result_set_show(QueryID,ResultSet) :-
+	result_set_has_description(ResultSet),
+	result_set_descriptions(ResultSet, Descrs),
+	% %% TODO move member to aggregate query
+	member(Desc,Descrs),
+	data_vis_plan_graph(Desc,GraphData),
+	GraphData \= [],
+	% publish the message,
+	data_vis_graph(QueryID, GraphData,
+	    [title: 'Graph of event participation']).
+
+%%
 data_vis_rdf_graph(InitialNode,EdgeData,GraphData) :-
     %% format DataVis msg
     % 1. find set of all IRIs in the graph
@@ -117,7 +129,25 @@ data_vis_affordance_graph(Obj,GraphData) :-
     ), EdgeData),
     % get DataVis graph data
     data_vis_rdf_graph(Obj,EdgeData,GraphData).
-
+%%
+data_vis_plan_graph(Plan,GraphData) :-
+    % get all edges
+    findall(Edge, (
+        kb_call((
+            triple(Plan, soma:hasGoal, Goal),
+            triple(Plan, dul:definesTask, Task),
+            ignore(triple(Goal,dul:usesConcept,Role)),
+            ignore(triple(Goal, dul:hasPart, ImageSchema))
+        )),
+        (   ( Edge=[Plan,Goal,1,2,'hasGoal'] )
+        ;   ( ground(Task),Edge=[Plan,Task,1,2,'definesTask'] )
+        ;   ( ground(Role),Edge=[Goal,Role,2,3,'usesConcept'] )
+        ;   ( ground(ImageSchema),Edge=[Goal,ImageSchema,2,3,'hasPart'] )
+        )
+    ), EdgeData),
+    % get DataVis graph data
+    data_vis_rdf_graph(Plan,EdgeData,GraphData).
+    
 %%
 data_vis_graph(ID,NodeData,Options) :-
     data_vis(graph(ID), [
