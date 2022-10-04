@@ -21,6 +21,7 @@ MAIL_PASSWORD = os.environ.get('OPENEASE_MAIL_PASSWORD')
 MAIL_DEFAULT_SENDER = '"Sender" <openease.iai@gmail.com>'
 
 USE_HOST_KNOWROB = (os.environ.get('OPENEASE_USE_HOST_KNOWROB', 'False') in TRUE_STRINGS)
+LOAD_HOST_NEEM = (os.environ.get('OPENEASE_LOAD_NEEM', 'True') in TRUE_STRINGS)
 
 USER_ENABLE_USERNAME = True
 USER_ENABLE_EMAIL = True
