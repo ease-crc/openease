@@ -72,7 +72,7 @@ sections:
     icon: fa-list-ol
 
   - id: plan_structure
-    name: Plan Phases
+    name: Structure
     icon: fa-sitemap
 
 
@@ -518,7 +518,7 @@ sub_topics:
 ######## Plan
 ######## Task
 #################
-sub_topics:
+#sub_topics:
 - topic: plan_task
   name: Goal
   description: About the goal of the task executed in the plan
