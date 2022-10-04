@@ -144,7 +144,6 @@ function KnowrobUI(flask_user,ros_client,options) {
         waitForProlog(ros, function() {
             console.info('Connected to KnowRob.');
             that.initNEEM(ros, function() {
-                console.info("NEEM has been initialized");
                 that.formatter.connect(ros, function() {
                     that.clearStatus();
                     if(options.has_query=='True') {
@@ -159,14 +158,25 @@ function KnowrobUI(flask_user,ros_client,options) {
     };
 
     this.initNEEM = function (ros,then) {
-        const pl = new ROSPrologClient(ros, {});
-        that.setStatus('Loading NEEM');
-        pl.jsonQuery("register_ros_package(openease_rules), knowrob_load_neem('" + that.neem_id + "').", function(result) {
-            pl.finishClient();
-            if(then) {
-                then();
-            }
-        });
+        if(options.load_neem=='True') {
+            const pl = new ROSPrologClient(ros, {});
+            that.setStatus('Loading NEEM');
+            pl.jsonQuery("register_ros_package(openease_rules), knowrob_load_neem('" + that.neem_id + "').", function(result) {
+                pl.finishClient();
+                console.info("NEEM has been initialized");
+                if(then) {
+                    then();
+                }
+            });
+        } else {
+            const pl = new ROSPrologClient(ros, {});
+            pl.jsonQuery("register_ros_package(openease_rules).", function(result) {
+                pl.finishClient();
+                if(then) {
+                    then();
+                }
+            });
+        }
     };
 
     // listen to republish_tick topic
@@ -236,7 +246,8 @@ function KnowrobUI(flask_user,ros_client,options) {
                 console.warn("Received DataVis msg, but no query is active.");
             }
             else {
-                console.warn("Received DataVis msg, but the associated query is not active (anymore).");
+                console.warn("Received DataVis msg with ID \"" + data_vis_msg.id + "\", but the associated query is not active (anymore). The active query has the ID \"" + that.last_qid + "\".");
+                console.warn(data_vis_msg);
             }
         });
     };

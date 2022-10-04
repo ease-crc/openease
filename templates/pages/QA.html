@@ -44,7 +44,9 @@
     <script type="text/javascript">
         const page = new KnowrobUI(flask_user, ros_client, {
             neem_id: '{{ neem.neem_id }}',
-            has_query: '{{ has_query }}'
+            has_query: '{{ has_query }}',
+            use_host_knowrob: '{{ use_host_knowrob }}',
+            load_neem: '{{ load_host_neem }}'
         });
         let followUpQueries = [];
         setROSConnectionHandler(page.onconnect);

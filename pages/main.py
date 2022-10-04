@@ -18,6 +18,7 @@ from flask_wtf import Form
 from wtforms import PasswordField
 from wtforms.validators import DataRequired
 from config.settings import USE_HOST_KNOWROB
+from config.settings import LOAD_HOST_NEEM
 
 from neems.neemhub import instance as neemhub
 
@@ -235,6 +236,9 @@ def render_QA_page():
     has_query = (query_text is not '')
     # show info about funding agencies
     funding = FUNDING_DATA
+    # expose some parameters
+    use_host_knowrob = USE_HOST_KNOWROB
+    load_host_neem = LOAD_HOST_NEEM
     return render_template('pages/QA.html', **locals())
 
 @app.route('/QA/random', methods=['POST'])
