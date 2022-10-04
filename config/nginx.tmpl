@@ -50,7 +50,7 @@ server {
   # Allow connections to ROS master on docker host via /ws/remote/172.17.42.1
   location /ws/host {
     rewrite /ws/host/(.*) /$1 break;
-    proxy_pass http://172.17.0.1:9090;
+    proxy_pass http://172.26.0.1:9090;
   }
 
   # iterates over all containers and creates 'location' entries
