@@ -120,6 +120,11 @@ def init_app(extra_config_settings={}):
     from pages.publications import automatic_update_publications_and_papers, load_default_publications_and_papers
     from pages.neem_overview import automatic_update_neem_overview_files, load_default_overview_files
 
+    # start background jobs for periodic fetching
+    # this needs to executed even if the config is debug because
+    # the admin can still change settings for the jobs later
+    start_background_scheduler()
+
     if _config_is_debug():
         # if content files are present in the volume and data in the db, 
         # no default files are loaded to save start up time
@@ -144,11 +149,6 @@ def init_app(extra_config_settings={}):
         # initial download of files in production mode
         automatic_update_neem_overview_files()
         automatic_update_publications_and_papers()
-        
-    # start background jobs for periodic fetching
-    # this needs to executed even if the config is debug because
-    # the admin can still change settings for the jobs later
-    start_background_scheduler()
     
     app.logger.info("Webapp started.")
     return app
