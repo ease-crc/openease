@@ -5,7 +5,7 @@ from flask_paginate import Pagination
 from flask_user import current_user
 
 from app_and_db import app
-from utility import admin_required
+from helpers.utility import admin_required
 
 from neems.neemhub import instance as neem_hub, NEEMHubConnectionError
 

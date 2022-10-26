@@ -17,7 +17,7 @@ from postgres.users import add_user
 
 __author__ = 'danielb@cs.uni-bremen.de'
 
-from utility import admin_required
+from helpers.utility import admin_required
 
 GOOGLE_OAUTH_USERINFO = 'https://www.googleapis.com/oauth2/v1/userinfo'
 

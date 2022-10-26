@@ -10,6 +10,7 @@ from postgres.AlchemyEncoder import AlchemyEncoder
 from postgres.settings import get_neemhub_settings
 
 NEEM_DOWNLOAD_URL_PREFIX = "https://neemgit.informatik.uni-bremen.de/"
+DEFAULT_IMAGE_PATH = 'static/img/default.jpg'
 
 class NEEM:
     def __init__(self, neem_hub, neem_info):
@@ -21,7 +22,6 @@ class NEEM:
         self.created_by = neem_info['created_by']
         self.created_at = parser.parse(neem_info['created_at']).strftime('%m/%d/%y %H:%M')
         self.maintainer = neem_info['created_by']
-        self.authors = neem_info['created_by']
 
         if 'mail' in neem_info:
             self.mail = neem_info['mail']
@@ -50,18 +50,17 @@ class NEEM:
         if 'image' in neem_info:
             self.image = neem_info['image']
         else:
-            self.image = 'None'
+            self.image = DEFAULT_IMAGE_PATH
 
     def get_info(self):
         return {
             'neem_id': self.neem_id,
-            'neem_tag': self.neem_tag,
             'name': self.name,
             'description': self.description,
             'maintainer': self.maintainer,
-            'authors': self.authors,
             'downloadUrl': self.downloadUrl,
-            'neem_repo_path': self.neem_repo_path
+            'neem_repo_path': self.neem_repo_path,
+            'image': self.image
         }
 
     def activate(self):

@@ -1,4 +1,5 @@
 import json
+from helpers.file_handler import read_file
 from urlparse import urlparse
 
 from flask import request, render_template, Markup, jsonify
@@ -6,7 +7,7 @@ from flask.ext.misaka import markdown
 from flask_user import current_user, login_required
 
 from app_and_db import app
-from config.settings import USE_HOST_KNOWROB
+from config.settings import USE_HOST_KNOWROB, WEBROB_PATH
 
 
 @app.route('/tutorials/')
@@ -32,12 +33,10 @@ def get_tutorial_data():
 
     # TODO: validate that tut_id is not a path
     tut_id = data['tutorial']
-    tut_file = '/opt/webapp/webrob/tutorials/'+tut_id+'.md'
+    tut_file = WEBROB_PATH + 'tutorials/' + tut_id + '.md'
 
     # read tutorial md data
-    page_data = ""
-    with open(tut_file, 'r') as f:
-        page_data = f.read()
+    page_data = read_file(tut_file)
     # convert to HTML
     page_data = Markup(markdown(page_data, fenced_code=True))
     # split into pages at <h2> tags
