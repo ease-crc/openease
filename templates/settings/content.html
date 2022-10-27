@@ -235,7 +235,7 @@
                                 {% if content_settings.last_update_type_publications_and_papers == UpdateMethod.NO_UPDATE -%}
                                 -
                                 {% else -%}
-                                {{ last_update_publications }}
+                                {{ last_update_publications }} UTC+0, No DST
                                 {% endif %}
                                 <br>
                                 {{ content_settings.last_update_type_publications_and_papers.name }}
@@ -250,7 +250,7 @@
                             </th>
                             <td>
                                 {% if content_settings.update_state_publications_and_papers == UpdateState.ACTIVE -%}
-                                {{ next_update_publications.isoformat(sep=' ') }}
+                                {{ next_update_publications.isoformat(sep=' ') }} UTC+0, No DST
                                 {% else -%}
                                 -
                                 {% endif %}
@@ -404,7 +404,7 @@
                                 {% if content_settings.last_update_type_neem_overview == UpdateMethod.NO_UPDATE -%}
                                 -
                                 {% else -%}
-                                {{ last_update_overview }}
+                                {{ last_update_overview }} UTC+0, No DST
                                 {% endif %}
                                 <br>
                                 {{ content_settings.last_update_type_neem_overview.name }}
@@ -419,7 +419,7 @@
                             </th>
                             <td>
                                 {% if content_settings.update_state_neem_overview == UpdateState.ACTIVE -%}
-                                {{ next_update_overview.isoformat(sep=' ') }}
+                                {{ next_update_overview.isoformat(sep=' ') }} UTC+0, No DST
                                 {% else -%}
                                 -
                                 {% endif %}
