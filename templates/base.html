@@ -84,17 +84,17 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {{ 'active' if '/publications' in request.path | safe }}"
-        href="/publications">
-          <i class="fas fa-list"></i>
-          Publications
-        </a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link {{ 'active' if request.path == '/tutorials/' | safe }}"
         href="/tutorials/">
           <i class="fas fa-book-open"></i>
           Tutorials
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ 'active' if '/publications' in request.path | safe }}"
+        href="/publications">
+          <i class="fas fa-list"></i>
+          Publications
         </a>
       </li>
     </ul>
