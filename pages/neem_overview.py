@@ -433,7 +433,7 @@ def load_default_overview_files():
     them to the correct locations. That includes:
       - default_neem_overview_data.json, 
             which is a json copy of the default NEEM_DATA
-            should be placed in /opt/webapp/webrob/default_files/
+            will be loaded by the database
       - overview-contents from default_neem_overview.zip, 
             which contains all the overview md-files
             should be placed in /opt/webapp/webrob/
