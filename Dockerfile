@@ -53,12 +53,11 @@ RUN npm run build
 RUN chown -R ros:ros /tmp/npm
 WORKDIR /opt/webapp
 
-# need to create these paths, otherwise there are
+# need to create this path, otherwise there are
 # permission errors during runtime
-# -p flag creates parent directories, if they do not
-# already exist, and does not throw errors if the path
+# -p flag creates parent directories if they do not
+# already exist and does not throw errors if the path
 # already exists
-RUN mkdir -p /opt/webapp/webrob/content
 RUN mkdir -p /opt/webapp/webrob/static/img/neem-overview
 ## copy this folder to the container
 COPY . /opt/webapp/webrob

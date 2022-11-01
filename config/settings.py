@@ -28,8 +28,8 @@ MAX_HISTORY_LINES = 100
 
 WEBROB_PATH = '/opt/webapp/webrob/'
 STATIC_DIR_PATH = WEBROB_PATH + 'static/'
-DEFAULT_FILES_PATH = WEBROB_PATH + 'default_files/'
 CONTENT_DIR_PATH = WEBROB_PATH + 'content/'
 DOWNLOADS_DIR_PATH = CONTENT_DIR_PATH + 'downloads/'
+DEFAULT_FILES_PATH = CONTENT_DIR_PATH + 'default_files/'
 
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
