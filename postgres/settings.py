@@ -1,9 +1,12 @@
 import enum
 
 from datetime import datetime
+from flask import flash
 
 from app_and_db import app, db
+from config.settings import LOCAL_PUBLICATIONS_AND_PAPERS
 from db import table_empty
+from helpers.file_handler import get_file_extension, path_is_file
 from helpers.utility import type_str, is_url
 
 FIRST_DOCUMENT_ID = 1
@@ -184,30 +187,44 @@ class ContentSettings(db.Model):
     @staticmethod
     def set_content_type_papers(content_state_enum_value):
         ContentSettings._set_attribute('content_type_papers', content_state_enum_value)
-    
-    @staticmethod
-    def set_default_papers_zip_url(str_value):
-        if not is_url(str_value) and str_value != '':
-            app.logger.info('String is not a url or empty string. Will not update field.')
-            return
-        
-        ContentSettings._set_attribute('default_papers_zip_url', str_value)
 
     @staticmethod
-    def set_papers_zip_url(str_value):
-        if not is_url(str_value) and str_value != '':
-            app.logger.info('String is not a url or empty string. Will not update field.')
+    def _str_is_url_or_valid_file(str_value, valid_file_extension):
+
+        if not str_value:
+            app.logger.info('String is empty. Will not update field.')
+            return False
+        if not is_url(str_value) and not path_is_file(LOCAL_PUBLICATIONS_AND_PAPERS + str_value):
+            flash(str_value + ': Cannot find file at correct path. Will not update field.')
+            app.logger.info('Cannot find file at correct path. Will not update field.')
+            return False
+        if not is_url(str_value) and not get_file_extension(str_value) == valid_file_extension:
+            flash(str_value + ': File has the wrong extension. Will not update field.')
+            app.logger.info('File has the wrong extension. Will not update field.')
+            return False
+        return True
+
+    @staticmethod
+    def _set_url_attribute_if_str_is_valid(attribute, str_value, valid_file_extension):
+        content_settings = ContentSettings.get_settings()
+        if getattr(content_settings, attribute) and not str_value:
+            pass
+        elif not ContentSettings._str_is_url_or_valid_file(str_value, valid_file_extension):
             return
         
-        ContentSettings._set_attribute('papers_zip_url', str_value)
+        ContentSettings._set_attribute(attribute, str_value)
+
+    @staticmethod
+    def set_default_papers_zip_url(str_value):
+        ContentSettings._set_url_attribute_if_str_is_valid('default_papers_zip_url', str_value, '.zip')
+
+    @staticmethod
+    def set_papers_zip_url(str_value):        
+        ContentSettings._set_url_attribute_if_str_is_valid('papers_zip_url', str_value, '.zip')
 
     @staticmethod
     def set_publications_bibtex_url(str_value):
-        if not is_url(str_value) and str_value != '':
-            app.logger.info('String is not a url or empty string. Will not update field.')
-            return
-        
-        ContentSettings._set_attribute('publications_bibtex_url', str_value)
+        ContentSettings._set_url_attribute_if_str_is_valid('publications_bibtex_url', str_value, '.bib')
         
     @staticmethod
     def _set_attribute(attr_as_str, value):

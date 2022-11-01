@@ -142,8 +142,8 @@
                 <form action="{{ url_for('store_publications_and_papers_urls') }}" method="post">
                     <div class="form-group row flex-column mx-0 mb-1">
                         <div>
-                            <label class="font-weight-bold col-form-label">Publications BibTex_Url</label>
-                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Url-location of the publications bibtex file that should be requested during updates. This file provides the data about all EASE publications. Urls need to start with 'http(s)://'.">
+                            <label class="font-weight-bold col-form-label">Publications BibTex Path/Url</label>
+                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Local path or url-location of the publications bibtex file that should be requested during updates. This file provides the data about all EASE publications. Urls need to start with 'http(s)://'. If using local path, provide the relative path of the file to the '/content/publications-and-papers/' directory on the host machine (that path is configured as bind mount).">
                                 <i class="far fa-question-circle"></i>
                             </button>
                         </div>
@@ -155,10 +155,15 @@
                     </div>
                     <div class="form-group row flex-column mx-0 mb-1">
                         <div>
-                            <label class="font-weight-bold col-form-label">default_papers.zip Url</label>
-                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Url-location of the default_papers.zip that should be requested when loading default publications. This file contains papers of EASE publications that can be viewed and downloaded on the publications-page. If left empty, users cannot access papers when default publications are loaded. Urls need to start with 'http(s)://'.">
+                            <label class="font-weight-bold col-form-label">default_papers.zip Path/Url</label>
+                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Local path or url-location of the default_papers.zip that should be requested when loading default publications. This file contains papers of EASE publications that can be viewed and downloaded on the publications-page. If left empty, users cannot access papers when default publications are loaded. Urls need to start with 'http(s)://'. If using local path, provide the relative path of the file to the '/content/publications-and-papers/' directory on the host machine (that path is configured as bind mount). Gets cached automatically, so it is usable even when the file is removed from the bind mount or host url.">
                                 <i class="far fa-question-circle"></i>
                             </button>
+                            <inline>
+                            {% if cached_default_papers_exist -%}
+                                [cached]
+                            {% endif %}   
+                            </inline>
                         </div>
                         <div>
                             <input type="text" placeholder=""
@@ -167,8 +172,8 @@
                     </div>
                     <div class="form-group row flex-column mx-0">
                         <div>
-                            <label class="font-weight-bold col-form-label">papers.zip Url</label>
-                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Url-location of the latest papers.zip that should be requested during updates. This file contains EASE publications that can be viewed and downloaded on the publications-page. If left empty, users cannot access papers when the latest publications are loaded. Urls need to start with 'http(s)://'.">
+                            <label class="font-weight-bold col-form-label">papers.zip Path/Url</label>
+                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Local path or url-location of the latest papers.zip that should be requested during updates. This file contains EASE publications that can be viewed and downloaded on the publications-page. If left empty, users cannot access papers when the latest publications are loaded. Urls need to start with 'http(s)://'. If using local path, provide the relative path of the file to the '/content/publications-and-papers/' directory on the host machine (that path is configured as bind mount).">
                                 <i class="far fa-question-circle"></i>
                             </button>
                         </div>

@@ -208,7 +208,9 @@ In addition, the following action can be performed:
 - set developer settings (= deactivate unneeded functionalities)
 - download 'content files' (s. [How to Update Default Files](#how-to-update-default-files))
 
-Lastly, the content-settings page is where the url for the publications `bibtex` and `papers.zip` need to be set. At least the former needs to be provided, otherwise the publications files cannot be updated. Urls need to start with 'http(s)://'.
+Lastly, the content-settings page is where the url or local path for the publications `bibtex` and `papers.zip` need to be set. If using the local path, provide the relative paths to `/content/publications-and-papers/` in the settings panel and place the mentioned files there.
+
+At least the `bibtex` file needs to be provided, otherwise the publications files cannot be updated. Urls need to start with 'http(s)://'.
 
 Each function is provided with a tooltip to explain it's function.
 

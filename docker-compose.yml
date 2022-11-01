@@ -80,6 +80,7 @@ services:
       - lft:/tmp/openEASE/dockerbridge
       - content:/opt/webapp/webrob/content
       - neem_overview_images:/opt/webapp/webrob/static/img/neem-overview
+      - ./content/publications-and-papers:/opt/webapp/webrob/content/publications-and-papers
     environment:
       # these are for docker-gen to recognize this container
       - VIRTUAL_HOST=openease

@@ -8,7 +8,7 @@ from app_and_db import app
 from helpers.utility import admin_required
 from helpers.thread_handler import start_thread
 from pages.neem_overview import DOWNLOADS_DIR_NEEM_OVERVIEW_DATA, DOWNLOADS_DIR_NEEM_OVERVIEW_MDS_AND_IMGS, DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP, manual_update_neem_overview_files, load_default_overview_files
-from pages.publications import DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP, manual_update_publications_and_papers, load_default_publications_and_papers
+from pages.publications import DEFAULT_PAPERS_ZIP_PATH, DOWNLOADS_DIR_PAPERS_ZIP, DOWNLOADS_DIR_PUBLICATIONS_BIBTEX, DOWNLOADS_DIR_PUBLICATIONS_DATA, DOWNLOADS_DIR_PUBLICATIONS_AND_PAPERS_ZIP, manual_update_publications_and_papers, load_default_publications_and_papers
 from helpers.background_scheduler import get_neem_overview_job_next_runtime, get_publications_job_next_runtime, resume_neem_overview_job, resume_publications_job, pause_neem_overview_job, pause_publications_job
 from postgres.settings import DATETIME_MIN, ContentSettings
 
@@ -37,6 +37,8 @@ def render_content_settings():
     overview_zip_download_exists = path_is_file(DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP)
 
     publications_url_is_not_set = (content_settings.publications_bibtex_url == '')
+
+    cached_default_papers_exist = path_is_file(DEFAULT_PAPERS_ZIP_PATH)
 
     return render_template('settings/content.html', **locals())
 
