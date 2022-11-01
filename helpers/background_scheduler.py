@@ -21,7 +21,7 @@ def start_background_scheduler():
         app.logger.info('The scheduler is already active. Will not start new one.')
         return
     
-    BACKGROUND_SCHEDULER.add_job(func=automatic_update_neem_overview_files, trigger="cron", hour='*/3', coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
+    BACKGROUND_SCHEDULER.add_job(func=automatic_update_neem_overview_files, trigger="cron", hour='3', coalesce=True, id=OVERVIEW_SCHEDULER_JOB_ID)
     BACKGROUND_SCHEDULER.add_job(func=automatic_update_publications_and_papers, trigger="cron", hour='3', coalesce=True, id=PUBLICATIONS_SCHEDULER_JOB_ID)
     BACKGROUND_SCHEDULER.start()
 
