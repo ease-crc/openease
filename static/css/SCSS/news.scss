@@ -1,0 +1,57 @@
+.news-content {
+    max-width: 600px;
+    margin: 1.3rem auto 1.5rem;
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    h1 {
+        font-family: Oswald;
+        font-weight: 400;
+        line-height: 1.1;
+    
+        margin-top: 10px;
+        margin-bottom: 10px;
+    
+        border-bottom: solid 2px #706f6f;
+        padding-bottom: 5px;
+        font-size: 28px;
+        color: #144f78;
+    }
+
+    // necessary so links to anchors on news page don't fall behind navbar
+    .anchor {
+        padding-top: 65px;
+        margin-top: -65px;
+    }
+    
+    p {
+        box-sizing: border-box;
+        color: rgb(51, 51, 51);
+        display: block;
+        font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        margin-bottom: 0.5rem;
+    }
+    
+    a {
+        font-size: 14px;
+        font-family: Oswald;
+        color: rgba(20,79,120,1);
+        text-decoration: none;
+    }
+    
+    a:hover {
+        color: #428bca;
+        text-decoration: underline;
+    }
+
+    .knowrob-img {
+        max-width: 100%;
+        height: auto;
+
+        margin-bottom: 0.5rem;
+    }
+}
