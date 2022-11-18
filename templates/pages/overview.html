@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ neem_data['name'] + " Overview" }}</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/overview.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div id="overview-content">{{ md_content|safe }}</div>
+
+    <div id="links" class="d-flex flex-wrap justify-content-center">
+        <a href="{{ neem_data.downloadUrl }}"
+        target="_blank" rel="noopener noreferrer"
+        class="btn mt-2 mt-sm-0">
+            <span class="fa fa-home"></span>
+            Neem Homepage
+        </a>
+        <a href="{{ url_for('render_QA_page') }}?neem_id={{ neem_data.neem_id }}"
+            class="btn mt-2 mt-sm-0">
+            <span class="fas fa-question"></span>
+            Knowledge Base
+        </a>
+    </div>
+    
+</div>
+{% endblock %}

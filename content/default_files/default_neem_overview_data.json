@@ -1,0 +1,112 @@
+{
+    "overview_neems": [
+        {
+            "last_updated": "2022-04-25T10:20:00.000000",
+            "name": "EASE Table Setting Dataset",
+            "image": "img/neem-overview/images/ease-2020-elan-table-setting/cover/cover_img",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/ease-tsd",
+            "neem_repo_path": "ease-2020-elan-table-setting",
+            "featured": false,
+            "neem_id": "6082c4197bde3a6bd233d477",
+            "maintainer": "Moritz",
+            "recent": true,
+            "description": "Multimodal dataset of human table setting."
+        },
+        {
+            "last_updated": "2021-12-16T12:41:20.000000",
+            "name": "Kuka KMR-IIWA robot scanning retail shelves",
+            "image": "img/neem-overview/images/refills-shelf-scanning/cover/cover_img.jpg",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/refills-shelf-scanning",
+            "neem_repo_path": "refills-shelf-scanning",
+            "featured": true,
+            "neem_id": "601042627e765711e2c10ab0",
+            "maintainer": "Simon Stelter",
+            "recent": true,
+            "description": "Episodic memories of a Kuka KMR-IIWA robot scanning the shelves in a retail store environment."
+        },
+        {
+            "last_updated": "2021-12-16T12:38:19.000000",
+            "name": "Kuka KMR-IIWA robot scanning retail shelves",
+            "image": "img/neem-overview/images/refills-shelf-scanning-simulation/cover/cover_img.jpg",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/refills-shelf-scanning-simulation",
+            "neem_repo_path": "refills-shelf-scanning-simulation",
+            "featured": false,
+            "neem_id": "5fdc979f55605baa6a41da8c",
+            "maintainer": "Simon Stelter",
+            "recent": true,
+            "description": "Episodic memories of a Kuka KMR-IIWA robot scanning the shelves in a simualated retail store environment."
+        },
+        {
+            "last_updated": "2021-08-11T12:55:19.000000",
+            "name": "PR2 Robot setting up a table in simulated IAI laboratory kitchen environment",
+            "image": "img/neem-overview/images/ease-2020-urobosim-fetch-and-place/cover/cover_img.png",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/urobosim-kitchen-fetch-place",
+            "neem_repo_path": "ease-2020-urobosim-fetch-and-place",
+            "featured": true,
+            "neem_id": "603127322113d53026863697",
+            "maintainer": "Michael Neumann",
+            "recent": true,
+            "description": "Episodic memories of a PR2 robot setting a table in a simulated laboratory kitchen environment at the University of Bremen."
+        },
+        {
+            "last_updated": "2021-02-26T02:07:17.000000",
+            "name": "Human avatar performing fetch and place task",
+            "image": "img/neem-overview/images/ease-2020-avatar-fetch-and-place/cover/cover_img.png",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/ease-2020-avatar-fetch-and-place-episode",
+            "neem_repo_path": "ease-2020-avatar-fetch-and-place",
+            "featured": false,
+            "neem_id": "5fdca2bcdab33892cea161a0",
+            "maintainer": "Mona Abdel-Keream",
+            "recent": true,
+            "description": "Episodic memories of a human operator performing fetch and place tasks in a simulated environment by controlling an avatar mimicking the body of a human."
+        },
+        {
+            "last_updated": "2021-02-15T16:04:48.000000",
+            "name": "Set the table for two persons.",
+            "image": "img/neem-overview/images/ease-2020-kitchenclash-set-table/cover/cover_img.png",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/kitchenclash",
+            "neem_repo_path": "ease-2020-kitchenclash-set-table",
+            "featured": false,
+            "neem_id": "60391798bd0858dfb1aaccfd",
+            "maintainer": "Johannes Pfau",
+            "recent": true,
+            "description": "Episodic memories of a human operator performing table setting in a simulated virtual reality environment."
+        },
+        {
+            "last_updated": "2021-02-15T16:04:48.000000",
+            "name": "Prepare a basic cucumber salad.",
+            "image": "img/neem-overview/images/ease-2020-kitchenclash-prepare-cucumber-salad/cover/cover_img.png",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/kitchenclash",
+            "neem_repo_path": "ease-2020-kitchenclash-prepare-cucumber-salad",
+            "featured": false,
+            "neem_id": "60392c01ac14f9c7daab8e2b",
+            "maintainer": "Johannes Pfau",
+            "recent": false,
+            "description": "Episodic memories of a human operator preparing a basic cucumber salad in a simulated virtual reality environment."
+        },
+        {
+            "last_updated": "2021-02-15T16:04:48.000000",
+            "name": "Prepare a steak.",
+            "image": "img/neem-overview/images/ease-2020-kitchenclash-prepare-a-steak/cover/cover_img.png",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/kitchenclash",
+            "neem_repo_path": "ease-2020-kitchenclash-prepare-a-steak",
+            "featured": false,
+            "neem_id": "603932bebca1070a4784e0c8",
+            "maintainer": "Johannes Pfau",
+            "recent": false,
+            "description": "Episodic memories of a human operator preparing a steak in a simulated virtual reality environment."
+        },
+        {
+            "last_updated": "2021-02-11T09:43:37.000000",
+            "name": "PR2 robot setting up a table in bullet world",
+            "image": "img/neem-overview/images/ease-2020-projection-fetch-and-place/cover/cover_img.png",
+            "downloadUrl": "https://neemgit.informatik.uni-bremen.de/neems/ease-2020-pr2-setting-up-table",
+            "neem_repo_path": "ease-2020-projection-fetch-and-place",
+            "featured": false,
+            "neem_id": "5fd0f191f3fc822d8e73d715",
+            "maintainer": "Sebastian Koralewski",
+            "recent": false,
+            "description": "Episodic memories of a PR2 robot setting a table including a spoon, bowl and milk box in a simulated kitchen environment."
+        }
+    ]
+}

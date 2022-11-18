@@ -78,6 +78,9 @@ services:
     volumes:
       - secret:/etc/ease_secret:ro
       - lft:/tmp/openEASE/dockerbridge
+      - content:/opt/webapp/webrob/content
+      - neem_overview_images:/opt/webapp/webrob/static/img/neem-overview
+      - ./content/publications-and-papers:/opt/webapp/webrob/content/publications-and-papers
     environment:
       # these are for docker-gen to recognize this container
       - VIRTUAL_HOST=openease
@@ -120,6 +123,10 @@ volumes:
   secret:
   # sql data volume
   postgres:
+  # various files for homepage & publications content
+  content:
+  # images for neem-overview markdowns
+  neem_overview_images:
   # nginx configuration
   nginx:
   # used by KnowRob containers for additional

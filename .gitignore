@@ -33,3 +33,5 @@ npm-debug.log
 # ignore coverage file, folder, and .html
 .coverage
 coverage/
+
+default_files/default_papers.zip

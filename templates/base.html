@@ -63,27 +63,38 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/">
+        <a class="nav-link {{ 'active' if request.path == '/homepage' | safe }}"
+        href="/">
           <i class="fas fa-home"></i>
           Home
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/QA">
+        <a class="nav-link {{ 'active' if '/QA' in request.path | safe }}"
+        href="/QA">
           <i class="fas fa-question"></i>
           Query
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/neems">
+        <a class="nav-link {{ 'active' if request.path == '/neems' | safe }}"
+        href="/neems">
           <i class="fas fa-search"></i>
           NEEMs
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/tutorials/">
+        <a class="nav-link {{ 'active' if request.path == '/tutorials/' | safe }}"
+        href="/tutorials/">
           <i class="fas fa-book-open"></i>
           Tutorials
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ 'active' if '/publications' in request.path | safe }}"
+        href="/publications">
+          <i class="fas fa-list"></i>
+          Publications
         </a>
       </li>
     </ul>
@@ -102,6 +113,7 @@
           <a class="dropdown-item" href="{{ url_for('admin_cookie') }}">Cookies</a>
           <a class="dropdown-item" href="{{ url_for('render_neem_hub_settings') }}">NEEM Hub</a>
           <a class="dropdown-item" href="{{ url_for('render_oauth_settings') }}">OAuth</a>
+          <a class="dropdown-item" href="{{ url_for('render_content_settings') }}">Content</a>
         </div>
       </li>
 {% endif %}
@@ -205,9 +217,6 @@
                   <div class="">
                     <p>
                       Prof. Michael Beetz, PhD
-                    </p>
-                    <p>
-                      Prof. Dr. Andreas Breiter
                     </p>
                   </div>
                   <div class="">

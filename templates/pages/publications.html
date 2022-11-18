@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>
+Publications
+</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/publications.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div id="content">
+        <h1>
+            openEASE related Publications
+        </h1>
+
+        {% set count = namespace(value=1) %}
+        {% for keyword in p_keywords %}
+            <h2>
+                {{ keyword.title }}
+            </h2>
+            
+            {% for publication in keyword.publications %}
+            <div class="row pub-item">
+                <div class="col-auto d-flex align-items-center pub-count">
+                    [{{ count.value }}]
+                </div>
+                <div class="col pub-reference">
+                    {{ publication.html_str | safe }}
+
+                    <a href={{ '/publications/' + publication.key }}>
+                        [bib]
+                    </a>
+
+                    {% if publication.has_pdf is sameas true and show_pdf_field is sameas true %}
+                    <a href={{ '/papers/' + publication.key + '.pdf' }}
+                    target="_blank" rel="noopener noreferrer">
+                        [pdf]
+                    </a>
+                    {% endif %}
+
+                    {% if publication.url != '' %}
+                    <a href={{ publication.url | safe }}
+                    target="_blank" rel="noopener noreferrer">
+                        [url]
+                    </a>
+                    {% endif %}
+                    
+                    {% if publication.doi != '' %}
+                    <a 
+                    {% if 'doi.org/' in publication.doi %}
+                        href={{ publication.doi }}
+                    {% else %}
+                        href={{ 'https://doi.org/' + publication.doi }}
+                    {% endif %}
+                    target="_blank" rel="noopener noreferrer">
+                        [doi]
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% set count.value = count.value + 1 %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}
