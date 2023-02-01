@@ -256,3 +256,18 @@ def store_publications_and_papers_urls():
     app.logger.info("Content settings have been updated")
     flash('Urls for papers and publications have been stored!', 'warning')
     return redirect(url_for('render_content_settings'))
+
+
+@app.route('/settings/content/store_news_cms_url', methods=["POST"])
+@admin_required
+def store_news_cms_url():
+    req = request.form
+    if req is None:
+        flash('Null request is submitted while form submission!', 'error')
+        redirect(url_for('render_content_settings'))
+    
+    ContentSettings.set_news_cms_url(req.get('news_cms_url'))
+
+    app.logger.info("Content settings have been updated")
+    flash('Url for news cms has been stored!', 'warning')
+    return redirect(url_for('render_content_settings'))

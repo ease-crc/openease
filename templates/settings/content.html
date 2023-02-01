@@ -137,7 +137,7 @@
                     </button>
                 </div>
             </div>
-            <div class="row mx-0 flex-column">
+            <div class="row mx-0 mb-4 flex-column">
                 <h3>Publications & Papers Urls</h3>
                 <form action="{{ url_for('store_publications_and_papers_urls') }}" method="post">
                     <div class="form-group row flex-column mx-0 mb-1">
@@ -181,6 +181,26 @@
                             <input type="text" placeholder=""
                                    class="form-control"
                                    name="papers_zip_url" value="{{ content_settings.papers_zip_url }}">
+                        </div>
+                    </div>
+                    <button class="col btn btn-success" type="submit" name="Update"
+                            value="Configure">Save</button>
+                </form>
+            </div>
+            <div class="row mx-0 flex-column">
+                <h3>News CMS Url</h3>
+                <form action="{{ url_for('store_news_cms_url') }}" method="post">
+                    <div class="form-group row flex-column mx-0">
+                        <div>
+                            <label class="font-weight-bold col-form-label">News CMS Url</label>
+                            <button type="button" class="btn tooltip-btn mr-1" data-toggle="tooltip" data-placement="top" title="Public Url of your external News CMS (has to be a directus CMS). You need a collection called articles which is publically accessible. For more details check the documentation.">
+                                <i class="far fa-question-circle"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <input type="text" placeholder=""
+                                   class="form-control"
+                                   name="news_cms_url" value="{{ content_settings.news_cms_url }}">
                         </div>
                     </div>
                     <button class="col btn btn-success" type="submit" name="Update"
