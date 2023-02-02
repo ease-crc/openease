@@ -277,3 +277,21 @@ hr {
     background-color: #706f6f;
     border-bottom-right-radius: 1rem;
 }
+
+.news-card {
+    padding: 1.2rem;
+    border: 2px solid;
+    border-radius: 8px;
+    margin: 0.5rem;
+    transition: all 0.15s ease-out;
+}
+
+.news-card:hover {
+    border: 2px solid #5586a2;
+    background-color: #5586a2;
+    text-decoration: none !important;
+
+    h3, p {
+        color: #eee !important;
+    }
+}

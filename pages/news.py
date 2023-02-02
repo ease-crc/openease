@@ -119,6 +119,15 @@ def get_newspage_articles(limit, page, search_query=''):
     return _get_news_articles_from_cms(url)
 
 
+def get_homepage_news_articles():
+    url = ('/items/articles'                 # retrieve items from the articles collection
+           '?fields=*, author.*'             # retrieve all available fields for the articles and respective authors
+           '&sort=sort,-publication_date'    # sort by publication date latest to oldest
+           '&limit=3')                       # retrieve 3 entries
+    
+    return _get_news_articles_from_cms(url)
+
+
 def _get_news_articles_from_cms(url_arguments):
     news_cms_base_url = _get_news_cms_base_url()
     if not news_cms_base_url:
