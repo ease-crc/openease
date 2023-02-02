@@ -12,11 +12,6 @@ from pages.publications import DEFAULT_PAPERS_ZIP_PATH, DOWNLOADS_DIR_PAPERS_ZIP
 from helpers.background_scheduler import get_neem_overview_job_next_runtime, get_publications_job_next_runtime, resume_neem_overview_job, resume_publications_job, pause_neem_overview_job, pause_publications_job
 from postgres.settings import DATETIME_MIN, ContentSettings
 
-@app.route('/news')
-def render_news():
-    return render_template('pages/news.html', **locals())
-
-
 @app.route('/settings/content')
 @admin_required
 def render_content_settings():
