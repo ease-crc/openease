@@ -34,4 +34,4 @@ npm-debug.log
 .coverage
 coverage/
 
-default_files/default_papers.zip
+content/default_files/default_papers.zip
