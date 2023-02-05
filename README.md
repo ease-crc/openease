@@ -184,8 +184,110 @@ During an update, previous information will be overwritten (except for default f
 
 ### News Blog
 
-The news blog is currently hardcoded.
-In the future a content-management-system for the blog will be set up. A guide will follow then.
+The news blog uses an external service: a [directus](https://directus.io/) cms (content management system). Articles are written on that service and accessed from the webserver backend. It is necessary to provide a url to the CMS in the content settings (s. [Content-Settings Page](#content-settings-page)).
+
+The current CMS is hosted at (TODO).
+
+#### CMS Requirements
+
+The CMS needs a collection called 'articles' which should be publically accessible. The collection needs to be configured to possess at least the following fields (with the specified type):
+
+- id (counting integer - primary key)
+- title (string)
+- text (WYSIWYG)
+- author (user)
+    - first_name (string)
+    - last_name (string)
+- publication date (date)
+- sort (sort)
+
+The former 4 fields and the author name fields need to be configured to be publically accessible (technically all other fields can be hidden from the public). 
+
+**Note**: The official openEASE CMS supports login via neemGit, thus any neemgit member can write articles. Additionally the admin can manually create and distribute accounts.
+
+#### CMS API Access 101
+
+If the CMS is properly configured, articles can be accessed as follows:
+
+- single articles: `<news-cms base-url> /items/articles/ <article id> ? <query parameters>`
+- multiple articles: `<news-cms base-url> /items/articles ? <query parameters>`
+
+Here are a few useful query parameters
+
+- `fields=*, author.*`
+
+    retrieve all available fields for the articles and respective authors <br>
+    (this is necessary, because otherwise the author name fields would not get fetched)
+
+- `sort=sort,-publication_date`
+
+    sort by publication date latest to oldest
+
+- `limit=<number>`
+    
+    retrieve requested amount of entries
+
+- `page=<number>`
+
+    retrieve items from page x; calculated with limit
+
+- `search=<query>`
+
+    searches articles with given queries
+
+- `meta=*`
+
+    retrieve collection meta data, like total and filtered number of articles
+
+
+An example query could look like this:
+
+```
+/items/articles?fields=*, author.*&sort=sort,-publication_date&limit=3
+```
+
+Which would fetch the three latest articles with all their exposed fields.
+
+For more details on how the CMS and its API work check out the [openEASE cms repository](https://github.com/ease-crc/openease_cms) and official [directus docs](https://docs.directus.io/reference/introduction.html).
+
+#### Development with Local CMS
+
+If you want to host your own CMS locally for e.g. development or testing, follow these steps:
+
+1. Create a new docker network called `cms-development-network`:
+
+    ```
+    docker network create cms-development-network
+    ```
+
+1. Add the following lines to the docker-compose files of openEASE and your directus CMS:
+
+    general network section
+    ```
+    networks:
+      [...]
+      # only needed if running both openease and cms locally
+      cms-development-network:
+          external: true
+    ```
+
+    network section of `openease` and `directus` service
+    ```
+    networks:
+      - [...]
+      # only needed if running both openease and cms locally
+      - cms-development-network
+    ```
+
+    **Note**: If you are using the official openEASE repositories, these lines should already be in the compose files. Thus, it is only necessary to uncomment them.
+
+1. In the openease admin content panel set the news cms url to:
+
+    ```
+    http://<name of directus container/service>:8055
+    ```
+
+Now the two services should be able to connect on your local machine.
 
 
 ### Content-Settings Page
@@ -207,6 +309,7 @@ In addition, the following action can be performed:
 - turn on/off to prepare downloadable files for the admin (these include the papers, markdowns, python dictionaries for neem-overview or publications data as JSON)
 - set developer settings (= deactivate unneeded functionalities)
 - download 'content files' (s. [How to Update Default Files](#how-to-update-default-files))
+- set the url to an external News CMS (for details s. [News Blog](#news-blog))
 
 Lastly, the content-settings page is where the url or local path for the publications `bibtex` and `papers.zip` need to be set. If using the local path, provide the relative paths to `/content/publications-and-papers/` in the settings panel and place the mentioned files there.
 
@@ -237,4 +340,4 @@ If the environment variable 'EASE_DEBUG' is set to 'false#, the server will load
 
 #### How to Update Default Files
 
-Default files follow the internal structure given by the program. Therefore, the easiest way to update them (for example, to include newer neem overviews or publications), is to fetch the latest updates on a running server, while having checked `prepare downloadable files`. Next, download the files of choice and replace the appropriate files in this repository.
+In order to update default files for content (for example, to include newer neem overviews or publications) fetch the latest updates on a running server in the admin content panel, while having checked the `prepare downloadable files` option. Next, download the files of choice and replace the appropriate files in this repository in `content/default_files`.
