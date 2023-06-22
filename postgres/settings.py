@@ -123,6 +123,7 @@ class ContentSettings(db.Model):
     publications_bibtex_url = db.Column(db.String(255), nullable=False, default='')
     default_papers_zip_url = db.Column(db.String(255), nullable=False, default='')
     papers_zip_url = db.Column(db.String(255), nullable=False, default='')
+    news_cms_url = db.Column(db.String(255), nullable=False, default='')
 
     @staticmethod
     def create_first_entry():
@@ -190,7 +191,6 @@ class ContentSettings(db.Model):
 
     @staticmethod
     def _str_is_url_or_valid_file(str_value, valid_file_extension):
-
         if not str_value:
             app.logger.info('String is empty. Will not update field.')
             return False
@@ -225,6 +225,18 @@ class ContentSettings(db.Model):
     @staticmethod
     def set_publications_bibtex_url(str_value):
         ContentSettings._set_url_attribute_if_str_is_valid('publications_bibtex_url', str_value, '.bib')
+
+    @staticmethod
+    def set_news_cms_url(str_value):
+        content_settings = ContentSettings.get_settings()
+        if getattr(content_settings, 'news_cms_url') and not str_value:
+            pass
+        elif not str_value or not is_url(str_value):
+            flash(str_value + ': String is not an url. Will not update field.')
+            app.logger.info('String is not an url. Will not update field.')
+            return
+
+        ContentSettings._set_attribute('news_cms_url', str_value)
         
     @staticmethod
     def _set_attribute(attr_as_str, value):
