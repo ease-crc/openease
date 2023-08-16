@@ -206,15 +206,18 @@ During an update, previous information will be overwritten (except for default f
 
 ### News Blog
 
-The news blog uses an external service: a [directus](https://directus.io/) cms (content management system). Articles are written on that service and accessed from the webserver backend. It is necessary to provide a url to the CMS in the content settings (s. [Content-Settings Page](#content-settings-page)).
+The news blog uses an external service, currently being a [directus](https://directus.io/) CMS (content management system).
+Articles are written on that service and accessed from the webserver backend.
+It is necessary to provide a url to the CMS in the content settings (s. [Content-Settings Page](#content-settings-page)).
 
-The current CMS is hosted at (TODO).
+A quick summary of the most important aspects of the News Blog will be provided here.
+However, for more info and documentation, visit the [openEASE CMS repository](https://github.com/ease-crc/openease_cms).
 
 #### CMS Requirements
 
 The CMS needs a collection called 'articles' which should be publically accessible. The collection needs to be configured to possess at least the following fields (with the specified type):
 
-- id (counting integer - primary key)
+- id (integer counter - primary key)
 - title (string)
 - text (WYSIWYG)
 - author (user)
@@ -223,16 +226,17 @@ The CMS needs a collection called 'articles' which should be publically accessib
 - publication date (date)
 - sort (sort)
 
-The former 4 fields and the author name fields need to be configured to be publically accessible (technically all other fields can be hidden from the public). 
+The first 4 fields and the author name fields need to be configured to be publically accessible (technically all other fields can be hidden from the public). 
 
-**Note**: The official openEASE CMS supports login via neemGit, thus any neemgit member can write articles. Additionally the admin can manually create and distribute accounts.
+**Note**: The official openEASE CMS supports login via neemGit, thus any neemgit member can write articles.
+Additionally the admin can manually create and distribute accounts.
 
 #### CMS API Access 101
 
 If the CMS is properly configured, articles can be accessed as follows:
 
-- single articles: `<news-cms base-url> /items/articles/ <article id> ? <query parameters>`
-- multiple articles: `<news-cms base-url> /items/articles ? <query parameters>`
+- single articles: `<news-CMS base-url> /items/articles/ <article id> ? <query parameters>`
+- multiple articles: `<news-CMS base-url> /items/articles ? <query parameters>`
 
 Here are a few useful query parameters
 
@@ -265,12 +269,12 @@ Here are a few useful query parameters
 An example query could look like this:
 
 ```
-/items/articles?fields=*, author.*&sort=sort,-publication_date&limit=3
+/items/articles?fields=*,author.*&sort=sort,-publication_date&limit=3
 ```
 
 Which would fetch the three latest articles with all their exposed fields.
 
-For more details on how the CMS and its API work check out the [openEASE cms repository](https://github.com/ease-crc/openease_cms) and official [directus docs](https://docs.directus.io/reference/introduction.html).
+For more details on how the CMS and its API work check out the [openEASE CMS repository](https://github.com/ease-crc/openease_cms) and official [directus docs](https://docs.directus.io/reference/introduction.html).
 
 #### Development with Local CMS
 
@@ -288,7 +292,7 @@ If you want to host your own CMS locally for e.g. development or testing, follow
     ```
     networks:
       [...]
-      # only needed if running both openease and cms locally
+      # only needed if running both openease and CMS locally
       cms-development-network:
           external: true
     ```
@@ -297,13 +301,15 @@ If you want to host your own CMS locally for e.g. development or testing, follow
     ```
     networks:
       - [...]
-      # only needed if running both openease and cms locally
+      # only needed if running both openease and CMS locally
       - cms-development-network
     ```
 
     **Note**: If you are using the official openEASE repositories, these lines should already be in the compose files. Thus, it is only necessary to uncomment them.
 
-1. In the openease admin content panel set the news cms url to:
+1. Start both openEASE and the directus CMS
+
+1. In the openease admin content panel set the news CMS url to:
 
     ```
     http://<name of directus container/service>:8055

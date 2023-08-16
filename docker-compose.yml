@@ -1,7 +1,7 @@
 version: '3'
 networks:
   openease:
-  # only needed if running both openease and cms locally
+  # only needed if running both openease and CMS locally
   # cms-development-network:
   #   external: true
 services:
@@ -78,7 +78,7 @@ services:
       - "5000:5000"
     networks:
       - openease
-      # only needed if running both openease and cms locally
+      # only needed if running both openease and CMS locally
       # - cms-development-network
     volumes:
       - secret:/etc/ease_secret:ro
