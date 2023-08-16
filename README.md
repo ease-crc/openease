@@ -63,11 +63,12 @@ docker rm $(docker ps -a -q)
 docker rmi $(docker images -q)
 ```
 
-## Content
+## Content Pages
 
 ### Neem-Overview Pages
 
-The homepage features certain neems and allows direct access to their knowledge base or overview page. The overview page just renders the README markdown file of the neem's repository.
+The homepage features certain neems and allows direct access to their knowledge base or overview page.
+The overview page just renders the README markdown file of the neem's repository.
 
 The homepage shows two fixed neems at the top, and below that the six most recently updated neems (based on the last commit to their respective repositories).
 
@@ -89,11 +90,15 @@ Furthermore, here are some suggestions for more things to include:
 - license
 - references
 
-Check out existing READMEs or overview pages for reference or structure. Make sure to keep the READMEs up-to-date.
+Check out existing READMEs or overview pages for reference or structure.
+Make sure to keep the READMEs up-to-date.
+Here are a few more points to consider:
 
-- Maintainers need to have a markdown file named 'README.md' in their repositories or their neem cannot be featured on the homepage (they will still appear on the neemhub page). The markdown should explain about the neem. For reference, have a look at READMEs of other.
-- Relevant publications need to be listed in said README. Currently they cannot be linked automatically to the neem.
-- If a unordered list is not rendered properly, make sure it has leading and trailing empty line in the README:
+- Maintainers need to have a markdown file named 'README.md' in their repositories or their neem cannot be featured on the homepage (they will still appear on the neemhub page).
+The markdown should present information about the neem.
+- Relevant publications need to be listed in said README.
+Currently they (unfortunately) cannot be linked automatically to the neem.
+- If a unordered list is not rendered properly, make sure it has a leading and trailing empty line in the README:
     ``` markdown
     some text
 
@@ -103,18 +108,27 @@ Check out existing READMEs or overview pages for reference or structure. Make su
 
     more text
     ```
-- Most elements of the README files should be rendered correctly. It might happen that some elements will not pass the renderer because of the HTML-sanitizer. If that happens, those element tags need to be added to the list of allowed tags in `get_sanitizer()` (s. `pages/neem_overview.py`). It might be necessary to adjust css styling in `static/css/overview.scss`.
+- Most elements of the README files should be rendered correctly.
+It might happen that some elements will not pass the renderer because of the HTML-sanitizer.
+If that happens, those element tags need to be added to the list of allowed tags in `get_sanitizer()` (s. `/pages/neem_overview.py`).
+It might also be necessary to adjust css styling in `/static/css/overview.scss`.
 
 #### Technical Details
 
-For updates, the server will first get the list of neems for the neemhub. Next it will check the repository of each of these neems for a README. If one can be found, it will be fetched and stored locally. The repositories of each neem is then checked for the time of the last update. Neems are then sorted by this timestamp, in order to select the six most recent neems to display on the homepage. The featured neems at the top of the homepage are identified by their neem-id. Meanwhile information about the neem and location of the related files will be stored in the postgres database.
+For updates, the server will first fetch the list of neems for the neemhub.
+Next it will check the repository of each of these neems for a README.
+If one can be found, it will be downloaded and stored locally.
+The repositories of each neem is then checked for the time of the last update.
+Neems are then sorted by this timestamp, in order to select the six most recent neems to display on the homepage.
+The featured neems at the top of the homepage are identified by their neem-id. Meanwhile information about the neem and location of the related files will be stored in the postgres database.
 
-During an update, previous information will be overwritten (except for default files, those are kept separately).
+During an update, previous information will be overwritten (except for default files, which are kept separately).
 
 
 ### Publications Pages
 
-The publications page features papers related to the EASE project. The page includes the information of the bibtex entry for each paper and, if available, also the paper itself.
+The publications page features papers related to the EASE project.
+The page includes the information of the bibtex entry for each paper and, if available, also the paper itself.
 
 The server fetches the bibtex-files and papers (pdfs compiled into a zip-file) once a day.
 
@@ -126,11 +140,13 @@ A few points of attention nonetheless:
 
 - **Syntax**
     
-    Check the syntax of the entry to be correct. The parser for the `bibtex`-files, `pybtex`, sadly is very unforgiving (s. [Possible Errors when Parsing bibtex-files](#possible-errors-when-parsing-bibtex-files)). [TEXfaq](https://texfaq.org/) is a valuable resource.
+    Check the syntax of the entry to be correct. The parser for the `bibtex`-files, `pybtex`, sadly is very unforgiving (s. [Possible Errors when Parsing bibtex-files](#possible-errors-when-parsing-bibtex-files)).
+    [TEXfaq](https://texfaq.org/) is a valuable resource.
 
 - **Authors**
 
-    One common error is the faulty listing of authors. Author names need to be listed in either of the following forms:
+    One common error is the faulty listing of authors.
+    Author names need to be listed in either of the following forms:
     
     - First Last
     - Last, First
@@ -146,7 +162,8 @@ A few points of attention nonetheless:
 
 - **Title Capitalization**
 
-    Unfortunately titles of publications, journals, etc. need to manually be set in the `bibtex`-entry in order to be properly displayed on the website. Python 2.7 itself only offers very rudimentary methods for capitalization of titles, and libraries such as [titlecase](https://pypi.org/project/titlecase/) do not support Python 2.7.
+    Unfortunately titles of publications, journals, etc. need to manually be set in the `bibtex`-entry in order to be properly displayed on the website.
+    Python 2.7 itself only offers very rudimentary methods for capitalization of titles, and libraries such as [titlecase](https://pypi.org/project/titlecase/) do not support Python 2.7.
 
     Generally, letters, words, or phrases encased with curly brackets `{}` will be displayed as written (in terms of capitalizaton):
 
@@ -158,7 +175,9 @@ A few points of attention nonetheless:
 
 #### Possible Errors when Parsing bibtex-files
 
-The server uses [`pybtex`](https://pybtex.org/) for parsing the bibtex-files. Said library is very sensitive when it comes to the syntax and will fail to parse even on a single error. Other parsers had different problems, overall `pybtex` was still the preferred choice.
+The server uses [`pybtex`](https://pybtex.org/) for parsing the bibtex-files.
+Said library is very sensitive when it comes to the syntax and will fail to parse even on a single error.
+Other parsers had different problems, overall `pybtex` was still the preferred choice.
 
 You can use the [following](https://github.com/navidJadid/publications-bibtex-tester) tool to check if a given bibtex-file would cause errors when parsed by the server.
 
@@ -166,7 +185,9 @@ You can use the [following](https://github.com/navidJadid/publications-bibtex-te
 
 #### Technical Details
 
-For updates, first an url for both the `publications.bib` and `papers.zip` need to be provided (s. [Content Settings page](#content-settings-page)). The former contains information about all EASE related publications. Only a subset of those will be displayed on the publications page later. To be specific, those which have the following keywords in their `bibtex`-entries:
+For updates, first an url for both the `publications.bib` and `papers.zip` need to be provided (s. [Content Settings page](#content-settings-page)).
+The former contains information about all EASE related publications. Only a subset of those will be displayed on the publications page later.
+To be specific, those which have the following keywords in their `bibtex`-entries:
 
 - openease_overview
 - openease_kb_of_exp_data
@@ -177,9 +198,10 @@ For updates, first an url for both the `publications.bib` and `papers.zip` need 
 - openease_manipulation
 - openease_natural_language
 
-The `bib`-file will be parsed and stored in a python dictionary. Also for each entry, the program checks if a paper is available as a pdf (from `papers.zip`) and links it, if available.
+The `bib`-file will be parsed and stored in a python dictionary.
+Also for each entry, the program checks if a paper is available as a pdf (from `papers.zip`) and links it, if available.
 
-During an update, previous information will be overwritten (except for default files, those are kept separately).
+During an update, previous information will be overwritten (except for default files, which are kept separately).
 
 
 ### News Blog
@@ -292,7 +314,7 @@ Now the two services should be able to connect on your local machine.
 
 ### Content-Settings Page
 
-The content-settings page shows the state of all the content for the neem-overview and publications pages. It shows:
+The content-settings page shows the state of all the content for the neem-overview and publications pages, which includes:
 
 - state of content loaded (none, default, latest)
 - state of the update jobs (active, paused)
@@ -311,27 +333,32 @@ In addition, the following action can be performed:
 - download 'content files' (s. [How to Update Default Files](#how-to-update-default-files))
 - set the url to an external News CMS (for details s. [News Blog](#news-blog))
 
-Lastly, the content-settings page is where the url or local path for the publications `bibtex` and `papers.zip` need to be set. If using the local path, provide the relative paths to `/content/publications-and-papers/` in the settings panel and place the mentioned files there.
+Lastly, the content-settings page is where the url or local path for the publications `bibtex` and `papers.zip` need to be set.
+If using the local path, provide the relative paths to `/content/publications-and-papers/` in the settings panel and place the mentioned files there.
 
-At least the `bibtex` file needs to be provided, otherwise the publications files cannot be updated. Urls need to start with 'http(s)://'.
+At least the `bibtex` file needs to be provided, otherwise the publications files cannot be updated.
+Urls need to start with 'http(s)://'.
 
 Each function is provided with a tooltip to explain it's function.
 
 #### Developer Settings
 
-The server will load debug settings for the content, 
-if the environment variable 'EASE_DEBUG' is set to 'true'. That includes:
+The server will load debug settings for the content, if the environment variable 'EASE_DEBUG' is set to 'true'.
+That includes:
 
 - upon start-up, either previously loaded content or default content is loaded (=faster start-up); no updates for neem-overview and publications are fetched
 - update jobs are set to paused
 - 'download default papers' is set to 'OFF'
 - 'prepare downloadable files' is set to 'OFF'
 
-In DEBUG mode, changes to those settings persist even after the lifetime of the container. This is useful if certain behaviours need to be examined upon restarting or rebuilding the container (otherwise these settings would need to be manually set each time). If you made some settings previously, but want the stock developer settings again, just click  'load developer settings' on the content-settings page.
+In DEBUG mode, changes to the settings persist even after the lifetime of the container.
+This is useful if certain behaviours need to be examined upon restarting or rebuilding the container (otherwise these settings would need to be manually set each time).
+If you made changed settings previously but want the stock developer settings again, just click 'load developer settings' on the content-settings page.
 
 #### Production Settings
 
-If the environment variable 'EASE_DEBUG' is set to 'false#, the server will load production settings for the content. That includes:
+If the environment variable 'EASE_DEBUG' is set to 'false', the server will load production settings for the content.
+That includes:
 
 - upon start-up, updates for neem-overview and publications are fetched
 - update jobs are set to active
@@ -340,4 +367,5 @@ If the environment variable 'EASE_DEBUG' is set to 'false#, the server will load
 
 #### How to Update Default Files
 
-In order to update default files for content (for example, to include newer neem overviews or publications) fetch the latest updates on a running server in the admin content panel, while having checked the `prepare downloadable files` option. Next, download the files of choice and replace the appropriate files in this repository in `content/default_files`.
+In order to update default files for content (for example, to include newer neem overviews or publications) fetch the latest updates on a running server in the admin content panel, while having checked the `prepare downloadable files` option.
+Next, download the files of choice and replace the appropriate files in this repository in `/content/default_files`.
