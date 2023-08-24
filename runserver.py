@@ -83,6 +83,7 @@ def init_app(extra_config_settings={}):
     from pages import neem_overview
     from pages import publications
     from pages import content
+    from pages import news
 
     add_user(user_manager=app.user_manager,
              name='admin',

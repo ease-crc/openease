@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ article.title }}</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/news.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="container" id="news-content">
+    <h1 class="">
+        {{ article.title }}
+    </h1>
+    <h4 class="mt-2 mb-4 text-right">
+        <i>written by {{ article.author.first_name }} {{ article.author.last_name }}, {{ article.publication_date }}</i>
+    </h4>
+    <div class="">
+        {{ article.text | safe }}
+    </div>    
+</div>
+{% endblock %}

@@ -7,11 +7,9 @@ from flask import redirect, url_for, render_template, flash
 from furl import furl
 from pathlib2 import Path
 from threading import Lock
-from html_sanitizer import Sanitizer
-from html_sanitizer.sanitizer import sanitize_href, bold_span_to_strong, italic_span_to_em, target_blank_noopener, tag_replacer
 
 from config.settings import DATETIME_FORMAT, WEBROB_PATH, CONTENT_DIR_PATH, STATIC_DIR_PATH, DEFAULT_FILES_PATH, DOWNLOADS_DIR_PATH
-from helpers.utility import download_file
+from helpers.utility import download_file, sanitize_html
 from helpers.file_handler import copy_file, copy_dir, get_file_extension, get_path_name, path_is_file, remove_if_is_dir, remove_if_is_file, unzip_file, dump_dict_to_json, get_dict_from_json, read_file, write_non_binary_file, make_archive_of_files_and_dirs
 from helpers.thread_handler import start_thread, mutex_lock
 from neems.neem import DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH_NO_STATIC
@@ -87,7 +85,7 @@ def _flash_cannot_display_overview_page():
 
 def _convert_md_to_html_and_sanitize(md_str):
     md_content = _convert_md_to_html(md_str)
-    return _sanitize_html(md_content)
+    return sanitize_html(md_content)
 
 
 def _convert_md_to_html(md_str):
@@ -96,13 +94,6 @@ def _convert_md_to_html(md_str):
     # add noreferrer to links; admittedely not the nicest way of doing this
     md_html = md_html.replace('rel=\"nofollow noopener\"', 'rel=\"nofollow noopener noreferrer\"')
     return md_html
-
-
-def _sanitize_html(html_str):
-    # need to sanitize the input, because the template loads the values
-    # as 'safe', which could otherwise allow XSS-exploits
-    sanitizer = get_html_sanitizer()
-    return sanitizer.sanitize(html_str)
 
 
 def manual_update_neem_overview_files():
@@ -540,50 +531,3 @@ def _prepare_overview_zip_download():
             NEEM_OVERVIEW_MARKDOWNS_PATH,
             NEEM_OVERVIEW_IMAGES_STATIC_DIR_PATH
         ], DOWNLOADS_DIR_NEEM_OVERVIEW_ZIP)
-
-
-def get_html_sanitizer():
-    """ When tags or items from the markdown are not displayed correctly,
-    it might hint to the sanitizer removing unallowed tags. To allow 
-    these tags to pass, adjust the sanitizer-config from get_sanitizer()
-    in # pages/overview.py. Afterwards adjust the styling in 
-    static/css/overview.scss.
-    
-    When in doubt, refer to
-      https://github.com/trentm/python-markdown2
-    and
-      https://github.com/matthiask/html-sanitizer """
-    
-    return Sanitizer({
-        'tags': {
-            'a', 'h1', 'h2', 'h3', 'strong', 'em', 'p', 'ul', 'ol',
-            'li', 'br', 'sub', 'sup', 'hr', 'img', 'blockquote',
-            'table', 'thead', 'tbody', 'tr', 'th', 'td',
-        },
-        'attributes': {
-            'a': ('href', 'name', 'target', 'title', 'id', 'rel'),
-            'img': ('src', 'alt', 'width', 'height'),
-        },
-        'empty': {'hr', 'a', 'br', 'img', 'tr', 'th', 'td'},
-        'separate': {
-            'a', 'p', 'li', 'img', 'table', 'tr', 'th', 'td', 'blockquote',
-        },
-        'whitespace': {'br'},
-        'keep_typographic_whitespace': False,
-        'add_nofollow': False,
-        'autolink': False,
-        'sanitize_href': sanitize_href,
-        'element_preprocessors': [
-            # convert span elements into em/strong if a matching style rule
-            # has been found. strong has precedence, strong & em at the same
-            # time is not supported
-            bold_span_to_strong,
-            italic_span_to_em,
-            tag_replacer('b', 'strong'),
-            tag_replacer('i', 'em'),
-            tag_replacer('form', 'p'),
-            target_blank_noopener,
-        ],
-        'element_postprocessors': [],
-        'is_mergeable': lambda e1, e2: True
-    })

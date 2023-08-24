@@ -9,83 +9,36 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SCSS/news.css') }}"/>
 {% endblock %}
 
+{% block nav_right %}
+<form class="form-inline">
+    <div class="md-form my-0">
+        <input name="news_query" id="news_query" class="form-control mr-sm-2" type="text" placeholder="Search"
+               aria-label="Search">
+    </div>
+</form>
+{% endblock %}
+
 {% block body %}
 <div class="container">
-    <div class="news-content">
-        <div id="knowrob-webpage-is-released" class="row flex-column anchor">
-            <h1>
-                KnowRob webpage is released
-            </h1>
-            <p>
-                We are pleased to announced that KnowRob webpage is updated according to latest changes in KnowRob 2.0. KnowRob is a knowledge processing system that combines knowledge representation and reasoning methods with techniques for acquiring knowledge and for grounding the knowledge in a physical system and can serve as a common semantic framework for integrating information from different sources. KnowRob combines static encyclopedic knowledge, common-sense knowledge, task descriptions, environment models, object information and information about observed actions that has been acquired from various sources (manually axiomatized, derived from observations, or imported from the web).
-            </p>
-            <div class="d-flex flex-column my-3 align-items-center">
-                <img class="knowrob-img"
-                src="{{ url_for('static', filename='img/knowrob2.png') }}"
-                alt="KnowRob 2.0 Architecture">
-                KnowRob 2.0 Architecture
-            </div>
-            <p>
-                KnowRob is developed within CRC EASE by the team from <a href="https://ai.uni-bremen.de/" rel="noopener noreferrer">Institute for Artificial Intelligence</a> (IAI), led by Prof. Michael Beetz at the University of Bremen. Please refer to the following <a href="http://knowrob.org/" rel="noopener noreferrer"></a>webpage</a> for latest news related to KnowRob. 
-            </p>
+    <div class="news-block">
+        <div class="row justify-content-center text-center">
+            {{ pagination.info }}
         </div>
-        <div id="neemhub-infrastructure-for-storing-and-processing-neems" class="row flex-column anchor">
-            <h1>
-                NEEMHub infrastructure for storing and processing NEEMs
-            </h1>
-            <p>
-                In order to make huge amount of data accessible to the research community, allow to analyze the data, create machine learning models from the data and support version control for the data and models, we have made an effort of releasing an infrastructure which can handle such requirements with one solution.
-            </p>
-            <p>
-                <a href="https://neemgit.informatik.uni-bremen.de/neems" rel="noopener noreferrer">NEEM-Hub</a> is one stop shop for storing NEEMs and evaluate them by deploying custom models which can analyze data. It boasts <a href="https://hadoop.apache.org/" rel="noopener noreferrer">Hadoop</a>big data support and <a href="https://dvc.org/doc/start" rel="noopener noreferrer">DVC</a> based version control of large data sets.  How you can access the NEEM-Hub is described in our <a href="https://ease-crc.github.io/soma/owl/current/NEEM-Handbook.pdf" rel="noopener noreferrer">NEEM-Handbook</a>. 
-            </p>
-        </div>
-        <div id="neem-handbook-is-released" class="row flex-column anchor">
-            <h1>
-                NEEM Handbook is released
-            </h1>
-            <p>
-                The “<a href="https://ease-crc.github.io/soma/owl/current/NEEM-Handbook.pdf" rel="noopener noreferrer">NEEM Handbook</a>”, describes the EASE system for episodic memories of everyday activities. It is thought to provide EASE researchers with compact but still comprehensive information about what information is contained in NEEMs , how it is represented, acquired, curated and published.
-            </p>
-            <p>
-                <b>Narrative Enabled Episodic Memories</b>
-            </p>
-            <p>
-                When somebody talks about the deciding goal in the last soccer world championship many of us can “replay” the episode in our “mind’s eye”. Those episodic memories can be seen as abstract descriptions that allow us to recall detailed pieces of information from any experienced activity. Having those detailed memories, we can use them to learn general knowledge or map similar memories to unknown situations, so we know how to behave in the given situation.
-            </p>
-            <p>
-                EASE integrates episodic memories deeply into the knowledge acquisition, representation, and processing system. For every activity the agent performs, observes, prospects and reads about, it creates an episode and stores it in its memory. An episode is best understood as a video recording that the agent makes of the ongoing activity. In addition, those videos are enriched with a very detailed story about the actions, motions, their purposes, effects and the agent’s sensor information during the activity.
-            </p>
-        </div>
-        <div id="soma-ontology-version-is-released" class="row flex-column anchor">
-            <h1>
-                SOMA ontology released
-            </h1>
-            <p>
-                An ontological modelling approach called “<a href="https://ease-crc.github.io/soma/" rel="noopener noreferrer">Socio-Physical Model of Activities</a> (SOMA)” is developed within the scope of CRC <a href="https://www.uni-bremen.de/csl/projekte/laufende-projekte/ease" rel="noopener noreferrer">EASE</a> research project at the University of Bremen that attempts to advance our understanding of how human-scale manipulation tasks can be mastered by robotic agents.
-            </p>
-            <p>
-                The abstraction of knowledge for everyday activities are handled by SOMA such a way so that robots can execute same task in different ways depending upon what tools are available and how the environment is shaped. The main focus of SOMA is the characterization of physical and social activity context, as well as the motions carried out by agents, and the interactions caused by them.
-            </p>
-            <p>
-                <a href="https://ease-crc.github.io/soma/" rel="noopener noreferrer">SOMA web page</a> provides information related to the various sources available online in order to interact with the model. Additionally one can visualize SOMA concepts on ontology visualization tool WebVOWL <a href="http://www.visualdataweb.de/webvowl/#iri=https://ease-crc.github.io/soma/owl/1.1.0/SOMA.owl" rel="noopener noreferrer">here</a>.
-            </p>
-        </div>
-        <div id="new-knowledge-base-experiments-are-added" class="row flex-column anchor">
-            <h1>
-                New Knowledge Base Experiments are added
-            </h1>
-            <p>
-                Data from several experiments are now available online. This includes “<a href="/QA?neem_id=5fd0f191f3fc822d8e73d715">Setting Up a Table in Bullet World</a>“, “<a href="/QA?neem_id=5fdc979f55605baa6a41da8c">Kuka KMR-IIWA robot scanning retail shelves</a>“, “<a href="/QA?neem_id=5fdca2bcdab33892cea161a0">Human avatar fetch and place</a>“, and “<a href="/QA?neem_id=5fda3da3e96ee178f6997257">URobot simulation fetch and place</a>“. Access experiment information through the Data, Knowledge & Tools column of the <a href="/homepage">openEASE homepage</a>.
-            </p>
-        </div>
-        <div id="new-openease-platform-is-released" class="row flex-column anchor">
-            <h1>
-                New openEASE Platform is released
-            </h1>
-            <p>
-                We are very happy to release the new openEASE Platform. This project is associated with the <a href="http://www.ai.uni-bremen.de/" rel="noopener noreferrer">Institute of Artificial Intelligence (IAI)</a> of the <a href="http://www.uni-bremen.de/" rel="noopener noreferrer">University Bremen</a>. If you want to learn more about the functionality of this platform, please check out the Introduction video on our front page or click <a href="/neems">here</a>.
-            </p>
+        {% for entry in news_articles %}
+                <a class="row flex-column news-card" href="/news_article/{{ entry.id }}">
+                    <h3 class="mt-1">
+                        {{ entry.title }}
+                    </h3>
+                    <p class="mt-2">
+                        {{ entry.text | safe }}
+                    </p>
+                    <p class="mb-0 text-right">
+                        <i>written by {{ entry.author.first_name }} {{ entry.author.last_name }}, {{ entry.publication_date }}</i>
+                    </p>
+                </a>
+        {% endfor %}
+        <div class="row pt-3 justify-content-center">
+            {{ pagination.links }}
         </div>
     </div>
 </div>

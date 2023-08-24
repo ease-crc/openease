@@ -12,11 +12,6 @@ from pages.publications import DEFAULT_PAPERS_ZIP_PATH, DOWNLOADS_DIR_PAPERS_ZIP
 from helpers.background_scheduler import get_neem_overview_job_next_runtime, get_publications_job_next_runtime, resume_neem_overview_job, resume_publications_job, pause_neem_overview_job, pause_publications_job
 from postgres.settings import DATETIME_MIN, ContentSettings
 
-@app.route('/news')
-def render_news():
-    return render_template('pages/news.html', **locals())
-
-
 @app.route('/settings/content')
 @admin_required
 def render_content_settings():
@@ -255,4 +250,19 @@ def store_publications_and_papers_urls():
     
     app.logger.info("Content settings have been updated")
     flash('Urls for papers and publications have been stored!', 'warning')
+    return redirect(url_for('render_content_settings'))
+
+
+@app.route('/settings/content/store_news_cms_url', methods=["POST"])
+@admin_required
+def store_news_cms_url():
+    req = request.form
+    if req is None:
+        flash('Null request is submitted while form submission!', 'error')
+        redirect(url_for('render_content_settings'))
+    
+    ContentSettings.set_news_cms_url(req.get('news_cms_url'))
+
+    app.logger.info("Content settings have been updated")
+    flash('Url for news cms has been stored!', 'warning')
     return redirect(url_for('render_content_settings'))

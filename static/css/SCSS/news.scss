@@ -1,57 +1,164 @@
-.news-content {
-    max-width: 600px;
-    margin: 1.3rem auto 1.5rem;
+$news-font-size: 1rem;
 
-    .row {
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-    h1 {
+#news-content {
+    max-width: 700px;
+    margin: 2rem auto 2rem;
+    
+    h1, h2, h3 {
         font-family: Oswald;
         font-weight: 400;
         line-height: 1.1;
-    
-        margin-top: 10px;
-        margin-bottom: 10px;
-    
-        border-bottom: solid 2px #706f6f;
-        padding-bottom: 5px;
-        font-size: 28px;
-        color: #144f78;
+        margin-bottom: 1rem;
     }
 
-    // necessary so links to anchors on news page don't fall behind navbar
-    .anchor {
-        padding-top: 65px;
-        margin-top: -65px;
+    h1 {
+        border-bottom: solid 2px #706f6f;
+        padding-bottom: 5px;
+        font-size: 2.6rem;
+        color: #144f78;
+        margin-top: 2rem;
     }
-    
+
+    h2 {
+        font-size: 2.1rem;
+        margin-top: 1.5rem;
+        color: #295f87;
+        text-decoration: underline;
+    }
+
+    h3 {
+        font-size: 1.6rem;
+        margin-top: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: #427da0;
+    }
+
+    h4 {
+        font-size: 1rem;
+        color: #427da0;
+    }
+
     p {
         box-sizing: border-box;
         color: rgb(51, 51, 51);
         display: block;
         font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        margin-bottom: 0.5rem;
-    }
-    
-    a {
-        font-size: 14px;
-        font-family: Oswald;
-        color: rgba(20,79,120,1);
-        text-decoration: none;
-    }
-    
-    a:hover {
-        color: #428bca;
-        text-decoration: underline;
+        font-size: $news-font-size;
     }
 
-    .knowrob-img {
-        max-width: 100%;
+    table {
+        border: 1px solid #ccc !important;
+        font-size: $news-font-size;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    thead {
+        background-color: #eee;
+        font-weight: normal;
+    }
+
+    td, th {
+        border: 1px solid #ccc !important;
+        padding: 0.6rem 1rem;
+    }
+
+    ul, ol {
+        font-size: $news-font-size;
+    }
+
+    ol li, ul li{
+        padding-left: 0.5rem;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        width: auto;
         height: auto;
-
-        margin-bottom: 0.5rem;
+        max-width: 100%;
+        max-height: 350px;
     }
+
+    figure {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    figcaption {
+        text-align: center;
+    }
+
+    blockquote {
+        border-left: 3px solid #ccc !important;
+        padding-left: 1rem;
+    }
+
+    blockquote p {
+        color: #666;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        margin: 0;
+    }
+
+    a {
+        font-weight: bold;
+        color: rgba(20,79,120,1);
+    }
+}
+
+.news-block {
+    max-width: 780px;
+    margin: 1rem auto 2rem;
+}
+
+.news-card {
+    padding: 1.2rem;
+    border: 2px solid #144f78;
+    border-radius: 8px;
+    margin: 0.5rem;
+    transition: all 0.15s ease-out;
+
+    h3 {
+        font-family: Oswald;
+        font-weight: 400;
+        line-height: 1.1;
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #5586a2 !important;
+    }
+
+    p {
+        font-size: 14px;
+        color: rgb(51, 51, 51) !important;
+    }
+}
+
+.news-card:hover {
+    border: 2px solid #5586a2;
+    background-color: #5586a2;
+    text-decoration: none !important;
+
+    h3, p {
+        color: #eee !important;
+    }
+}
+
+.pagination-page-info {
+    padding: .6em;
+    padding-left: 0;
+    width: 40em;
+    margin: .5em;
+    margin-left: 0;
+    font-size: 12px;
+}
+.pagination-page-info b {
+    color: black;
+    padding-left: 2px;
+    padding: .1em .25em;
 }

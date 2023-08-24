@@ -32,6 +32,32 @@
 
     <div id="page-contents" class="d-flex flex-column flex-md-row">
         <div class="col-md-6 col-lg-7">
+            {% if show_whats_new_section %}
+            <div class="content-block mt-2 mt-md-0">
+                <h1 class="mb-3">
+                    What's New
+                    <span class="px-2" style="font-size: 1rem;">
+                        <i class="fas fa-arrow-right"></i>
+                        <a href="/news" class="px-1">
+                            News Blog
+                        </a>
+                    </span>
+                </h1>
+                {% for entry in news_articles.data %}
+                <a class="row flex-column news-card" href="/news_article/{{ entry.id }}">
+                    <h3 class="mt-1">
+                        {{ entry.title }}
+                    </h3>
+                    <p class="mt-2">
+                        {{ entry.text | safe }}
+                    </p>
+                    <p class="mb-0 text-right">
+                        <i>written by {{ entry.author.first_name }} {{ entry.author.last_name }}, {{ entry.publication_date }}</i>
+                    </p>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
             <div class="content-block mt-2 mt-md-0">
                 <h1>
                     About openEASE
@@ -72,78 +98,6 @@
                         href="https://www.youtube.com/watch?v=D8Susiv7L4I"
                         rel="noopener noreferrer">[Video]</a>.
                 </p>
-            </div>
-            <div class="content-block mt-2 mt-md-0">
-                <h1>
-                    What's New
-                </h1>
-
-                <div class="row flex-column">
-                    <h3 class="mt-2">
-                        KnowRob webpage is released
-                    </h3>
-                    <p class="mb-1">
-                        We are pleased to announced that KnowRob webpage is updated according to latest changes in KnowRob 2.0. KnowRob is a knowledge processing system that combines knowledge representation and reasoning methods with techniques for acquiring knowledge and for grounding the knowledge in a physical system and can serve as a common semantic framework for integrating information […]
-                    </p>
-                    <a href="/news#knowrob-webpage-is-released">
-                        [Read More]
-                    </a>
-                </div>
-                <div class="row flex-column">
-                    <h3 class="mt-4">
-                        NEEMHub infrastructure for storing and processing NEEMs
-                    </h3>
-                    <p class="mb-1">
-                        In order to make huge amount of data accessible to the research community, allow to analyze the data, create machine learning models from the data and support version control for the data and models, we have made an effort of releasing an infrastructure which can handle such requirements with one solution. NEEM-Hub is one stop […]
-                    </p>
-                    <a href="/news#neemhub-infrastructure-for-storing-and-processing-neems">
-                        [Read More]
-                    </a>
-                </div>
-                <div class="row flex-column">
-                    <h3 class="mt-4">
-                        NEEM Handbook is released
-                    </h3>
-                    <p class="mb-1">
-                        The “NEEM Handbook”, describes the EASE system for episodic memories of everyday activities. It is thought to provide EASE researchers with compact but still comprehensive information about what information is contained in NEEMs , how it is represented, acquired, curated and published. Narrative Enabled Episodic Memories When somebody talks about the deciding goal in the […]
-                    </p>
-                    <a href="/news#neem-handbook-is-released">
-                        [Read More]
-                    </a>
-                </div>
-                <div class="row flex-column">
-                    <h3 class="mt-4">
-                        SOMA ontology released
-                    </h3>
-                    <p class="mb-1">
-                        An ontological modelling approach called “Socio-Physical Model of Activities (SOMA)” is developed within the scope of CRC EASE research project at the University of Bremen that attempts to advance our understanding of how human-scale manipulation tasks can be mastered by robotic agents. The abstraction of knowledge for everyday activities are handled by SOMA such a way so […]
-                    </p>
-                    <a href="/news#soma-ontology-version-is-released">
-                        [Read More]
-                    </a>
-                </div>
-                <div class="row flex-column">
-                    <h3 class="mt-4">
-                        New Knowledge Base Experiments are added
-                    </h3>
-                    <p class="mb-1">
-                        Data from several experiments are now available online. This includes “Setting Up a Table in Bullet World“, “Kuka KMR-IIWA robot scanning retail shelves “,  “Human avatar fetch and place“, and “URobot simulation fetch and place“. Access experiment information through the Data, Knowledge & Tools column of the openEASE homepage.
-                    </p>
-                    <a href="/news#new-knowledge-base-experiments-are-added">
-                        [Read More]
-                    </a>
-                </div>
-                <div class="row flex-column">
-                    <h3 class="mt-4">
-                        New openEASE Platform is released
-                    </h3>
-                    <p class="mb-1">
-                        We are very happy to release the new openEASE Platform. This project is associated with the Institute of Artificial Intelligence (IAI) of the University Bremen. If you want to learn more about the functionality of this platform, please check out the Introduction video on our front page or click here.
-                    </p>
-                    <a href="/news#new-openease-platform-is-released">
-                        [Read More]
-                    </a>
-                </div>
             </div>
         </div>
         <div class="col-md-6 col-lg-5">

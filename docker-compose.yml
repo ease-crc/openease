@@ -1,6 +1,9 @@
 version: '3'
 networks:
   openease:
+  # only needed if running both openease and CMS locally
+  # cms-development-network:
+  #   external: true
 services:
   # Nginx serves requests on port 80/443 through rediecting
   # to flask and other web applications.
@@ -75,6 +78,8 @@ services:
       - "5000:5000"
     networks:
       - openease
+      # only needed if running both openease and CMS locally
+      # - cms-development-network
     volumes:
       - secret:/etc/ease_secret:ro
       - lft:/tmp/openEASE/dockerbridge
